@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+   <node name="wizard" no-namespace="true">
+      <node name="webapp">
+         <node name="module" key="name">
+            <node name="page" key="name" />
+         </node>
+      </node>
+      <node name="datasources">
+         <node name="datasource" key="name">
+            <node name="jdbc-connection" />
+         </node>
+      </node>
+   </node>
+</root>

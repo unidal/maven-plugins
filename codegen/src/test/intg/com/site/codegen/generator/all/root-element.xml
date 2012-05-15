@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root-element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="root-element.xsd">
+   <all-primitive-types b1="21" b3="64" d1="0.1" d3="3.9" l1="1">
+      <b2>123</b2>
+      <s2>12</s2>
+      <l2>12345</l2>
+   </all-primitive-types>
+   <all-reserved-keywords abstract="true" class="c1"/>
+   <attribute-only b1="false" s1="str"/>
+   <attribute-with-default d1="2012-05-05 18:19:57" l1="11111" />
+   <attribute-with-text a1="123">hello</attribute-with-text>
+   <element-only>
+      <b0>true</b0>
+      <l1>123</l1>
+      <l1>234</l1>
+      <l2>abc</l2>
+      <l2>def</l2>
+      <l2>ghi</l2>
+      <l3s>
+         <l3>ll</l3>
+         <l3>lll</l3>
+      </l3s>
+      <s1>{s11}</s1>
+      <s1>{s12}</s1>
+      <s2>{s21}</s2>
+      <s2>{s22}</s2>
+      <s3s>
+         <s3>{s31}</s3>
+         <s3>{s32}</s3>
+         <s3>{s33}</s3>
+      </s3s>
+   </element-only>
+   <element-with-default>
+      <b1>false</b1>
+   </element-with-default>
+   <element-with-text>123</element-with-text>
+   <attribute-element />
+   <attribute-element-with-default />
+   <attribute-element-with-text>12345</attribute-element-with-text>
+   <text-only>text only</text-only>
+   <list-item a1="l1" a2="value here">
+      <e1>e1</e1>
+   </list-item>
+   <list-item a1="l2" a2="value here 2">
+      <e1>e2</e1>
+   </list-item>
+   <indented-list>
+      <list-item a1="l1" a2="value here">
+         <e1>e1</e1>
+      </list-item>
+      <list-item a1="l2" a2="value here 2">
+         <e1>e2</e1>
+      </list-item>
+   </indented-list>
+   <map-item a1="123">
+      <e1>k1</e1>
+   </map-item>
+   <map-item a1="124">
+      <e1>k2</e1>
+   </map-item>
+   <indented-map>
+      <map-item a1="123">
+         <e1>k1</e1>
+      </map-item>
+      <map-item a1="124">
+         <e1>k2</e1>
+      </map-item>
+   </indented-map>
+   <nodeList>
+      <node>
+         <current>
+            <current></current>
+            <children></children>
+         </current>
+         <children>
+            <node>
+               <current></current>
+               <children></children>
+            </node>
+            <node>
+               <current></current>
+               <children></children>
+            </node>
+         </children>
+      </node>
+      <node />
+   </nodeList>
+   <any-support i1="1" a1="1" a2="s" a3="3">
+      <node>
+         <current>
+            <current></current>
+            <children></children>
+         </current>
+         <children>
+            <node>
+               <current></current>
+               <children></children>
+            </node>
+            <node>
+               <current></current>
+               <children></children>
+            </node>
+         </children>
+      </node>
+      <node />
+   </any-support>
+</root-element>

@@ -1,0 +1,26 @@
+<model model-package="com.ebay.maven.plugin.webres.model" disable-xml-parser="true" disable-validator="true" disable-xml-schema="true" enable-merger="true">
+  <entity name="report" root="true">
+    <attribute name="groupId" value-type="String" />
+    <attribute name="artifactId" value-type="String" />
+    <attribute name="version" value-type="String" />
+    <attribute name="baseline-version" value-type="String" />
+    <attribute name="status" value-type="String" />
+    <attribute name="timestamp" value-type="String" />
+    <entity-ref name="failure" type="list" names="failures" />
+  </entity>
+  <entity name="failure">
+    <attribute name="type" value-type="String" key="true" />
+    <entity-ref name="class" type="list" names="classes" />
+  </entity>
+  <entity name="class">
+    <attribute name="name" value-type="String" key="true" />
+    <attribute name="signature" value-type="String" />
+    <attribute name="baseline-signature" value-type="String" />
+    <entity-ref name="method" type="list" names="methods" />
+  </entity>
+  <entity name="method">
+    <attribute name="name" value-type="String" />
+    <attribute name="baseline-signature" value-type="String" />
+    <attribute name="signature" value-type="String" />
+  </entity>
+</model>

@@ -1,0 +1,44 @@
+<root>
+   <common-slots>
+      <slot id="sys1">
+         <resource urn="js:local:/js/home/first.js" />
+         <resource urn="js:local:/js/home/third2.js" />
+      </slot>
+      <slot id="sys2">
+         ...
+      </slot>
+      ...
+   </common-slots>
+   <pages>
+      <page request-uri="/jsp/home.jsp" >
+         <slot id="HEAD">
+            <!-- not in page, but added by profile -->
+            <resource urn="js:global:/META-INF/js/tracking.js"/>
+         </slot>
+         <slot id="BODY">
+            <!-- resource override -->
+            <resource urn="js:local:/js/home/third2.js" old-urn="js:local:/js/home/third.js"/>
+         </slot>
+         <slot id="BOTTOM" override="true">
+            <!--  slot re-assignment-->
+            <resource urn="js:local:/js/home/big.js" />
+            <resource urn="js:local:/js/home/second.js" />
+         </slot>
+         <slot id="ABOVE_FOLD">
+            <!-- resource override and re-order -->
+            <resource urn="js:global:/path/to/other.js" enabled="false"/>
+            <resource urn="js:resrepo:/logical/path/to/another.js" />
+            <resource urn="js:global:/path/to/other2.js"/>
+         </slot>
+          <!-- following  is defined by deployment developer who will do performance tuning-->
+         <common-slot-ref id="sys1" before-slot="HEAD"/>
+         <common-slot-ref id="sys2" after-slot="BODY"/>
+         <slot-group id="group1" main-slot="BODY"> 
+            <slot-ref id="rtm"/>
+            <slot-ref id="BODY"/>
+         </slot-group>
+         ...
+      </page>
+      ...
+   </pages>
+</root>

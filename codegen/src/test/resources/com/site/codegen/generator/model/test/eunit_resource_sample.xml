@@ -1,0 +1,19 @@
+<test-plan>
+    <test-case name="test1">
+       <description>Test Scenario 1</description>
+       <source><![CDATA[<res:img value="${res.local.img.half.buttons.btn_Buy_37x19_gif}" width="74"/>]]></source>
+       <result><![CDATA[<img src="/img/half/buttons/btn_Buy_37x19.gif" width="74" height="19" />]]></result>
+    </test-case>
+    <test-case name="test2">
+       <description>Test Scenario 2</description>
+       <source><![CDATA[<res:useCss value="${res.css.local.mystyle_css.$ABC}"/>]]></source>
+       <exception type="java.lang.RuntimeException">
+          <message>Unsupported property(ABC) for resource(com.ebay.esf.resource.css.LocalCssResource) with uri(css.local:/mystyle_css#ABC).</message>
+          <pattern>Unsupported property(ABC) for resource({0})</pattern>
+       </exception>
+       <exception type="java.lang.Exception">
+          <message>Unsupported property(ABC) for resource(com.ebay.esf.resource.css.LocalCssResource) with uri(css.local:/mystyle_css#ABC).</message>
+          <pattern>Unsupported property(ABC) for resource({0})</pattern>
+       </exception>
+    </test-case>
+</test-plan>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="workbook" root="true">
+    <attribute name="output" value-type="String" />
+    <attribute name="template" value-type="String" />
+    <entity-ref name="sheet" type="list" names="sheets" />
+  </entity>
+  <entity name="sheet">
+    <attribute name="id" value-type="int" />
+    <attribute name="name" value-type="String" />
+    <entity-ref name="format" type="list" names="formats" />
+    <entity-ref name="row" type="list" names="rows" />
+    <entity-ref name="empty" type="list" names="empties" />
+    <entity-ref name="col" type="list" names="cols" />
+  </entity>
+  <entity name="format">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="font" />
+    <entity-ref name="pattern" />
+  </entity>
+  <entity name="font">
+    <attribute name="name" value-type="String" />
+    <attribute name="size" value-type="int" />
+    <attribute name="bold" value-type="boolean" />
+    <attribute name="italic" value-type="boolean" />
+  </entity>
+  <entity name="pattern">
+    <attribute name="type" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+  <entity name="row">
+    <attribute name="start-col" value-type="int" />
+    <attribute name="start-row" value-type="int" />
+    <attribute name="create" value-type="boolean" />
+    <entity-ref name="label" type="list" names="labels" />
+    <entity-ref name="number" type="list" names="numbers" />
+    <entity-ref name="empty" type="list" names="empties" />
+    <entity-ref name="date-time" type="list" names="date-times" />
+  </entity>
+  <entity name="label">
+    <attribute name="format" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+  <entity name="number">
+    <attribute name="format" value-type="String" />
+    <element name="text" value-type="double" text="true" />
+  </entity>
+  <entity name="empty">
+    <attribute name="cols" value-type="int" />
+    <attribute name="rows" value-type="int" />
+  </entity>
+  <entity name="date-time">
+    <attribute name="format" value-type="String" />
+    <attribute name="offset" value-type="int" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+  <entity name="col">
+    <attribute name="start-row" value-type="int" />
+    <attribute name="start-col" value-type="int" />
+    <attribute name="create" value-type="boolean" />
+    <entity-ref name="label" type="list" names="labels" />
+    <entity-ref name="number" type="list" names="numbers" />
+    <entity-ref name="empty" type="list" names="empties" />
+    <entity-ref name="date-time" type="list" names="date-times" />
+  </entity>
+</model>
+

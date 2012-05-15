@@ -1,0 +1,295 @@
+<plugin>
+  <description>The Maven plugin is used to generate Adobe Flash files (*.swf and *.swc) from Flex source files (*.mxml, *.as and *.css etc).</description>
+  <groupId>com.site.maven.plugins</groupId>
+  <artifactId>maven-flex-plugin</artifactId>
+  <version>1.0.0</version>
+  <goalPrefix>flex</goalPrefix>
+  <isolatedRealm>false</isolatedRealm>
+  <inheritedByDefault>true</inheritedByDefault>
+  <mojos>
+    <mojo>
+      <goal>compile</goal>
+      <description>Flex compile mojo to generate .swc or/and .swf file on Flex SDK 2 &amp;amp; 3.
+
+A forked java process will be created to do Flex compilation. JVM arguments
+and additional arguments could be specified if needed.
+
+Note: The plugin will check the output file and sources files to determine if
+source is up to date or it should be re-generated.</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <implementation>com.site.maven.plugin.flex.FlexCompileMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <parameters>
+        <parameter>
+          <name>args</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>additional arguments to be passed at the end of command line to build Flex</description>
+        </parameter>
+        <parameter>
+          <name>classifier</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Artifact classifier</description>
+        </parameter>
+        <parameter>
+          <name>dependencies</name>
+          <type>java.util.List</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>swf dependencies, which will be used to generate html template files and
+.swf files will be copied to the war source directory</description>
+        </parameter>
+        <parameter>
+          <name>enabled</name>
+          <type>boolean</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Skip the Flex build or not. If not enabled, then the build will be skipped</description>
+        </parameter>
+        <parameter>
+          <name>flexConfig</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Flex configuration file for Flex compiler.</description>
+        </parameter>
+        <parameter>
+          <name>flexHome</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Home location of Flex SDK 2 or 3, please checking the existance of
+lib/mxmlc.jar and lib/compc.jar and lib/xercesImpl.jar</description>
+        </parameter>
+        <parameter>
+          <name>jvmargs</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>JVM arguments for forked java process</description>
+        </parameter>
+        <parameter>
+          <name>packaging</name>
+          <type>java.lang.String</type>
+          <required>false</required>
+          <editable>false</editable>
+          <description>Type of output, currently two types supported: swf and swc</description>
+        </parameter>
+        <parameter>
+          <name>parameters</name>
+          <type>java.util.List</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Flex build parameters in the format of below (within configuration):
+
+&lt;pre&gt;
+&amp;lt;configuration&amp;gt;
+...
+&amp;lt;parameters&amp;gt;
+&amp;lt;locale&amp;gt;en_US&amp;lt;locale&amp;gt;
+&amp;lt;include-classes&amp;gt;
+&amp;lt;class&amp;gt;com.site.A&amp;lt;/class&amp;gt;
+&amp;lt;class&amp;gt;com.site.B&amp;lt;/class&amp;gt;
+...
+&amp;lt;/include-classes&amp;gt;
+&amp;lt;include-file&amp;gt;file.png com/site/image/file.png&amp;lt;/include-file&amp;gt;
+&amp;lt;include-file&amp;gt;folder.png com/site/image/folder.png&amp;lt;/include-file&amp;gt;
+&amp;lt;publisher&amp;gt;site.com&amp;lt;/publisher&amp;gt;
+&amp;lt;--
+&amp;lt;dump-config&amp;gt;flex-config&amp;lt;/dump-config&amp;gt;
+--&amp;gt;
+&amp;lt;benchmark/&amp;gt;
+&amp;lt;/parameters&amp;gt;
+...
+&amp;lt;/configuration&amp;gt;
+&lt;/pre&gt;
+
+as shown above, following parameters will be added into the command line:
+
+&lt;pre&gt;
+-locate en_US
+-include-classes com.site.A,com.site.B,...
+-include-file file.png com/site/image/file.png
+-include-file folder.png com/site/image/folder.png
+...
+-publisher site.com
+-benchmark
+&lt;/pre&gt;</description>
+        </parameter>
+        <parameter>
+          <name>sourceFile</name>
+          <type>java.io.File</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Source file (for example, .mxml/.css). It's required for swf compilation.</description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <enabled implementation="boolean" default-value="true">${flex.enabled}</enabled>
+        <jvmargs implementation="java.lang.String">${jvmargs}</jvmargs>
+        <sourceFile implementation="java.io.File" default-value="${project.build.sourceDirectory}/main.mxml">${flex.sourceFile}</sourceFile>
+        <packaging implementation="java.lang.String" default-value="${project.packaging}"/>
+        <args implementation="java.lang.String">${flex.args}</args>
+        <flexConfig implementation="java.io.File">${flex.config}</flexConfig>
+        <classifier implementation="java.lang.String" default-value="flex2">${flex.classifier}</classifier>
+        <flexHome implementation="java.io.File">${flex.home}</flexHome>
+      </configuration>
+      <requirements>
+        <requirement>
+          <role>org.apache.maven.project.MavenProjectHelper</role>
+          <field-name>projectHelper</field-name>
+        </requirement>
+      </requirements>
+    </mojo>
+    <mojo>
+      <goal>initialize</goal>
+      <description>Initialize/setup Flex environment.
+
+&lt;ul&gt;
+&lt;li&gt;Set default source directory to ${basedir}/src/main/flex&lt;/li&gt;
+&lt;li&gt;Set default test source directory to ${basedir}/src/test/flex&lt;/li&gt;
+&lt;li&gt;Set default output directory to ${project.build.directory}/flex&lt;/li&gt;
+&lt;li&gt;Set default test output directory to
+${project.build.directory}/test-flex&lt;/li&gt;
+&lt;/ul&gt;</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <implementation>com.site.maven.plugin.flex.FlexInitializeMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <parameters>
+        <parameter>
+          <name>outputDirectory</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Output directory of Flex.</description>
+        </parameter>
+        <parameter>
+          <name>project</name>
+          <type>org.apache.maven.project.MavenProject</type>
+          <required>true</required>
+          <editable>false</editable>
+          <description>Current project</description>
+        </parameter>
+        <parameter>
+          <name>sourceDirectory</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Source directory of Flex.</description>
+        </parameter>
+        <parameter>
+          <name>testOutputDirectory</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Test output directory of Flex.</description>
+        </parameter>
+        <parameter>
+          <name>testSourceDirectory</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Test source directory of Flex.</description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <project implementation="org.apache.maven.project.MavenProject">${project}</project>
+        <testSourceDirectory implementation="java.io.File" default-value="${basedir}/src/test/flex"/>
+        <sourceDirectory implementation="java.io.File" default-value="${basedir}/src/main/flex"/>
+        <outputDirectory implementation="java.io.File" default-value="${project.build.directory}/flex"/>
+        <testOutputDirectory implementation="java.io.File" default-value="${project.build.directory}/test-flex"/>
+      </configuration>
+    </mojo>
+    <mojo>
+      <goal>runtime</goal>
+      <description>Build Flex runtime environment for a web application.
+
+Following steps will be taken:
+&lt;ul&gt;
+&lt;li&gt;Unzip Flex runtime&lt;/li&gt;
+&lt;li&gt;For each swf dependency in the dependencies, generate html file from the
+template file and copy it to war source directory as well as swf file&lt;/li&gt;
+&lt;li&gt;Copy resource files if specified&lt;/li&gt;
+&lt;/ul&gt;</description>
+      <requiresDirectInvocation>false</requiresDirectInvocation>
+      <requiresProject>true</requiresProject>
+      <requiresReports>false</requiresReports>
+      <aggregator>false</aggregator>
+      <requiresOnline>false</requiresOnline>
+      <inheritedByDefault>true</inheritedByDefault>
+      <implementation>com.site.maven.plugin.flex.FlexRuntimeMojo</implementation>
+      <language>java</language>
+      <instantiationStrategy>per-lookup</instantiationStrategy>
+      <executionStrategy>once-per-session</executionStrategy>
+      <parameters>
+        <parameter>
+          <name>dependencies</name>
+          <type>java.util.List</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>swf dependencies, which will be used to generate html template files and
+.swf files will be copied to the war source directory</description>
+        </parameter>
+        <parameter>
+          <name>flexRuntime</name>
+          <type>java.io.File</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Flex runtime zip file</description>
+        </parameter>
+        <parameter>
+          <name>overwrite</name>
+          <type>boolean</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>If overwrite Flex runtime files if exists</description>
+        </parameter>
+        <parameter>
+          <name>resources</name>
+          <type>java.util.List</type>
+          <required>false</required>
+          <editable>true</editable>
+          <description>Resource files need to be copied and packaged into war file. Optional.</description>
+        </parameter>
+        <parameter>
+          <name>template</name>
+          <type>java.lang.String</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>Template file name within Flex runtime.zip. It's used as a template to
+create Flex landing page for each of swf files.</description>
+        </parameter>
+        <parameter>
+          <name>warSourceDirectory</name>
+          <type>java.lang.String</type>
+          <required>true</required>
+          <editable>true</editable>
+          <description>war source directory of current project</description>
+        </parameter>
+      </parameters>
+      <configuration>
+        <template implementation="java.lang.String" default-value="flex/main.html"/>
+        <overwrite implementation="boolean" default-value="false"/>
+        <warSourceDirectory implementation="java.lang.String" default-value="src/main/webapp"/>
+      </configuration>
+    </mojo>
+  </mojos>
+  <dependencies/>
+</plugin>

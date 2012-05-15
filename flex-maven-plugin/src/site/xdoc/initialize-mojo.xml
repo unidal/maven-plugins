@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF8"?>
+<document>
+  <properties>
+    <title>maven-flex-plugin - flex:initialize</title>
+  </properties>
+  <body>
+    <section name="flex:initialize">
+      <p><strong>Full name</strong>:</p>
+      <p>com.site.maven.plugins:maven-flex-plugin:1.0.0:initialize</p>
+      <p><strong>Description</strong>:</p>
+      <p>Initialize/setup Flex environment. 
+
+<ul>
+<li>Set default source directory to ${basedir}/src/main/flex</li>
+
+<li>Set default test source directory to
+${basedir}/src/test/flex</li>
+
+<li>Set default output directory to
+${project.build.directory}/flex</li>
+
+<li>Set default test output directory to
+${project.build.directory}/test-flex</li>
+</ul></p>
+      <p><strong>Attributes</strong>:</p>
+      <ul>
+        <li>Requires a Maven 2.0 project to be executed.</li>
+      </ul>
+      <subsection name="Required Parameters">
+        <table border="0" align="left">
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Since</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><strong><a href="#outputDirectory">outputDirectory</a></strong></td>
+            <td><code>File</code></td>
+            <td><code>-</code></td>
+            <td>Output directory of Flex. Default value is: <code>${project.build.directory}/flex</code>.</td>
+          </tr>
+          <tr>
+            <td><strong><a href="#sourceDirectory">sourceDirectory</a></strong></td>
+            <td><code>File</code></td>
+            <td><code>-</code></td>
+            <td>Source directory of Flex. Default value is: <code>${basedir}/src/main/flex</code>.</td>
+          </tr>
+          <tr>
+            <td><strong><a href="#testOutputDirectory">testOutputDirectory</a></strong></td>
+            <td><code>File</code></td>
+            <td><code>-</code></td>
+            <td>Test output directory of Flex. Default value is: <code>${project.build.directory}/test-flex</code>.</td>
+          </tr>
+          <tr>
+            <td><strong><a href="#testSourceDirectory">testSourceDirectory</a></strong></td>
+            <td><code>File</code></td>
+            <td><code>-</code></td>
+            <td>Test source directory of Flex. Default value is: <code>${basedir}/src/test/flex</code>.</td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Parameter Details">
+        <p><strong><a name="outputDirectory">outputDirectory</a>:</strong></p>
+        <p>Output directory of Flex.</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.io.File</code></li>
+          <li><strong>Required</strong>: <code>Yes</code></li>
+          <li><strong>Default</strong>: <code>${project.build.directory}/flex</code></li>
+        </ul><hr/><p><strong><a name="sourceDirectory">sourceDirectory</a>:</strong></p>
+        <p>Source directory of Flex.</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.io.File</code></li>
+          <li><strong>Required</strong>: <code>Yes</code></li>
+          <li><strong>Default</strong>: <code>${basedir}/src/main/flex</code></li>
+        </ul><hr/><p><strong><a name="testOutputDirectory">testOutputDirectory</a>:</strong></p>
+        <p>Test output directory of Flex.</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.io.File</code></li>
+          <li><strong>Required</strong>: <code>Yes</code></li>
+          <li><strong>Default</strong>: <code>${project.build.directory}/test-flex</code></li>
+        </ul><hr/><p><strong><a name="testSourceDirectory">testSourceDirectory</a>:</strong></p>
+        <p>Test source directory of Flex.</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.io.File</code></li>
+          <li><strong>Required</strong>: <code>Yes</code></li>
+          <li><strong>Default</strong>: <code>${basedir}/src/test/flex</code></li>
+        </ul>
+      </subsection>
+    </section>
+  </body>
+</document>

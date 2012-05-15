@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.site.com/dal"
+	xmlns:tns="http://www.site.com/dal" elementFormDefault="qualified">
+
+	<complexType name="EntitiesType">
+		<sequence>
+			<element name="entity" type="tns:EntityType" minOccurs="0" maxOccurs="unbounded"></element>
+		</sequence>
+		<attribute name="do-package" type="string" use="optional"></attribute>
+		<attribute name="bo-package" type="string" use="optional"></attribute>
+		<attribute name="gen" type="boolean" use="optional" default="false"></attribute>
+	</complexType>
+
+	<complexType name="EntityType">
+		<choice maxOccurs="unbounded" minOccurs="0">
+			<element name="relation" type="tns:RelationType" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="member" type="tns:MemberType" maxOccurs="unbounded" minOccurs="1"></element>
+			<element name="var" type="tns:VarType" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="primary-key" type="tns:PrimaryKeyType" minOccurs="0" maxOccurs="1"></element>
+			<element name="index" type="tns:IndexType" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="readsets" type="tns:ReadsetsType" minOccurs="0"></element>
+			<element name="updatesets" type="tns:UpdatesetsType" minOccurs="0"></element>
+			<element name="query-defs" type="tns:QueryDefsType" minOccurs="0"></element>
+		</choice>
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="table" type="string" use="required"></attribute>
+		<attribute name="alias" type="string" use="required"></attribute>
+		<attribute name="do-package" type="string" use="optional"></attribute>
+		<attribute name="bo-package" type="string" use="optional"></attribute>
+		<attribute name="gen" type="boolean" use="optional"></attribute>
+	</complexType>
+
+	<complexType name="RelationType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="entity-name" type="string" use="required"></attribute>
+		<attribute name="entity-alias" type="string" use="required"></attribute>
+		<attribute name="join" type="string" use="required"></attribute>
+	</complexType>
+
+	<complexType name="MemberType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="alias" type="string" use="optional"></attribute>
+		<attribute name="field" type="string" use="required"></attribute>
+		<attribute name="value-type" type="string" use="required"></attribute>
+		<attribute name="nullable" type="boolean" use="optional" default="true"></attribute>
+		<attribute name="key" type="boolean" use="optional" default="false"></attribute>
+		<attribute name="all" type="boolean" use="optional" default="true"></attribute>
+		<attribute name="auto-increment" type="boolean" use="optional" default="false"></attribute>
+		<attribute name="select-expr" type="string" use="optional"></attribute>
+		<attribute name="insert-expr" type="string" use="optional"></attribute>
+		<attribute name="update-expr" type="string" use="optional"></attribute>
+	</complexType>
+
+	<complexType name="VarType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="value-type" type="string" use="required"></attribute>
+		<attribute name="key-member" type="string" use="optional"></attribute>
+	</complexType>
+
+	<complexType name="PrimaryKeyType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="members" type="string" use="required"></attribute>
+	</complexType>
+
+	<complexType name="IndexType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="members" type="string" use="required"></attribute>
+	</complexType>
+
+	<complexType name="ReadsetsType">
+		<sequence>
+			<element name="readset" type="tns:ReadsetType" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="ReadsetType">
+		<choice>
+			<element name="member" type="tns:ReadsetMemberType" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="readset-ref" type="tns:ReadsetRefType" maxOccurs="unbounded" minOccurs="0"></element>
+		</choice>
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="all" type="boolean" use="optional" default="false"></attribute>
+	</complexType>
+
+	<complexType name="ReadsetMemberType">
+		<attribute name="name" type="string" use="required"></attribute>
+	</complexType>
+
+	<complexType name="ReadsetRefType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="relation-name" type="string" use="optional"></attribute>
+	</complexType>
+
+	<complexType name="UpdatesetsType">
+		<sequence>
+			<element name="updateset" type="tns:UpdatesetType" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="UpdatesetType">
+		<sequence>
+			<element name="member" type="tns:MemberType" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="all" type="boolean" use="optional" default="false"></attribute>
+	</complexType>
+
+	<complexType name="QueryDefsType">
+		<sequence>
+			<element name="query" type="tns:QueryType" maxOccurs="unbounded" minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="QueryType">
+		<choice maxOccurs="unbounded" minOccurs="0">
+			<element name="param" type="tns:ParamType" minOccurs="0" maxOccurs="unbounded"></element>
+			<element name="statement" type="tns:StatementType"></element>
+		</choice>
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="type" type="string" use="required"></attribute>
+		<attribute name="multiple" type="boolean" use="optional" default="false"></attribute>
+		<attribute name="sp" type="boolean" use="optional" default="false"></attribute>
+		<attribute name="batch" type="boolean" use="optional" default="false"></attribute>
+	</complexType>
+
+	<complexType name="ParamType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="type" type="tns:ParamTypeType" use="optional" default="in"></attribute>
+	</complexType>
+
+	<simpleType name="ParamTypeType">
+		<restriction base="string">
+			<enumeration value="in"></enumeration>
+			<enumeration value="out"></enumeration>
+			<enumeration value="inout"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<complexType name="StatementType">
+		<simpleContent>
+			<extension base="string"></extension>
+		</simpleContent>
+	</complexType>
+
+	<element name="entities" type="tns:EntitiesType"></element>
+
+</schema>

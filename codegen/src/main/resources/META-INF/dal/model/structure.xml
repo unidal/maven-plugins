@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+   <node name="model" no-namespace="true">
+      <node name="entity" key="name">
+         <node name="attribute" key="alias,name"/>
+         <node name="element" key="alias,name"/>
+         <node name="entity-ref" key="alias,name"/>
+      </node>
+   </node>
+</root>

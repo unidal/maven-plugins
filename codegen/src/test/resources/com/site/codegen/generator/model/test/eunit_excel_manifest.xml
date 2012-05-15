@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest>
+	<file path="eunit_excel_codegen.xml"/>
+	<file path="eunit_excel.xml"/>
+</manifest>

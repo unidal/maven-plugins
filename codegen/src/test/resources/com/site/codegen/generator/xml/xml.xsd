@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.site.com/dal"
+	xmlns:tns="http://www.site.com/dal" elementFormDefault="qualified">
+
+	<complexType name="RootType">
+		<sequence>
+			<element name="element" type="tns:ElementType" minOccurs="1" maxOccurs="unbounded"></element>
+		</sequence>
+		<attribute name="do-package" type="string" use="optional"></attribute>
+	</complexType>
+
+	<complexType name="ElementType">
+		<choice maxOccurs="unbounded" minOccurs="0">
+			<element name="attribute" type="tns:AttributeFieldType" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="element" type="tns:ElementFieldType" maxOccurs="unbounded" minOccurs="0"></element>
+			<element name="element-ref" type="tns:ElementRefFieldType" maxOccurs="unbounded" minOccurs="0"></element>
+		</choice>
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="alias" type="string" use="optional"></attribute>
+		<attribute name="do-package" type="string" use="optional"></attribute>
+		<attribute name="root" type="boolean" use="optional"></attribute>
+		<attribute name="root-name" type="string" use="required"></attribute>
+	</complexType>
+
+	<complexType name="AttributeFieldType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="value-type" type="string" use="required"></attribute>
+		<attribute name="alias" type="string" use="optional"></attribute>
+		<attribute name="format" type="string" use="optional"></attribute>
+	</complexType>
+
+	<complexType name="ElementFieldType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="value-type" type="string" use="required"></attribute>
+		<attribute name="alias" type="string" use="optional"></attribute>
+		<attribute name="format" type="string" use="optional"></attribute>
+	</complexType>
+
+	<complexType name="ElementRefFieldType">
+		<attribute name="name" type="string" use="required"></attribute>
+		<attribute name="list" type="boolean" use="optional"></attribute>
+		<attribute name="list-name" type="string" use="optional"></attribute>
+		<attribute name="list-alais" type="string" use="optional"></attribute>
+	</complexType>
+
+	<element name="root" type="tns:RootType"></element>
+</schema>

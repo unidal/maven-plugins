@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF8"?>
+<document>
+  <properties>
+    <title>maven-flex-plugin - flex:compile</title>
+  </properties>
+  <body>
+    <section name="flex:compile">
+      <p><strong>Full name</strong>:</p>
+      <p>com.site.maven.plugins:maven-flex-plugin:1.0.0:compile</p>
+      <p><strong>Description</strong>:</p>
+      <p>Flex compile mojo to generate .swc or/and .swf file on Flex SDK 2
+&amp; 3. A forked java process will be created to do Flex
+compilation. JVM arguments and additional arguments could be
+specified if needed. Note: The plugin will check the output file
+and sources files to determine if source is up to date or it should
+be re-generated.</p>
+      <p><strong>Attributes</strong>:</p>
+      <ul>
+        <li>Requires a Maven 2.0 project to be executed.</li>
+      </ul>
+      <subsection name="Required Parameters">
+        <table border="0" align="left">
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Since</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><strong><a href="#flexHome">flexHome</a></strong></td>
+            <td><code>File</code></td>
+            <td><code>-</code></td>
+            <td>Home location of Flex SDK 2 or 3, please checking the existance of
+lib/mxmlc.jar and lib/compc.jar and lib/xercesImpl.jar </td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Optional Parameters">
+        <table border="0" align="left">
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Since</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><strong><a href="#args">args</a></strong></td>
+            <td><code>String</code></td>
+            <td><code>-</code></td>
+            <td>additional arguments to be passed at the end of command line to
+build Flex </td>
+          </tr>
+          <tr>
+            <td><strong><a href="#classifier">classifier</a></strong></td>
+            <td><code>String</code></td>
+            <td><code>-</code></td>
+            <td>Artifact classifier Default value is: <code>flex2</code>.</td>
+          </tr>
+          <tr>
+            <td><strong><a href="#dependencies">dependencies</a></strong></td>
+            <td><code>List</code></td>
+            <td><code>-</code></td>
+            <td>swf dependencies, which will be used to generate html template
+files and .swf files will be copied to the war source directory </td>
+          </tr>
+          <tr>
+            <td><strong><a href="#enabled">enabled</a></strong></td>
+            <td><code>boolean</code></td>
+            <td><code>-</code></td>
+            <td>Skip the Flex build or not. If not enabled, then the build will be
+skipped Default value is: <code>true</code>.</td>
+          </tr>
+          <tr>
+            <td><strong><a href="#flexConfig">flexConfig</a></strong></td>
+            <td><code>File</code></td>
+            <td><code>-</code></td>
+            <td>Flex configuration file for Flex compiler. </td>
+          </tr>
+          <tr>
+            <td><strong><a href="#jvmargs">jvmargs</a></strong></td>
+            <td><code>String</code></td>
+            <td><code>-</code></td>
+            <td>JVM arguments for forked java process </td>
+          </tr>
+          <tr>
+            <td><strong><a href="#parameters">parameters</a></strong></td>
+            <td><code>List</code></td>
+            <td><code>-</code></td>
+            <td>Flex build parameters in the format of below (within
+configuration): 
+
+<pre>
+&lt;configuration&gt;
+...
+&lt;parameters&gt;
+&lt;locale&gt;en_US&lt;locale&gt;
+&lt;include-classes&gt;
+&lt;class&gt;com.site.A&lt;/class&gt;
+&lt;class&gt;com.site.B&lt;/class&gt;
+...
+&lt;/include-classes&gt;
+&lt;include-file&gt;file.png com/site/image/file.png&lt;/include-file&gt;
+&lt;include-file&gt;folder.png com/site/image/folder.png&lt;/include-file&gt;
+&lt;publisher&gt;site.com&lt;/publisher&gt;
+&lt;--
+&lt;dump-config&gt;flex-config&lt;/dump-config&gt;
+--&gt;
+&lt;benchmark/&gt;
+&lt;/parameters&gt;
+...
+&lt;/configuration&gt;
+</pre>
+
+as shown above, following parameters will be added into the command
+line: 
+
+<pre>
+-locate en_US
+-include-classes com.site.A,com.site.B,...
+-include-file file.png com/site/image/file.png
+-include-file folder.png com/site/image/folder.png
+...
+-publisher site.com
+-benchmark
+</pre> </td>
+          </tr>
+          <tr>
+            <td><strong><a href="#sourceFile">sourceFile</a></strong></td>
+            <td><code>File</code></td>
+            <td><code>-</code></td>
+            <td>Source file (for example, .mxml/.css). It's required for swf
+compilation. Default value is: <code>${project.build.sourceDirectory}/main.mxml</code>.</td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Parameter Details">
+        <p><strong><a name="args">args</a>:</strong></p>
+        <p>additional arguments to be passed at the end of command line to
+build Flex</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.lang.String</code></li>
+          <li><strong>Required</strong>: <code>No</code></li>
+          <li><strong>Expression</strong>: <code>${flex.args}</code></li>
+        </ul><hr/><p><strong><a name="classifier">classifier</a>:</strong></p>
+        <p>Artifact classifier</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.lang.String</code></li>
+          <li><strong>Required</strong>: <code>No</code></li>
+          <li><strong>Expression</strong>: <code>${flex.classifier}</code></li>
+          <li><strong>Default</strong>: <code>flex2</code></li>
+        </ul><hr/><p><strong><a name="dependencies">dependencies</a>:</strong></p>
+        <p>swf dependencies, which will be used to generate html template
+files and .swf files will be copied to the war source directory</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.util.List</code></li>
+          <li><strong>Required</strong>: <code>No</code></li>
+        </ul><hr/><p><strong><a name="enabled">enabled</a>:</strong></p>
+        <p>Skip the Flex build or not. If not enabled, then the build will be
+skipped</p>
+        <ul>
+          <li><strong>Type</strong>: <code>boolean</code></li>
+          <li><strong>Required</strong>: <code>No</code></li>
+          <li><strong>Expression</strong>: <code>${flex.enabled}</code></li>
+          <li><strong>Default</strong>: <code>true</code></li>
+        </ul><hr/><p><strong><a name="flexConfig">flexConfig</a>:</strong></p>
+        <p>Flex configuration file for Flex compiler.</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.io.File</code></li>
+          <li><strong>Required</strong>: <code>No</code></li>
+          <li><strong>Expression</strong>: <code>${flex.config}</code></li>
+        </ul><hr/><p><strong><a name="flexHome">flexHome</a>:</strong></p>
+        <p>Home location of Flex SDK 2 or 3, please checking the existance of
+lib/mxmlc.jar and lib/compc.jar and lib/xercesImpl.jar</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.io.File</code></li>
+          <li><strong>Required</strong>: <code>Yes</code></li>
+          <li><strong>Expression</strong>: <code>${flex.home}</code></li>
+        </ul><hr/><p><strong><a name="jvmargs">jvmargs</a>:</strong></p>
+        <p>JVM arguments for forked java process</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.lang.String</code></li>
+          <li><strong>Required</strong>: <code>No</code></li>
+          <li><strong>Expression</strong>: <code>${jvmargs}</code></li>
+        </ul><hr/><p><strong><a name="parameters">parameters</a>:</strong></p>
+        <p>Flex build parameters in the format of below (within
+configuration): 
+
+<pre>
+&lt;configuration&gt;
+...
+&lt;parameters&gt;
+&lt;locale&gt;en_US&lt;locale&gt;
+&lt;include-classes&gt;
+&lt;class&gt;com.site.A&lt;/class&gt;
+&lt;class&gt;com.site.B&lt;/class&gt;
+...
+&lt;/include-classes&gt;
+&lt;include-file&gt;file.png com/site/image/file.png&lt;/include-file&gt;
+&lt;include-file&gt;folder.png com/site/image/folder.png&lt;/include-file&gt;
+&lt;publisher&gt;site.com&lt;/publisher&gt;
+&lt;--
+&lt;dump-config&gt;flex-config&lt;/dump-config&gt;
+--&gt;
+&lt;benchmark/&gt;
+&lt;/parameters&gt;
+...
+&lt;/configuration&gt;
+</pre>
+
+as shown above, following parameters will be added into the command
+line: 
+
+<pre>
+-locate en_US
+-include-classes com.site.A,com.site.B,...
+-include-file file.png com/site/image/file.png
+-include-file folder.png com/site/image/folder.png
+...
+-publisher site.com
+-benchmark
+</pre></p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.util.List</code></li>
+          <li><strong>Required</strong>: <code>No</code></li>
+        </ul><hr/><p><strong><a name="sourceFile">sourceFile</a>:</strong></p>
+        <p>Source file (for example, .mxml/.css). It's required for swf
+compilation.</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.io.File</code></li>
+          <li><strong>Required</strong>: <code>No</code></li>
+          <li><strong>Expression</strong>: <code>${flex.sourceFile}</code></li>
+          <li><strong>Default</strong>: <code>${project.build.sourceDirectory}/main.mxml</code></li>
+        </ul>
+      </subsection>
+    </section>
+  </body>
+</document>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root do-package="com.site.app.game.xml">
+	<element name="game" root="true" root-name="game" do-package="com.site.app.game.xml" do-class="Game">
+		<element name="id" value-type="int" value-type-key="" value-type-element="Integer" value-type-generic="" param-name-element="id" param-name="id" field-name="m_id" add-method="addId" get-method="getId" set-method="setId"/>
+		<element name="enabled" value-type="boolean" value-type-key="" value-type-element="Boolean" value-type-generic="" param-name-element="enabled" param-name="enabled" field-name="m_enabled" add-method="addEnabled" get-method="isEnabled" set-method="setEnabled"/>
+		<element name="time" value-type="long" value-type-key="" value-type-element="Long" value-type-generic="" param-name-element="time" param-name="time" field-name="m_time" add-method="addTime" get-method="getTime" set-method="setTime"/>
+		<element name="date" value-type="java.util.Date" value-type-key="" value-type-element="java.util.Date" value-type-generic="" param-name-element="date" param-name="date" field-name="m_date" add-method="addDate" get-method="getDate" set-method="setDate"/>
+		<element name="script" value-type="String" value-type-key="" value-type-element="String" value-type-generic="" param-name-element="script" param-name="script" field-name="m_script" add-method="addScript" get-method="getScript" set-method="setScript"/>
+		<element-ref name="village" value-type-key="Integer" value-type-element="Village" value-type-generic="" value-type="Village" param-name-element="village" param-name="village" field-name="m_village" add-method="addVillage" get-method="getVillage" set-method="setVillage"/>
+		<element-ref name="village" list="true" list-name="village-list" list-type="map" value-type-key="Integer" value-type-element="Village" value-type-generic="&lt;Integer, Village&gt;" value-type="Map&lt;Integer, Village&gt;" param-name-element="village" param-name="villageList" field-name="m_villageList" add-method="addVillage" get-method="getVillageList" set-method="setVillageList"/>
+		<element-ref name="reso" list="true" list-name="resos" list-alias="resources" value-type-key="" value-type-element="Resource" value-type-generic="" value-type="Resource[]" param-name-element="reso" param-name="resources" field-name="m_resources" add-method="addReso" get-method="getResources" set-method="setResources"/>
+		<element-ref name="soldiers" value-type-key="" value-type-element="Soldiers" value-type-generic="" value-type="Soldiers" param-name-element="soldiers" param-name="soldiers" field-name="m_soldiers" add-method="addSoldiers" get-method="getSoldiers" set-method="setSoldiers"/>
+	</element>
+	<element name="village" do-package="com.site.app.game.xml" do-class="Village">
+		<attribute name="id" value-type="int" key="true" param-name="id" field-name="m_id" get-method="getId" set-method="setId"/>
+		<attribute name="name" value-type="String" param-name="name" field-name="m_name" get-method="getName" set-method="setName"/>
+		<attribute name="x" value-type="int" param-name="x" field-name="m_x" get-method="getX" set-method="setX"/>
+		<attribute name="y" value-type="int" param-name="y" field-name="m_y" get-method="getY" set-method="setY"/>
+		<attribute name="vip" value-type="boolean" param-name="vip" field-name="m_vip" get-method="isVip" set-method="setVip"/>
+		<attribute name="ismain" value-type="boolean" param-name="ismain" field-name="m_ismain" get-method="isIsmain" set-method="setIsmain"/>
+		<attribute name="statename" value-type="String" alias="state-name" param-name="stateName" field-name="m_stateName" get-method="getStateName" set-method="setStateName"/>
+	</element>
+	<element name="reso" alias="resource" do-package="com.site.app.game.xml" do-class="Resource">
+		<attribute name="id" value-type="String" param-name="id" field-name="m_id" get-method="getId" set-method="setId"/>
+		<attribute name="now" value-type="double" param-name="now" field-name="m_now" get-method="getNow" set-method="setNow"/>
+		<attribute name="max" value-type="double" param-name="max" field-name="m_max" get-method="getMax" set-method="setMax"/>
+		<attribute name="speed" value-type="double" param-name="speed" field-name="m_speed" get-method="getSpeed" set-method="setSpeed"/>
+		<attribute name="increase" value-type="double" param-name="increase" field-name="m_increase" get-method="getIncrease" set-method="setIncrease"/>
+	</element>
+	<element name="soldiers" do-package="com.site.app.game.xml" do-class="Soldiers">
+		<attribute name="zjzbid" value-type="int" param-name="zjzbid" field-name="m_zjzbid" get-method="getZjzbid" set-method="setZjzbid"/>
+		<element-ref name="soldier" list="true" value-type-key="" value-type-element="Soldier" value-type-generic="" value-type="Soldier[]" param-name-element="soldier" param-name="soldierList" field-name="m_soldierList" add-method="addSoldier" get-method="getSoldierList" set-method="setSoldierList"/>
+	</element>
+	<element name="soldier" do-package="com.site.app.game.xml" do-class="Soldier">
+		<attribute name="vid" value-type="String" param-name="vid" field-name="m_vid" get-method="getVid" set-method="setVid"/>
+		<attribute name="tribe" value-type="String" param-name="tribe" field-name="m_tribe" get-method="getTribe" set-method="setTribe"/>
+		<attribute name="type" value-type="int" param-name="type" field-name="m_type" get-method="getType" set-method="setType"/>
+		<attribute name="count" value-type="int" param-name="count" field-name="m_count" get-method="getCount" set-method="setCount"/>
+	</element>
+</root>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF8"?>
+<document>
+  <properties>
+    <title>maven-flex-plugin - flex:runtime</title>
+  </properties>
+  <body>
+    <section name="flex:runtime">
+      <p><strong>Full name</strong>:</p>
+      <p>com.site.maven.plugins:maven-flex-plugin:1.0.0:runtime</p>
+      <p><strong>Description</strong>:</p>
+      <p>Build Flex runtime environment for a web application. Following
+steps will be taken: 
+
+<ul>
+<li>Unzip Flex runtime</li>
+
+<li>For each swf dependency in the dependencies, generate html file
+from the template file and copy it to war source directory as well
+as swf file</li>
+
+<li>Copy resource files if specified</li>
+</ul></p>
+      <p><strong>Attributes</strong>:</p>
+      <ul>
+        <li>Requires a Maven 2.0 project to be executed.</li>
+      </ul>
+      <subsection name="Required Parameters">
+        <table border="0" align="left">
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Since</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><strong><a href="#flexRuntime">flexRuntime</a></strong></td>
+            <td><code>File</code></td>
+            <td><code>-</code></td>
+            <td>Flex runtime zip file </td>
+          </tr>
+          <tr>
+            <td><strong><a href="#overwrite">overwrite</a></strong></td>
+            <td><code>boolean</code></td>
+            <td><code>-</code></td>
+            <td>If overwrite Flex runtime files if exists Default value is: <code>false</code>.</td>
+          </tr>
+          <tr>
+            <td><strong><a href="#template">template</a></strong></td>
+            <td><code>String</code></td>
+            <td><code>-</code></td>
+            <td>Template file name within Flex runtime.zip. It's used as a template
+to create Flex landing page for each of swf files. Default value is: <code>flex/main.html</code>.</td>
+          </tr>
+          <tr>
+            <td><strong><a href="#warSourceDirectory">warSourceDirectory</a></strong></td>
+            <td><code>String</code></td>
+            <td><code>-</code></td>
+            <td>war source directory of current project Default value is: <code>src/main/webapp</code>.</td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Optional Parameters">
+        <table border="0" align="left">
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Since</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td><strong><a href="#dependencies">dependencies</a></strong></td>
+            <td><code>List</code></td>
+            <td><code>-</code></td>
+            <td>swf dependencies, which will be used to generate html template
+files and .swf files will be copied to the war source directory </td>
+          </tr>
+          <tr>
+            <td><strong><a href="#resources">resources</a></strong></td>
+            <td><code>List</code></td>
+            <td><code>-</code></td>
+            <td>Resource files need to be copied and packaged into war file.
+Optional. </td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="Parameter Details">
+        <p><strong><a name="dependencies">dependencies</a>:</strong></p>
+        <p>swf dependencies, which will be used to generate html template
+files and .swf files will be copied to the war source directory</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.util.List</code></li>
+          <li><strong>Required</strong>: <code>No</code></li>
+        </ul><hr/><p><strong><a name="flexRuntime">flexRuntime</a>:</strong></p>
+        <p>Flex runtime zip file</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.io.File</code></li>
+          <li><strong>Required</strong>: <code>Yes</code></li>
+        </ul><hr/><p><strong><a name="overwrite">overwrite</a>:</strong></p>
+        <p>If overwrite Flex runtime files if exists</p>
+        <ul>
+          <li><strong>Type</strong>: <code>boolean</code></li>
+          <li><strong>Required</strong>: <code>Yes</code></li>
+          <li><strong>Default</strong>: <code>false</code></li>
+        </ul><hr/><p><strong><a name="resources">resources</a>:</strong></p>
+        <p>Resource files need to be copied and packaged into war file.
+Optional.</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.util.List</code></li>
+          <li><strong>Required</strong>: <code>No</code></li>
+        </ul><hr/><p><strong><a name="template">template</a>:</strong></p>
+        <p>Template file name within Flex runtime.zip. It's used as a template
+to create Flex landing page for each of swf files.</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.lang.String</code></li>
+          <li><strong>Required</strong>: <code>Yes</code></li>
+          <li><strong>Default</strong>: <code>flex/main.html</code></li>
+        </ul><hr/><p><strong><a name="warSourceDirectory">warSourceDirectory</a>:</strong></p>
+        <p>war source directory of current project</p>
+        <ul>
+          <li><strong>Type</strong>: <code>java.lang.String</code></li>
+          <li><strong>Required</strong>: <code>Yes</code></li>
+          <li><strong>Default</strong>: <code>src/main/webapp</code></li>
+        </ul>
+      </subsection>
+    </section>
+  </body>
+</document>

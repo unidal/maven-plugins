@@ -1,0 +1,42 @@
+ ------
+ Introduction
+ ------
+ Frankie Wu
+ ------
+ 21 Nov 2007
+ ------
+
+
+Maven Flex Plugin
+
+  The Flex Plugin is used to generate Adobe Flash files (*.swf and *.swc) from Flex source files (*.mxml, *.as and *.css etc).
+
+* Goals Overview
+
+  The Maven Flex Plugin defined two build lifecycles (swf and swc) with {{{flex-initialize-mojo.html}initialize}} goal bound to the <initialize> phase of <default> build lifecycle.
+  It has three goals:
+
+  * {{{initialize-mojo.html}initialize}}: setup default directories for Flex project if not specified explicitly.
+
+  * {{{compile-mojo.html}compile}}: generate Adobe Flash files (*.swf and *.swc) from Flex source files (*.mxml, *.as, *.css etc) via calling Flex compiler.
+
+  * {{{runtime-mojo.html}runtime}}: copy swf files to the web application root and generate HTMl files with same name from the template file flex/main.html in the flexruntime.zip.
+
+* Usage
+
+  {{{usage.html}Instructions on how to use the Flex Plugin}}.
+  
+* Examples
+
+  To provide you with better understanding on some usages of the Eclipse Plugin,
+  you can take a look into the following examples:
+
+  * {{{examples/prevent-module-references.html}Prevent Module References}}
+
+  * {{{examples/attach-library-sources.html}Attach Library Sources}}
+
+  * {{{examples/provide-project-natures-and-build-commands.html}Provide Project Natures and Build Commands}}
+
+  * {{{examples/additional-facets.html}Adding additional facets}}
+
+  * {{{examples/load-code-styles.html}Load Code Style file}}

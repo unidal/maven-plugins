@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entities>
+	<entity name="user" table="user" alias="u">
+		<member name="field-name" value-type="boolean"/>
+		<member name="field-name" value-type="byte"/>
+		<member name="field-name" value-type="char"/>
+		<member name="field-name" value-type="short"/>
+		<member name="field-name" value-type="int"/>
+		<member name="field-name" value-type="long"/>
+		<member name="field-name" value-type="float"/>
+		<member name="field-name" value-type="double"/>
+		<member name="field-name" value-type="String"/>
+		<member name="field-name" value-type="Date"/>
+		<member name="field-name" value-type="Time"/>
+		<member name="field-name" value-type="UserDefinedType"/>
+		<var name="field-name" value-type="boolean"/>
+		<var name="field-name" value-type="byte"/>
+		<var name="field-name" value-type="char"/>
+		<var name="field-name" value-type="short"/>
+		<var name="field-name" value-type="int"/>
+		<var name="field-name" value-type="long"/>
+		<var name="field-name" value-type="float"/>
+		<var name="field-name" value-type="double"/>
+		<var name="field-name" value-type="String"/>
+		<var name="field-name" value-type="Date"/>
+		<var name="field-name" value-type="Time"/>
+		<var name="field-name" value-type="UserDefinedType"/>
+	</entity>
+</entities>

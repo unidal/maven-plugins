@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest>
+	<file path="/com/site/app/game/xml/Game.java" template="/META-INF/dal/xml/do.xsl" mode="create_or_overwrite">
+		<property name="do-package">com.site.app.game.xml</property>
+		<property name="name">game</property>
+	</file>
+	<file path="/com/site/app/game/xml/Village.java" template="/META-INF/dal/xml/do.xsl" mode="create_or_overwrite">
+		<property name="do-package">com.site.app.game.xml</property>
+		<property name="name">village</property>
+	</file>
+	<file path="/com/site/app/game/xml/Resource.java" template="/META-INF/dal/xml/do.xsl" mode="create_or_overwrite">
+		<property name="do-package">com.site.app.game.xml</property>
+		<property name="name">reso</property>
+	</file>
+	<file path="/com/site/app/game/xml/Soldiers.java" template="/META-INF/dal/xml/do.xsl" mode="create_or_overwrite">
+		<property name="do-package">com.site.app.game.xml</property>
+		<property name="name">soldiers</property>
+	</file>
+	<file path="/com/site/app/game/xml/Soldier.java" template="/META-INF/dal/xml/do.xsl" mode="create_or_overwrite">
+		<property name="do-package">com.site.app.game.xml</property>
+		<property name="name">soldier</property>
+	</file>
+</manifest>

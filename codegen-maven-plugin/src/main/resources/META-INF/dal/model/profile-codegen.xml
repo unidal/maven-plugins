@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="profile" root="true">
+    <entity-ref name="env" type="list" names="envs" />
+  </entity>
+  <entity name="env">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="property" type="list" names="properties" />
+  </entity>
+  <entity name="property">
+    <attribute name="name" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+</model>
+

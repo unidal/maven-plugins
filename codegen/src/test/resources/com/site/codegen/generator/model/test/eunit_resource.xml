@@ -1,0 +1,8 @@
+<model model-package="com.ebay.eunit.resource.model" disable-xml-parser-tag-node='true'>
+  <entity name="test-case">
+    <attribute name="name" value-type="String" key="true"/>
+  </entity>
+  <entity name="exception">
+    <attribute name="type" value-type="String" key="true" />
+  </entity>
+</model>

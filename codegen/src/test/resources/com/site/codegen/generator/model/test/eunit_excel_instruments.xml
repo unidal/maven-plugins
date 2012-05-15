@@ -1,0 +1,96 @@
+<workbook output="output2.xls" template="output.xls">
+   <sheet id="0" name="First Sheet">
+      <format id="times16">
+         <font name="Times New Roman" size="16" bold="true" italic="true"/>
+      </format>
+      <format id="arail10">
+         <font name="Arial" size="12" bold="true" italic="true"/>
+      </format>
+      <format id="fivedps">
+         <pattern type="number">#.#####</pattern>
+      </format>
+      <format id="date-time1">
+         <pattern type="date">dd MMM yyyy hh:mm:ss</pattern>
+      </format>
+      <row start-col="2" start-row="2" create="true">
+         <label>A label record</label>
+         <number>3.1459</number>
+         <label format="arail10">Arial 10 point label</label>
+         <label format="arail10">Another Arial 10 point label</label>
+         <label format="times16">Times 16 bold italic label</label>
+         <empty cols="2"/>
+         <number format="#integer">3.1459</number>
+         <number format="#float">3.1459</number>
+         <number format="fivedps">3.1459</number>
+      </row>
+      <row create="true">
+         <date-time format="date-time1"/>
+         <empty cols="2"/>
+         <label>A label record</label>
+         <empty/>
+         <date-time format="date-time1" offset="-1"/>
+         <date-time format="date-time1" offset="-30"/>
+         <date-time format="date-time1">28 JUN 2011 11:19:00</date-time>
+      </row>
+      <row create="true">
+         <date-time format="date-time1"/>
+         <empty cols="2"/>
+         <label>A label record</label>
+         <empty/>
+         <date-time format="date-time1" offset="-1"/>
+         <date-time format="date-time1" offset="-30"/>
+         <date-time format="date-time1">28 JUN 2011 11:19:00</date-time>
+      </row>
+      <row create="true">
+         <date-time format="date-time1"/>
+         <empty cols="2"/>
+         <label>A label record</label>
+         <empty/>
+         <date-time format="date-time1" offset="-1"/>
+         <date-time format="date-time1" offset="-30"/>
+         <date-time format="date-time1">28 JUN 2011 11:19:00</date-time>
+      </row>
+      <empty cols="1" rows="1"/>
+      <empty cols="1" rows="1"/>
+      <col start-row="8" start-col="1" create="true">
+         <label>A label record</label>
+         <number>3.1459</number>
+         <label format="arail10">Arial 10 point label</label>
+         <label format="arail10">Another Arial 10 point label</label>
+         <label format="times16">Times 16 bold italic label</label>
+         <empty rows="2"/>
+         <number format="#integer">3.1459</number>
+         <number format="#float">3.1459</number>
+         <number format="fivedps">3.1459</number>
+      </col>
+      <col create="true">
+         <date-time format="date-time1"/>
+         <empty rows="2"/>
+         <label>A label record</label>
+         <empty/>
+         <date-time format="date-time1" offset="-1"/>
+         <date-time format="date-time1" offset="-30"/>
+         <date-time format="date-time1">28 JUN 2011 11:19:00</date-time>
+      </col>
+      <col create="true">
+         <date-time format="date-time1"/>
+         <empty rows="2"/>
+         <label>A label record</label>
+         <empty/>
+         <date-time format="date-time1" offset="-1"/>
+         <date-time format="date-time1" offset="-30"/>
+         <date-time format="date-time1">28 JUN 2011 11:19:00</date-time>
+      </col>
+      <col create="true">
+         <date-time format="date-time1"/>
+         <empty rows="2"/>
+         <label>A label record</label>
+         <empty/>
+         <date-time format="date-time1" offset="-1"/>
+         <date-time format="date-time1" offset="-30"/>
+         <date-time format="date-time1">28 JUN 2011 11:19:00</date-time>
+      </col>
+   </sheet>
+   <sheet>
+   </sheet>
+</workbook>

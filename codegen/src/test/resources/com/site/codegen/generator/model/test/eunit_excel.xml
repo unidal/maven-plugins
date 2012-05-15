@@ -1,0 +1,15 @@
+<model model-package="com.ebay.eunit.report.excel.model" enable-base-visitor='true' enable-xml-parser='true'>
+   <entity name="workbook" class-name="workbook-entity" />
+   <entity name="sheet" class-name="sheet-entity" all-children-in-sequence="true" />
+   <entity name="label" class-name="label-entity" />
+   <entity name="number" class-name="number-entity" />
+   <entity name="format" class-name="format-entity" >
+      <attribute name="id" key="true"/>
+   </entity>
+   <entity name="font" class-name="font-entity" />
+   <entity name="pattern" class-name="pattern-entity" />
+   <entity name="date-time" class-name="date-time-entity" />
+   <entity name="row" class-name="row-entity" all-children-in-sequence="true" />
+   <entity name="col" class-name="col-entity" all-children-in-sequence="true" />
+   <entity name="empty" class-name="empty-entity" />
+</model>

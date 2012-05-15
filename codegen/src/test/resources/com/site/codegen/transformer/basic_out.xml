@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entities>
+  <entity name="user" table="user" alias="u" class-name="User" entity-class="UserEntity" do-class="User" dao-class="UserDao" bo-class="UserBo" bof-class="UserBof" do-package="" bo-package="" param-name="user" variable-name="m_user" get-method="getUser" set-method="setUser">
+    <member name="user-id" field="user_id" value-type="int" length="11" nullable="false" key="true" field-name="m_userId" param-name="userId" upper-name="USER_ID" get-method="getUserId" set-method="setUserId" all="true"/>
+    <member name="full-name" field="full_name" value-type="String" length="30" nullable="false" field-name="m_fullName" param-name="fullName" upper-name="FULL_NAME" get-method="getFullName" set-method="setFullName" all="true"/>
+    <member name="creation-date" field="creation_date" value-type="java.util.Date" nullable="false" field-name="m_creationDate" param-name="creationDate" upper-name="CREATION_DATE" get-method="getCreationDate" set-method="setCreationDate" all="true"/>
+    <member name="last-modified-date" field="last_modified_date" value-type="java.util.Date" nullable="false" field-name="m_lastModifiedDate" param-name="lastModifiedDate" upper-name="LAST_MODIFIED_DATE" get-method="getLastModifiedDate" set-method="setLastModifiedDate" all="true"/>
+    <var name="key-user-id" value-type="int" key-member="user-id" field-name="m_keyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" get-method="getKeyUserId" set-method="setKeyUserId" get-key-method="getUserId"/>
+    <primary-key name="PRIMARY" members="user_id"/>
+    <readsets>
+      <readset name="FULL" all="true" upper-name="FULL"/>
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" upper-name="FULL"/>
+    </updatesets>
+    <query-defs>
+      <query name="findByPK" upper-name="FIND_BY_PK" type="SELECT">
+        <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='user-id'/> = ${key-user-id}]]></statement>
+      </query>
+      <query name="insert" upper-name="INSERT" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="updateByPK" upper-name="UPDATE_BY_PK" type="UPDATE">
+        <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='user-id'/> = ${key-user-id}]]></statement>
+      </query>
+      <query name="deleteByPK" upper-name="DELETE_BY_PK" type="DELETE">
+        <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='user-id'/> = ${key-user-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="user-address" table="user_address" alias="ua" class-name="UserAddress" entity-class="UserAddressEntity" do-class="UserAddress" dao-class="UserAddressDao" bo-class="UserAddressBo" bof-class="UserAddressBof" do-package="" bo-package="" param-name="userAddress" variable-name="m_userAddress" get-method="getUserAddress" set-method="setUserAddress">
+    <member name="user-id" field="user_id" value-type="int" length="11" nullable="false" key="true" field-name="m_userId" param-name="userId" upper-name="USER_ID" get-method="getUserId" set-method="setUserId" all="true"/>
+    <member name="type" field="type" value-type="String" length="1" nullable="false" key="true" field-name="m_type" param-name="type" upper-name="TYPE" get-method="getType" set-method="setType" all="true"/>
+    <member name="address" field="address" value-type="String" length="100" nullable="false" field-name="m_address" param-name="address" upper-name="ADDRESS" get-method="getAddress" set-method="setAddress" all="true"/>
+    <var name="key-user-id" value-type="int" key-member="user-id" field-name="m_keyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" get-method="getKeyUserId" set-method="setKeyUserId" get-key-method="getUserId"/>
+    <var name="key-type" value-type="String" key-member="type" field-name="m_keyType" param-name="keyType" upper-name="KEY_TYPE" get-method="getKeyType" set-method="setKeyType" get-key-method="getType"/>
+    <primary-key name="PRIMARY" members="user_id, type"/>
+    <readsets>
+      <readset name="FULL" all="true" upper-name="FULL"/>
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" upper-name="FULL"/>
+    </updatesets>
+    <query-defs>
+      <query name="findByPK" upper-name="FIND_BY_PK" type="SELECT">
+        <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
+        <param name="key-type" value-type="String" get-method="getKeyType" set-method="setKeyType" param-name="keyType" upper-name="KEY_TYPE" in="true" out="false"/>
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='user-id'/> = ${key-user-id} AND <FIELD name='type'/> = ${key-type}]]></statement>
+      </query>
+      <query name="insert" upper-name="INSERT" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="updateByPK" upper-name="UPDATE_BY_PK" type="UPDATE">
+        <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
+        <param name="key-type" value-type="String" get-method="getKeyType" set-method="setKeyType" param-name="keyType" upper-name="KEY_TYPE" in="true" out="false"/>
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='user-id'/> = ${key-user-id} AND <FIELD name='type'/> = ${key-type}]]></statement>
+      </query>
+      <query name="deleteByPK" upper-name="DELETE_BY_PK" type="DELETE">
+        <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
+        <param name="key-type" value-type="String" get-method="getKeyType" set-method="setKeyType" param-name="keyType" upper-name="KEY_TYPE" in="true" out="false"/>
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='user-id'/> = ${key-user-id} AND <FIELD name='type'/> = ${key-type}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>

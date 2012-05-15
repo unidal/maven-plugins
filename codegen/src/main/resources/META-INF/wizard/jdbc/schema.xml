@@ -1,0 +1,41 @@
+<root>
+  <entity name="wizard" root="true">
+    <attribute name="package" value-type="String" required="true">Project base package name</attribute>
+    <attribute name="src-dir" value-type="String">Source directory to place generated model classes.</attribute>
+  	<entity-ref name="webapp" />
+  	<entity-ref name="datasources" />
+  </entity>
+  <entity name="webapp" root="true">
+    <attribute name="package" value-type="String" required="true">Project base package name</attribute>
+    <attribute name="webres" value-type="boolean" default-value="false">If supporting webres framework or not</attribute>
+  	<entity-ref name="module" />
+  </entity>
+  <entity name="module" root="true">
+    <attribute name="name" value-type="String" required="true">Module name</attribute>
+    <attribute name="path" value-type="String" required="true">Module uri path</attribute>
+    <attribute name="package" value-type="String">Module package name</attribute>
+    <entity-ref name="page" />
+  </entity>
+  <entity name="page">
+    <attribute name="name" value-type="String" required='true'>Name for the generated page.</attribute>
+    <attribute name="package" value-type="String">Page package name</attribute>
+    <attribute name="title" value-type="String">Title for the generated page.</attribute>
+    <attribute name="default" value-type="boolean" default-value="false">If it's the default page when without page specified.</attribute>
+    <attribute name="standalone" value-type="boolean" default-value="false">If it's a stand-alone page.</attribute>
+    <attribute name="view" value-type="String" default-value="/jsp/{module}/{page}.jsp">View path for forwarding.</attribute>
+    <element name="description" value-type="String">Description for the generated page.</element>
+  </entity>
+  <entity name="datasources">
+     <entity-ref name="datasource"/>
+  </entity>
+  <entity name="datasource">
+     <entity-ref name="jdbc-connection"/>
+  </entity>
+  <entity name="jdbc-connection">
+    <attribute name="driver" value-type="String" required='true'>Jdbc driver</attribute>
+    <attribute name="url" value-type="String" required='true'>Jdbc url</attribute>
+    <attribute name="user" value-type="String" required='true'>Jdbc user</attribute>
+    <attribute name="password" value-type="String" required='true'>Jdbc password</attribute>
+    <attribute name="properties" value-type="String" required='true'>Jdbc connection properties</attribute>
+  </entity>
+</root>

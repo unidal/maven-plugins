@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entities>
+	<entity name="user" table="user" alias="u">
+		<relation name="home-address" entity-name="user-address" entity-alias="hua" join="u.user_id=hua.user_id and hua.type='H'" />
+		<relation name="office-address" entity-name="user-address" entity-alias="oua" join="u.user_id=oua.user_id and oua.type='O'" />
+		<relation name="billing-address" entity-name="user-address" entity-alias="bua" join="u.user_id=bua.user_id and bua.type='B'" />
+		<member name="user-id" field="user_id" value-type="int" length="11" nullable="false" key="true" />
+		<member name="full-name" alias="user-name" field="full_name" value-type="String" length="30" nullable="false" />
+		<member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+		<member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" />
+		<readsets>
+			<readset name="full-full-home">
+				<readset-ref name="FULL"/>
+				<readset-ref name="FULL" relation-name="home-address"/>
+			</readset>
+			<readset name="full-full-office">
+				<readset-ref name="FULL"/>
+				<readset-ref name="FULL" relation-name="office-address"/>
+			</readset>
+			<readset name="full-full-billing">
+				<readset-ref name="FULL"/>
+				<readset-ref name="FULL" relation-name="billing-address"/>
+			</readset>
+		</readsets>
+	</entity>
+	<entity name="user-address" table="user_address" alias="ua">
+		<member name="user-id" field="user_id" value-type="int" length="11" nullable="false" key="true" />
+		<member name="type" field="type" value-type="String" length="1" nullable="false" key="true" />
+		<member name="address" field="address" value-type="String" length="100" nullable="false" />
+	</entity>
+</entities>

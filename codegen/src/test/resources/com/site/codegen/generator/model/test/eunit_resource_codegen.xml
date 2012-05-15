@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="test-plan" root="true">
+    <entity-ref name="test-case" type="list" names="test-cases" />
+  </entity>
+  <entity name="test-case">
+    <attribute name="name" value-type="String" />
+    <element name="description" value-type="String" />
+    <element name="source" value-type="String" />
+    <element name="result" value-type="String" />
+    <entity-ref name="exception" type="list" names="exceptions" />
+  </entity>
+  <entity name="exception">
+    <attribute name="type" value-type="String" />
+    <element name="message" value-type="String" />
+    <element name="pattern" value-type="String" />
+  </entity>
+</model>
+

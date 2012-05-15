@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest>
+   <file path="/com/site/app/user/dal/User.java" template="/META-INF/dal/jdbc/do.xsl" mode="create_or_overwrite">
+      <property name="do-package">com.site.app.user.dal</property>
+      <property name="name">user</property>
+   </file>
+   <file path="/com/site/app/user/dal/UserEntity.java" template="/META-INF/dal/jdbc/entity.xsl" mode="create_or_overwrite">
+      <property name="do-package">com.site.app.user.dal</property>
+      <property name="name">user</property>
+   </file>
+   <file path="/com/site/app/user/dal/UserDao.java" template="/META-INF/dal/jdbc/dao.xsl" mode="create_or_overwrite">
+      <property name="do-package">com.site.app.user.dal</property>
+      <property name="name">user</property>
+   </file>
+   <file path="/com/site/app/user/dal/UserBo.java" template="/META-INF/dal/jdbc/bo.xsl" mode="create_or_overwrite">
+      <property name="bo-package">com.site.app.user.dal</property>
+      <property name="name">user</property>
+   </file>
+   <file path="/com/site/app/user/dal/UserBof.java" template="/META-INF/dal/jdbc/bof.xsl" mode="create_or_overwrite">
+      <property name="bo-package">com.site.app.user.dal</property>
+      <property name="name">user</property>
+   </file>
+   <file path="/com/site/app/useraddress/dal/UserAddress.java" template="/META-INF/dal/jdbc/do.xsl"
+      mode="create_or_overwrite">
+      <property name="do-package">com.site.app.useraddress.dal</property>
+      <property name="name">user-address</property>
+   </file>
+   <file path="/com/site/app/useraddress/dal/UserAddressEntity.java" template="/META-INF/dal/jdbc/entity.xsl"
+      mode="create_or_overwrite">
+      <property name="do-package">com.site.app.useraddress.dal</property>
+      <property name="name">user-address</property>
+   </file>
+   <file path="/com/site/app/useraddress/dal/UserAddressDao.java" template="/META-INF/dal/jdbc/dao.xsl"
+      mode="create_or_overwrite">
+      <property name="do-package">com.site.app.useraddress.dal</property>
+      <property name="name">user-address</property>
+   </file>
+   <file path="/com/site/app/useraddress/dal/UserAddressBo.java" template="/META-INF/dal/jdbc/bo.xsl"
+      mode="create_or_overwrite">
+      <property name="bo-package">com.site.app.useraddress.dal</property>
+      <property name="name">user-address</property>
+   </file>
+   <file path="/com/site/app/useraddress/dal/UserAddressBof.java" template="/META-INF/dal/jdbc/bof.xsl"
+      mode="create_or_overwrite">
+      <property name="bo-package">com.site.app.useraddress.dal</property>
+      <property name="name">user-address</property>
+   </file>
+</manifest>
+

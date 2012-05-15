@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entities>
+	<entity name="user" table="user" alias="u" class-name="User" entity-class="UserEntity" do-class="User" dao-class="UserDao" bo-class="UserBo" bof-class="UserBof" do-package="" bo-package="" param-name="user" variable-name="m_user" get-method="getUser" set-method="setUser">
+		<member name="field-name" value-type="boolean" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="isFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="byte" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="char" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="short" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="int" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="long" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="float" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="double" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="String" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="java.util.Date" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="long" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<member name="field-name" value-type="UserDefinedType" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
+		<var name="field-name" value-type="boolean" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="isFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="byte" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="char" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="short" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="int" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="long" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="float" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="double" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="String" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="java.util.Date" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="long" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+		<var name="field-name" value-type="UserDefinedType" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName"/>
+	</entity>
+</entities>

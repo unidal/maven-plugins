@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root do-package="com.site.app.game.xml">
+	<element name="game">
+		<element name="time" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+		<element-ref name="reso" list-name="resos" list-alias="resources"/>
+		<element-ref name="village" list-name="villagelist" list-alias="village-list"/>
+	</element>
+	<element name="village">
+		<attribute name="vip" value-type="boolean"/>
+		<attribute name="ismain" value-type="boolean"/>
+		<attribute name="statename" value-type="String" alias="state-name"/>
+	</element>
+	<element name="reso" alias="resource"/>
+	<element name="studyqueue" alias="study-queue"/>
+</root>

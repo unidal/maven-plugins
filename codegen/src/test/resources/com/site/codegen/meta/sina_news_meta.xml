@@ -1,0 +1,34 @@
+<root>
+  <element name="rss" root="true">
+    <attribute name="version" value-type="double" />
+    <element-ref name="channel" />
+  </element>
+  <element name="channel">
+    <element name="title" value-type="String" />
+    <element name="description" value-type="String" />
+    <element name="link" value-type="String" />
+    <element name="language" value-type="String" />
+    <element name="generator" value-type="String" />
+    <element name="ttl" value-type="int" />
+    <element name="copyright" value-type="String" />
+    <element name="pubDate" value-type="Date" format="EEE, d MMM yyyy HH:mm:ss z" />
+    <element name="category" value-type="String" />
+    <element-ref name="image" />
+    <element-ref name="item" list="true" />
+  </element>
+  <element name="image">
+    <element name="title" value-type="String" />
+    <element name="link" value-type="String" />
+    <element name="url" value-type="String" />
+  </element>
+  <element name="item">
+    <element name="title" value-type="String" />
+    <element name="link" value-type="String" />
+    <element name="author" value-type="String" />
+    <element name="guid" value-type="String" />
+    <element name="category" value-type="String" />
+    <element name="pubDate" value-type="Date" format="EEE, d MMM yyyy HH:mm:ss z" />
+    <element name="comments" value-type="String" />
+    <element name="description" value-type="String" />
+  </element>
+</root>

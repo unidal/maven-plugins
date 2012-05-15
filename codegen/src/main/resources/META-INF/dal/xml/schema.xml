@@ -1,0 +1,40 @@
+<root>
+  <element name="root" root="true">
+    <attribute name="alias" value-type="String" />
+    <attribute name="do-package" value-type="String" />
+    <element-ref name="element" />
+  </element>
+  <element name="element">
+    <attribute name="name" value-type="String" />
+    <attribute name="alias" value-type="String" />
+    <attribute name="root" value-type="boolean" />
+    <element-ref name="attribute" />
+    <element-ref name="leaf-element" />
+    <element-ref name="element-ref" />
+  </element>
+  <element name="leaf-element" alias="element">
+    <attribute name="name" value-type="String" />
+    <attribute name="value-type" value-type="String" />
+    <attribute name="alias" value-type="String" />
+    <attribute name="list" value-type="boolean" />
+    <attribute name="list-name" value-type="String" />
+    <attribute name="list-alias" value-type="String" />
+    <attribute name="list-type" value-type="String">array|list|map</attribute>
+    <attribute name="key" value-type="boolean" />
+  </element>
+  <element name="attribute">
+    <attribute name="name" value-type="String" />
+    <attribute name="alias" value-type="String" />
+    <attribute name="value-type" value-type="String" />
+    <attribute name="format" value-type="String" />
+    <attribute name="key" value-type="boolean" />
+  </element>
+  <element name="element-ref">
+    <attribute name="name" value-type="String" />
+    <attribute name="alias" value-type="String" />
+    <attribute name="list" value-type="boolean" />
+    <attribute name="list-name" value-type="String" />
+    <attribute name="list-alias" value-type="String" />
+    <attribute name="list-type" value-type="String">array|list|map</attribute>
+  </element>
+</root>

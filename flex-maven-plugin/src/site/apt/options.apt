@@ -1,0 +1,1249 @@
+ ------
+ Flex Compiler 2.0.1 Command-Line Options
+ ------
+ Frankie Wu
+ ------
+ 21 Nov 2007
+ ------
+ 
+Flex Compiler Syntax and Options
+ 
+    * {{mxmlc syntax}}
+ 
+    * {{mxmlc options}}
+ 
+    * {{compc syntax}}
+ 
+    * {{compc options}}
+ 
+    * {{asdoc syntax}}
+ 
+    * {{asdoc options}}
+ 
+* {mxmlc syntax}
+
+~~ mxmlc -help advanced syntax
++----+
+Adobe Flex Compiler (mxmlc)
+Version 2.0.1 build 179877
+Copyright (c) 2004-2006 Adobe Systems, Inc. All rights reserved.
+
+Usage: mxmlc [configuration options] [default arguments]
+
+Configuration options may be set on the command line as
+'-variable=value,value,value' or '-variable value value'. (The number of
+values required depends on the particular variable.) Boolean options may be
+enabled with '-variable=true' and disabled with '-variable=false', with
+'-variable' being shorthand for '-variable=true'. Variables may be cleared by
+setting '-variable=' with no value following the equals sign.
+
+The default argument list is equivalent to setting the 'file-specs' variable.
+The special string '--' may be used to terminate processing of named
+configuration options and to force any remaining values on the command line
+to be interpreted as default arguments.
+
+In general, a given variable may only be set once, but a few variables may be
+set multiple times if noted as 'repeatable' in their description; i.e.
+'-a=x,y,z' may also be set as '-a=x -a=y -a=z' if 'a' is repeatable. A more
+useful trait of repeatable variables is that by using the special syntax
+'-variable+=value,value', the new values set will be appended to the current
+value, rather than replacing the current value list.
+
+Configuration variables sometimes have shortened aliases to be easier to
+type. Hierarchical dotted variable names will automatically have an alias
+generated for their 'leaf' name, if it is unique.
+
+If a sequence formatted as ${token} is found in a configuration value, it
+will be expanded to the value of the token. All Java properties are treated
+as tokens, but tokens may also be set using '+token=value' on the command
+line.  Token replacement is limited to simple strings, but may be recursively
+defined.
+
+Filenames specified on the command line must either be an absolute path or
+relative to the current directory.
+
+Use 'mxmlc -help list' to list available configuration variables.
++----+
+
+* {mxmlc options}
+
+~~ mxmlc -help advanced list details
++----+
+Adobe Flex Compiler (mxmlc)
+Version 2.0.1 build 179877
+Copyright (c) 2004-2006 Adobe Systems, Inc. All rights reserved.
+
+-benchmark
+    output performance benchmark
+-compiler.accessible
+    alias -accessible
+    generate an accessible SWF
+-compiler.actionscript-file-encoding <string>
+    alias -actionscript-file-encoding
+    specifies actionscript file encoding. If there is no BOM in the AS3
+    source files, the compiler will use this file encoding.
+-compiler.allow-source-path-overlap
+    alias -allow-source-path-overlap
+    checks if a source-path entry is a subdirectory of another
+    source-path entry. It helps make the package names of MXML components
+    unambiguous. (advanced)
+-compiler.as3
+    alias -as3
+    use the ActionScript 3 class based object model for greater
+    performance and better error reporting. In the class based object
+    model most built-in functions are implemented as fixed methods of
+    classes. (advanced)
+-compiler.context-root <context-path>
+    alias -context-root
+    path to replace {context.root} tokens for service channel endpoints
+-compiler.debug
+    alias -debug
+    generates a movie that is suitable for debugging
+-compiler.defaults-css-url <string>
+    alias -defaults-css-url
+    defines the location of the default style sheet. Setting this option
+    overrides the implicit use of the defaults.css style sheet in the
+    framework.swc file. (advanced)
+-compiler.es
+    alias -es
+    use the ECMAScript edition 3 prototype based object model to allow
+    dynamic overriding of prototype properties. In the prototype based
+    object model built-in functions are implemented as dynamic properties
+    of prototype objects. (advanced)
+-compiler.external-library-path [path-element] [...]
+    alias -el
+    list of SWC files or directories to compile against but to omit from
+    linking (repeatable)
+-compiler.fonts.flash-type
+    alias -flash-type
+    enables FlashType for embedded fonts, which provides greater clarity
+    for small fonts.
+-compiler.fonts.languages.language-range <lang> <range>
+    alias -language-range
+    a range to restrict the number of font glyphs embedded into the SWF
+    (advanced, repeatable)
+-compiler.fonts.local-fonts-snapshot <string>
+    alias -local-fonts-snapshot
+    File containing system font data produced by
+    flex2.tools.FontSnapshot. (advanced)
+-compiler.fonts.managers [manager-class] [...]
+    alias -managers
+    Compiler font manager classes, in policy resolution order (advanced)
+-compiler.fonts.max-cached-fonts <string>
+    alias -max-cached-fonts
+    sets the maximum number of fonts to keep in the server cache.  The
+    default value is 20. (advanced)
+-compiler.fonts.max-glyphs-per-face <string>
+    alias -max-glyphs-per-face
+    sets the maximum number of character glyph-outlines to keep in the
+    server cache for each font face. The default value is 1000.
+-compiler.headless-server
+    alias -headless-server
+    a flag to set when Flex is running on a server without a display
+    (advanced)
+-compiler.include-libraries [library] [...]
+    alias -include-libraries
+    a list of libraries (SWCs) to completely include in the SWF
+    (repeatable)
+-compiler.incremental
+    alias -incremental
+    enables incremental compilation
+-compiler.keep-all-type-selectors
+    alias -keep-all-type-selectors
+    disables the pruning of unused type selectors (advanced)
+-compiler.keep-as3-metadata [name] [...]
+    alias -keep-as3-metadata
+    keep the specified metadata in the SWF (advanced, repeatable)
+-compiler.keep-generated-actionscript
+    alias -keep
+    save temporary source files generated during MXML compilation
+    (advanced)
+-compiler.library-path [path-element] [...]
+    alias -l
+    list of SWC files or directories that contain SWC files (repeatable)
+-compiler.locale <string>
+    alias -locale
+    specifies the locale for internationalization
+-compiler.namespaces.namespace <uri> <manifest>
+    alias -namespace
+    Specify a URI to associate with a manifest of components for use as
+    MXML elements (repeatable)
+-compiler.optimize
+    alias -optimize
+    Enable post-link SWF optimization
+-compiler.services <filename>
+    alias -services
+    path to Flex Data Services configuration file
+-compiler.show-actionscript-warnings
+    alias -show-actionscript-warnings
+    runs the AS3 compiler in a mode that detects legal but potentially
+    incorrect code
+-compiler.show-binding-warnings
+    alias -show-binding-warnings
+    toggle whether warnings generated from data binding code are
+    displayed
+-compiler.show-deprecation-warnings
+    alias -show-deprecation-warnings
+    toggle whether the use of deprecated APIs generates a warning
+-compiler.show-unused-type-selector-warnings
+    alias -show-unused-type-selector-warnings
+    toggle whether warnings generated from unused type selectors are
+    displayed
+-compiler.source-path [path-element] [...]
+    alias -source-path
+    list of path elements that form the roots of ActionScript class
+    hierarchies (repeatable)
+-compiler.strict
+    alias -strict
+    runs the AS3 compiler in strict error checking mode.
+-compiler.theme [filename] [...]
+    alias -theme
+    list of CSS or SWC files to apply as a theme (repeatable)
+-compiler.use-resource-bundle-metadata
+    alias -use-resource-bundle-metadata
+    determines whether resources bundles are included in the application.
+-compiler.verbose-stacktraces
+    alias -verbose-stacktraces
+    save callstack information to the SWF for debugging (advanced)
+-compiler.warn-array-tostring-changes
+    alias -warn-array-tostring-changes
+    Array.toString() format has changed. (advanced)
+-compiler.warn-assignment-within-conditional
+    alias -warn-assignment-within-conditional
+    Assignment within conditional. (advanced)
+-compiler.warn-bad-array-cast
+    alias -warn-bad-array-cast
+    Possibly invalid Array cast operation. (advanced)
+-compiler.warn-bad-bool-assignment
+    alias -warn-bad-bool-assignment
+    Non-Boolean value used where a Boolean value was expected. (advanced)
+-compiler.warn-bad-date-cast
+    alias -warn-bad-date-cast
+    Invalid Date cast operation. (advanced)
+-compiler.warn-bad-es3-type-method
+    alias -warn-bad-es3-type-method
+    Unknown method. (advanced)
+-compiler.warn-bad-es3-type-prop
+    alias -warn-bad-es3-type-prop
+    Unknown property. (advanced)
+-compiler.warn-bad-nan-comparison
+    alias -warn-bad-nan-comparison
+    Illogical comparison with NaN. Any comparison operation involving NaN
+    will evaluate to false because NaN != NaN. (advanced)
+-compiler.warn-bad-null-assignment
+    alias -warn-bad-null-assignment
+    Impossible assignment to null. (advanced)
+-compiler.warn-bad-null-comparison
+    alias -warn-bad-null-comparison
+    Illogical comparison with null. (advanced)
+-compiler.warn-bad-undefined-comparison
+    alias -warn-bad-undefined-comparison
+    Illogical comparison with undefined.  Only untyped variables (or
+    variables of type *) can be undefined. (advanced)
+-compiler.warn-boolean-constructor-with-no-args
+    alias -warn-boolean-constructor-with-no-args
+    Boolean() with no arguments returns false in ActionScript 3.0.
+    Boolean() returned undefined in ActionScript 2.0. (advanced)
+-compiler.warn-changes-in-resolve
+    alias -warn-changes-in-resolve
+    __resolve is no longer supported. (advanced)
+-compiler.warn-class-is-sealed
+    alias -warn-class-is-sealed
+    Class is sealed.  It cannot have members added to it dynamically.
+    (advanced)
+-compiler.warn-const-not-initialized
+    alias -warn-const-not-initialized
+    Constant not initialized. (advanced)
+-compiler.warn-constructor-returns-value
+    alias -warn-constructor-returns-value
+    Function used in new expression returns a value.  Result will be what
+    the function returns, rather than a new instance of that function.
+    (advanced)
+-compiler.warn-deprecated-event-handler-error
+    alias -warn-deprecated-event-handler-error
+    EventHandler was not added as a listener. (advanced)
+-compiler.warn-deprecated-function-error
+    alias -warn-deprecated-function-error
+    Unsupported ActionScript 2.0 function. (advanced)
+-compiler.warn-deprecated-property-error
+    alias -warn-deprecated-property-error
+    Unsupported ActionScript 2.0 property. (advanced)
+-compiler.warn-duplicate-argument-names
+    alias -warn-duplicate-argument-names
+    More than one argument by the same name. (advanced)
+-compiler.warn-duplicate-variable-def
+    alias -warn-duplicate-variable-def
+    Duplicate variable definition  (advanced)
+-compiler.warn-for-var-in-changes
+    alias -warn-for-var-in-changes
+    ActionScript 3.0 iterates over an object's properties within a "for x
+    in target" statement in random order. (advanced)
+-compiler.warn-import-hides-class
+    alias -warn-import-hides-class
+    Importing a package by the same name as the current class will hide
+    that class identifier in this scope. (advanced)
+-compiler.warn-instance-of-changes
+    alias -warn-instance-of-changes
+    Use of the instanceof operator. (advanced)
+-compiler.warn-internal-error
+    alias -warn-internal-error
+    Internal error in compiler. (advanced)
+-compiler.warn-level-not-supported
+    alias -warn-level-not-supported
+    _level is no longer supported. For more information, see the
+    flash.display package. (advanced)
+-compiler.warn-missing-namespace-decl
+    alias -warn-missing-namespace-decl
+    Missing namespace declaration (e.g. variable is not defined to be
+    public, private, etc.). (advanced)
+-compiler.warn-negative-uint-literal
+    alias -warn-negative-uint-literal
+    Negative value will become a large positive value when assigned to a
+    uint data type. (advanced)
+-compiler.warn-no-constructor
+    alias -warn-no-constructor
+    Missing constructor. (advanced)
+-compiler.warn-no-explicit-super-call-in-constructor
+    alias -warn-no-explicit-super-call-in-constructor
+    The super() statement was not called within the constructor.
+    (advanced)
+-compiler.warn-no-type-decl
+    alias -warn-no-type-decl
+    Missing type declaration. (advanced)
+-compiler.warn-number-from-string-changes
+    alias -warn-number-from-string-changes
+    In ActionScript 3.0, white space is ignored and '' returns 0.
+    Number() returns NaN in ActionScript 2.0 when the parameter is '' or
+    contains white space. (advanced)
+-compiler.warn-scoping-change-in-this
+    alias -warn-scoping-change-in-this
+    Change in scoping for the this keyword.  Class methods extracted from
+    an instance of a class will always resolve this back to that
+    instance.  In ActionScript 2.0 this is looked up dynamically based on
+    where the method is invoked from. (advanced)
+-compiler.warn-slow-text-field-addition
+    alias -warn-slow-text-field-addition
+    Inefficient use of += on a TextField. (advanced)
+-compiler.warn-unlikely-function-value
+    alias -warn-unlikely-function-value
+    Possible missing parentheses. (advanced)
+-compiler.warn-xml-class-has-changed
+    alias -warn-xml-class-has-changed
+    Possible usage of the ActionScript 2.0 XML class. (advanced)
+-debug-password <string>
+    the password to include in debuggable SWFs (advanced)
+-default-background-color <int>
+    default background color (may be overridden by the application code)
+    (advanced)
+-default-frame-rate <int>
+    default frame rate to be used in the SWF. (advanced)
+-default-script-limits <max-recursion-depth> <max-execution-time>
+    default script execution limits (may be overridden by root
+    attributes) (advanced)
+-default-size <width> <height>
+    default application size (may be overridden by root attributes in the
+    application) (advanced)
+-dump-config <filename>
+    write a file containing all currently set configuration values in a
+    format suitable for use as a flex config file (advanced)
+-externs [symbol] [...]
+    a list of symbols to omit from linking when building a SWF (advanced,
+    repeatable)
+-frames.frame [label] [classname] [...]
+    alias -frame
+    A SWF frame label with a sequence of classnames that will be linked
+    onto the frame. (advanced, repeatable)
+-help [keyword] [...]
+    keywords are 'syntax', 'list', 'advanced', 'aliases', 'details', or a
+    search term
+-includes [symbol] [...]
+    a list of symbols to always link in when building a SWF (advanced,
+    repeatable)
+-licenses.license <product> <serial-number>
+    alias -license
+    specifies a product and a serial number.  (repeatable)
+-link-report <filename>
+    Output a XML-formatted report of all definitions linked into the
+    application. (advanced)
+-load-config <filename>
+    load a file containing configuration options (repeatable)
+-load-externs <filename>
+    an XML file containing <def>, <pre>, and <ext> symbols to omit from
+    linking when building a SWF (advanced, repeatable)
+-metadata.contributor <name>
+    alias -contributor
+    A contributor's name to store in the SWF metadata (repeatable)
+-metadata.creator <name>
+    alias -creator
+    A creator's name to store in the SWF metadata (repeatable)
+-metadata.date <text>
+    alias -date
+    The creation date to store in the SWF metadata
+-metadata.description <text>
+    alias -description
+    The default description to store in the SWF metadata
+-metadata.language <code>
+    alias -language
+    The language to store in the SWF metadata (i.e. EN, FR) (repeatable)
+-metadata.localized-description <text> <lang>
+    alias -localized-description
+    A localized RDF/XMP description to store in the SWF metadata
+    (repeatable)
+-metadata.localized-title <title> <lang>
+    alias -localized-title
+    A localized RDF/XMP title to store in the SWF metadata (repeatable)
+-metadata.publisher <name>
+    alias -publisher
+    A publisher's name to store in the SWF metadata (repeatable)
+-metadata.title <text>
+    alias -title
+    The default title to store in the SWF metadata
+-output <filename>
+    alias -o
+    the filename of the SWF movie to create
+-raw-metadata <text>
+    XML text to store in the SWF metadata (overrides metadata.*
+    configuration) (advanced)
+-resource-bundle-list <filename>
+    prints a list of resource bundles to a file for input to the compc
+    compiler to create a resource bundle SWC file.  (advanced)
+-runtime-shared-libraries [url] [...]
+    alias -rsl
+    a list of runtime shared library URLs to be loaded before the
+    application starts (repeatable)
+-use-network
+    toggle whether the SWF is flagged for access to network resources
+-version
+    display the build version of the program
+-warnings
+    toggle the display of warnings
++----+
+
+* {compc syntax}
+
+~~ compc -help advanced syntax
++----+
+Adobe Flex Compiler (compc)
+Version 2.0.1 build 179877
+Copyright (c) 2004-2006 Adobe Systems, Inc. All rights reserved.
+
+Usage: compc [configuration options] [default arguments]
+
+Configuration options may be set on the command line as
+'-variable=value,value,value' or '-variable value value'. (The number of
+values required depends on the particular variable.) Boolean options may be
+enabled with '-variable=true' and disabled with '-variable=false', with
+'-variable' being shorthand for '-variable=true'. Variables may be cleared by
+setting '-variable=' with no value following the equals sign.
+
+The default argument list is equivalent to setting the 'include-classes'
+variable. The special string '--' may be used to terminate processing of
+named configuration options and to force any remaining values on the command
+line to be interpreted as default arguments.
+
+In general, a given variable may only be set once, but a few variables may be
+set multiple times if noted as 'repeatable' in their description; i.e.
+'-a=x,y,z' may also be set as '-a=x -a=y -a=z' if 'a' is repeatable. A more
+useful trait of repeatable variables is that by using the special syntax
+'-variable+=value,value', the new values set will be appended to the current
+value, rather than replacing the current value list.
+
+Configuration variables sometimes have shortened aliases to be easier to
+type. Hierarchical dotted variable names will automatically have an alias
+generated for their 'leaf' name, if it is unique.
+
+If a sequence formatted as ${token} is found in a configuration value, it
+will be expanded to the value of the token. All Java properties are treated
+as tokens, but tokens may also be set using '+token=value' on the command
+line.  Token replacement is limited to simple strings, but may be recursively
+defined.
+
+Filenames specified on the command line must either be an absolute path or
+relative to the current directory.
+
+Use 'compc -help list' to list available configuration variables.
++----+
+
+* {compc options}
+
+~~ compc -help advanced list details
++----+
+Adobe Flex Compiler (compc)
+Version 2.0.1 build 179877
+Copyright (c) 2004-2006 Adobe Systems, Inc. All rights reserved.
+
+-benchmark
+    output performance benchmark
+-compiler.accessible
+    alias -accessible
+    generate an accessible SWF
+-compiler.actionscript-file-encoding <string>
+    alias -actionscript-file-encoding
+    specifies actionscript file encoding. If there is no BOM in the AS3
+    source files, the compiler will use this file encoding.
+-compiler.allow-source-path-overlap
+    alias -allow-source-path-overlap
+    checks if a source-path entry is a subdirectory of another
+    source-path entry. It helps make the package names of MXML components
+    unambiguous. (advanced)
+-compiler.as3
+    alias -as3
+    use the ActionScript 3 class based object model for greater
+    performance and better error reporting. In the class based object
+    model most built-in functions are implemented as fixed methods of
+    classes. (advanced)
+-compiler.context-root <context-path>
+    alias -context-root
+    path to replace {context.root} tokens for service channel endpoints
+-compiler.debug
+    alias -debug
+    generates a movie that is suitable for debugging
+-compiler.defaults-css-url <string>
+    alias -defaults-css-url
+    defines the location of the default style sheet. Setting this option
+    overrides the implicit use of the defaults.css style sheet in the
+    framework.swc file. (advanced)
+-compiler.es
+    alias -es
+    use the ECMAScript edition 3 prototype based object model to allow
+    dynamic overriding of prototype properties. In the prototype based
+    object model built-in functions are implemented as dynamic properties
+    of prototype objects. (advanced)
+-compiler.external-library-path [path-element] [...]
+    alias -el
+    list of SWC files or directories to compile against but to omit from
+    linking (repeatable)
+-compiler.fonts.flash-type
+    alias -flash-type
+    enables FlashType for embedded fonts, which provides greater clarity
+    for small fonts.
+-compiler.fonts.languages.language-range <lang> <range>
+    alias -language-range
+    a range to restrict the number of font glyphs embedded into the SWF
+    (advanced, repeatable)
+-compiler.fonts.local-fonts-snapshot <string>
+    alias -local-fonts-snapshot
+    File containing system font data produced by
+    flex2.tools.FontSnapshot. (advanced)
+-compiler.fonts.managers [manager-class] [...]
+    alias -managers
+    Compiler font manager classes, in policy resolution order (advanced)
+-compiler.fonts.max-cached-fonts <string>
+    alias -max-cached-fonts
+    sets the maximum number of fonts to keep in the server cache.  The
+    default value is 20. (advanced)
+-compiler.fonts.max-glyphs-per-face <string>
+    alias -max-glyphs-per-face
+    sets the maximum number of character glyph-outlines to keep in the
+    server cache for each font face. The default value is 1000.
+-compiler.headless-server
+    alias -headless-server
+    a flag to set when Flex is running on a server without a display
+    (advanced)
+-compiler.include-libraries [library] [...]
+    alias -include-libraries
+    a list of libraries (SWCs) to completely include in the SWF
+    (repeatable)
+-compiler.incremental
+    alias -incremental
+    enables incremental compilation
+-compiler.keep-all-type-selectors
+    alias -keep-all-type-selectors
+    disables the pruning of unused type selectors (advanced)
+-compiler.keep-as3-metadata [name] [...]
+    alias -keep-as3-metadata
+    keep the specified metadata in the SWF (advanced, repeatable)
+-compiler.keep-generated-actionscript
+    alias -keep-generated-actionscript
+    save temporary source files generated during MXML compilation
+    (advanced)
+-compiler.library-path [path-element] [...]
+    alias -l
+    list of SWC files or directories that contain SWC files (repeatable)
+-compiler.locale <string>
+    alias -locale
+    specifies the locale for internationalization
+-compiler.namespaces.namespace <uri> <manifest>
+    alias -namespace
+    Specify a URI to associate with a manifest of components for use as
+    MXML elements (repeatable)
+-compiler.optimize
+    alias -optimize
+    Enable post-link SWF optimization
+-compiler.services <filename>
+    alias -services
+    path to Flex Data Services configuration file
+-compiler.show-actionscript-warnings
+    alias -show-actionscript-warnings
+    runs the AS3 compiler in a mode that detects legal but potentially
+    incorrect code
+-compiler.show-binding-warnings
+    alias -show-binding-warnings
+    toggle whether warnings generated from data binding code are
+    displayed
+-compiler.show-deprecation-warnings
+    alias -show-deprecation-warnings
+    toggle whether the use of deprecated APIs generates a warning
+-compiler.show-unused-type-selector-warnings
+    alias -show-unused-type-selector-warnings
+    toggle whether warnings generated from unused type selectors are
+    displayed
+-compiler.source-path [path-element] [...]
+    alias -sp
+    list of path elements that form the roots of ActionScript class
+    hierarchies (repeatable)
+-compiler.strict
+    alias -strict
+    runs the AS3 compiler in strict error checking mode.
+-compiler.theme [filename] [...]
+    alias -theme
+    list of CSS or SWC files to apply as a theme (repeatable)
+-compiler.use-resource-bundle-metadata
+    alias -use-resource-bundle-metadata
+    determines whether resources bundles are included in the application.
+-compiler.verbose-stacktraces
+    alias -verbose-stacktraces
+    save callstack information to the SWF for debugging (advanced)
+-compiler.warn-array-tostring-changes
+    alias -warn-array-tostring-changes
+    Array.toString() format has changed. (advanced)
+-compiler.warn-assignment-within-conditional
+    alias -warn-assignment-within-conditional
+    Assignment within conditional. (advanced)
+-compiler.warn-bad-array-cast
+    alias -warn-bad-array-cast
+    Possibly invalid Array cast operation. (advanced)
+-compiler.warn-bad-bool-assignment
+    alias -warn-bad-bool-assignment
+    Non-Boolean value used where a Boolean value was expected. (advanced)
+-compiler.warn-bad-date-cast
+    alias -warn-bad-date-cast
+    Invalid Date cast operation. (advanced)
+-compiler.warn-bad-es3-type-method
+    alias -warn-bad-es3-type-method
+    Unknown method. (advanced)
+-compiler.warn-bad-es3-type-prop
+    alias -warn-bad-es3-type-prop
+    Unknown property. (advanced)
+-compiler.warn-bad-nan-comparison
+    alias -warn-bad-nan-comparison
+    Illogical comparison with NaN. Any comparison operation involving NaN
+    will evaluate to false because NaN != NaN. (advanced)
+-compiler.warn-bad-null-assignment
+    alias -warn-bad-null-assignment
+    Impossible assignment to null. (advanced)
+-compiler.warn-bad-null-comparison
+    alias -warn-bad-null-comparison
+    Illogical comparison with null. (advanced)
+-compiler.warn-bad-undefined-comparison
+    alias -warn-bad-undefined-comparison
+    Illogical comparison with undefined.  Only untyped variables (or
+    variables of type *) can be undefined. (advanced)
+-compiler.warn-boolean-constructor-with-no-args
+    alias -warn-boolean-constructor-with-no-args
+    Boolean() with no arguments returns false in ActionScript 3.0.
+    Boolean() returned undefined in ActionScript 2.0. (advanced)
+-compiler.warn-changes-in-resolve
+    alias -warn-changes-in-resolve
+    __resolve is no longer supported. (advanced)
+-compiler.warn-class-is-sealed
+    alias -warn-class-is-sealed
+    Class is sealed.  It cannot have members added to it dynamically.
+    (advanced)
+-compiler.warn-const-not-initialized
+    alias -warn-const-not-initialized
+    Constant not initialized. (advanced)
+-compiler.warn-constructor-returns-value
+    alias -warn-constructor-returns-value
+    Function used in new expression returns a value.  Result will be what
+    the function returns, rather than a new instance of that function.
+    (advanced)
+-compiler.warn-deprecated-event-handler-error
+    alias -warn-deprecated-event-handler-error
+    EventHandler was not added as a listener. (advanced)
+-compiler.warn-deprecated-function-error
+    alias -warn-deprecated-function-error
+    Unsupported ActionScript 2.0 function. (advanced)
+-compiler.warn-deprecated-property-error
+    alias -warn-deprecated-property-error
+    Unsupported ActionScript 2.0 property. (advanced)
+-compiler.warn-duplicate-argument-names
+    alias -warn-duplicate-argument-names
+    More than one argument by the same name. (advanced)
+-compiler.warn-duplicate-variable-def
+    alias -warn-duplicate-variable-def
+    Duplicate variable definition  (advanced)
+-compiler.warn-for-var-in-changes
+    alias -warn-for-var-in-changes
+    ActionScript 3.0 iterates over an object's properties within a "for x
+    in target" statement in random order. (advanced)
+-compiler.warn-import-hides-class
+    alias -warn-import-hides-class
+    Importing a package by the same name as the current class will hide
+    that class identifier in this scope. (advanced)
+-compiler.warn-instance-of-changes
+    alias -warn-instance-of-changes
+    Use of the instanceof operator. (advanced)
+-compiler.warn-internal-error
+    alias -warn-internal-error
+    Internal error in compiler. (advanced)
+-compiler.warn-level-not-supported
+    alias -warn-level-not-supported
+    _level is no longer supported. For more information, see the
+    flash.display package. (advanced)
+-compiler.warn-missing-namespace-decl
+    alias -warn-missing-namespace-decl
+    Missing namespace declaration (e.g. variable is not defined to be
+    public, private, etc.). (advanced)
+-compiler.warn-negative-uint-literal
+    alias -warn-negative-uint-literal
+    Negative value will become a large positive value when assigned to a
+    uint data type. (advanced)
+-compiler.warn-no-constructor
+    alias -warn-no-constructor
+    Missing constructor. (advanced)
+-compiler.warn-no-explicit-super-call-in-constructor
+    alias -warn-no-explicit-super-call-in-constructor
+    The super() statement was not called within the constructor.
+    (advanced)
+-compiler.warn-no-type-decl
+    alias -warn-no-type-decl
+    Missing type declaration. (advanced)
+-compiler.warn-number-from-string-changes
+    alias -warn-number-from-string-changes
+    In ActionScript 3.0, white space is ignored and '' returns 0.
+    Number() returns NaN in ActionScript 2.0 when the parameter is '' or
+    contains white space. (advanced)
+-compiler.warn-scoping-change-in-this
+    alias -warn-scoping-change-in-this
+    Change in scoping for the this keyword.  Class methods extracted from
+    an instance of a class will always resolve this back to that
+    instance.  In ActionScript 2.0 this is looked up dynamically based on
+    where the method is invoked from. (advanced)
+-compiler.warn-slow-text-field-addition
+    alias -warn-slow-text-field-addition
+    Inefficient use of += on a TextField. (advanced)
+-compiler.warn-unlikely-function-value
+    alias -warn-unlikely-function-value
+    Possible missing parentheses. (advanced)
+-compiler.warn-xml-class-has-changed
+    alias -warn-xml-class-has-changed
+    Possible usage of the ActionScript 2.0 XML class. (advanced)
+-debug-password <string>
+    the password to include in debuggable SWFs (advanced)
+-default-background-color <int>
+    default background color (may be overridden by the application code)
+    (advanced)
+-default-frame-rate <int>
+    default frame rate to be used in the SWF. (advanced)
+-default-script-limits <max-recursion-depth> <max-execution-time>
+    default script execution limits (may be overridden by root
+    attributes) (advanced)
+-default-size <width> <height>
+    default application size (may be overridden by root attributes in the
+    application) (advanced)
+-directory
+-dump-config <filename>
+    write a file containing all currently set configuration values in a
+    format suitable for use as a flex config file (advanced)
+-externs [symbol] [...]
+    a list of symbols to omit from linking when building a SWF (advanced,
+    repeatable)
+-frames.frame [label] [classname] [...]
+    alias -frame
+    A SWF frame label with a sequence of classnames that will be linked
+    onto the frame. (advanced, repeatable)
+-help [keyword] [...]
+    keywords are 'syntax', 'list', 'advanced', 'aliases', 'details', or a
+    search term
+-include-classes [class] [...]
+    alias -ic
+     (repeatable, default variable)
+-include-file <name> <path>
+    alias -if
+     (repeatable)
+-include-lookup-only
+     (advanced)
+-include-namespaces [uri] [...]
+    alias -in
+     (repeatable)
+-include-resource-bundles [bundle] [...]
+    alias -ir
+     (repeatable)
+-include-sources [path-element] [...]
+    alias -is
+     (repeatable)
+-includes [symbol] [...]
+    a list of symbols to always link in when building a SWF (advanced,
+    repeatable)
+-licenses.license <product> <serial-number>
+    alias -license
+    specifies a product and a serial number.  (repeatable)
+-link-report <filename>
+    Output a XML-formatted report of all definitions linked into the
+    application. (advanced)
+-load-config <filename>
+    load a file containing configuration options (repeatable)
+-load-externs <filename>
+    an XML file containing <def>, <pre>, and <ext> symbols to omit from
+    linking when building a SWF (advanced, repeatable)
+-metadata.contributor <name>
+    alias -contributor
+    A contributor's name to store in the SWF metadata (repeatable)
+-metadata.creator <name>
+    alias -creator
+    A creator's name to store in the SWF metadata (repeatable)
+-metadata.date <text>
+    alias -date
+    The creation date to store in the SWF metadata
+-metadata.description <text>
+    alias -description
+    The default description to store in the SWF metadata
+-metadata.language <code>
+    alias -language
+    The language to store in the SWF metadata (i.e. EN, FR) (repeatable)
+-metadata.localized-description <text> <lang>
+    alias -localized-description
+    A localized RDF/XMP description to store in the SWF metadata
+    (repeatable)
+-metadata.localized-title <title> <lang>
+    alias -localized-title
+    A localized RDF/XMP title to store in the SWF metadata (repeatable)
+-metadata.publisher <name>
+    alias -publisher
+    A publisher's name to store in the SWF metadata (repeatable)
+-metadata.title <text>
+    alias -title
+    The default title to store in the SWF metadata
+-output <filename>
+    alias -o
+    the filename of the SWF movie to create
+-raw-metadata <text>
+    XML text to store in the SWF metadata (overrides metadata.*
+    configuration) (advanced)
+-resource-bundle-list <filename>
+    prints a list of resource bundles to a file for input to the compc
+    compiler to create a resource bundle SWC file.  (advanced)
+-runtime-shared-libraries [url] [...]
+    alias -rsl
+    a list of runtime shared library URLs to be loaded before the
+    application starts (repeatable)
+-use-network
+    toggle whether the SWF is flagged for access to network resources
+-version
+    display the build version of the program
++----+
+
+* {asdoc syntax}
+
+~~ asdoc -help advanced syntax
++----+
+Adobe Flex Compiler (asdoc)
+Version 2.0.1 build 179877
+Copyright (c) 2004-2006 Adobe Systems, Inc. All rights reserved.
+
+Usage: asdoc [configuration options] [default arguments]
+
+Configuration options may be set on the command line as
+'-variable=value,value,value' or '-variable value value'. (The number of
+values required depends on the particular variable.) Boolean options may be
+enabled with '-variable=true' and disabled with '-variable=false', with
+'-variable' being shorthand for '-variable=true'. Variables may be cleared by
+setting '-variable=' with no value following the equals sign.
+
+The default argument list is equivalent to setting the 'doc-classes'
+variable. The special string '--' may be used to terminate processing of
+named configuration options and to force any remaining values on the command
+line to be interpreted as default arguments.
+
+In general, a given variable may only be set once, but a few variables may be
+set multiple times if noted as 'repeatable' in their description; i.e.
+'-a=x,y,z' may also be set as '-a=x -a=y -a=z' if 'a' is repeatable. A more
+useful trait of repeatable variables is that by using the special syntax
+'-variable+=value,value', the new values set will be appended to the current
+value, rather than replacing the current value list.
+
+Configuration variables sometimes have shortened aliases to be easier to
+type. Hierarchical dotted variable names will automatically have an alias
+generated for their 'leaf' name, if it is unique.
+
+If a sequence formatted as ${token} is found in a configuration value, it
+will be expanded to the value of the token. All Java properties are treated
+as tokens, but tokens may also be set using '+token=value' on the command
+line.  Token replacement is limited to simple strings, but may be recursively
+defined.
+
+Filenames specified on the command line must either be an absolute path or
+relative to the current directory.
+
+Use 'asdoc -help list' to list available configuration variables.
++----+
+
+* {asdoc options}
+
+~~ asdoc -help advanced list details
++----+
+Adobe Flex Compiler (asdoc)
+Version 2.0.1 build 179877
+Copyright (c) 2004-2006 Adobe Systems, Inc. All rights reserved.
+
+-benchmark
+    output performance benchmark
+-compiler.accessible
+    alias -accessible
+    generate an accessible SWF
+-compiler.actionscript-file-encoding <string>
+    alias -actionscript-file-encoding
+    specifies actionscript file encoding. If there is no BOM in the AS3
+    source files, the compiler will use this file encoding.
+-compiler.allow-source-path-overlap
+    alias -allow-source-path-overlap
+    checks if a source-path entry is a subdirectory of another
+    source-path entry. It helps make the package names of MXML components
+    unambiguous. (advanced)
+-compiler.as3
+    alias -as3
+    use the ActionScript 3 class based object model for greater
+    performance and better error reporting. In the class based object
+    model most built-in functions are implemented as fixed methods of
+    classes. (advanced)
+-compiler.context-root <context-path>
+    alias -context-root
+    path to replace {context.root} tokens for service channel endpoints
+-compiler.debug
+    alias -debug
+    generates a movie that is suitable for debugging
+-compiler.defaults-css-url <string>
+    alias -defaults-css-url
+    defines the location of the default style sheet. Setting this option
+    overrides the implicit use of the defaults.css style sheet in the
+    framework.swc file. (advanced)
+-compiler.es
+    alias -es
+    use the ECMAScript edition 3 prototype based object model to allow
+    dynamic overriding of prototype properties. In the prototype based
+    object model built-in functions are implemented as dynamic properties
+    of prototype objects. (advanced)
+-compiler.external-library-path [path-element] [...]
+    alias -el
+    list of SWC files or directories to compile against but to omit from
+    linking (repeatable)
+-compiler.fonts.flash-type
+    alias -flash-type
+    enables FlashType for embedded fonts, which provides greater clarity
+    for small fonts.
+-compiler.fonts.languages.language-range <lang> <range>
+    alias -language-range
+    a range to restrict the number of font glyphs embedded into the SWF
+    (advanced, repeatable)
+-compiler.fonts.local-fonts-snapshot <string>
+    alias -local-fonts-snapshot
+    File containing system font data produced by
+    flex2.tools.FontSnapshot. (advanced)
+-compiler.fonts.managers [manager-class] [...]
+    alias -managers
+    Compiler font manager classes, in policy resolution order (advanced)
+-compiler.fonts.max-cached-fonts <string>
+    alias -max-cached-fonts
+    sets the maximum number of fonts to keep in the server cache.  The
+    default value is 20. (advanced)
+-compiler.fonts.max-glyphs-per-face <string>
+    alias -max-glyphs-per-face
+    sets the maximum number of character glyph-outlines to keep in the
+    server cache for each font face. The default value is 1000.
+-compiler.headless-server
+    alias -headless-server
+    a flag to set when Flex is running on a server without a display
+    (advanced)
+-compiler.include-libraries [library] [...]
+    alias -include-libraries
+    a list of libraries (SWCs) to completely include in the SWF
+    (repeatable)
+-compiler.incremental
+    alias -incremental
+    enables incremental compilation
+-compiler.keep-all-type-selectors
+    alias -keep-all-type-selectors
+    disables the pruning of unused type selectors (advanced)
+-compiler.keep-as3-metadata [name] [...]
+    alias -keep-as3-metadata
+    keep the specified metadata in the SWF (advanced, repeatable)
+-compiler.keep-generated-actionscript
+    alias -keep-generated-actionscript
+    save temporary source files generated during MXML compilation
+    (advanced)
+-compiler.library-path [path-element] [...]
+    alias -l
+    list of SWC files or directories that contain SWC files (repeatable)
+-compiler.locale <string>
+    alias -locale
+    specifies the locale for internationalization
+-compiler.namespaces.namespace <uri> <manifest>
+    alias -namespace
+    Specify a URI to associate with a manifest of components for use as
+    MXML elements (repeatable)
+-compiler.optimize
+    alias -optimize
+    Enable post-link SWF optimization
+-compiler.services <filename>
+    alias -services
+    path to Flex Data Services configuration file
+-compiler.show-actionscript-warnings
+    alias -show-actionscript-warnings
+    runs the AS3 compiler in a mode that detects legal but potentially
+    incorrect code
+-compiler.show-binding-warnings
+    alias -show-binding-warnings
+    toggle whether warnings generated from data binding code are
+    displayed
+-compiler.show-deprecation-warnings
+    alias -show-deprecation-warnings
+    toggle whether the use of deprecated APIs generates a warning
+-compiler.show-unused-type-selector-warnings
+    alias -show-unused-type-selector-warnings
+    toggle whether warnings generated from unused type selectors are
+    displayed
+-compiler.source-path [path-element] [...]
+    alias -sp
+    list of path elements that form the roots of ActionScript class
+    hierarchies (repeatable)
+-compiler.strict
+    alias -strict
+    runs the AS3 compiler in strict error checking mode.
+-compiler.theme [filename] [...]
+    alias -theme
+    list of CSS or SWC files to apply as a theme (repeatable)
+-compiler.use-resource-bundle-metadata
+    alias -use-resource-bundle-metadata
+    determines whether resources bundles are included in the application.
+-compiler.verbose-stacktraces
+    alias -verbose-stacktraces
+    save callstack information to the SWF for debugging (advanced)
+-compiler.warn-array-tostring-changes
+    alias -warn-array-tostring-changes
+    Array.toString() format has changed. (advanced)
+-compiler.warn-assignment-within-conditional
+    alias -warn-assignment-within-conditional
+    Assignment within conditional. (advanced)
+-compiler.warn-bad-array-cast
+    alias -warn-bad-array-cast
+    Possibly invalid Array cast operation. (advanced)
+-compiler.warn-bad-bool-assignment
+    alias -warn-bad-bool-assignment
+    Non-Boolean value used where a Boolean value was expected. (advanced)
+-compiler.warn-bad-date-cast
+    alias -warn-bad-date-cast
+    Invalid Date cast operation. (advanced)
+-compiler.warn-bad-es3-type-method
+    alias -warn-bad-es3-type-method
+    Unknown method. (advanced)
+-compiler.warn-bad-es3-type-prop
+    alias -warn-bad-es3-type-prop
+    Unknown property. (advanced)
+-compiler.warn-bad-nan-comparison
+    alias -warn-bad-nan-comparison
+    Illogical comparison with NaN. Any comparison operation involving NaN
+    will evaluate to false because NaN != NaN. (advanced)
+-compiler.warn-bad-null-assignment
+    alias -warn-bad-null-assignment
+    Impossible assignment to null. (advanced)
+-compiler.warn-bad-null-comparison
+    alias -warn-bad-null-comparison
+    Illogical comparison with null. (advanced)
+-compiler.warn-bad-undefined-comparison
+    alias -warn-bad-undefined-comparison
+    Illogical comparison with undefined.  Only untyped variables (or
+    variables of type *) can be undefined. (advanced)
+-compiler.warn-boolean-constructor-with-no-args
+    alias -warn-boolean-constructor-with-no-args
+    Boolean() with no arguments returns false in ActionScript 3.0.
+    Boolean() returned undefined in ActionScript 2.0. (advanced)
+-compiler.warn-changes-in-resolve
+    alias -warn-changes-in-resolve
+    __resolve is no longer supported. (advanced)
+-compiler.warn-class-is-sealed
+    alias -warn-class-is-sealed
+    Class is sealed.  It cannot have members added to it dynamically.
+    (advanced)
+-compiler.warn-const-not-initialized
+    alias -warn-const-not-initialized
+    Constant not initialized. (advanced)
+-compiler.warn-constructor-returns-value
+    alias -warn-constructor-returns-value
+    Function used in new expression returns a value.  Result will be what
+    the function returns, rather than a new instance of that function.
+    (advanced)
+-compiler.warn-deprecated-event-handler-error
+    alias -warn-deprecated-event-handler-error
+    EventHandler was not added as a listener. (advanced)
+-compiler.warn-deprecated-function-error
+    alias -warn-deprecated-function-error
+    Unsupported ActionScript 2.0 function. (advanced)
+-compiler.warn-deprecated-property-error
+    alias -warn-deprecated-property-error
+    Unsupported ActionScript 2.0 property. (advanced)
+-compiler.warn-duplicate-argument-names
+    alias -warn-duplicate-argument-names
+    More than one argument by the same name. (advanced)
+-compiler.warn-duplicate-variable-def
+    alias -warn-duplicate-variable-def
+    Duplicate variable definition  (advanced)
+-compiler.warn-for-var-in-changes
+    alias -warn-for-var-in-changes
+    ActionScript 3.0 iterates over an object's properties within a "for x
+    in target" statement in random order. (advanced)
+-compiler.warn-import-hides-class
+    alias -warn-import-hides-class
+    Importing a package by the same name as the current class will hide
+    that class identifier in this scope. (advanced)
+-compiler.warn-instance-of-changes
+    alias -warn-instance-of-changes
+    Use of the instanceof operator. (advanced)
+-compiler.warn-internal-error
+    alias -warn-internal-error
+    Internal error in compiler. (advanced)
+-compiler.warn-level-not-supported
+    alias -warn-level-not-supported
+    _level is no longer supported. For more information, see the
+    flash.display package. (advanced)
+-compiler.warn-missing-namespace-decl
+    alias -warn-missing-namespace-decl
+    Missing namespace declaration (e.g. variable is not defined to be
+    public, private, etc.). (advanced)
+-compiler.warn-negative-uint-literal
+    alias -warn-negative-uint-literal
+    Negative value will become a large positive value when assigned to a
+    uint data type. (advanced)
+-compiler.warn-no-constructor
+    alias -warn-no-constructor
+    Missing constructor. (advanced)
+-compiler.warn-no-explicit-super-call-in-constructor
+    alias -warn-no-explicit-super-call-in-constructor
+    The super() statement was not called within the constructor.
+    (advanced)
+-compiler.warn-no-type-decl
+    alias -warn-no-type-decl
+    Missing type declaration. (advanced)
+-compiler.warn-number-from-string-changes
+    alias -warn-number-from-string-changes
+    In ActionScript 3.0, white space is ignored and '' returns 0.
+    Number() returns NaN in ActionScript 2.0 when the parameter is '' or
+    contains white space. (advanced)
+-compiler.warn-scoping-change-in-this
+    alias -warn-scoping-change-in-this
+    Change in scoping for the this keyword.  Class methods extracted from
+    an instance of a class will always resolve this back to that
+    instance.  In ActionScript 2.0 this is looked up dynamically based on
+    where the method is invoked from. (advanced)
+-compiler.warn-slow-text-field-addition
+    alias -warn-slow-text-field-addition
+    Inefficient use of += on a TextField. (advanced)
+-compiler.warn-unlikely-function-value
+    alias -warn-unlikely-function-value
+    Possible missing parentheses. (advanced)
+-compiler.warn-xml-class-has-changed
+    alias -warn-xml-class-has-changed
+    Possible usage of the ActionScript 2.0 XML class. (advanced)
+-debug-password <string>
+    the password to include in debuggable SWFs (advanced)
+-default-background-color <int>
+    default background color (may be overridden by the application code)
+    (advanced)
+-default-frame-rate <int>
+    default frame rate to be used in the SWF. (advanced)
+-default-script-limits <max-recursion-depth> <max-execution-time>
+    default script execution limits (may be overridden by root
+    attributes) (advanced)
+-default-size <width> <height>
+    default application size (may be overridden by root attributes in the
+    application) (advanced)
+-doc-classes [class] [...]
+    alias -dc
+     (repeatable, default variable)
+-doc-namespaces [uri] [...]
+    alias -dn
+     (repeatable)
+-doc-sources [path-element] [...]
+    alias -ds
+     (repeatable)
+-exclude-classes [class] [...]
+     (repeatable)
+-exclude-dependencies
+-externs [symbol] [...]
+    a list of symbols to omit from linking when building a SWF (advanced,
+    repeatable)
+-footer <string>
+-frames.frame [label] [classname] [...]
+    alias -frame
+    A SWF frame label with a sequence of classnames that will be linked
+    onto the frame. (advanced, repeatable)
+-help [keyword] [...]
+    keywords are 'syntax', 'list', 'advanced', 'aliases', 'details', or a
+    search term
+-includes [symbol] [...]
+    a list of symbols to always link in when building a SWF (advanced,
+    repeatable)
+-left-frameset-width <int>
+-licenses.license <product> <serial-number>
+    alias -license
+    specifies a product and a serial number.  (repeatable)
+-link-report <filename>
+    Output a XML-formatted report of all definitions linked into the
+    application. (advanced)
+-load-config <filename>
+    load a file containing configuration options (repeatable)
+-load-externs <filename>
+    an XML file containing <def>, <pre>, and <ext> symbols to omit from
+    linking when building a SWF (advanced, repeatable)
+-main-title <string>
+-metadata.contributor <name>
+    alias -contributor
+    A contributor's name to store in the SWF metadata (repeatable)
+-metadata.creator <name>
+    alias -creator
+    A creator's name to store in the SWF metadata (repeatable)
+-metadata.date <text>
+    alias -date
+    The creation date to store in the SWF metadata
+-metadata.description <text>
+    alias -description
+    The default description to store in the SWF metadata
+-metadata.language <code>
+    alias -language
+    The language to store in the SWF metadata (i.e. EN, FR) (repeatable)
+-metadata.localized-description <text> <lang>
+    alias -localized-description
+    A localized RDF/XMP description to store in the SWF metadata
+    (repeatable)
+-metadata.localized-title <title> <lang>
+    alias -localized-title
+    A localized RDF/XMP title to store in the SWF metadata (repeatable)
+-metadata.publisher <name>
+    alias -publisher
+    A publisher's name to store in the SWF metadata (repeatable)
+-metadata.title <text>
+    alias -title
+    The default title to store in the SWF metadata
+-output <filename>
+    alias -o
+    the filename of the SWF movie to create
+-packages.package <string> <string>
+    alias -package
+     (repeatable)
+-raw-metadata <text>
+    XML text to store in the SWF metadata (overrides metadata.*
+    configuration) (advanced)
+-resource-bundle-list <filename>
+    prints a list of resource bundles to a file for input to the compc
+    compiler to create a resource bundle SWC file.  (advanced)
+-runtime-shared-libraries [url] [...]
+    alias -rsl
+    a list of runtime shared library URLs to be loaded before the
+    application starts (repeatable)
+-templates-path <string>
+-use-network
+    toggle whether the SWF is flagged for access to network resources
+-version
+    display the build version of the program
+-window-title <string>
++----+

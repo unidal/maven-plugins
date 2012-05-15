@@ -1,0 +1,63 @@
+ ------
+ Introduction
+ ------
+ Frankie Wu
+ ------
+ 21 Nov 2007
+ ------
+ 
+Example: GraphModuleLibrary
+
++----+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <artifactId>GridFlex</artifactId>
+      <groupId>com.site.kernel.sc.flex</groupId>
+      <version>1.0.0-SNAPSHOT</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <artifactId>GraphModuleLibrary</artifactId>
+   <name>GraphModuleLibrary</name>
+   <description>Graph Module Library</description>
+   <packaging>swc</packaging>
+   <build>
+      <sourceDirectory>.</sourceDirectory>
+      <plugins>
+         <plugin>
+            <groupId>com.site.maven.plugins</groupId>
+            <artifactId>maven-flex-plugin</artifactId>
+            <extensions>true</extensions>
+            <configuration>
+               <parameters>
+                  <include-classes>
+				         <class>com.site.A</class>
+				         <class>com.site.B</class>
+                  </include-classes>
+				      <include-file>file.png com/site/image/file.png</include-file>
+				      <include-file>folder.png com/site/image/folder.png</include-file>
+                  <publisher>site.com</publisher>
+                  <headless-server />
+                  <benchmark />
+               </parameters>
+            </configuration>
+            <executions>
+               <execution>
+                  <id>build ${project.name} on Flex SDK 2</id>
+                  <phase>generate-resources</phase>
+                  <configuration>
+                     <classifier>flex2</classifier>
+                     <flexHome>${flex.sdk2.home}</flexHome>
+                  </configuration>
+                  <goals>
+                     <goal>compile</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+         ...
+      </plugins>
+   </build>
+</project>
++----+

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="wizard" root="true">
+    <entity-ref name="webapp" />
+    <entity-ref name="datasources" />
+  </entity>
+  <entity name="webapp">
+    <attribute name="package" value-type="String" />
+    <attribute name="webres" value-type="boolean" />
+    <entity-ref name="module" type="list" names="modules" />
+  </entity>
+  <entity name="module">
+    <attribute name="name" value-type="String" />
+    <attribute name="path" value-type="String" />
+    <entity-ref name="page" type="list" names="pages" />
+  </entity>
+  <entity name="page">
+    <attribute name="name" value-type="String" />
+    <attribute name="title" value-type="String" />
+    <attribute name="default" value-type="boolean" />
+    <attribute name="path" value-type="String" />
+    <attribute name="view" value-type="String" />
+    <attribute name="standalone" value-type="boolean" />
+    <element name="description" value-type="String" />
+  </entity>
+  <entity name="datasources">
+    <entity-ref name="datasource" type="list" names="datasources"/>
+  </entity>
+  <entity name="datasource">
+    <attribute name="name" value-type="String" />
+    <attribute name="do-package" value-type="String" />
+    <entity-ref name="jdbc-connection" />
+  </entity>
+  <entity name="jdbc-connection">
+    <element name="driver" value-type="String" />
+    <element name="url" value-type="String" />
+    <element name="user" value-type="String" />
+    <element name="password" value-type="String" />
+    <element name="properties" value-type="String" />
+  </entity>
+</model>
+

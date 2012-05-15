@@ -1,6 +1,9 @@
-*.class
+/ws/*
+/target/*
+/*/target/*
+/*/.*
+/*/*/target/*
+/*/*/.*
+/*/*/*/target/*
+/*/*/*/.*
 
-# Package Files #
-*.jar
-*.war
-*.ear

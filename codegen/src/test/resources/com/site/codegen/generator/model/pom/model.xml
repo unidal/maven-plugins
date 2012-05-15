@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.site.codegen.pom.model" enable-xml-parser="true" enable-json-builder="true">
+   <entity name="project" root="true" dynamic-attributes="true">
+      <entity-ref name="build" />
+      <any name="others"/>
+   </entity>
+   <entity name="build">
+      <entity-ref name="plugin" type="list" names="plugins"/>
+      <any/>
+   </entity>
+   <entity name="plugin">
+      <element name="groupId" value-type="String"/>
+      <element name="artifactId" value-type="String"/>
+      <element name="version" value-type="String"/>
+      <entity-ref name="execution" type="list" names="executions"/>
+      <any/>
+   </entity>
+   <entity name="plugin">
+      <element name="groupId" value-type="String"/>
+      <element name="artifactId" value-type="String"/>
+      <element name="version" value-type="String"/>
+      <entity-ref name="execution" type="list" names="executions"/>
+      <any/>
+   </entity>
+   <entity name="execution">
+      <any/>
+   </entity>
+</model>

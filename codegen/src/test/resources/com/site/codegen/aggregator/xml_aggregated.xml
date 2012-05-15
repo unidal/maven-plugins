@@ -1,0 +1,85 @@
+<root do-package="com.site.app.game.xml">
+   <element name="game" root="true">
+      <element name="script" value-type="String"/>
+      <element name="time" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <element-ref name="village"/>
+      <element-ref name="actions"/>
+      <element-ref name="reso" list="true" list-name="resos" list-alias="resources"/>
+      <element-ref name="question"/>
+      <element-ref name="village" list="true" list-name="villagelist" list-alias="village-list"/>
+      <element-ref name="reports"/>
+      <element-ref name="studyqueue"/>
+      <element-ref name="tasks"/>
+      <element-ref name="soldiers"/>
+      <element-ref name="html" list="true" list-name="htmls"/>
+   </element>
+   <element name="village">
+      <attribute name="name" value-type="String"/>
+      <attribute name="x" value-type="int"/>
+      <attribute name="y" value-type="int"/>
+      <attribute name="vip" value-type="boolean"/>
+      <attribute name="ismain" value-type="boolean"/>
+      <attribute name="statename" value-type="String" alias="state-name"/>
+      <attribute name="id" value-type="int"/>
+   </element>
+   <element name="actions">
+      <attribute name="quid" value-type="int"/>
+      <attribute name="quname" value-type="String"/>
+      <attribute name="act" value-type="String"/>
+      <attribute name="rid" value-type="int"/>
+      <attribute name="villageid" value-type="int"/>
+      <attribute name="rand" value-type="int"/>
+   </element>
+   <element name="reso" alias="resource">
+      <attribute name="id" value-type="String"/>
+      <attribute name="now" value-type="double"/>
+      <attribute name="max" value-type="double"/>
+      <attribute name="speed" value-type="double"/>
+      <attribute name="increase" value-type="double"/>
+   </element>
+   <element name="question">
+      <attribute name="id" value-type="int"/>
+      <attribute name="isanswer" value-type="int"/>
+      <attribute name="content" value-type="String"/>
+      <attribute name="item1" value-type="String"/>
+      <attribute name="item2" value-type="String"/>
+      <attribute name="item3" value-type="String"/>
+      <attribute name="item4" value-type="String"/>
+   </element>
+   <element name="reports">
+      <attribute name="reportnew" value-type="int"/>
+      <attribute name="msgnew" value-type="int"/>
+   </element>
+   <element name="studyqueue" alias="study-queue">
+      <attribute name="bqs" value-type="int"/>
+      <attribute name="ytj" value-type="int"/>
+      <attribute name="hby" value-type="int"/>
+      <attribute name="jc" value-type="int"/>
+      <attribute name="xg" value-type="int"/>
+   </element>
+   <element name="tasks">
+      <attribute name="zjzbid" value-type="int"/>
+      <element-ref name="task"/>
+   </element>
+   <element name="task">
+      <attribute name="type" value-type="int"/>
+      <attribute name="queueid" value-type="int"/>
+      <attribute name="intro" value-type="String"/>
+      <attribute name="begintime" value-type="String"/>
+      <attribute name="endtime" value-type="String"/>
+   </element>
+   <element name="soldiers">
+      <attribute name="zjzbid" value-type="int"/>
+      <element-ref name="soldier"/>
+   </element>
+   <element name="soldier">
+      <attribute name="vid" value-type="int"/>
+      <attribute name="tribe" value-type="String"/>
+      <attribute name="type" value-type="int"/>
+      <attribute name="count" value-type="int"/>
+   </element>
+   <element name="html">
+      <attribute name="id" value-type="String"/>
+      <element name="text" value-type="String" value="true"/>
+   </element>
+</root>

@@ -1,0 +1,260 @@
+<status timestamp="2012-05-03 13:39:56.546">
+   <runtime start-time="1336023594737" up-time="1817"/>
+   <os name="Mac OS X" arch="x86_64" version="Mac OS X" available-processors="4" system-load-average="1.2001953125" process-time="3120000000" total-physical-memory="4294967296" free-physical-memory="1005801472" committed-virtual-memory="2944618496" total-swap-space="4294967296" free-swap-space="318496768"/>
+   <disk>
+      <disk-volume id="/" total="120473067520" free="44497117184" usable="44234973184"/>
+   </disk>
+   <memory max="129957888" total="85000192" free="68561880" heap-usage="16438312" non-heap-usage="17296104">
+      <gc name="ParNew" count="3" time="19"/>
+      <gc name="ConcurrentMarkSweep" count="0" time="0"/>
+   </memory>
+   <thread count="23" daemon-count="5" peek-count="23" total-started-count="23" cat-thread-count="15" pigeon-thread-count="0">
+      <dump>1: "Cat-DefaultMessageHandler" Id=26 TIMED_WAITING on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@442f1e75 
+at sun.misc.Unsafe.park(Native Method) 
+- waiting on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@442f1e75 
+at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196) 
+at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025) 
+at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:424) 
+at com.dianping.cat.message.io.TcpSocketReceiver.onMessage(TcpSocketReceiver.java:106) 
+at com.dianping.cat.message.spi.internal.DefaultMessageHandler.run(DefaultMessageHandler.java:84) 
+at java.lang.Thread.run(Thread.java:680) 
+at com.site.helper.Threads$RunnableThread.run(Threads.java:242) 
+
+2: "Cat-RealtimeConsumer-DumpAnalyzer-13" Id=24 TIMED_WAITING on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@766b62d1 
+at sun.misc.Unsafe.park(Native Method) 
+- waiting on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@766b62d1 
+at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196) 
+at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025) 
+at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:424) 
+at com.dianping.cat.message.io.DefaultMessageQueue.poll(DefaultMessageQueue.java:32) 
+at com.dianping.cat.message.spi.AbstractMessageAnalyzer.analyze(AbstractMessageAnalyzer.java:20) 
+at com.dianping.cat.consumer.RealtimeConsumer$PeriodTask.run(RealtimeConsumer.java:481) 
+at java.lang.Thread.run(Thread.java:680) 
+... 
+
+3: "Cat-RealtimeConsumer-EventAnalyzer-13" Id=21 TIMED_WAITING on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@644ca6b6 
+at sun.misc.Unsafe.park(Native Method) 
+- waiting on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@644ca6b6 
+at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196) 
+at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025) 
+at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:424) 
+at com.dianping.cat.message.io.DefaultMessageQueue.poll(DefaultMessageQueue.java:32) 
+at com.dianping.cat.message.spi.AbstractMessageAnalyzer.analyze(AbstractMessageAnalyzer.java:20) 
+at com.dianping.cat.consumer.RealtimeConsumer$PeriodTask.run(RealtimeConsumer.java:481) 
+at java.lang.Thread.run(Thread.java:680) 
+... 
+
+4: "Cat-RealtimeConsumer-HeartbeatAnalyzer-13" Id=23 TIMED_WAITING on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@424c414 
+at sun.misc.Unsafe.park(Native Method) 
+- waiting on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@424c414 
+at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196) 
+at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025) 
+at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:424) 
+at com.dianping.cat.message.io.DefaultMessageQueue.poll(DefaultMessageQueue.java:32) 
+at com.dianping.cat.message.spi.AbstractMessageAnalyzer.analyze(AbstractMessageAnalyzer.java:20) 
+at com.dianping.cat.consumer.RealtimeConsumer$PeriodTask.run(RealtimeConsumer.java:481) 
+at java.lang.Thread.run(Thread.java:680) 
+... 
+
+5: "Cat-RealtimeConsumer-PeriodManager" Id=17 TIMED_WAITING 
+at java.lang.Thread.sleep(Native Method) 
+at com.dianping.cat.consumer.RealtimeConsumer$PeriodManager.run(RealtimeConsumer.java:354) 
+at java.lang.Thread.run(Thread.java:680) 
+at com.site.helper.Threads$RunnableThread.run(Threads.java:242) 
+
+6: "Cat-RealtimeConsumer-ProblemAnalyzer-13" Id=19 TIMED_WAITING on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1343a083 
+at sun.misc.Unsafe.park(Native Method) 
+- waiting on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1343a083 
+at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196) 
+at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025) 
+at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:424) 
+at com.dianping.cat.message.io.DefaultMessageQueue.poll(DefaultMessageQueue.java:32) 
+at com.dianping.cat.message.spi.AbstractMessageAnalyzer.analyze(AbstractMessageAnalyzer.java:20) 
+at com.dianping.cat.consumer.RealtimeConsumer$PeriodTask.run(RealtimeConsumer.java:481) 
+at java.lang.Thread.run(Thread.java:680) 
+... 
+
+7: "Cat-RealtimeConsumer-TopIpAnalyzer-13" Id=22 TIMED_WAITING on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@9c4ff2c 
+at sun.misc.Unsafe.park(Native Method) 
+- waiting on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@9c4ff2c 
+at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196) 
+at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025) 
+at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:424) 
+at com.dianping.cat.message.io.DefaultMessageQueue.poll(DefaultMessageQueue.java:32) 
+at com.dianping.cat.message.spi.AbstractMessageAnalyzer.analyze(AbstractMessageAnalyzer.java:20) 
+at com.dianping.cat.consumer.RealtimeConsumer$PeriodTask.run(RealtimeConsumer.java:481) 
+at java.lang.Thread.run(Thread.java:680) 
+... 
+
+8: "Cat-RealtimeConsumer-TransactionAnalyzer-13" Id=20 TIMED_WAITING on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@64552a2b 
+at sun.misc.Unsafe.park(Native Method) 
+- waiting on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@64552a2b 
+at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196) 
+at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025) 
+at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:424) 
+at com.dianping.cat.message.io.DefaultMessageQueue.poll(DefaultMessageQueue.java:32) 
+at com.dianping.cat.message.spi.AbstractMessageAnalyzer.analyze(AbstractMessageAnalyzer.java:20) 
+at com.dianping.cat.consumer.RealtimeConsumer$PeriodTask.run(RealtimeConsumer.java:481) 
+at java.lang.Thread.run(Thread.java:680) 
+... 
+
+9: "Cat-ServerConfigReloader" Id=16 TIMED_WAITING 
+at java.lang.Thread.sleep(Native Method) 
+at com.dianping.cat.configuration.ServerConfigManager$ServerConfigReloader.run(ServerConfigManager.java:263) 
+at java.lang.Thread.run(Thread.java:680) 
+at com.site.helper.Threads$RunnableThread.run(Threads.java:242) 
+
+10: "Cat-StatusUpdateTask" Id=31 RUNNABLE 
+at sun.management.ThreadImpl.dumpThreads0(Native Method) 
+at sun.management.ThreadImpl.dumpAllThreads(ThreadImpl.java:433) 
+at com.dianping.cat.status.StatusInfoCollector.visitThread(StatusInfoCollector.java:184) 
+at com.dianping.cat.status.model.transform.BaseVisitor.visitStatus(BaseVisitor.java:68) 
+at com.dianping.cat.status.StatusInfoCollector.visitStatus(StatusInfoCollector.java:178) 
+at com.dianping.cat.status.model.entity.StatusInfo.accept(StatusInfo.java:31) 
+at com.dianping.cat.status.StatusUpdateTask.run(StatusUpdateTask.java:47) 
+at java.lang.Thread.run(Thread.java:680) 
+... 
+
+11: "Cat-TcpSocketReceiver-Boss-0.0.0.0/0.0.0.0:2280-0" Id=25 RUNNABLE (in native) 
+at sun.nio.ch.KQueueArrayWrapper.kevent0(Native Method) 
+at sun.nio.ch.KQueueArrayWrapper.poll(KQueueArrayWrapper.java:136) 
+at sun.nio.ch.KQueueSelectorImpl.doSelect(KQueueSelectorImpl.java:69) 
+at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69) 
+- locked sun.nio.ch.Util$2@7178b64b 
+- locked java.util.Collections$UnmodifiableSet@2c083020 
+- locked sun.nio.ch.KQueueSelectorImpl@4d8f9b75 
+at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80) 
+at org.jboss.netty.channel.socket.nio.NioServerSocketPipelineSink$Boss.run(NioServerSocketPipelineSink.java:240) 
+at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108) 
+at org.jboss.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:44) 
+... 
+
+Number of locked synchronizers = 2 
+- java.util.concurrent.locks.ReentrantLock$NonfairSync@f27461b 
+- java.util.concurrent.locks.ReentrantLock$NonfairSync@5b6b9e62 
+
+12: "Cat-TcpSocketReceiver-Worker-0" Id=29 RUNNABLE (in native) 
+at sun.nio.ch.KQueueArrayWrapper.kevent0(Native Method) 
+at sun.nio.ch.KQueueArrayWrapper.poll(KQueueArrayWrapper.java:136) 
+at sun.nio.ch.KQueueSelectorImpl.doSelect(KQueueSelectorImpl.java:69) 
+at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69) 
+- locked sun.nio.ch.Util$2@4578aae1 
+- locked java.util.Collections$UnmodifiableSet@751abd68 
+- locked sun.nio.ch.KQueueSelectorImpl@2e8932e8 
+at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80) 
+at org.jboss.netty.channel.socket.nio.SelectorUtil.select(SelectorUtil.java:38) 
+at org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:165) 
+at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108) 
+... 
+
+Number of locked synchronizers = 1 
+- java.util.concurrent.locks.ReentrantLock$NonfairSync@316d3536 
+
+13: "Cat-TcpSocketSender" Id=30 TIMED_WAITING on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@4add8e0d 
+at sun.misc.Unsafe.park(Native Method) 
+- waiting on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@4add8e0d 
+at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196) 
+at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025) 
+at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:424) 
+at com.dianping.cat.message.io.DefaultMessageQueue.poll(DefaultMessageQueue.java:32) 
+at com.dianping.cat.message.io.TcpSocketSender.run(TcpSocketSender.java:131) 
+at java.lang.Thread.run(Thread.java:680) 
+at com.site.helper.Threads$RunnableThread.run(Threads.java:242) 
+
+14: "Cat-TcpSocketSender-Boss-/127.0.0.1:2280-0" Id=27 RUNNABLE (in native) 
+at sun.nio.ch.KQueueArrayWrapper.kevent0(Native Method) 
+at sun.nio.ch.KQueueArrayWrapper.poll(KQueueArrayWrapper.java:136) 
+at sun.nio.ch.KQueueSelectorImpl.doSelect(KQueueSelectorImpl.java:69) 
+at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69) 
+- locked sun.nio.ch.Util$2@4c29d65b 
+- locked java.util.Collections$UnmodifiableSet@4eb8176d 
+- locked sun.nio.ch.KQueueSelectorImpl@180a1d7b 
+at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80) 
+at org.jboss.netty.channel.socket.nio.NioClientSocketPipelineSink$Boss.run(NioClientSocketPipelineSink.java:255) 
+at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108) 
+at org.jboss.netty.util.internal.DeadLockProofWorker$1.run(DeadLockProofWorker.java:44) 
+... 
+
+Number of locked synchronizers = 1 
+- java.util.concurrent.locks.ReentrantLock$NonfairSync@40158291 
+
+15: "Cat-TcpSocketSender-Worker-0" Id=28 RUNNABLE (in native) 
+at sun.nio.ch.KQueueArrayWrapper.kevent0(Native Method) 
+at sun.nio.ch.KQueueArrayWrapper.poll(KQueueArrayWrapper.java:136) 
+at sun.nio.ch.KQueueSelectorImpl.doSelect(KQueueSelectorImpl.java:69) 
+at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69) 
+- locked sun.nio.ch.Util$2@78c08593 
+- locked java.util.Collections$UnmodifiableSet@2781b3d4 
+- locked sun.nio.ch.KQueueSelectorImpl@3445378f 
+at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80) 
+at org.jboss.netty.channel.socket.nio.SelectorUtil.select(SelectorUtil.java:38) 
+at org.jboss.netty.channel.socket.nio.NioWorker.run(NioWorker.java:165) 
+at org.jboss.netty.util.ThreadRenamingRunnable.run(ThreadRenamingRunnable.java:108) 
+... 
+
+Number of locked synchronizers = 1 
+- java.util.concurrent.locks.ReentrantLock$NonfairSync@2c42a818 
+
+16: "Finalizer" Id=3 WAITING on java.lang.ref.ReferenceQueue$Lock@8135daf 
+at java.lang.Object.wait(Native Method) 
+- waiting on java.lang.ref.ReferenceQueue$Lock@8135daf 
+at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118) 
+at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134) 
+at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:159) 
+
+17: "Poller SunPKCS11-Darwin" Id=13 TIMED_WAITING 
+at java.lang.Thread.sleep(Native Method) 
+at sun.security.pkcs11.SunPKCS11$TokenPoller.run(SunPKCS11.java:692) 
+at java.lang.Thread.run(Thread.java:680) 
+
+18: "ReaderThread" Id=10 RUNNABLE (in native) 
+at java.net.SocketInputStream.socketRead0(Native Method) 
+at java.net.SocketInputStream.read(SocketInputStream.java:129) 
+at sun.nio.cs.StreamDecoder.readBytes(StreamDecoder.java:264) 
+at sun.nio.cs.StreamDecoder.implRead(StreamDecoder.java:306) 
+at sun.nio.cs.StreamDecoder.read(StreamDecoder.java:158) 
+- locked java.io.InputStreamReader@305e7020 
+at java.io.InputStreamReader.read(InputStreamReader.java:167) 
+at java.io.BufferedReader.fill(BufferedReader.java:136) 
+at java.io.BufferedReader.readLine(BufferedReader.java:299) 
+- locked java.io.InputStreamReader@305e7020 
+... 
+
+19: "Reference Handler" Id=2 WAITING on java.lang.ref.Reference$Lock@2f6b904d 
+at java.lang.Object.wait(Native Method) 
+- waiting on java.lang.ref.Reference$Lock@2f6b904d 
+at java.lang.Object.wait(Object.java:485) 
+at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116) 
+
+20: "Signal Dispatcher" Id=6 RUNNABLE 
+
+21: "Timer-0" Id=14 TIMED_WAITING on java.util.TaskQueue@3cdf0256 
+at java.lang.Object.wait(Native Method) 
+- waiting on java.util.TaskQueue@3cdf0256 
+at java.util.TimerThread.mainLoop(Timer.java:509) 
+at java.util.TimerThread.run(Timer.java:462) 
+
+22: "btpool0-0 - Acceptor0 SocketConnector@0.0.0.0:2281" Id=12 RUNNABLE (in native) 
+at java.net.PlainSocketImpl.socketAccept(Native Method) 
+at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408) 
+- locked java.net.SocksSocketImpl@55127b52 
+at java.net.ServerSocket.implAccept(ServerSocket.java:462) 
+at java.net.ServerSocket.accept(ServerSocket.java:430) 
+at org.mortbay.jetty.bio.SocketConnector.accept(SocketConnector.java:99) 
+at org.mortbay.jetty.AbstractConnector$Acceptor.run(AbstractConnector.java:537) 
+at org.mortbay.thread.BoundedThreadPool$PoolThread.run(BoundedThreadPool.java:450) 
+
+23: "main" Id=1 RUNNABLE 
+at java.util.zip.ZipFile.read(Native Method) 
+at java.util.zip.ZipFile.access$1200(ZipFile.java:31) 
+at java.util.zip.ZipFile$ZipFileInputStream.read(ZipFile.java:459) 
+- locked java.util.jar.JarFile@798f1a31 
+at java.util.zip.ZipFile$1.fill(ZipFile.java:242) 
+at java.util.zip.InflaterInputStream.read(InflaterInputStream.java:141) 
+at sun.misc.Resource.getBytes(Resource.java:108) 
+at java.net.URLClassLoader.defineClass(URLClassLoader.java:257) 
+at java.net.URLClassLoader.access$000(URLClassLoader.java:58) 
+...</dump>
+   </thread>
+   <message produced="0" overflowed="0" bytes="0"/>
+</status>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <element name="root" root="true" param-name="_for">
+    <attribute name="alias" value-type="String" param-name="test"/>
+    <attribute name="do-package" value-type="String" param-name="_default"/>
+    <attribute name="class1" value-type="Class"/>
+    <element name="class2" value-type="Class"/>
+    <element-ref name="element"/>
+  </element>
+</root>

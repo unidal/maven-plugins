@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root do-package="com.site.app.game.xml">
+	<element name="game" root="true" root-name="game">
+		<element name="id" value-type="int"/>
+		<element name="enabled" value-type="boolean"/>
+		<element name="time" value-type="long"/>
+		<element name="date" value-type="Date"/>
+		<element name="script" value-type="String"/>
+		<element-ref name="village"/>
+		<element-ref name="village" list="true" list-name="village-list" list-type="map"/>
+		<element-ref name="reso" list="true" list-name="resos" list-alias="resources"/>
+		<element-ref name="soldiers"/>
+	</element>
+	<element name="village">
+		<attribute name="id" value-type="int" key="true"/>
+		<attribute name="name" value-type="String"/>
+		<attribute name="x" value-type="int"/>
+		<attribute name="y" value-type="int"/>
+		<attribute name="vip" value-type="boolean"/>
+		<attribute name="ismain" value-type="boolean"/>
+		<attribute name="statename" value-type="String" alias="state-name"/>
+	</element>
+	<element name="reso" alias="resource">
+		<attribute name="id" value-type="String"/>
+		<attribute name="now" value-type="double"/>
+		<attribute name="max" value-type="double"/>
+		<attribute name="speed" value-type="double"/>
+		<attribute name="increase" value-type="double"/>
+	</element>
+	<element name="soldiers">
+		<attribute name="zjzbid" value-type="int"/>
+		<element-ref name="soldier" list="true"/>
+	</element>
+	<element name="soldier">
+		<attribute name="vid" value-type="String"/>
+		<attribute name="tribe" value-type="String"/>
+		<attribute name="type" value-type="int"/>
+		<attribute name="count" value-type="int"/>
+	</element>
+</root>

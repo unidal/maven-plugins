@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entities>
+	<entity name="user" table="user" alias="u" class-name="User" entity-class="UserEntity" do-class="User" dao-class="UserDao" bo-class="UserBo" bof-class="UserBof" do-package="" bo-package="" param-name="user" variable-name="m_user" get-method="getUser" set-method="setUser">
+		<member name="user-id" field="user_id" value-type="int" length="11" nullable="false" key="true" field-name="m_userId" param-name="userId" upper-name="USER_ID" get-method="getUserId" set-method="setUserId" all="true"/>
+		<member name="flags" field="flags" value-type="int" type="UserFlags" length="11" nullable="false" field-name="m_flags" param-name="flags" upper-name="FLAGS" get-method="getFlags" set-method="setFlags" all="true">
+			<flag name="confirmed_via_email" index="0" upper-name="CONFIRMED_VIA_EMAIL">Confirmed via Email</flag>
+			<flag name="suspended_by_admin" index="1" upper-name="SUSPENDED_BY_ADMIN">Suspended by Admin</flag>
+			<flag name="verified_via_bank" index="2" upper-name="VERIFIED_VIA_BANK">Verified via Bank</flag>
+		</member>
+	</entity>
+</entities>
