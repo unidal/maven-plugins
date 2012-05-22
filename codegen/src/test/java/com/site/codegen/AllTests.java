@@ -5,7 +5,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.site.codegen.aggregator.XmlAggregatorTest;
-import com.site.codegen.generator.AllGeneratorTests;
 import com.site.codegen.manifest.ManifestCreatorTest;
 import com.site.codegen.manifest.ManifestParserTest;
 import com.site.codegen.meta.ModelMetaTest;
@@ -20,8 +19,6 @@ import com.site.codegen.transformer.XslNormalizeTest;
 @SuiteClasses({
 
 XmlAggregatorTest.class,
-
-AllGeneratorTests.class,
 
 ManifestCreatorTest.class,
 

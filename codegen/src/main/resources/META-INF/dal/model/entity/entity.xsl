@@ -120,8 +120,14 @@
 </xsl:template>
 
 <xsl:template name="constructor">
+   <xsl:variable name="keys" select="attribute[@key='true'] | element[@key='true']"/>
+   <xsl:if test="$keys">
+      <xsl:value-of select="$empty"/>   public <xsl:value-of select='@entity-class'/>() {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+   </xsl:if>
    <xsl:value-of select="$empty"/>   public <xsl:value-of select='@entity-class'/>(<xsl:value-of select="$empty"/>
-   <xsl:for-each select="attribute[@key='true'] | element[@key='true']">
+   <xsl:for-each select="$keys">
       <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@param-name'/><xsl:value-of select="$empty"/>
    </xsl:for-each>
    <xsl:value-of select="$empty"/>) {<xsl:value-of select="$empty-line"/>
@@ -520,7 +526,7 @@
 
 <xsl:template name="method-set-fields">
    <xsl:variable name="entity" select="." />
-   <xsl:for-each select="attribute[not(@readonly='true')] | element[not(@readonly='true' or @list='true' or @set='true')] | entity-ref[not(@list='true' or @map='true')]">
+   <xsl:for-each select="attribute[not(@readonly='true' and not(@key='true'))] | element[not(@readonly='true' and not(@key='true') or @list='true' or @set='true')] | entity-ref[not(@list='true' or @map='true')]">
       <xsl:sort select="@set-method"/>
       
       <xsl:value-of select="$empty"/>   public <xsl:value-of select='$entity/@entity-class'/><xsl:value-of select='$space'/><xsl:value-of select='@set-method'/>(<xsl:value-of select="@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>) {<xsl:value-of select="$empty-line"/>

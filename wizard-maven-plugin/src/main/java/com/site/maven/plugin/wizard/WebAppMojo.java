@@ -28,7 +28,7 @@ import com.site.maven.plugin.wizard.model.entity.Module;
 import com.site.maven.plugin.wizard.model.entity.Page;
 import com.site.maven.plugin.wizard.model.entity.Webapp;
 import com.site.maven.plugin.wizard.model.entity.Wizard;
-import com.site.maven.plugin.wizard.model.transform.DefaultXmlParser;
+import com.site.maven.plugin.wizard.model.transform.DefaultDomParser;
 
 /**
  * Create a new page of web application project.
@@ -119,7 +119,7 @@ public class WebAppMojo extends AbstractMojo {
       if (wizardFile.isFile()) {
          String content = Files.forIO().readFrom(wizardFile, "utf-8");
 
-         wizard = new DefaultXmlParser().parse(content);
+         wizard = new DefaultDomParser().parse(content);
       } else {
          Webapp webapp = new Webapp();
          

@@ -12,7 +12,7 @@ import com.site.maven.plugin.common.Injector;
 public class BuildPlanMojoTest extends TestCase {
    public void testExecute() throws MojoExecutionException, MojoFailureException {
       BuildPlanMojo mojo = new BuildPlanMojo();
-      File pom = new File("../../pom.xml");
+      File pom = new File("pom.xml");
       File buildPlan = new File("plan.xml");
 
       Injector.setField(mojo, "pomFile", pom);

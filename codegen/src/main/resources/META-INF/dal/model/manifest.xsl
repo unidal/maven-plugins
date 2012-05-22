@@ -50,7 +50,6 @@
       <xsl:call-template name="generate-resource">
         <xsl:with-param name="file" select="concat(translate($package,'.','/'), '/', //entity[@root='true']/@name, '.xsd')"/>
         <xsl:with-param name="template" select="'xml/schema.xsl'"/>
-        <xsl:with-param name="mode" select="'create_if_not_exists'"/>
       </xsl:call-template>
    </xsl:if>
    
@@ -125,6 +124,21 @@
       </xsl:call-template>
    </xsl:if>
    
+   <xsl:variable name="policy-json-parser">
+      <xsl:call-template name="model-policy">
+         <xsl:with-param name="name" select="'json-parser'"/>
+      </xsl:call-template>
+   </xsl:variable>
+
+   <xsl:if test="$policy-json-parser='true'">
+      <!-- DefaultJsonBuilder class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'DefaultJsonParser'"/>
+        <xsl:with-param name="package" select="$transform-package"/>
+        <xsl:with-param name="template" select="'transform/default-json-parser.xsl'"/>
+      </xsl:call-template>
+   </xsl:if>
+ 
    <xsl:variable name="policy-merger">
       <xsl:call-template name="model-policy">
          <xsl:with-param name="name" select="'merger'"/>

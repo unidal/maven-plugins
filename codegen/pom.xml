@@ -8,13 +8,13 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>codegen</artifactId>
-	<version>1.1.0</version>
-	<name>Common code generator</name>
+	<version>1.1.1</version>
+	<name>Core generator</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.site.common</groupId>
 			<artifactId>lookup</artifactId>
-			<version>1.0.9</version>
+			<version>1.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>jdom</groupId>

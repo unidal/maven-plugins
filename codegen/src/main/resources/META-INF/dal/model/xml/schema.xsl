@@ -39,6 +39,7 @@
             <xsl:for-each select="attribute[not(@render='false' or @text='true')]">
                <xsl:call-template name="attribute"/>
             </xsl:for-each>
+            <xsl:call-template name="dynamic-attribute"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:element name="xs:simpleContent" namespace="{$xs-namespace}">
@@ -48,6 +49,7 @@
                   <xsl:for-each select="attribute[not(@render='false' or @text='true')]">
                      <xsl:call-template name="attribute"/>
                   </xsl:for-each>
+                  <xsl:call-template name="dynamic-attribute"/>
                </xsl:element>
             </xsl:element>
          </xsl:otherwise>
@@ -72,6 +74,8 @@
       <xsl:choose>
          <xsl:when test="(@list='true' or @map='true') and @xml-indent='true'">
             <xsl:attribute name="name"><xsl:value-of select="@tag-name"/></xsl:attribute>
+            <xsl:attribute name="minOccurs">0</xsl:attribute>
+            <xsl:attribute name="maxOccurs">1</xsl:attribute>
             <xsl:element name="xs:complexType" namespace="{$xs-namespace}">
                <xsl:element name="xs:sequence" namespace="{$xs-namespace}">
                   <xsl:attribute name="minOccurs">0</xsl:attribute>
@@ -84,10 +88,10 @@
             </xsl:element>
          </xsl:when>
          <xsl:when test="@list='true' or @map='true'">
-            <xsl:attribute name="minOccurs">0</xsl:attribute>
-            <xsl:attribute name="maxOccurs">unbounded</xsl:attribute>
             <xsl:attribute name="name"><xsl:value-of select="@ref-name"/></xsl:attribute>
             <xsl:attribute name="type"><xsl:value-of select="$entity/@xsd-type"/></xsl:attribute>
+            <xsl:attribute name="minOccurs">0</xsl:attribute>
+            <xsl:attribute name="maxOccurs">unbounded</xsl:attribute>
          </xsl:when>
          <xsl:otherwise>
             <xsl:attribute name="name"><xsl:value-of select="@ref-name"/></xsl:attribute>
@@ -156,6 +160,14 @@
          </xsl:when>
       </xsl:choose>
    </xsl:element>
+</xsl:template>
+
+<xsl:template name="dynamic-attribute">
+   <xsl:if test="@dynamic-attributes='true'">
+      <xsl:element name="xs:anyAttribute" namespace="{$xs-namespace}">
+         <xsl:attribute name="processContents">lax</xsl:attribute>
+      </xsl:element>
+   </xsl:if>
 </xsl:template>
 
 <xsl:template name="convert-type">

@@ -120,23 +120,6 @@
    private StringBuilder m_text = new StringBuilder();
 </xsl:template>
 
-<xsl:template name="method-get-document">
-   protected Node getDocument(String xml) {
-      DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
-      dbf.setIgnoringElementContentWhitespace(true);
-      dbf.setIgnoringComments(true);
-
-      try {
-         DocumentBuilder db = dbf.newDocumentBuilder();
-
-         return db.parse(new InputSource(new StringReader(xml)));
-      } catch (Exception x) {
-         throw new RuntimeException(x);
-      }
-   }
-</xsl:template>
-
 <xsl:template name="method-parse">
    <xsl:variable name="current" select="."/>
    <xsl:value-of select="$empty-line"/>

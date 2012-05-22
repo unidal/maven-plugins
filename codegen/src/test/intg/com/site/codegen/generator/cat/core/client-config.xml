@@ -1,3 +1,4 @@
 <config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
-	<domain id="Group" />
+   <base-log-dir>/tmp/catlog</base-log-dir>
+   <domain id="Group"/>
 </config>

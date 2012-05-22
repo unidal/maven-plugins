@@ -9,8 +9,6 @@ import com.site.maven.plugin.codegen.plexus.ProfileTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-MojoTest.class,
-
 ProfileTest.class
 
 })

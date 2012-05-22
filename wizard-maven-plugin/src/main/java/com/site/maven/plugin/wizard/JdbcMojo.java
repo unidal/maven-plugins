@@ -29,7 +29,7 @@ import com.site.maven.plugin.wizard.model.entity.Datasources;
 import com.site.maven.plugin.wizard.model.entity.JdbcConnection;
 import com.site.maven.plugin.wizard.model.entity.Wizard;
 import com.site.maven.plugin.wizard.model.transform.BaseVisitor;
-import com.site.maven.plugin.wizard.model.transform.DefaultXmlParser;
+import com.site.maven.plugin.wizard.model.transform.DefaultDomParser;
 
 /**
  * Create a new page of web application project.
@@ -159,7 +159,7 @@ public class JdbcMojo extends AbstractMojo {
 
       if (wizardFile.isFile()) {
          String content = Files.forIO().readFrom(wizardFile, "utf-8");
-         wizard = new DefaultXmlParser().parse(content);
+         wizard = new DefaultDomParser().parse(content);
       } else {
          wizard = new Wizard();
          wizard.setDatasources(new Datasources());

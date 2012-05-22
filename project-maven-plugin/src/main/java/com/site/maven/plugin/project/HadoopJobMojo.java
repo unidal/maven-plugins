@@ -53,8 +53,9 @@ public class HadoopJobMojo extends AbstractMojo {
 	 */
 	protected boolean verbose;
 
-	private void addMainClassAndManifest(Archiver a, File dir, File artifactJar, String classpath) throws IOException,
-	      ArchiverException {
+	private void addMainClassAndManifest(Archiver a, File dir,
+			File artifactJar, String classpath) throws IOException,
+			ArchiverException {
 		String manifestName = "META-INF/MANIFEST.MF";
 		JarFile jar = new JarFile(artifactJar);
 		Manifest manifest = jar.getManifest();
@@ -63,14 +64,16 @@ public class HadoopJobMojo extends AbstractMojo {
 
 		if (mainClassName == null) {
 			jar.close();
-			throw new IllegalStateException(String.format("No Main-Class entry is found in jar(%s)!", artifactJar));
+			throw new IllegalStateException(String.format(
+					"No Main-Class entry is found in jar(%s)!", artifactJar));
 		}
 
 		String mainClassPath = mainClassName.replace('.', '/') + ".class";
 		ZipEntry entry = jar.getEntry(mainClassPath);
 		File mainClassFile = File.createTempFile("main", "class");
 
-		Files.forIO().copy(jar.getInputStream(entry), new FileOutputStream(mainClassFile), AutoClose.INPUT_OUTPUT);
+		Files.forIO().copy(jar.getInputStream(entry),
+				new FileOutputStream(mainClassFile), AutoClose.INPUT_OUTPUT);
 
 		jar.close();
 
@@ -91,7 +94,8 @@ public class HadoopJobMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		String jarName = m_project.getArtifactId() + "-" + m_project.getVersion() + "-job.jar";
+		String jarName = m_project.getArtifactId() + "-"
+				+ m_project.getVersion() + "-job.jar";
 		Archiver a = new ZipArchiver();
 
 		a.setDestFile(new File(outputDir, jarName));
@@ -99,28 +103,32 @@ public class HadoopJobMojo extends AbstractMojo {
 		try {
 			List<String> elements = m_project.getRuntimeClasspathElements();
 
-			makeArchive(a, m_project.getBuild().getDirectory(), m_project.getExecutionProject().getArtifact().getFile(),
-			      elements);
+			makeArchive(a, m_project.getBuild().getDirectory(), m_project
+					.getExecutionProject().getArtifact().getFile(), elements);
 			a.createArchive();
 
-			getLog().info(String.format("File(%s) created.", a.getDestFile().getCanonicalPath()));
+			getLog().info(
+					String.format("File(%s) created.", a.getDestFile()
+							.getCanonicalPath()));
 		} catch (Exception e) {
-			throw new MojoExecutionException("Fail to resolve runtime classpath!", e);
+			throw new MojoExecutionException(
+					"Fail to resolve runtime classpath!", e);
 		}
 	}
 
-	void makeArchive(Archiver a, String baseDir, File artifactJar, List<String> elements) throws Exception {
+	void makeArchive(Archiver a, String baseDir, File artifactJar,
+			List<String> elements) throws Exception {
 		StringBuilder classpath = new StringBuilder(2048);
 		String mainJar = "lib/" + artifactJar.getName();
 
 		a.addFile(artifactJar, mainJar);
 		classpath.append(". ").append(mainJar);
-
+		
 		for (String element : elements) {
 			File file = new File(element);
 
 			if (file.isFile()) {
-				String name = "lib/" + file.getName();
+				String name = "lib/"+file.getName();
 
 				a.addFile(file, name);
 				classpath.append(' ').append(name);
