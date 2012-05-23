@@ -151,7 +151,7 @@
                <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.setDynamicAttribute(tag, value);<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:value-of select="$indent"/>   throw new RuntimeException(String.format("Unknown tag(%s) under %s!", tag, <xsl:value-of select="$current/@param-name"/>.getClass().getName()));<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$indent"/>   throw new RuntimeException(String.format("Unknown tag(%s) under %s!", tag, <xsl:value-of select="$current/@param-name"/>));<xsl:value-of select="$empty-line"/>
             </xsl:otherwise>
          </xsl:choose>
          <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
@@ -281,7 +281,7 @@
          <xsl:variable name="name" select="@name"/>
          <xsl:variable name="entity" select="//entity[@name=$name]"/>
          <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-names"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/><xsl:value-of select="'      '"/><xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="$entity/@entity-class"/>(null);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/><xsl:value-of select="'      '"/><xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="$entity/@entity-class"/>();<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/>      m_linker.<xsl:value-of select="@on-event-method"/>((<xsl:value-of select="$current/@entity-class"/>) parent, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/>      m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
@@ -308,7 +308,7 @@
                <xsl:variable name="name" select="@name"/>
                <xsl:variable name="entity" select="//entity[@name=$name]"/>
                <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-names"/>.equals(parentTag)) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$indent"/><xsl:value-of select="'            '"/><xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="$entity/@entity-class"/>(null);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$indent"/><xsl:value-of select="'            '"/><xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="$entity/@entity-class"/>();<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$indent"/>            m_linker.<xsl:value-of select="@on-event-method"/>((ClientConfig) parent, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$indent"/>            m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
@@ -356,7 +356,7 @@
       <xsl:value-of select="$empty"/>      } else <xsl:value-of select="$empty"/>
    </xsl:for-each>
    <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="$empty"/>         throw new RuntimeException(String.format("Unknown entity(%s) under %s!", tag, parent.getClass().getName()));<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>         throw new RuntimeException(String.format("Unknown tag(%s) under %s!", tag, parent));<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
 </xsl:template>
@@ -427,18 +427,27 @@
 <xsl:value-of select="$empty"/>   static class JsonReader {
       private Reader m_reader;
 
+      private char[] m_buffer = new char[2048];
+
+      private int m_size;
+
+      private int m_index;
+
       public JsonReader(Reader reader) {
          m_reader = reader;
       }
 
       private char next() throws IOException {
-         int i = m_reader.read();
+         if (m_index <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>= m_size) {
+            m_size = m_reader.read(m_buffer);
+            m_index = 0;
 
-         if (i == -1) {
-            throw new EOFException();
-         } else {
-            return (char) i;
+            if (m_size == -1) {
+               throw new EOFException();
+            }
          }
+
+         return m_buffer[m_index++];
       }
 
       public void parse(DefaultJsonParser parser) throws IOException {
@@ -471,7 +480,13 @@
                   char ch2 = next();
 
                   if (ch2 != ch) {
-                     sb.append(ch2);
+                     if (ch2 == '\\') {
+                        char ch3 = next();
+
+                        sb.append(ch3);
+                     } else {
+                        sb.append(ch2);
+                     }
                   } else {
                      if (!flag) {
                         parser.onName(sb.toString());
