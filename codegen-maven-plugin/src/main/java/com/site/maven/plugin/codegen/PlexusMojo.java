@@ -23,10 +23,10 @@ import org.codehaus.plexus.util.cli.StreamConsumer;
 import com.site.helper.Joiners;
 import com.site.helper.Splitters;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
-import org.unidal.maven.plugins.plexus.profile.entity.Env;
-import org.unidal.maven.plugins.plexus.profile.entity.Profile;
-import org.unidal.maven.plugins.plexus.profile.entity.Property;
-import org.unidal.maven.plugins.plexus.profile.transform.DefaultDomParser;
+import com.site.maven.plugins.plexus.profile.entity.Env;
+import com.site.maven.plugins.plexus.profile.entity.Profile;
+import com.site.maven.plugins.plexus.profile.entity.Property;
+import com.site.maven.plugins.plexus.profile.transform.DefaultDomParser;
 
 /**
  * Code generator for Plexus dependency injection
