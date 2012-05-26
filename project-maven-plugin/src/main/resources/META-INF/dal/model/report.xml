@@ -1,4 +1,4 @@
-<model model-package="com.site.maven.plugin.project.model" disable-xml-parser="true" disable-validator="true" disable-xml-schema="true" enable-merger="true">
+<model model-package="org.unidal.maven.plugin.project.model" disable-xml-parser="true" disable-validator="true" disable-xml-schema="true" enable-merger="true">
   <entity name="report" root="true">
     <attribute name="groupId" value-type="String" />
     <attribute name="artifactId" value-type="String" />

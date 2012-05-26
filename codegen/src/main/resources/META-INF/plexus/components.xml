@@ -1,177 +1,177 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.site.codegen.meta.TableMeta</role>
-			<implementation>com.site.codegen.meta.DefaultTableMeta</implementation>
+			<role>org.unidal.codegen.meta.TableMeta</role>
+			<implementation>org.unidal.codegen.meta.DefaultTableMeta</implementation>
 		</component>
 		<component>
-			<role>com.site.codegen.meta.XmlMeta</role>
-			<implementation>com.site.codegen.meta.DefaultXmlMeta</implementation>
+			<role>org.unidal.codegen.meta.XmlMeta</role>
+			<implementation>org.unidal.codegen.meta.DefaultXmlMeta</implementation>
 		</component>
 		<component>
-			<role>com.site.codegen.meta.ModelMeta</role>
-			<implementation>com.site.codegen.meta.DefaultModelMeta</implementation>
+			<role>org.unidal.codegen.meta.ModelMeta</role>
+			<implementation>org.unidal.codegen.meta.DefaultModelMeta</implementation>
 		</component>
 		<component>
-			<role>com.site.codegen.meta.WizardMeta</role>
-			<implementation>com.site.codegen.meta.DefaultWizardMeta</implementation>
+			<role>org.unidal.codegen.meta.WizardMeta</role>
+			<implementation>org.unidal.codegen.meta.DefaultWizardMeta</implementation>
 		</component>
 		<component>
-			<role>com.site.codegen.meta.XmlMetaHelper</role>
-			<implementation>com.site.codegen.meta.DefaultXmlMetaHelper</implementation>
+			<role>org.unidal.codegen.meta.XmlMetaHelper</role>
+			<implementation>org.unidal.codegen.meta.DefaultXmlMetaHelper</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.codegen.meta.XmlMeta</role>
+					<role>org.unidal.codegen.meta.XmlMeta</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.codegen.manifest.ManifestCreator</role>
-			<implementation>com.site.codegen.manifest.DefaultManifestCreator</implementation>
+			<role>org.unidal.codegen.manifest.ManifestCreator</role>
+			<implementation>org.unidal.codegen.manifest.DefaultManifestCreator</implementation>
 		</component>
 		<component>
-			<role>com.site.codegen.template.XslTemplateManager</role>
-			<implementation>com.site.codegen.template.DefaultXslTemplateManager</implementation>
+			<role>org.unidal.codegen.template.XslTemplateManager</role>
+			<implementation>org.unidal.codegen.template.DefaultXslTemplateManager</implementation>
 		</component>
 		<component>
-			<role>com.site.codegen.transformer.XslTransformer</role>
-			<implementation>com.site.codegen.transformer.DefaultXslTransformer</implementation>
+			<role>org.unidal.codegen.transformer.XslTransformer</role>
+			<implementation>org.unidal.codegen.transformer.DefaultXslTransformer</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.codegen.template.XslTemplateManager</role>
+					<role>org.unidal.codegen.template.XslTemplateManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.codegen.manifest.ManifestParser</role>
-			<implementation>com.site.codegen.manifest.DefaultManifestParser</implementation>
+			<role>org.unidal.codegen.manifest.ManifestParser</role>
+			<implementation>org.unidal.codegen.manifest.DefaultManifestParser</implementation>
 		</component>
 		<component>
-			<role>com.site.codegen.aggregator.XmlAggregator</role>
+			<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 			<role-hint>dal-jdbc</role-hint>
-			<implementation>com.site.codegen.aggregator.DefaultXmlAggregator</implementation>
+			<implementation>org.unidal.codegen.aggregator.DefaultXmlAggregator</implementation>
 			<configuration>
 				<structureFile>META-INF/dal/jdbc/structure.xml</structureFile>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.codegen.generator.Generator</role>
+			<role>org.unidal.codegen.generator.Generator</role>
 			<role-hint>dal-jdbc</role-hint>
-			<implementation>com.site.codegen.generator.XslGenerator</implementation>
+			<implementation>org.unidal.codegen.generator.XslGenerator</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.site.codegen.transformer.XslTransformer</role>
+					<role>org.unidal.codegen.transformer.XslTransformer</role>
 				</requirement>
 				<requirement>
-					<role>com.site.codegen.manifest.ManifestParser</role>
+					<role>org.unidal.codegen.manifest.ManifestParser</role>
 				</requirement>
 				<requirement>
-					<role>com.site.codegen.aggregator.XmlAggregator</role>
+					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 					<role-hint>dal-jdbc</role-hint>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.codegen.aggregator.XmlAggregator</role>
+			<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 			<role-hint>dal-xml</role-hint>
-			<implementation>com.site.codegen.aggregator.DefaultXmlAggregator</implementation>
+			<implementation>org.unidal.codegen.aggregator.DefaultXmlAggregator</implementation>
 			<configuration>
 				<structureFile>META-INF/dal/xml/structure.xml</structureFile>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.codegen.generator.Generator</role>
+			<role>org.unidal.codegen.generator.Generator</role>
 			<role-hint>dal-xml</role-hint>
-			<implementation>com.site.codegen.generator.XslGenerator</implementation>
+			<implementation>org.unidal.codegen.generator.XslGenerator</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.site.codegen.transformer.XslTransformer</role>
+					<role>org.unidal.codegen.transformer.XslTransformer</role>
 				</requirement>
 				<requirement>
-					<role>com.site.codegen.manifest.ManifestParser</role>
+					<role>org.unidal.codegen.manifest.ManifestParser</role>
 				</requirement>
 				<requirement>
-					<role>com.site.codegen.aggregator.XmlAggregator</role>
+					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 					<role-hint>dal-xml</role-hint>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.codegen.aggregator.XmlAggregator</role>
+			<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 			<role-hint>dal-model</role-hint>
-			<implementation>com.site.codegen.aggregator.DefaultXmlAggregator</implementation>
+			<implementation>org.unidal.codegen.aggregator.DefaultXmlAggregator</implementation>
 			<configuration>
 				<structureFile>META-INF/dal/model/structure.xml</structureFile>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.codegen.generator.Generator</role>
+			<role>org.unidal.codegen.generator.Generator</role>
 			<role-hint>dal-model</role-hint>
-			<implementation>com.site.codegen.generator.XslGenerator</implementation>
+			<implementation>org.unidal.codegen.generator.XslGenerator</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.site.codegen.transformer.XslTransformer</role>
+					<role>org.unidal.codegen.transformer.XslTransformer</role>
 				</requirement>
 				<requirement>
-					<role>com.site.codegen.manifest.ManifestParser</role>
+					<role>org.unidal.codegen.manifest.ManifestParser</role>
 				</requirement>
 				<requirement>
-					<role>com.site.codegen.aggregator.XmlAggregator</role>
+					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 					<role-hint>dal-model</role-hint>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.codegen.aggregator.XmlAggregator</role>
+			<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 			<role-hint>wizard-webapp</role-hint>
-			<implementation>com.site.codegen.aggregator.DefaultXmlAggregator</implementation>
+			<implementation>org.unidal.codegen.aggregator.DefaultXmlAggregator</implementation>
 			<configuration>
 				<structureFile>META-INF/wizard/webapp/structure.xml</structureFile>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.codegen.generator.Generator</role>
+			<role>org.unidal.codegen.generator.Generator</role>
 			<role-hint>wizard-webapp</role-hint>
-			<implementation>com.site.codegen.generator.XslGenerator</implementation>
+			<implementation>org.unidal.codegen.generator.XslGenerator</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.site.codegen.transformer.XslTransformer</role>
+					<role>org.unidal.codegen.transformer.XslTransformer</role>
 				</requirement>
 				<requirement>
-					<role>com.site.codegen.manifest.ManifestParser</role>
+					<role>org.unidal.codegen.manifest.ManifestParser</role>
 				</requirement>
 				<requirement>
-					<role>com.site.codegen.aggregator.XmlAggregator</role>
+					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 					<role-hint>wizard-webapp</role-hint>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.codegen.aggregator.XmlAggregator</role>
+			<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 			<role-hint>wizard-jdbc</role-hint>
-			<implementation>com.site.codegen.aggregator.DefaultXmlAggregator</implementation>
+			<implementation>org.unidal.codegen.aggregator.DefaultXmlAggregator</implementation>
 			<configuration>
 				<structureFile>META-INF/wizard/jdbc/structure.xml</structureFile>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.codegen.generator.Generator</role>
+			<role>org.unidal.codegen.generator.Generator</role>
 			<role-hint>wizard-jdbc</role-hint>
-			<implementation>com.site.codegen.generator.XslGenerator</implementation>
+			<implementation>org.unidal.codegen.generator.XslGenerator</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.site.codegen.transformer.XslTransformer</role>
+					<role>org.unidal.codegen.transformer.XslTransformer</role>
 				</requirement>
 				<requirement>
-					<role>com.site.codegen.manifest.ManifestParser</role>
+					<role>org.unidal.codegen.manifest.ManifestParser</role>
 				</requirement>
 				<requirement>
-					<role>com.site.codegen.aggregator.XmlAggregator</role>
+					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 					<role-hint>wizard-jdbc</role-hint>
 				</requirement>
 			</requirements>
