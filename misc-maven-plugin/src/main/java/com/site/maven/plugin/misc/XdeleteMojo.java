@@ -14,7 +14,7 @@ import org.apache.maven.plugin.MojoFailureException;
  * <pre>
  * Exmaple:
  * &lt;plugin&gt;
- *   &lt;groupId&gt;com.site.maven.plugins&lt;/groupId&gt;
+ *   &lt;groupId&gt;org.unidal.maven.plugins&lt;/groupId&gt;
  *   &lt;artifactId&gt;maven-misc-plugin&lt;/artifactId&gt;
  *       &lt;configuration&gt;
  *               &lt;targetDirectory&gt;path/to/generated/source&lt;/targetDirectory&gt;

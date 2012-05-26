@@ -9,7 +9,7 @@
                <lifecycle>
                   <id>default</id>
                   <phases>
-                     <initialize>com.site.maven.plugins:flex-maven-plugin:initialize</initialize>
+                     <initialize>org.unidal.maven.plugins:flex-maven-plugin:initialize</initialize>
                      <generate-resources>org.apache.maven.plugins:maven-resources-plugin:resources</generate-resources>
                      <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                      <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
@@ -18,7 +18,7 @@
                <lifecycle>
                   <id>clean</id>
                   <phases>
-                     <pre-clean>com.site.maven.plugins:flex-maven-plugin:initialize</pre-clean>
+                     <pre-clean>org.unidal.maven.plugins:flex-maven-plugin:initialize</pre-clean>
                      <clean>org.apache.maven.plugins:maven-clean-plugin:clean</clean>
                   </phases>
                </lifecycle>
@@ -45,7 +45,7 @@
                <lifecycle>
                   <id>default</id>
                   <phases>
-                     <initialize>com.site.maven.plugins:flex-maven-plugin:initialize</initialize>
+                     <initialize>org.unidal.maven.plugins:flex-maven-plugin:initialize</initialize>
                      <generate-resources>org.apache.maven.plugins:maven-resources-plugin:resources</generate-resources>
                      <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                      <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
@@ -54,7 +54,7 @@
                <lifecycle>
                   <id>clean</id>
                   <phases>
-                     <pre-clean>com.site.maven.plugins:flex-maven-plugin:initialize</pre-clean>
+                     <pre-clean>org.unidal.maven.plugins:flex-maven-plugin:initialize</pre-clean>
                      <clean>org.apache.maven.plugins:maven-clean-plugin:clean</clean>
                   </phases>
                </lifecycle>

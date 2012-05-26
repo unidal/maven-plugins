@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.site.helper.Files;
-import com.site.maven.plugins.plexus.profile.entity.Profile;
-import com.site.maven.plugins.plexus.profile.transform.DefaultDomParser;
+import org.unidal.maven.plugins.plexus.profile.entity.Profile;
+import org.unidal.maven.plugins.plexus.profile.transform.DefaultDomParser;
 
 public class ProfileTest {
    @Test
