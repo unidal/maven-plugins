@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project artifactId="project-maven-plugin" version="1.1.1" packaging="maven-plugin">
+   <name>Maven Project Plugin</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.unidal.maven.plugins</groupId>
+         <artifactId>common</artifactId>
+         <version>1.1.1</version>
+      </dependency>
+      <dependency>
+         <groupId>org.unidal.maven.plugins</groupId>
+         <artifactId>codegen</artifactId>
+         <version>1.1.1</version>
+      </dependency>
+      <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+         <artifactId>plexus-archiver</artifactId>
+         <version>2.1.1</version>
+      </dependency>
+      <dependency>
+         <groupId>jdom</groupId>
+         <artifactId>jdom</artifactId>
+         <version>1.0</version>
+      </dependency>
+      <dependency>
+         <groupId>jaxen</groupId>
+         <artifactId>jaxen</artifactId>
+         <version>1.1</version>
+      </dependency>
+   </dependencies>
+</project>
+

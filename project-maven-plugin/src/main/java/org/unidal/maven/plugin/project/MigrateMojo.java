@@ -66,8 +66,10 @@ public class MigrateMojo extends AbstractMojo {
    private int m_failure;
 
    public void execute() throws MojoExecutionException, MojoFailureException {
-      sourcePackage = PropertyProviders.fromConsole().forString("sourcePackage", "Java source package:", sourcePackage, null);
-      targetPackage = PropertyProviders.fromConsole().forString("targetPackage", "Java target package:", targetPackage, null);
+      sourcePackage = PropertyProviders.fromConsole().forString("sourcePackage", "Java source package:", sourcePackage,
+            null);
+      targetPackage = PropertyProviders.fromConsole().forString("targetPackage", "Java target package:", targetPackage,
+            null);
 
       m_reversedSourcePackage = reversePackage(sourcePackage);
       m_reversedTargetPackage = reversePackage(targetPackage);
@@ -169,7 +171,11 @@ public class MigrateMojo extends AbstractMojo {
 
                migrateDirectory(source, target, newPath, newPackageName);
             } else if (file.isFile()) {
-               migrateFile(file, new File(target, targetPath + "/" + name));
+               if (targetPath == null) {
+                  migrateFile(file, new File(target, name));
+               } else {
+                  migrateFile(file, new File(target, targetPath + "/" + name));
+               }
             }
          }
       }
@@ -177,13 +183,14 @@ public class MigrateMojo extends AbstractMojo {
 
    protected void migrateFile(File source, File target) {
       try {
-         String original = Files.forIO().readFrom(source, "utf-8");
+         String encoding = "utf-8";
+         String original = Files.forIO().readFrom(source, encoding);
          String migrated = replaceAll(original, sourcePackage, targetPackage);
 
          // for tld uri, cookie domain name etc.
          migrated = replaceAll(migrated, m_reversedSourcePackage, m_reversedTargetPackage);
 
-         Files.forIO().writeTo(target, migrated);
+         Files.forIO().writeTo(target, migrated, encoding);
          m_success++;
 
          boolean changed = !original.equals(migrated);
