@@ -148,9 +148,9 @@
          <xsl:value-of select="$empty"/>if (<xsl:value-of select="$empty"/>
          <xsl:for-each select="$entity-refs">
             <xsl:if test="position()!=1"> || </xsl:if>
-            <xsl:value-of select="$empty"/><xsl:value-of select="@upper-names"/>.equals(tag))<xsl:value-of select="$empty"/>
+            <xsl:value-of select="$empty"/><xsl:value-of select="@upper-names"/>.equals(tag)<xsl:value-of select="$empty"/>
          </xsl:for-each>
-         <xsl:value-of select="$empty"/> {<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>) {<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/>   // do nothing here<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
       </xsl:if>
