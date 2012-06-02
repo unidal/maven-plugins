@@ -39,6 +39,11 @@
       <xsl:sort select="@upper-name"/>
 
       <xsl:variable name="upper-name" select="@upper-name"/>
+      <xsl:if test="generate-id(//entity/entity-ref[not(@map='true' or @list='true' or @render='false')][@upper-name=$upper-name][1])=generate-id()">
+         <xsl:if test="@upper-name != @upper-names">
+            <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name"/>;<xsl:value-of select="$empty-line"/>
+         </xsl:if>
+      </xsl:if>
       <xsl:if test="generate-id((//entity/attribute | //entity/element | //entity/entity-ref)[not(@render='false')][@upper-name=$upper-name][1])=generate-id()">
          <xsl:choose>
             <xsl:when test="name()='entity-ref' and (@map='true' or @list='true')">
@@ -75,6 +80,9 @@
    private Stack<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> m_objs = new Stack<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/>();
 
    private <xsl:value-of select="entity[@root='true']/@entity-class"/> m_root;
+<xsl:if test="//entity/element[@list='true' or @set='true'][not(@render='false')]">
+   private boolean m_inElements = false;
+</xsl:if>
 </xsl:template>
 
 <xsl:template name="method-static-parse">
@@ -92,7 +100,6 @@
       <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(String json) throws IOException {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      return parse(new StringReader(json));<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
    </xsl:for-each>
 </xsl:template>
 
@@ -133,30 +140,49 @@
    <xsl:param name="indent"/>
    
    <xsl:variable name="current" select="."/>
-   <xsl:for-each select="(attribute | element)[not(@render='false')]">
-      <xsl:if test="position()=1">
-         <xsl:value-of select="$indent"/>
+   <xsl:variable name="children" select="(attribute | element | entity-ref)[not(@render='false')]"/>
+   <xsl:if test="$children">
+      <xsl:value-of select="$indent"/>
+      <xsl:variable name="entity-refs" select="entity-ref[not(@render='false')]"/>
+      <xsl:if test="$entity-refs">
+         <xsl:value-of select="$empty"/>if (<xsl:value-of select="$empty"/>
+         <xsl:for-each select="$entity-refs">
+            <xsl:if test="position()!=1"> || </xsl:if>
+            <xsl:value-of select="$empty"/><xsl:value-of select="@upper-names"/>.equals(tag))<xsl:value-of select="$empty"/>
+         </xsl:for-each>
+         <xsl:value-of select="$empty"/> {<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>   // do nothing here<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
       </xsl:if>
-      <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@set-method"/>(<xsl:value-of select="$empty"/>
-      <xsl:call-template name="convert-type">
-         <xsl:with-param name="value" select="'value'"/>
-      </xsl:call-template>
-      <xsl:value-of select="$empty"/>);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
-      <xsl:if test="position()=last()">
-         <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
+      <xsl:for-each select="(attribute | element)[not(@render='false')]">
+         <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="$empty"/>
          <xsl:choose>
-            <xsl:when test="$current/@dynamic-attributes='true'">
-               <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.setDynamicAttribute(tag, value);<xsl:value-of select="$empty-line"/>
+            <xsl:when test="@list='true' or @set='true'">
+               <xsl:value-of select="@add-method"/>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:value-of select="$indent"/>   throw new RuntimeException(String.format("Unknown tag(%s) under %s!", tag, <xsl:value-of select="$current/@param-name"/>));<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="@set-method"/>
             </xsl:otherwise>
          </xsl:choose>
-         <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
-      </xsl:if>
-   </xsl:for-each>
+         <xsl:value-of select="$empty"/>(<xsl:value-of select="$empty"/>
+         <xsl:call-template name="convert-type">
+            <xsl:with-param name="value" select="'value'"/>
+         </xsl:call-template>
+         <xsl:value-of select="$empty"/>);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
+      </xsl:for-each>
+      <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
+      <xsl:choose>
+         <xsl:when test="$current/@dynamic-attributes='true'">
+            <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.setDynamicAttribute(tag, value);<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="$indent"/>   throw new RuntimeException(String.format("Unknown tag(%s) of %s under %s!", tag, <xsl:value-of select="$current/@param-name"/>, m_tags));<xsl:value-of select="$empty-line"/>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
+   </xsl:if>
 </xsl:template>
 
 <xsl:template name="convert-type">
@@ -208,41 +234,88 @@
 </xsl:template>
 
 <xsl:template name="method-on-array-begin">
+   <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   protected void onArrayBegin() {<xsl:value-of select="$empty-line"/>
-   <xsl:if test="entity[entity-ref[@list='true' and not(@render='false')]]">
+   <xsl:variable name="entities" select="entity[element[@list='true' or @set='true'] or entity-ref[@list='true']][ not(@render='false')]"/>
+   <xsl:if test="$entities">
       <xsl:variable name="indent" select="'      '"/>
       <xsl:value-of select="$empty"/>      Object parent = m_objs.peek();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      String tag = m_tags.peek();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$indent"/>
-      <xsl:for-each select="entity[entity-ref[@list='true' and not(@render='false')]]">
+      <xsl:for-each select="$entities">
          <xsl:value-of select="$empty"/>if (parent instanceof <xsl:value-of select="@entity-class"/>) {<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>
-         <xsl:for-each select="entity-ref[@list='true' and not(@render='false')]">
-            <xsl:value-of select="$empty"/>   if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/>
+         <xsl:for-each select="element[(@list='true' or @set='true')][not(@render='false')]">
+            <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>      m_objs.push(parent);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>      m_inElements = true;<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>   } else <xsl:value-of select="$empty"/>
+         </xsl:for-each>
+         <xsl:for-each select="entity-ref[@list='true'][not(@render='false')]">
+            <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-names"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$indent"/>      m_objs.push(parent);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$indent"/>   } else <xsl:value-of select="$empty"/>
          </xsl:for-each>
          <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>            throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>      throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
       </xsl:for-each>
-      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$indent"/>   throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
    </xsl:if>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
 </xsl:template>
 
 <xsl:template name="method-on-array-end">
    protected void onArrayEnd() {
       m_objs.pop();
       m_tags.pop();
+<xsl:if test="//entity/element[@list='true' or @set='true'][not(@render='false')]">
+      m_inElements = false;
+</xsl:if>
    }
 </xsl:template>
 
 <xsl:template name="method-on-name">
-   protected void onName(String name) {
-      m_tags.push(name);
-   }
+   <xsl:value-of select="$empty"/>   protected void onName(String name) {<xsl:value-of select="$empty-line"/>
+      <xsl:variable name="elements" select="//entity/element[@list='true' or @set='true'][not(@render='false')]"/>
+      <xsl:choose>
+         <xsl:when test="$elements">
+            <xsl:variable name="indent" select="'      '"/>
+            <xsl:value-of select="$indent"/>if (m_inElements) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>   Object parent = m_objs.peek();<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>   String tag = m_tags.peek();<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/>
+            <xsl:for-each select="//entity[element[@list='true' or @set='true'][not(@render='false')]]">
+               <xsl:variable name="entity" select="."/>
+               <xsl:value-of select="$empty"/>if (parent instanceof <xsl:value-of select="$entity/@entity-class"/>) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$indent"/><xsl:value-of select="'      '"/>
+               <xsl:for-each select="element[(@list='true' or @set='true')][not(@render='false')]">
+                  <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$indent"/>         ((<xsl:value-of select="$entity/@entity-class"/>) parent).<xsl:value-of select="@add-method"/>(name);<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$indent"/>      } else <xsl:value-of select="$empty"/>
+               </xsl:for-each>
+               <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$indent"/>         throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$indent"/>      }<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$indent"/>   } else <xsl:value-of select="$empty"/>
+            </xsl:for-each>
+            <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>      throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>} else {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>   m_tags.push(name);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="$empty"/>      m_tags.push(name);<xsl:value-of select="$empty-line"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
 </xsl:template>
 
 <xsl:template name="method-on-object-begin">
@@ -276,54 +349,55 @@
             <xsl:value-of select="$indent"/>      m_objs.push(parent);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$indent"/>   } else <xsl:value-of select="$empty"/>
          </xsl:if>
+         <xsl:for-each select="entity-ref[@list='true' and not(@render='false')]">
+            <xsl:variable name="name" select="@name"/>
+            <xsl:variable name="entity" select="//entity[@name=$name]"/>
+            <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-names"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/><xsl:value-of select="'      '"/><xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="$entity/@entity-class"/>();<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>      m_linker.<xsl:value-of select="@on-event-method"/>((<xsl:value-of select="$current/@entity-class"/>) parent, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>      m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>      m_tags.push("");<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>   } else <xsl:value-of select="$empty"/>
+         </xsl:for-each>
+         <xsl:for-each select="entity-ref[not(@list='true' or @map='true') and not(@render='false')]">
+            <xsl:variable name="name" select="@name"/>
+            <xsl:variable name="entity" select="//entity[@name=$name]"/>
+            <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/><xsl:value-of select="'      '"/><xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="$entity/@entity-class"/>();<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>      m_linker.<xsl:value-of select="@on-event-method"/>((<xsl:value-of select="$current/@entity-class"/>) parent, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>      m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>   } else <xsl:value-of select="$empty"/>
+         </xsl:for-each>
       </xsl:if>
-      <xsl:for-each select="entity-ref[@list='true' and not(@render='false')]">
-         <xsl:variable name="name" select="@name"/>
-         <xsl:variable name="entity" select="//entity[@name=$name]"/>
-         <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-names"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/><xsl:value-of select="'      '"/><xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="$entity/@entity-class"/>();<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>      m_linker.<xsl:value-of select="@on-event-method"/>((<xsl:value-of select="$current/@entity-class"/>) parent, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>      m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>      m_tags.push("");<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>   } else <xsl:value-of select="$empty"/>
-      </xsl:for-each>
-      <xsl:for-each select="entity-ref[not(@list='true' or @map='true') and not(@render='false')]">
-         <xsl:variable name="name" select="@name"/>
-         <xsl:variable name="entity" select="//entity[@name=$name]"/>
-         <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/><xsl:value-of select="'      '"/><xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="$entity/@entity-class"/>();<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>      m_linker.<xsl:value-of select="@on-event-method"/>((<xsl:value-of select="$current/@entity-class"/>) parent, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>      m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>   } else <xsl:value-of select="$empty"/>
-      </xsl:for-each>
       <xsl:choose>
-         <xsl:when test="entity-ref[@map='true' and not(@render='false')]">
+         <xsl:when test="entity-ref[not(@render='false')]">
             <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$indent"/>         String parentTag = m_tags.size() <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>= 2 ? m_tags.get(m_tags.size() - 2) : null;<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$indent"/><xsl:value-of select="'         '"/>
-            <xsl:for-each select="entity-ref[@map='true' and not(@render='false')]">
-               <xsl:variable name="name" select="@name"/>
-               <xsl:variable name="entity" select="//entity[@name=$name]"/>
-               <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-names"/>.equals(parentTag)) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$indent"/><xsl:value-of select="'            '"/><xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="$entity/@entity-class"/>();<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$indent"/>            m_linker.<xsl:value-of select="@on-event-method"/>((ClientConfig) parent, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$indent"/>            m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$indent"/>         } else {<xsl:value-of select="$empty"/>
-            </xsl:for-each>
-            <xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$indent"/>            throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$indent"/>         }<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$indent"/>      }<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty"/>
+            <xsl:choose>
+               <xsl:when test="entity-ref[@list='true' and not(@render='false')]">
+                  <xsl:call-template name="on-object-begin">
+                     <xsl:with-param name="current" select="$current"/>
+                     <xsl:with-param name="indent" select="'         '"/>
+                  </xsl:call-template>
+                  <xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty"/>
+               </xsl:when>
+               <xsl:when test="entity-ref[@map='true' and not(@render='false')]">
+                  <xsl:call-template name="on-object-begin">
+                     <xsl:with-param name="current" select="$current"/>
+                     <xsl:with-param name="indent" select="'      '"/>
+                  </xsl:call-template>
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:value-of select="$indent"/>      throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty"/>
+               </xsl:otherwise>
+            </xsl:choose>
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="$indent"/>      throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty"/>
             <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
          </xsl:otherwise>
       </xsl:choose>
@@ -337,6 +411,38 @@
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
 </xsl:template>
 
+<xsl:template name="on-object-begin">
+   <xsl:param name="current"/>
+   <xsl:param name="indent"/>
+
+   <xsl:choose>
+      <xsl:when test="entity-ref[@map='true' and not(@render='false')]">
+         <xsl:value-of select="$indent"/>         String parentTag = m_tags.size() <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>= 2 ? m_tags.get(m_tags.size() - 2) : null;<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/><xsl:value-of select="'         '"/>
+         <xsl:for-each select="entity-ref[@map='true' and not(@render='false')]">
+            <xsl:variable name="name" select="@name"/>
+            <xsl:variable name="entity" select="//entity[@name=$name]"/>
+            <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-names"/>.equals(parentTag)) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/><xsl:value-of select="'            '"/><xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="$entity/@entity-class"/>();<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>            m_linker.<xsl:value-of select="@on-event-method"/>((<xsl:value-of select="$current/@entity-class"/>) parent, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>            m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$indent"/>         } else {<xsl:value-of select="$empty"/>
+         </xsl:for-each>
+         <xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>            throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>         }<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>      }<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty"/>
+      </xsl:when>
+      <xsl:otherwise>
+         <xsl:value-of select="$indent"/>      throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty"/>
+      </xsl:otherwise>
+   </xsl:choose>   
+</xsl:template>
+
 <xsl:template name="method-on-object-end">
    protected void onObjectEnd() {
       m_objs.pop();
@@ -345,6 +451,7 @@
 </xsl:template>
 
 <xsl:template name="method-on-value">
+   <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   protected void onValue(String value) {<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>      Object parent = m_objs.peek();<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>      String tag = m_tags.pop();<xsl:value-of select="$empty-line"/>
@@ -424,7 +531,7 @@
 </xsl:template>
 
 <xsl:template name="class-json-reader">
-<xsl:value-of select="$empty"/>   static class JsonReader {
+   static class JsonReader {
       private Reader m_reader;
 
       private char[] m_buffer = new char[2048];
@@ -474,6 +581,7 @@
                }
 
                parser.onObjectEnd();
+               flag = false;
                break;
             case '"':
                while (true) {
@@ -519,6 +627,7 @@
                break;
             case '[':
                parser.onArrayBegin();
+               flag = false;
                break;
             case ']':
                parser.onArrayEnd();

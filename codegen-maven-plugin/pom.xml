@@ -11,11 +11,16 @@
    <artifactId>codegen-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
    <name>Code Generation Maven Plugin</name>
-   <version>1.1.1</version>
+   <version>1.1.2</version>
    <prerequisites>
       <maven>3.0.3</maven>
    </prerequisites>
    <dependencies>
+      <dependency>
+         <groupId>org.unidal.maven.plugins</groupId>
+         <artifactId>codegen</artifactId>
+         <version>1.1.2</version>
+      </dependency>
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
          <artifactId>common</artifactId>
@@ -25,11 +30,6 @@
          <groupId>com.site.common</groupId>
          <artifactId>lookup</artifactId>
          <version>1.1.0</version>
-      </dependency>
-      <dependency>
-         <groupId>org.unidal.maven.plugins</groupId>
-         <artifactId>codegen</artifactId>
-         <version>1.1.1</version>
       </dependency>
       <dependency>
          <groupId>mysql</groupId>
