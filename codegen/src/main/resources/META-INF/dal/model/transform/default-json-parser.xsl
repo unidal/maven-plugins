@@ -375,7 +375,7 @@
          <xsl:when test="entity-ref[not(@render='false')]">
             <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
             <xsl:choose>
-               <xsl:when test="entity-ref[@list='true' and not(@render='false')]">
+               <xsl:when test="entity-ref[@list='true' and not(@xml-indent='true') and not(@render='false')]">
                   <xsl:call-template name="on-object-begin">
                      <xsl:with-param name="current" select="$current"/>
                      <xsl:with-param name="indent" select="'         '"/>
