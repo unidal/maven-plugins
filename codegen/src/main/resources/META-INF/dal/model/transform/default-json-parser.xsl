@@ -428,9 +428,9 @@
             <xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$indent"/>            m_linker.<xsl:value-of select="@on-event-method"/>((<xsl:value-of select="$current/@entity-class"/>) parent, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$indent"/>            m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$indent"/>         } else {<xsl:value-of select="$empty"/>
+            <xsl:value-of select="$indent"/>         } else <xsl:value-of select="$empty"/>
          </xsl:for-each>
-         <xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/>            throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/>         }<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/>      }<xsl:value-of select="$empty-line"/>

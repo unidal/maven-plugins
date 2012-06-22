@@ -57,6 +57,11 @@ public class CatConsumerGeneratorTest extends ModelGenerateTestSupport {
 	public void testGenerateProblemReport() throws Exception {
 		generateWithXsd("consumer/problem-report-manifest.xml");
 	}
+	
+	@Test
+	public void testGenerateProblem2Report() throws Exception {
+	   generateWithXsd("consumer/problem2-report-manifest.xml");
+	}
 
 	@Test
 	public void testGenerateTransactionReport() throws Exception {

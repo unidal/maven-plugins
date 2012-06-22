@@ -54,7 +54,10 @@
    <xsl:for-each select="entity">
       <xsl:sort select="@upper-name"/>
 
-      <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name"/>;<xsl:value-of select="$empty-line"/>
+      <xsl:variable name="name" select="@name"/>
+      <xsl:if test="@root='true' or //entity/entity-ref[@name=$name and not(@render='false')]">
+         <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name"/>;<xsl:value-of select="$empty-line"/>
+      </xsl:if>
    </xsl:for-each>
    <xsl:for-each select="entity/entity-ref[((@list='true' or @map='true') and @xml-indent='true' or @alias) and not(@render='false')]">
       <xsl:sort select="@upper-name"/>
@@ -235,6 +238,13 @@
                                     </xsl:call-template>
                                     <xsl:value-of select="$empty"/>);<xsl:value-of select="$empty-line"/>
                                     <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty"/>
+                                 </xsl:when>
+                                 <xsl:when test="@list='true' or @set='true'">
+                                    <xsl:value-of select="$entity/@local-name"/>.<xsl:value-of select="@add-method"/>(<xsl:value-of select="$empty"/>
+                                    <xsl:call-template name="convert-type">
+                                       <xsl:with-param name="value" select="'getText()'"/>
+                                    </xsl:call-template>
+                                    <xsl:value-of select="$empty"/>);<xsl:value-of select="$empty"/>
                                  </xsl:when>
                                  <xsl:otherwise>
                                     <xsl:value-of select="$entity/@local-name"/>.<xsl:value-of select="@set-method"/>(<xsl:value-of select="$empty"/>
