@@ -1,19 +1,24 @@
 package org.unidal.maven.plugin.project;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.unidal.maven.plugin.common.PropertyProviders;
 
 import com.site.helper.Files;
 import com.site.helper.Joiners;
+import com.site.helper.Scanners;
+import com.site.helper.Scanners.FileMatcher;
 import com.site.helper.Splitters;
-import org.unidal.maven.plugin.common.PropertyProviders;
 
 /**
  * Migrate all source files from one project to another project using a
@@ -66,10 +71,8 @@ public class MigrateMojo extends AbstractMojo {
    private int m_failure;
 
    public void execute() throws MojoExecutionException, MojoFailureException {
-      sourcePackage = PropertyProviders.fromConsole().forString("sourcePackage", "Java source package:", sourcePackage,
-            null);
-      targetPackage = PropertyProviders.fromConsole().forString("targetPackage", "Java target package:", targetPackage,
-            null);
+      sourcePackage = PropertyProviders.fromConsole().forString("sourcePackage", "Java source package:", sourcePackage, null);
+      targetPackage = PropertyProviders.fromConsole().forString("targetPackage", "Java target package:", targetPackage, null);
 
       m_reversedSourcePackage = reversePackage(sourcePackage);
       m_reversedTargetPackage = reversePackage(targetPackage);
@@ -78,50 +81,27 @@ public class MigrateMojo extends AbstractMojo {
          long start = System.currentTimeMillis();
          File baseDir = project.getBasedir().getCanonicalFile();
          File currentDir = new File(".").getCanonicalFile();
-         File targetBase;
-
-         if (baseDir.equals(currentDir)) { // current project
-            if (targetDir.startsWith("/")) {
-               targetBase = new File(targetDir);
-            } else {
-               targetBase = new File(currentDir, targetDir);
-            }
-         } else {
-            String basePath = baseDir.getCanonicalPath();
-            String currentPath = currentDir.getCanonicalPath();
-
-            if (basePath.startsWith(currentPath)) { // sub-module
-               String relativePath = basePath.substring(currentPath.length());
-
-               if (targetDir.startsWith("/")) {
-                  targetBase = new File(targetDir, relativePath);
-               } else {
-                  targetBase = new File(new File(currentDir, targetDir), relativePath);
-               }
-            } else {
-               throw new IllegalStateException(String.format(
-                     "Invalid directory to run maven build! base: %s, current: %s.", basePath, currentPath));
-            }
-         }
+         File targetBase = getTargetBaseDir(baseDir, currentDir);
+         final Set<String> sourceFolders = new HashSet<String>();
 
          m_success = 0;
          m_changed = 0;
          m_failure = 0;
 
          for (String source : (List<String>) project.getCompileSourceRoots()) {
-            migrateSource(baseDir, targetBase, source);
+            sourceFolders.add(source);
          }
 
          for (String testSource : (List<String>) project.getTestCompileSourceRoots()) {
-            migrateSource(baseDir, targetBase, testSource);
+            sourceFolders.add(testSource);
          }
 
          for (Resource resource : (List<Resource>) project.getResources()) {
-            migrateSource(baseDir, targetBase, resource.getDirectory());
+            sourceFolders.add(resource.getDirectory());
          }
 
          for (Resource testResource : (List<Resource>) project.getTestResources()) {
-            migrateSource(baseDir, targetBase, testResource.getDirectory());
+            sourceFolders.add(testResource.getDirectory());
          }
 
          if (new File(baseDir, "pom.xml").exists()) {
@@ -129,22 +109,73 @@ public class MigrateMojo extends AbstractMojo {
          }
 
          if ("war".equals(project.getPackaging())) {
-            migrateSource(baseDir, targetBase, "src/main/webapp");
+            sourceFolders.add("src/main/webapp");
+         }
+
+         Scanners.forDir().scan(baseDir, new FileMatcher() {
+            @Override
+            public Direction matches(File base, String path) {
+               if (path.equals("src") || path.startsWith("src/")) {
+                  List<String> parts = Splitters.by('/').split(path);
+
+                  if (parts.size() == 3) {
+                     sourceFolders.add(path);
+                     return Direction.MATCHED;
+                  } else {
+                     return Direction.DOWN;
+                  }
+               }
+
+               return Direction.NEXT;
+            }
+         });
+
+         for (String sourceFolder : sourceFolders) {
+            migrateSource(baseDir, targetBase, sourceFolder);
          }
 
          long timeUsed = System.currentTimeMillis() - start;
 
          getLog().info(
-               String.format("%s files migrated in %s ms, with %s changed and %s failures.", m_success, timeUsed,
-                     m_changed, m_failure));
+               String.format("%s files migrated in %s ms, with %s changed and %s failures.", m_success, timeUsed, m_changed,
+                     m_failure));
       } catch (Exception e) {
-         String message = String.format(
-               "Error when migrating project[sourcePackage: %s, targetPackage: %s, targetDir: %s].", sourcePackage,
-               targetPackage, targetDir);
+         String message = String.format("Error when migrating project[sourcePackage: %s, targetPackage: %s, targetDir: %s].",
+               sourcePackage, targetPackage, targetDir);
 
          getLog().error(message);
          throw new MojoFailureException(message, e);
       }
+   }
+
+   private File getTargetBaseDir(File baseDir, File currentDir) throws IOException {
+      File targetBase;
+
+      if (baseDir.equals(currentDir)) { // current project
+         if (targetDir.startsWith("/")) {
+            targetBase = new File(targetDir);
+         } else {
+            targetBase = new File(currentDir, targetDir);
+         }
+      } else {
+         String basePath = baseDir.getCanonicalPath();
+         String currentPath = currentDir.getCanonicalPath();
+
+         if (basePath.startsWith(currentPath)) { // sub-module
+            String relativePath = basePath.substring(currentPath.length());
+
+            if (targetDir.startsWith("/")) {
+               targetBase = new File(targetDir, relativePath);
+            } else {
+               targetBase = new File(new File(currentDir, targetDir), relativePath);
+            }
+         } else {
+            throw new IllegalStateException(String.format("Invalid directory to run maven build! base: %s, current: %s.", basePath,
+                  currentPath));
+         }
+      }
+
+      return targetBase;
    }
 
    protected void migrateDirectory(File source, File target, String sourcePath, String sourcePackageName) {

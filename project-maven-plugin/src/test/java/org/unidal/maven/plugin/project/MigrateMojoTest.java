@@ -1,32 +1,50 @@
 package org.unidal.maven.plugin.project;
 
+import static org.mockito.Mockito.when;
+
 import java.io.File;
 
 import junit.framework.Assert;
 
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.unidal.maven.plugin.common.Injector;
 
 import com.site.lookup.ComponentTestCase;
-import org.unidal.maven.plugin.common.Injector;
 
 @RunWith(JUnit4.class)
 public class MigrateMojoTest extends ComponentTestCase {
+   @Mock
+   private MavenProject m_project;
+
+   @Before
+   public void before() {
+      MockitoAnnotations.initMocks(this);
+   }
+
    private MavenProject createMavenProject(String finalName, String path) throws Exception {
       File baseDir = new File(path).getCanonicalFile();
-      MavenProject project = new MavenProject();
 
-      project.setFile(new File(baseDir, finalName + ".jar"));
-      project.getCompileSourceRoots().add(new File(baseDir, "src/main/java").toString());
-      project.getTestCompileSourceRoots().add(new File(baseDir, "src/test/java").toString());
-      project.getResources().add(createResource(new File(baseDir, "src/main/resources")));
-      project.getTestResources().add(createResource(new File(baseDir, "src/test/resources")));
+      when(m_project.getBasedir()).thenReturn(baseDir);
+      when(m_project.getPackaging()).thenReturn("war");
+      // when(m_project.getFile()).thenReturn(new File(baseDir, finalName +
+      // ".jar"));
 
-      return project;
+      // MavenProject m_project = new MavenProject();
+
+      // m_project.setFile(new File(baseDir, finalName + ".jar"));
+      m_project.getCompileSourceRoots().add(new File(baseDir, "src/main/java").toString());
+      m_project.getTestCompileSourceRoots().add(new File(baseDir, "src/test/java").toString());
+      m_project.getResources().add(createResource(new File(baseDir, "src/main/resources")));
+      m_project.getTestResources().add(createResource(new File(baseDir, "src/test/resources")));
+
+      return m_project;
    }
 
    protected Resource createResource(File directory) {
@@ -37,14 +55,13 @@ public class MigrateMojoTest extends ComponentTestCase {
    }
 
    @Test
-   @Ignore
    public void testMigrate() throws Exception {
       MigrateMojo mojo = new MigrateMojo();
 
-      Injector.setField(mojo, "project", createMavenProject("eunit-testfwk", "../../common/eunit-testfwk"));
-      Injector.setField(mojo, "sourcePackage", "com.ebay.eunit");
-      Injector.setField(mojo, "targetPackage", "com.site.eunit");
-      Injector.setField(mojo, "targetDir", "target/eunit-testfwk");
+      Injector.setField(mojo, "project", createMavenProject("project-maven-plugin", "."));
+      Injector.setField(mojo, "sourcePackage", "org.unidal.maven");
+      Injector.setField(mojo, "targetPackage", "org.unidal.test");
+      Injector.setField(mojo, "targetDir", "target/project-maven-plugin");
       Injector.setField(mojo, "verbose", false);
 
       mojo.execute();
@@ -54,7 +71,7 @@ public class MigrateMojoTest extends ComponentTestCase {
    public void testReversePackage() {
       checkReverse("a.b", "b.a");
       checkReverse("a.b.c", "c.b.a");
-      
+
       checkReverse("a.b.", ".b.a");
       checkReverse("a.b.c.", ".c.b.a");
    }

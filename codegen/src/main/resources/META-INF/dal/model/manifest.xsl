@@ -275,6 +275,13 @@
            <xsl:with-param name="package" select="$transform-package"/>
            <xsl:with-param name="template" select="'transform/default-sax-parser.xsl'"/>
          </xsl:call-template>
+
+         <!-- DefaultSaxParser class -->
+         <xsl:call-template name="generate-java">
+           <xsl:with-param name="class" select="'DefaultNativeBuilder'"/>
+           <xsl:with-param name="package" select="$transform-package"/>
+           <xsl:with-param name="template" select="'transform/default-native-builder.xsl'"/>
+         </xsl:call-template>
       </xsl:if>
    </xsl:if>
 
