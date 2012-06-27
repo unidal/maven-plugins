@@ -114,6 +114,11 @@
          <xsl:with-param name="name" select="'json-builder'"/>
       </xsl:call-template>
    </xsl:variable>
+   <xsl:variable name="policy-native-builder">
+      <xsl:call-template name="model-policy">
+         <xsl:with-param name="name" select="'native-builder'"/>
+      </xsl:call-template>
+   </xsl:variable>
 
    <xsl:if test="$policy-json-builder='true'">
       <!-- DefaultJsonBuilder class -->
@@ -121,6 +126,15 @@
         <xsl:with-param name="class" select="'DefaultJsonBuilder'"/>
         <xsl:with-param name="package" select="$transform-package"/>
         <xsl:with-param name="template" select="'transform/default-json-builder.xsl'"/>
+      </xsl:call-template>
+   </xsl:if>
+   
+   <xsl:if test="$policy-native-builder='true'">
+      <!-- DefaultNativeBuilder class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'DefaultNativeBuilder'"/>
+        <xsl:with-param name="package" select="$transform-package"/>
+        <xsl:with-param name="template" select="'transform/default-native-builder.xsl'"/>
       </xsl:call-template>
    </xsl:if>
    
@@ -199,8 +213,13 @@
          <xsl:with-param name="name" select="'xml-parser-tag-node'"/>
       </xsl:call-template>
    </xsl:variable>
-   
-   <xsl:if test="$policy-xml-parser-sax='true' or $policy-xml-parser-dom='true' or $policy-xml-parser-tag-node='true'">
+   <xsl:variable name="policy-native-parser">
+      <xsl:call-template name="model-policy">
+         <xsl:with-param name="name" select="'native-parser'"/>
+      </xsl:call-template>
+   </xsl:variable>
+
+   <xsl:if test="$policy-xml-parser-sax='true' or $policy-xml-parser-dom='true' or $policy-xml-parser-tag-node='true' or $policy-native-parser='true'">
       <!-- ILinker class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'ILinker'"/>
@@ -245,7 +264,7 @@
          </xsl:call-template>
       </xsl:if>
 
-      <xsl:if test="$policy-xml-parser-dom='true'">
+      <xsl:if test="$policy-xml-parser-dom='true' or $policy-native-parser='true'">
          <!-- DefaultMaker class -->
          <xsl:call-template name="generate-java">
            <xsl:with-param name="class" select="'DefaultDomMaker'"/>
@@ -275,16 +294,18 @@
            <xsl:with-param name="package" select="$transform-package"/>
            <xsl:with-param name="template" select="'transform/default-sax-parser.xsl'"/>
          </xsl:call-template>
-
-         <!-- DefaultSaxParser class -->
-         <xsl:call-template name="generate-java">
-           <xsl:with-param name="class" select="'DefaultNativeBuilder'"/>
-           <xsl:with-param name="package" select="$transform-package"/>
-           <xsl:with-param name="template" select="'transform/default-native-builder.xsl'"/>
-         </xsl:call-template>
+      </xsl:if>
+   
+      <xsl:if test="$policy-native-parser">
+            <!-- DefaultNativeParser class -->
+            <xsl:call-template name="generate-java">
+              <xsl:with-param name="class" select="'DefaultNativeParser'"/>
+              <xsl:with-param name="package" select="$transform-package"/>
+              <xsl:with-param name="template" select="'transform/default-native-parser.xsl'"/>
+            </xsl:call-template>
       </xsl:if>
    </xsl:if>
-
+   
    <xsl:if test="$policy-xml-parser-dom='true'">
       <xsl:variable name="policy-model-test">
          <xsl:call-template name="model-policy">

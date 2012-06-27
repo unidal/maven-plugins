@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <model model-package="com.dianping.cat.configuration.client" enable-xml-parser="true" enable-validator="true"
-   enable-xml-schema="true" enable-merger="true" enable-sax-parser="true" enable-json-builder="true" enable-json-parser="true"
-   enable-base-visitor="true" enable-native-builder="true">
+   enable-xml-schema="true" enable-merger="true" enable-native-builder="true" enable-native-parser="true">
    <entity name="config" class-name="ClientConfig" root="true" dynamic-attributes="true">
       <attribute name="mode" required="true" />
       <attribute name="enabled" value-type="boolean" />
@@ -15,6 +14,7 @@
    </entity>
    <entity name="domain">
       <attribute name="id" value-type="String" key="true" />
+      <attribute name="max-threads" value-type="int" primitive="true" default-value="500" />
    </entity>
    <entity name="bind">
       <attribute name="port" primitive="true" default-value="2280" />

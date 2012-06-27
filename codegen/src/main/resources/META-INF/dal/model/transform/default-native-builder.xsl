@@ -33,7 +33,6 @@
       <xsl:value-of select="$empty"/>import java.util.Map;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IEntity;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IVisitor;<xsl:value-of select="$empty-line"/>
    <xsl:for-each select="entity">
       <xsl:sort select="@entity-class"/>
@@ -44,21 +43,22 @@
 </xsl:template>
 
 <xsl:template name="method-commons">
+   <xsl:variable name="root" select="entity[@root='true']"/>
    private DataOutputStream m_out;
 
    public DefaultNativeBuilder(OutputStream out) {
       m_out = new DataOutputStream(out);
    }
 
-   public static byte[] build(ClientConfig config) {
+   public static byte[] build(<xsl:value-of select="$root/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$root/@param-name"/>) {
       ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
 
-      build(config, out);
+      build(<xsl:value-of select="$root/@param-name"/>, out);
       return out.toByteArray();
    }
 
-   public static void build(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity, OutputStream out) {
-      entity.accept(new DefaultNativeBuilder(out));
+   public static void build(<xsl:value-of select="$root/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$root/@param-name"/>, OutputStream out) {
+      <xsl:value-of select="$root/@param-name"/>.accept(new DefaultNativeBuilder(out));
    }
 </xsl:template>
 
@@ -79,11 +79,13 @@
                <xsl:value-of select="$empty"/>      write<xsl:call-template name="get-type-name"/>(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:when test="name()='element' and (@list='true' or @set='true')">
-               <xsl:value-of select="$empty"/>      writeTag(<xsl:value-of select="$index"/>, 2);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>      writeInt(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().size());<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         writeTag(<xsl:value-of select="$index"/>, 2);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         writeInt(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().size());<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>      for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>         write<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name-element"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            write<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>(<xsl:value-of select="@param-name-element"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
@@ -102,19 +104,23 @@
          
          <xsl:choose>
             <xsl:when test="@list='true'">
-               <xsl:value-of select="$empty"/>      writeTag(<xsl:value-of select="$index"/>, 2);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>      writeInt(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().size());<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         writeTag(<xsl:value-of select="$index"/>, 2);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         writeInt(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().size());<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>      for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="$current/@visit-method"/>(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name-element"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="$current/@visit-method"/>(<xsl:value-of select="@param-name-element"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:when test="@map='true'">
-               <xsl:value-of select="$empty"/>      writeTag(<xsl:value-of select="$index"/>, 2);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>      writeInt(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().size());<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         writeTag(<xsl:value-of select="$index"/>, 2);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         writeInt(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().size());<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>      for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().values()) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="$current/@visit-method"/>(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name-element"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().values()) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="$current/@visit-method"/>(<xsl:value-of select="@param-name-element"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
@@ -127,12 +133,14 @@
          <xsl:value-of select="$empty-line"/>
       </xsl:for-each>
       <xsl:if test="@dynamic-attributes='true'">
-         <xsl:value-of select="$empty"/>      writeTag(63, 2);<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>      writeInt(<xsl:value-of select="$entity/@param-name"/>.getDynamicAttributes().size());<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$entity/@param-name"/>.getDynamicAttributes().isEmpty()) {<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         writeTag(63, 2);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         writeInt(<xsl:value-of select="$entity/@param-name"/>.getDynamicAttributes().size());<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>      for (Map.Entry<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> dynamicAttribute : <xsl:value-of select="$entity/@param-name"/>.getDynamicAttributes().entrySet()) {<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>         writeString(dynamicAttribute.getKey());<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>         writeString(dynamicAttribute.getValue());<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         for (Map.Entry<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> dynamicAttribute : <xsl:value-of select="$entity/@param-name"/>.getDynamicAttributes().entrySet()) {<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>            writeString(dynamicAttribute.getKey());<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>            writeString(dynamicAttribute.getValue());<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$empty-line"/>
       </xsl:if>
@@ -142,9 +150,9 @@
 </xsl:template>
 
 <xsl:template name="method-write-methods">
-   private void writeBoolean(Boolean value) {
+   private void writeBoolean(boolean value) {
       try {
-         m_out.writeInt(value == null ? -1 : value.booleanValue() ? 1 : 0);
+         m_out.writeByte(value ? 1 : 0);
       } catch (IOException e) {
          throw new RuntimeException(e);
       }
@@ -168,7 +176,7 @@
 
    private void writeTag(int field, int type) {
       try {
-         m_out.writeByte(field <xsl:value-of select="'&lt;&lt;'" disable-output-escaping="yes"/> 2 + type);
+         m_out.writeByte((field <xsl:value-of select="'&lt;&lt;'" disable-output-escaping="yes"/> 2) + type);
       } catch (IOException e) {
          throw new RuntimeException(e);
       }
