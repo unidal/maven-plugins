@@ -158,9 +158,65 @@
       }
    }
 
+   private void writeByte(byte value) {
+      try {
+         m_out.writeByte(value);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private void writeChar(char value) {
+      try {
+         writeVarint(value);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private void writeDate(java.util.Date value) {
+      try {
+         writeVarint(value.getTime());
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private void writeDouble(double value) {
+      try {
+         m_out.writeDouble(value);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private void writeFloat(float value) {
+      try {
+         m_out.writeFloat(value);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
    private void writeInt(int value) {
       try {
-         m_out.writeInt(value);
+         writeVarint(value);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private void writeLong(long value) {
+      try {
+         writeVarint(value);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private void writeShort(short value) {
+      try {
+         writeVarint(value);
       } catch (IOException e) {
          throw new RuntimeException(e);
       }
@@ -179,6 +235,18 @@
          m_out.writeByte((field <xsl:value-of select="'&lt;&lt;'" disable-output-escaping="yes"/> 2) + type);
       } catch (IOException e) {
          throw new RuntimeException(e);
+      }
+   }
+
+   protected void writeVarint(long value) throws IOException {
+      while (true) {
+         if ((value <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> ~0x7FL) == 0) {
+            m_out.writeByte((byte) value);
+            return;
+         } else {
+            m_out.writeByte(((byte) value <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> 0x7F) | 0x80);
+            value <xsl:value-of select="'&gt;&gt;&gt;'" disable-output-escaping="yes"/>= 7;
+         }
       }
    }
 </xsl:template>

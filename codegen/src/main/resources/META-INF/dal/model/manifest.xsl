@@ -296,7 +296,7 @@
          </xsl:call-template>
       </xsl:if>
    
-      <xsl:if test="$policy-native-parser">
+      <xsl:if test="$policy-native-parser='true'">
             <!-- DefaultNativeParser class -->
             <xsl:call-template name="generate-java">
               <xsl:with-param name="class" select="'DefaultNativeParser'"/>

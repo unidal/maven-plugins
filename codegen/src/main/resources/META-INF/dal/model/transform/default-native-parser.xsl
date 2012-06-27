@@ -85,8 +85,8 @@
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   protected void <xsl:value-of select="@visit-method"/>Children(<xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>, int field, int type) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      switch (field) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   protected void <xsl:value-of select="@visit-method"/>Children(<xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>, int _field, int _type) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      switch (_field) {<xsl:value-of select="$empty-line"/>
       <xsl:variable name="indent" select="'            '"/>
       <xsl:for-each select="(attribute | element)[not(@render='false')]">
          <xsl:variable name="index" select="position()"/>
@@ -99,9 +99,9 @@
             </xsl:when>
             <xsl:when test="name()='element' and (@list='true' or @set='true')">
                <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            if (type == 1) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            if (_type == 1) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>               <xsl:value-of select="'                  '"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@add-method"/>(read<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>());<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            } else if (type == 2) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            } else if (_type == 2) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>               for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>               <xsl:value-of select="'                  '"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@add-method"/>(read<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>());<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>               }<xsl:value-of select="$empty-line"/>
@@ -123,14 +123,14 @@
          <xsl:choose>
             <xsl:when test="@list='true' or @map='true'">
                <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            if (type == 1) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            if (_type == 1) {<xsl:value-of select="$empty-line"/>
                <xsl:call-template name="visit-child">
                   <xsl:with-param name="entity" select="$current"/>
                   <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
                   <xsl:with-param name="indent" select="'              '"/>
                   <xsl:with-param name="param-name" select="@param-name-element"/>
                </xsl:call-template>
-               <xsl:value-of select="$empty"/>            } else if (type == 2) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            } else if (_type == 2) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>               for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
                <xsl:call-template name="visit-child">
                   <xsl:with-param name="entity" select="$current"/>
@@ -191,9 +191,65 @@
       }
    }
 
+   private byte readByte() {
+      try {
+         return m_in.readByte();
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private char readChar() {
+      try {
+         return (char) readVarint(16);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private java.util.Date readDate() {
+      try {
+         return new java.util.Date(readVarint(64));
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private double readDouble() {
+      try {
+         return m_in.readDouble();
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private float readFloat() {
+      try {
+         return m_in.readFloat();
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
    private int readInt() {
       try {
-         return m_in.readInt();
+         return (int) readVarint(32);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private long readLong() {
+      try {
+         return readVarint(64);
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+
+   private short readShort() {
+      try {
+         return (short) readVarint(16);
       } catch (IOException e) {
          throw new RuntimeException(e);
       }
@@ -213,6 +269,22 @@
       } catch (IOException e) {
          throw new RuntimeException(e);
       }
+   }
+
+   protected long readVarint(final int length) throws IOException {
+      int shift = 0;
+      long result = 0;
+
+      while (shift <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> length) {
+         final byte b = m_in.readByte();
+         result |= (long) (b <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> 0x7F) <xsl:value-of select="'&lt;&lt;'" disable-output-escaping="yes"/> shift;
+         if ((b <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> 0x80) == 0) {
+            return result;
+         }
+         shift += 7;
+      }
+
+      throw new RuntimeException("Malformed variable int " + length + "!");
    }
 </xsl:template>
 
