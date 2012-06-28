@@ -150,6 +150,8 @@
 </xsl:template>
 
 <xsl:template name="method-write-methods">
+<xsl:variable name="properties" select="(//entity/attribute | //entity/element)[not(@render='false')]"/>
+<xsl:if test="$properties[@value-type='Boolean' or @value-type='boolean']">
    private void writeBoolean(boolean value) {
       try {
          m_out.writeByte(value ? 1 : 0);
@@ -157,7 +159,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='byte' or @value-type='Byte']">
    private void writeByte(byte value) {
       try {
          m_out.writeByte(value);
@@ -165,7 +168,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='char' or @value-type='Character']">
    private void writeChar(char value) {
       try {
          writeVarint(value);
@@ -173,7 +177,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='date' or @value-type='java.util.Date']">
    private void writeDate(java.util.Date value) {
       try {
          writeVarint(value.getTime());
@@ -181,7 +186,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='double' or @value-type='Double']">
    private void writeDouble(double value) {
       try {
          m_out.writeDouble(value);
@@ -189,7 +195,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='float' or @value-type='Float']">
    private void writeFloat(float value) {
       try {
          m_out.writeFloat(value);
@@ -197,7 +204,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='int' or @value-type='Integer']">
    private void writeInt(int value) {
       try {
          writeVarint(value);
@@ -205,7 +213,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='long' or @value-type='Long']">
    private void writeLong(long value) {
       try {
          writeVarint(value);
@@ -213,7 +222,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='short' or @value-type='Short']">
    private void writeShort(short value) {
       try {
          writeVarint(value);
@@ -221,7 +231,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='String']">
    private void writeString(String value) {
       try {
          m_out.writeUTF(value);
@@ -229,7 +240,7 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
    private void writeTag(int field, int type) {
       try {
          m_out.writeByte((field <xsl:value-of select="'&lt;&lt;'" disable-output-escaping="yes"/> 2) + type);

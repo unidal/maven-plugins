@@ -24,6 +24,7 @@
 </xsl:template>
 
 <xsl:template name="import-list">
+   <xsl:value-of select="$empty"/>import java.io.ByteArrayInputStream;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.DataInputStream;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.IOException;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.InputStream;<xsl:value-of select="$empty-line"/>
@@ -49,6 +50,10 @@
 
    public DefaultNativeParser(InputStream in) {
       m_in = new DataInputStream(in);
+   }
+
+   public static <xsl:value-of select="$root/@entity-class"/> parse(byte[] data) {
+      return parse(new ByteArrayInputStream(data));
    }
 
    public static <xsl:value-of select="$root/@entity-class"/> parse(InputStream in) {
@@ -183,6 +188,8 @@
 </xsl:template>
 
 <xsl:template name="method-read-methods">
+<xsl:variable name="properties" select="(//entity/attribute | //entity/element)[not(@render='false')]"/>
+<xsl:if test="$properties[@value-type='Boolean' or @value-type='boolean']">
    private boolean readBoolean() {
       try {
          return m_in.readByte() == 1 ? Boolean.TRUE : Boolean.FALSE;
@@ -190,7 +197,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='byte' or @value-type='Byte']">
    private byte readByte() {
       try {
          return m_in.readByte();
@@ -198,7 +206,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='char' or @value-type='Character']">
    private char readChar() {
       try {
          return (char) readVarint(16);
@@ -206,7 +215,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='date' or @value-type='java.util.Date']">
    private java.util.Date readDate() {
       try {
          return new java.util.Date(readVarint(64));
@@ -214,7 +224,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='double' or @value-type='Double']">
    private double readDouble() {
       try {
          return m_in.readDouble();
@@ -222,7 +233,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='float' or @value-type='Float']">
    private float readFloat() {
       try {
          return m_in.readFloat();
@@ -230,7 +242,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='int' or @value-type='Integer']">
    private int readInt() {
       try {
          return (int) readVarint(32);
@@ -238,7 +251,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='long' or @value-type='Long']">
    private long readLong() {
       try {
          return readVarint(64);
@@ -246,7 +260,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='short' or @value-type='Short']">
    private short readShort() {
       try {
          return (short) readVarint(16);
@@ -254,7 +269,8 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
+<xsl:if test="$properties[@value-type='String']">
    private String readString() {
       try {
          return m_in.readUTF();
@@ -262,7 +278,7 @@
          throw new RuntimeException(e);
       }
    }
-
+</xsl:if>
    private byte readTag() {
       try {
          return m_in.readByte();
