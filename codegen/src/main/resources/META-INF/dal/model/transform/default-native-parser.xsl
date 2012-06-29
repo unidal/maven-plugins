@@ -28,12 +28,15 @@
    <xsl:value-of select="$empty"/>import java.io.DataInputStream;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.IOException;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.InputStream;<xsl:value-of select="$empty-line"/>
-   <xsl:if test="//entity[@dynamic-attributes='true']">
+   <xsl:if test="//entity[@dynamic-attributes='true'] | entity/any">
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>import java.util.Map;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IVisitor;<xsl:value-of select="$empty-line"/>
+   <xsl:if test="entity/any">
+      <xsl:value-of select="$empty"/>import <xsl:value-of select="entity/any/@entity-package"/>.Any;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
    <xsl:for-each select="entity">
       <xsl:sort select="@entity-class"/>
 
@@ -76,6 +79,46 @@
 </xsl:template>
 
 <xsl:template name="method-visit">
+   <xsl:if test="entity/any">
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public void <xsl:value-of select="entity/any/@visit-method"/>(Any any) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      byte tag;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      while ((tag = readTag()) != -1) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         visitAnyChildren(any, (tag <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> 0xFF) <xsl:value-of select="'&gt;&gt;'" disable-output-escaping="yes"/> 2, tag <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> 0x3);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   protected void visitAnyChildren(Any any, int _field, int _type) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      switch (_field) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      case 1:<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         any.setName(readString());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         break;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      case 2:<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         any.setValue(readString());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         break;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      case 33:<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         Map<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> attribute = any.getAttributes();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            String key = readString();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            String value = readString();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            attribute.put(key, value);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         break;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      case 34:<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            Any any_ = new Any();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            visitAny(any_);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            any.addChild(any_);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         break;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+   </xsl:if>
    <xsl:for-each select="entity">
       <xsl:sort select="@visit-method"/>
 
@@ -133,7 +176,7 @@
                   <xsl:with-param name="entity" select="$current"/>
                   <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
                   <xsl:with-param name="indent" select="'              '"/>
-                  <xsl:with-param name="param-name" select="@param-name-element"/>
+                  <xsl:with-param name="param-name" select="@local-name"/>
                </xsl:call-template>
                <xsl:value-of select="$empty"/>            } else if (_type == 2) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>               for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
@@ -141,7 +184,7 @@
                   <xsl:with-param name="entity" select="$current"/>
                   <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
                   <xsl:with-param name="indent" select="'                 '"/>
-                  <xsl:with-param name="param-name" select="@param-name-element"/>
+                  <xsl:with-param name="param-name" select="@local-name"/>
                </xsl:call-template>
                <xsl:value-of select="$empty"/>               }<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
