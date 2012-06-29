@@ -107,6 +107,10 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public void <xsl:value-of select="@visit-method"/>(<xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>) {<xsl:value-of select="$empty-line"/>
+      <xsl:if test="@root='true'">
+         <xsl:value-of select="$empty"/>      writeTag(63, 0);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty-line"/>
+      </xsl:if>
       <xsl:for-each select="(attribute | element)[not(@render='false')]">
          <xsl:variable name="index" select="position()"/>
          

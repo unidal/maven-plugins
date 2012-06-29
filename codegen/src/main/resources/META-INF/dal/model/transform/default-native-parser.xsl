@@ -128,6 +128,12 @@
       <xsl:value-of select="$empty"/>   public void <xsl:value-of select="@visit-method"/>(<xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      byte tag;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
+      <xsl:if test="@root='true'">
+         <xsl:value-of select="$empty"/>      if ((tag = readTag()) != -4) {<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         throw new RuntimeException(String.format("Malformed payload, expected: %s, but was: %s!", -4, tag));<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty-line"/>
+      </xsl:if>
       <xsl:value-of select="$empty"/>      while ((tag = readTag()) != -1) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="@visit-method"/>Children(<xsl:value-of select="@param-name"/>, (tag <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> 0xFF) <xsl:value-of select="'&gt;&gt;'" disable-output-escaping="yes"/> 2, tag <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> 0x3);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
