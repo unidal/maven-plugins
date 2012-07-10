@@ -1,6 +1,6 @@
 <wizard package="com.dianping.garden">
-   <webapp package="com.dianping.garden" webres="true">
-      <module name="dashboard" path="d">
+   <webapp name="garden" package="com.dianping.garden" webres="true" cat="true">
+      <module name="dashboard" path="d" default="true">
          <page name="home" title="Home" default="true">
             <description>Home Page of Garden</description>
          </page>

@@ -28,6 +28,46 @@
      <xsl:with-param name="class" select="'AllTests'"/>
      <xsl:with-param name="template" select="'test/all-tests.xsl'"/>
    </xsl:call-template>
+
+   <!-- TestServer class -->
+   <xsl:call-template name="generate-java">
+     <xsl:with-param name="src-dir" select="concat(/wizard/@base-dir, '/src/test/java')" />
+     <xsl:with-param name="package" select="@package"/>
+     <xsl:with-param name="class" select="'TestServer'"/>
+     <xsl:with-param name="template" select="'test/test-server.xsl'"/>
+     <xsl:with-param name="mode" select="'create_or_overwrite'"/>
+   </xsl:call-template>
+
+   <!-- ComponentsConfigurator class -->
+   <xsl:call-template name="generate-java">
+     <xsl:with-param name="package" select="concat(@package, '.build')"/>
+     <xsl:with-param name="class" select="'ComponentsConfigurator'"/>
+     <xsl:with-param name="template" select="'build/components-configurator.xsl'"/>
+   </xsl:call-template>
+
+   <!-- WebComponentConfigurator class -->
+   <xsl:call-template name="generate-java">
+     <xsl:with-param name="package" select="concat(@package, '.build')"/>
+     <xsl:with-param name="class" select="'WebComponentConfigurator'"/>
+     <xsl:with-param name="template" select="'build/web-component-configurator.xsl'"/>
+     <xsl:with-param name="mode" select="'create_or_overwrite'"/>
+   </xsl:call-template>
+
+   <!-- WEB-INF/web.xml file -->
+   <xsl:call-template name="generate-resource">
+     <xsl:with-param name="src-dir" select="concat(/wizard/@base-dir, '/src/main/webapp')" />
+     <xsl:with-param name="file" select="'WEB-INF/web.xml'"/>
+     <xsl:with-param name="template" select="'web-inf/web-xml.xsl'"/>
+   </xsl:call-template>
+
+   <xsl:if test="@cat='true'">
+      <!-- META-INF/cat/client.xml file -->
+      <xsl:call-template name="generate-resource">
+        <xsl:with-param name="src-dir" select="concat(/wizard/@base-dir, '/src/main/resources')" />
+        <xsl:with-param name="file" select="'META-INF/cat/client.xml'"/>
+        <xsl:with-param name="template" select="'cat/client-xml.xsl'"/>
+      </xsl:call-template>
+   </xsl:if>
 </xsl:template>
 
 <xsl:template match="module">
@@ -155,9 +195,9 @@
 
 <xsl:template name="generate-resource">
    <xsl:param name="src-dir" select="concat(/wizard/@base-dir, '/src/main/resources')" />
-   <xsl:param name="package"/>
-   <xsl:param name="module"/>
-   <xsl:param name="name"/>
+   <xsl:param name="package" select="''"/>
+   <xsl:param name="module" select="''"/>
+   <xsl:param name="name" select="''"/>
    <xsl:param name="file"/>
    <xsl:param name="template"/>
    <xsl:param name="mode" select="'create_if_not_exists'"/>

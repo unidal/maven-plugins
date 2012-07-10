@@ -1,16 +1,13 @@
 package org.unidal.maven.plugin.wizard;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.xml.sax.SAXException;
-
-import com.site.helper.Files;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.DefaultDomParser;
+
+import com.site.helper.Files;
 
 public class WebAppMojoTest {
    @Test
@@ -22,13 +19,10 @@ public class WebAppMojoTest {
    }
 
    @Test
-   @Ignore
-   public void test() throws IOException, SAXException {
+   public void testPom() throws Exception {
       WebAppMojo mojo = new WebAppMojo();
-      File wizardFile = new File("target/generate-resources/wizard.xml");
-      Wizard wizard = mojo.buildWizard(wizardFile);
+      File pomFile = new File(getClass().getResource("pom.xml").getFile());
 
-      Files.forIO().writeTo(wizardFile.getCanonicalFile(), wizard.toString());
-      System.out.println(wizard);
+      mojo.addDependenciesToPom(pomFile);
    }
 }

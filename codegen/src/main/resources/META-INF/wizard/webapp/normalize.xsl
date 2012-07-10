@@ -53,7 +53,10 @@
             <xsl:with-param name="name" select="$normalized-name"/>
          </xsl:call-template>
       </xsl:variable>
-
+      
+      <xsl:attribute name="capital-name">
+         <xsl:value-of select="$capital-name"/>
+      </xsl:attribute>
       <xsl:attribute name="package">
          <xsl:choose>
             <xsl:when test="@package"><xsl:value-of select="@package"/></xsl:when>

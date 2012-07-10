@@ -7,12 +7,15 @@
   </entity>
   <entity name="webapp">
     <attribute name="package" value-type="String" />
+    <attribute name="name" value-type="String" />
     <attribute name="webres" value-type="boolean" />
+    <attribute name="cat" value-type="boolean" />
     <entity-ref name="module" type="list" names="modules" />
   </entity>
   <entity name="module">
     <attribute name="name" value-type="String" />
     <attribute name="path" value-type="String" />
+    <attribute name="default" value-type="boolean" />
     <entity-ref name="page" type="list" names="pages" />
   </entity>
   <entity name="page">

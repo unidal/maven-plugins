@@ -193,7 +193,7 @@
          m_sb.append("<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
       }
    }
-<xsl:if test="//entity/element[not(@render='false' or @text='true')]">
+<xsl:if test="//entity/element[not(@render='false' or @text='true')] | //entity/any">
    private void tagWithText(String name, String text, Object... nameValues) {
       if (text == null) {
          return;

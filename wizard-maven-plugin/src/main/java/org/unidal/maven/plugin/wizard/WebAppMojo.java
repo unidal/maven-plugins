@@ -14,21 +14,24 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.xml.sax.SAXException;
-
 import org.unidal.codegen.generator.AbstractGenerateContext;
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.Generator;
 import org.unidal.codegen.meta.WizardMeta;
-import com.site.helper.Files;
 import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
 import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.DefaultDomParser;
+import org.xml.sax.SAXException;
+
+import com.site.helper.Files;
 
 /**
  * Create a new page of web application project.
@@ -122,15 +125,19 @@ public class WebAppMojo extends AbstractMojo {
          wizard = new DefaultDomParser().parse(content);
       } else {
          Webapp webapp = new Webapp();
-         
-         String packageName = PropertyProviders.fromConsole().forString("package", "Java package name for webapp:",
-               null, null);
+
+         String packageName = PropertyProviders.fromConsole().forString("package", "Java package name for webapp:", null, null);
+         String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
+         String name = PropertyProviders.fromConsole().forString("name", "Name for webapp:", defaultName, null);
          boolean webres = PropertyProviders.fromConsole().forBoolean("webres", "Support WebRes framework?", false);
+         boolean cat = PropertyProviders.fromConsole().forBoolean("cat", "Support CAT?", true);
 
          wizard = new Wizard();
          wizard.setWebapp(webapp);
          webapp.setPackage(packageName);
+         webapp.setName(name);
          webapp.setWebres(webres);
+         webapp.setCat(cat);
       }
 
       Webapp webapp = wizard.getWebapp();
@@ -141,16 +148,17 @@ public class WebAppMojo extends AbstractMojo {
          moduleNames.add(module.getName());
       }
 
-      String moduleName = PropertyProviders.fromConsole().forString("module", "Select module name below or input a new one:", moduleNames, null, null);
+      String moduleName = PropertyProviders.fromConsole().forString("module", "Select module name below or input a new one:",
+            moduleNames, null, null);
       Module module = webapp.findModule(moduleName);
 
       if (module == null) {
-         String path = PropertyProviders.fromConsole().forString("path", "Module path:", moduleName.substring(0, 1),
-               null);
+         String path = PropertyProviders.fromConsole().forString("path", "Module path:", moduleName.substring(0, 1), null);
 
          module = new Module(moduleName);
 
          module.setPath(path);
+         module.setDefault(modules.isEmpty());
          webapp.addModule(module);
       }
 
@@ -160,7 +168,8 @@ public class WebAppMojo extends AbstractMojo {
          pageNames.add(page.getName());
       }
 
-      String pageName = PropertyProviders.fromConsole().forString("page", "Select page name below or input a new one:", pageNames, null, null);
+      String pageName = PropertyProviders.fromConsole().forString("page", "Select page name below or input a new one:", pageNames,
+            null, null);
       Page page = module.findPage(pageName);
 
       if (page == null) {
@@ -223,9 +232,80 @@ public class WebAppMojo extends AbstractMojo {
          m_generator.generate(ctx);
          m_project.addCompileSourceRoot(sourceDir);
          getLog().info(ctx.getGeneratedFiles() + " files generated.");
+
+         addDependenciesToPom(m_project.getFile());
       } catch (Exception e) {
          throw new MojoExecutionException("Code generating failed.", e);
       }
+   }
+
+   protected void addDependenciesToPom(File pomFile) throws Exception {
+      Document doc = new SAXBuilder().build(pomFile);
+      Element root = doc.getRootElement();
+      Namespace ns = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
+      Element packaging = findOrCreateChild(ns, root, "packaging");
+
+      packaging.setText("war");
+
+      Element dependencies = findOrCreateChild(ns, root, "dependencies");
+
+      if (!checkDependency(ns, dependencies, "com.site.common", "web-framework", "1.0.12", null)) {
+         checkDependency(ns, dependencies, "com.site.common", "test-framework", "1.0.1", "test");
+         checkDependency(ns, dependencies, "javax.servlet", "servlet-api", "2.5", "provided");
+         checkDependency(ns, dependencies, "junit", "junit", "4.8.1", "test");
+         checkDependency(ns, dependencies, "org.mortbay.jetty", "jetty", "6.1.14", "test");
+         checkDependency(ns, dependencies, "org.mortbay.jetty", "jsp-2.1", "6.1.14", "test");
+      }
+   }
+
+   @SuppressWarnings("unchecked")
+   private boolean checkDependency(Namespace ns, Element dependencies, String groupId, String artifactId, String version,
+         String scope) {
+      List<Element> children = dependencies.getChildren("dependency", ns);
+      Element dependency = null;
+
+      for (Element child : children) {
+         String g = child.getChildText("groupId", ns);
+         String a = child.getChildText("artifactId", ns);
+
+         if (groupId.equals(g) && artifactId.equals(a)) {
+            dependency = child;
+            break;
+         }
+      }
+
+      if (dependency == null) {
+         dependency = new Element("dependency", ns);
+         createChild(ns, dependency, "groupId", groupId);
+         createChild(ns, dependency, "artifactId", artifactId);
+         createChild(ns, dependency, "version", version);
+
+         if (scope != null) {
+            createChild(ns, dependency, "scope", scope);
+         }
+
+         dependencies.addContent(dependency);
+         return false;
+      } else {
+         return true;
+      }
+   }
+
+   private void createChild(Namespace ns, Element parent, String name, String value) {
+      Element child = new Element(name, ns).setText(value);
+
+      parent.addContent(child);
+   }
+
+   private Element findOrCreateChild(Namespace ns, Element parent, String name) {
+      Element child = parent.getChild(name, ns);
+
+      if (child == null) {
+         child = new Element(name, ns);
+         parent.addContent(child);
+      }
+
+      return child;
    }
 
    protected File getFile(String path) {
