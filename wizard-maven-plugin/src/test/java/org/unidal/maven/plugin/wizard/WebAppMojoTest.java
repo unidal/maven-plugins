@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.DefaultDomParser;
 
@@ -21,8 +22,17 @@ public class WebAppMojoTest {
    @Test
    public void testPom() throws Exception {
       WebAppMojo mojo = new WebAppMojo();
-      File pomFile = new File(getClass().getResource("pom.xml").getFile());
+      File pomFile = new File(getClass().getResource("pom-before.xml").getFile());
+      File expectedPomFile = new File(getClass().getResource("pom-after.xml").getFile());
+      String expected = Files.forIO().readFrom(expectedPomFile, "utf-8");
+      File tmpFile = new File("target/pom.xml");
 
-      mojo.addDependenciesToPom(pomFile);
+      Files.forDir().copyFile(pomFile, tmpFile);
+
+      mojo.changePom(tmpFile, new Webapp().setPackage("com.dianping.test"));
+
+      String actual = Files.forIO().readFrom(tmpFile, "utf-8");
+
+      Assert.assertEquals(expected.replaceAll("\r", ""), actual.replaceAll("\r", ""));
    }
 }

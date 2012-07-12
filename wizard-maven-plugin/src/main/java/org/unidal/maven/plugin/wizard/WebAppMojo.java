@@ -13,9 +13,9 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.jdom.CDATA;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -116,6 +116,8 @@ public class WebAppMojo extends AbstractMojo {
     */
    protected boolean debug;
 
+   private Wizard m_wizard;
+
    protected Wizard buildWizard(File wizardFile) throws IOException, SAXException {
       Wizard wizard;
 
@@ -192,11 +194,80 @@ public class WebAppMojo extends AbstractMojo {
       return wizard;
    }
 
+   protected void changePom(File pomFile, Webapp webapp) throws Exception {
+      Document doc = new SAXBuilder().build(pomFile);
+      Element root = doc.getRootElement();
+      PomBuilder b = new PomBuilder();
+      Element dependencies = b.findOrCreateChild(root, "dependencies");
+      Element packaging = b.findOrCreateChild(root, "packaging", "dependencies", null);
+
+      if (!"war".equals(packaging.getText())) {
+         packaging.setText("war");
+         getLog().info("Change project packaging type to war.");
+      }
+
+      if (!b.checkDependency(dependencies, "com.site.common", "web-framework", "1.0.13", null)) {
+         b.checkDependency(dependencies, "com.site.common", "test-framework", "1.0.1", "test");
+
+         if (webapp.isWebres()) {
+            b.checkDependency(dependencies, "org.unidal.webres", "WebResServer", "1.2.0", null);
+         }
+
+         b.checkDependency(dependencies, "javax.servlet", "servlet-api", "2.5", "provided");
+         b.checkDependency(dependencies, "junit", "junit", "4.8.1", "test");
+         b.checkDependency(dependencies, "org.mortbay.jetty", "jetty", "6.1.14", "test");
+         b.checkDependency(dependencies, "org.mortbay.jetty", "jsp-2.1", "6.1.14", "test");
+      }
+
+      Element build = b.findOrCreateChild(root, "build", null, "dependencies");
+      Element pluginManagement = b.findOrCreateChild(build, "pluginManagement");
+      Element pluginManagementPlugins = b.findOrCreateChild(pluginManagement, "plugins");
+      Element compilerPlugin = b.checkPlugin(pluginManagementPlugins, null, "maven-compiler-plugin", "2.3.2");
+      Element compilerConfiguration = b.findOrCreateChild(compilerPlugin, "configuration");
+
+      b.findOrCreateChild(compilerConfiguration, "source").setText("1.6");
+      b.findOrCreateChild(compilerConfiguration, "target").setText("1.6");
+
+      Element eclipsePlugin = b.checkPlugin(pluginManagementPlugins, null, "maven-eclipse-plugin", "2.8");
+      Element eclipseConfiguration = b.findOrCreateChild(eclipsePlugin, "configuration");
+
+      b.findOrCreateChild(eclipseConfiguration, "downloadSources").setText("true");
+      b.findOrCreateChild(eclipseConfiguration, "ajdtVersion").setText("none");
+
+      Element additionalConfig = b.findOrCreateChild(eclipseConfiguration, "additionalConfig");
+      Element file = b.findOrCreateChild(additionalConfig, "file");
+
+      b.findOrCreateChild(file, "name").setText(".settings/org.eclipse.jdt.core.prefs");
+      b.findOrCreateChild(file, "content").addContent(new CDATA( //
+            "org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6\r\n" + //
+                  "eclipse.preferences.version=1\r\n" + //
+                  "org.eclipse.jdt.core.compiler.source=1.6\r\n" + //
+                  "org.eclipse.jdt.core.compiler.compliance=1.6\r\n"));
+
+      Element plugins = b.findOrCreateChild(build, "plugins");
+      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.4");
+      Element codegenPlexus = b.checkPluginExecution(codegenPlugin, "plexus", "process-classes",
+            "generate plexus component descriptor");
+      Element codegenPlexusConfiguration = b.findOrCreateChild(codegenPlexus, "configuration");
+
+      b.findOrCreateChild(codegenPlexusConfiguration, "className").setText(webapp.getPackage() + ".build.ComponentsConfigurator");
+
+      if (b.isPomModified()) {
+         saveXml(doc, pomFile);
+         getLog().info(String.format("Added dependencies to POM file(%s).", pomFile));
+         getLog().info("You need run following command to setup eclipse environment:");
+         getLog().info("   mvn eclipse:clean eclipse:eclipse");
+      }
+   }
+
    public void execute() throws MojoExecutionException, MojoFailureException {
       try {
          final File manifestFile = getFile(manifest);
          File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
-         Reader reader = new StringReader(buildWizard(wizardFile).toString());
+
+         m_wizard = buildWizard(wizardFile);
+
+         Reader reader = new StringReader(m_wizard.toString());
 
          if (!manifestFile.exists()) {
             saveXml(m_meta.getManifest("wizard.xml"), manifestFile);
@@ -233,79 +304,10 @@ public class WebAppMojo extends AbstractMojo {
          m_project.addCompileSourceRoot(sourceDir);
          getLog().info(ctx.getGeneratedFiles() + " files generated.");
 
-         addDependenciesToPom(m_project.getFile());
+         changePom(m_project.getFile(), m_wizard.getWebapp());
       } catch (Exception e) {
          throw new MojoExecutionException("Code generating failed.", e);
       }
-   }
-
-   protected void addDependenciesToPom(File pomFile) throws Exception {
-      Document doc = new SAXBuilder().build(pomFile);
-      Element root = doc.getRootElement();
-      Namespace ns = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
-      Element packaging = findOrCreateChild(ns, root, "packaging");
-
-      packaging.setText("war");
-
-      Element dependencies = findOrCreateChild(ns, root, "dependencies");
-
-      if (!checkDependency(ns, dependencies, "com.site.common", "web-framework", "1.0.12", null)) {
-         checkDependency(ns, dependencies, "com.site.common", "test-framework", "1.0.1", "test");
-         checkDependency(ns, dependencies, "javax.servlet", "servlet-api", "2.5", "provided");
-         checkDependency(ns, dependencies, "junit", "junit", "4.8.1", "test");
-         checkDependency(ns, dependencies, "org.mortbay.jetty", "jetty", "6.1.14", "test");
-         checkDependency(ns, dependencies, "org.mortbay.jetty", "jsp-2.1", "6.1.14", "test");
-      }
-   }
-
-   @SuppressWarnings("unchecked")
-   private boolean checkDependency(Namespace ns, Element dependencies, String groupId, String artifactId, String version,
-         String scope) {
-      List<Element> children = dependencies.getChildren("dependency", ns);
-      Element dependency = null;
-
-      for (Element child : children) {
-         String g = child.getChildText("groupId", ns);
-         String a = child.getChildText("artifactId", ns);
-
-         if (groupId.equals(g) && artifactId.equals(a)) {
-            dependency = child;
-            break;
-         }
-      }
-
-      if (dependency == null) {
-         dependency = new Element("dependency", ns);
-         createChild(ns, dependency, "groupId", groupId);
-         createChild(ns, dependency, "artifactId", artifactId);
-         createChild(ns, dependency, "version", version);
-
-         if (scope != null) {
-            createChild(ns, dependency, "scope", scope);
-         }
-
-         dependencies.addContent(dependency);
-         return false;
-      } else {
-         return true;
-      }
-   }
-
-   private void createChild(Namespace ns, Element parent, String name, String value) {
-      Element child = new Element(name, ns).setText(value);
-
-      parent.addContent(child);
-   }
-
-   private Element findOrCreateChild(Namespace ns, Element parent, String name) {
-      Element child = parent.getChild(name, ns);
-
-      if (child == null) {
-         child = new Element(name, ns);
-         parent.addContent(child);
-      }
-
-      return child;
    }
 
    protected File getFile(String path) {

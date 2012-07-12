@@ -25,10 +25,35 @@
    <xsl:copy>
       <xsl:copy-of select="@*"/>
       
+      <xsl:variable name="name">
+         <xsl:value-of select="@name"/>
+      </xsl:variable>
+      <xsl:variable name="normalized-name">
+         <xsl:call-template name="normalize">
+            <xsl:with-param name="source" select="$name"/>
+         </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="capital-name">
+         <xsl:call-template name="capital-name">
+            <xsl:with-param name="name" select="$normalized-name"/>
+         </xsl:call-template>
+      </xsl:variable>
+      
+      <xsl:attribute name="capital-name">
+         <xsl:value-of select="$capital-name"/>
+      </xsl:attribute>
       <xsl:attribute name="package">
          <xsl:choose>
             <xsl:when test="@package"><xsl:value-of select="@package"/></xsl:when>
             <xsl:otherwise><xsl:value-of select="../@package"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
+      <xsl:attribute name="server-port">
+         <xsl:choose>
+            <xsl:when test="@name">
+               <xsl:value-of select="translate(substring(concat(@name,'000'),1,4),'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789','22233344455566677778889999222333444555666777788899990000000000')"/>
+            </xsl:when>
+            <xsl:otherwise>8080</xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
 

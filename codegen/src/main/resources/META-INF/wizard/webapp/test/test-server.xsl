@@ -130,7 +130,7 @@ public class TestServer {
 	}
 
 	protected int getServerPort() {
-		return 7862;
+		return <xsl:value-of select="@server-port"/>;
 	}
 
 	protected String getTimestamp() {

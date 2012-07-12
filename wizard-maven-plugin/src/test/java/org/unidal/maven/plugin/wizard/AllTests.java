@@ -7,6 +7,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
 
+ProjectTest.class,
+
 WebAppMojoTest.class
 
 })
