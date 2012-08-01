@@ -155,7 +155,7 @@ public class WebAppMojo extends AbstractMojo {
       Module module = webapp.findModule(moduleName);
 
       if (module == null) {
-         String path = PropertyProviders.fromConsole().forString("path", "Module path:", moduleName.substring(0, 1), null);
+         String path = PropertyProviders.fromConsole().forString("module.path", "Module path:", moduleName.substring(0, 1), null);
 
          module = new Module(moduleName);
 
@@ -175,7 +175,7 @@ public class WebAppMojo extends AbstractMojo {
       Page page = module.findPage(pageName);
 
       if (page == null) {
-         String path = PropertyProviders.fromConsole().forString("path", "Page path:", pageName, null);
+         String path = PropertyProviders.fromConsole().forString("page.path", "Page path:", pageName, null);
 
          page = new Page(pageName);
 
@@ -206,8 +206,8 @@ public class WebAppMojo extends AbstractMojo {
          getLog().info("Change project packaging type to war.");
       }
 
-      if (!b.checkDependency(dependencies, "com.site.common", "web-framework", "1.0.13", null)) {
-         b.checkDependency(dependencies, "com.site.common", "test-framework", "1.0.1", "test");
+      if (!b.checkDependency(dependencies, "com.site.common", "web-framework", "1.0.15", null)) {
+         b.checkDependency(dependencies, "com.site.common", "test-framework", "1.0.3", "test");
 
          if (webapp.isWebres()) {
             b.checkDependency(dependencies, "org.unidal.webres", "WebResServer", "1.2.0", null);
@@ -238,11 +238,15 @@ public class WebAppMojo extends AbstractMojo {
       Element file = b.findOrCreateChild(additionalConfig, "file");
 
       b.findOrCreateChild(file, "name").setText(".settings/org.eclipse.jdt.core.prefs");
-      b.findOrCreateChild(file, "content").addContent(new CDATA( //
-            "org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6\r\n" + //
-                  "eclipse.preferences.version=1\r\n" + //
-                  "org.eclipse.jdt.core.compiler.source=1.6\r\n" + //
-                  "org.eclipse.jdt.core.compiler.compliance=1.6\r\n"));
+
+      Element content = b.findOrCreateChild(file, "content");
+      if (content.getChildren().isEmpty()) {
+         content.addContent(new CDATA( //
+               "org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6\r\n" + //
+                     "eclipse.preferences.version=1\r\n" + //
+                     "org.eclipse.jdt.core.compiler.source=1.6\r\n" + //
+                     "org.eclipse.jdt.core.compiler.compliance=1.6\r\n"));
+      }
 
       Element plugins = b.findOrCreateChild(build, "plugins");
       Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.4");

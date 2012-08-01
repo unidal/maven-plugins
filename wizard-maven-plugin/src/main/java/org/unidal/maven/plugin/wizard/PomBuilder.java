@@ -81,20 +81,24 @@ public class PomBuilder {
 
    public Element checkPluginExecution(Element plugin, String goal, String phase, String id) {
       Element executions = findOrCreateChild(plugin, "executions");
-      Element execution = createChild(executions, "execution", null);
+      Element execution = findPluginExecution(executions, id);
 
-      if (id != null) {
-         createChild(execution, "id", id);
-      }
+      if (execution == null) {
+         execution = createChild(executions, "execution", null);
 
-      if (phase != null) {
-         createChild(execution, "phase", phase);
-      }
+         if (id != null) {
+            createChild(execution, "id", id);
+         }
 
-      if (goal != null) {
-         Element goals = createChild(execution, "goals", null);
+         if (phase != null) {
+            createChild(execution, "phase", phase);
+         }
 
-         createChild(goals, "goal", goal);
+         if (goal != null) {
+            Element goals = createChild(execution, "goals", null);
+
+            createChild(goals, "goal", goal);
+         }
       }
 
       return execution;
@@ -154,6 +158,27 @@ public class PomBuilder {
       }
 
       return child;
+   }
+
+   @SuppressWarnings("unchecked")
+   private Element findPluginExecution(Element executions, String id) {
+      Element execution = null;
+
+      for (Element e : (List<Element>) executions.getChildren()) {
+         Element idElement = e.getChild("id", NS);
+
+         if (id == null) {
+            if (idElement == null || "default".equals(idElement.getValue())) {
+               execution = e;
+               break;
+            }
+         } else if (idElement != null && id.equals(idElement.getValue())) {
+            execution = e;
+            break;
+         }
+      }
+
+      return execution;
    }
 
    @SuppressWarnings("unchecked")

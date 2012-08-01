@@ -30,6 +30,7 @@ public class WebAppMojoTest {
       Files.forDir().copyFile(pomFile, tmpFile);
 
       mojo.changePom(tmpFile, new Webapp().setPackage("com.dianping.test"));
+      mojo.changePom(tmpFile, new Webapp().setPackage("com.dianping.test")); // next time, change nothing
 
       String actual = Files.forIO().readFrom(tmpFile, "utf-8");
 

@@ -34,12 +34,12 @@
     <dependency>
       <groupId>com.site.common</groupId>
       <artifactId>web-framework</artifactId>
-      <version>1.0.13</version>
+      <version>1.0.15</version>
     </dependency>
     <dependency>
       <groupId>com.site.common</groupId>
       <artifactId>test-framework</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>

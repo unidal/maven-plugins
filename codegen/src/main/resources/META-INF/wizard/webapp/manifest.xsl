@@ -35,7 +35,6 @@
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="class" select="'TestServer'"/>
      <xsl:with-param name="template" select="'test/test-server.xsl'"/>
-     <xsl:with-param name="mode" select="'create_or_overwrite'"/>
    </xsl:call-template>
 
    <!-- ComponentsConfigurator class -->
