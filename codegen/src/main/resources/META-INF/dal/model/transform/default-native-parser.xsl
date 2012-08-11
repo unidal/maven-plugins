@@ -292,7 +292,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='int' or @value-type='Integer']">
+<xsl:if test="$properties[@value-type='int' or @value-type='Integer'] | element[@list='true' or @set='true'] or entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or any">
    private int readInt() {
       try {
          return (int) readVarint(32);

@@ -246,7 +246,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='int' or @value-type='Integer']">
+<xsl:if test="$properties[@value-type='int' or @value-type='Integer'] | element[@list='true' or @set='true'] or entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or any">
    private void writeInt(int value) {
       try {
          writeVarint(value);
