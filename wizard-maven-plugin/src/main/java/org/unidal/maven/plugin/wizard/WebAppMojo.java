@@ -194,7 +194,69 @@ public class WebAppMojo extends AbstractMojo {
       return wizard;
    }
 
-   protected void changePom(File pomFile, Webapp webapp) throws Exception {
+   public void execute() throws MojoExecutionException, MojoFailureException {
+      try {
+         final File manifestFile = getFile(manifest);
+         File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
+
+         m_wizard = buildWizard(wizardFile);
+
+         Reader reader = new StringReader(m_wizard.toString());
+
+         if (!manifestFile.exists()) {
+            saveXml(m_meta.getManifest("wizard.xml"), manifestFile);
+         }
+
+         saveXml(m_meta.getWizard(reader), wizardFile);
+
+         final URL manifestXml = manifestFile.toURI().toURL();
+         final GenerateContext ctx = new AbstractGenerateContext(m_project.getBasedir(), resouceBase, sourceDir) {
+            public URL getManifestXml() {
+               return manifestXml;
+            }
+
+            public void log(LogLevel logLevel, String message) {
+               switch (logLevel) {
+               case DEBUG:
+                  if (debug) {
+                     getLog().debug(message);
+                  }
+                  break;
+               case INFO:
+                  if (debug || verbose) {
+                     getLog().info(message);
+                  }
+                  break;
+               case ERROR:
+                  getLog().error(message);
+                  break;
+               }
+            }
+         };
+
+         m_generator.generate(ctx);
+         m_project.addCompileSourceRoot(sourceDir);
+         getLog().info(ctx.getGeneratedFiles() + " files generated.");
+
+         modifyPomFile(m_project.getFile(), m_wizard.getWebapp());
+      } catch (Exception e) {
+         throw new MojoExecutionException("Code generating failed.", e);
+      }
+   }
+
+   protected File getFile(String path) {
+      File file;
+
+      if (path.startsWith("/") || path.indexOf(':') > 0) {
+         file = new File(path);
+      } else {
+         file = new File(baseDir, path);
+      }
+
+      return file;
+   }
+
+   protected void modifyPomFile(File pomFile, Webapp webapp) throws Exception {
       Document doc = new SAXBuilder().build(pomFile);
       Element root = doc.getRootElement();
       PomFileBuilder b = new PomFileBuilder();
@@ -262,68 +324,6 @@ public class WebAppMojo extends AbstractMojo {
          getLog().info("You need run following command to setup eclipse environment:");
          getLog().info("   mvn eclipse:clean eclipse:eclipse");
       }
-   }
-
-   public void execute() throws MojoExecutionException, MojoFailureException {
-      try {
-         final File manifestFile = getFile(manifest);
-         File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
-
-         m_wizard = buildWizard(wizardFile);
-
-         Reader reader = new StringReader(m_wizard.toString());
-
-         if (!manifestFile.exists()) {
-            saveXml(m_meta.getManifest("wizard.xml"), manifestFile);
-         }
-
-         saveXml(m_meta.getWizard(reader), wizardFile);
-
-         final URL manifestXml = manifestFile.toURI().toURL();
-         final GenerateContext ctx = new AbstractGenerateContext(m_project.getBasedir(), resouceBase, sourceDir) {
-            public URL getManifestXml() {
-               return manifestXml;
-            }
-
-            public void log(LogLevel logLevel, String message) {
-               switch (logLevel) {
-               case DEBUG:
-                  if (debug) {
-                     getLog().debug(message);
-                  }
-                  break;
-               case INFO:
-                  if (debug || verbose) {
-                     getLog().info(message);
-                  }
-                  break;
-               case ERROR:
-                  getLog().error(message);
-                  break;
-               }
-            }
-         };
-
-         m_generator.generate(ctx);
-         m_project.addCompileSourceRoot(sourceDir);
-         getLog().info(ctx.getGeneratedFiles() + " files generated.");
-
-         changePom(m_project.getFile(), m_wizard.getWebapp());
-      } catch (Exception e) {
-         throw new MojoExecutionException("Code generating failed.", e);
-      }
-   }
-
-   protected File getFile(String path) {
-      File file;
-
-      if (path.startsWith("/") || path.indexOf(':') > 0) {
-         file = new File(path);
-      } else {
-         file = new File(baseDir, path);
-      }
-
-      return file;
    }
 
    protected void saveXml(Document doc, File file) throws IOException {

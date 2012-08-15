@@ -50,15 +50,19 @@ public class CatConfigMojo extends AbstractMojo {
     */
    protected String servers;
 
-   protected void modifyPomFile() throws JDOMException, IOException {
-      File pomFile = new File("pom.xml");
+   protected void modifyPomFile(File pomFile) throws JDOMException, IOException {
       Document doc = new SAXBuilder().build(pomFile);
       Element root = doc.getRootElement();
       PomFileBuilder b = new PomFileBuilder();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
       String version = "0.3.4";
 
-      b.checkDependency(dependencies, "com.dianping.cat", "cat-core", version, null);
+      if (b.checkDependency(dependencies, "com.dianping.cat", "cat-core", version, null)) {
+         b.checkDependency(dependencies, "com.dianping.zebra", "zebra-ds-monitor-client", "0.0.6.cat", null);
+         b.checkDependency(dependencies, "com.dianping", "avatar-dao", "2.1.7", null);
+         b.checkDependency(dependencies, "com.dianping.dpsf", "dpsf-net", "1.6.1", null);
+         b.checkDependency(dependencies, "com.dianping.hawk", "hawk-client", "0.6.7", null);
+      }
 
       if (b.isPomFileModified()) {
          saveXml(doc, pomFile, true);
@@ -66,9 +70,7 @@ public class CatConfigMojo extends AbstractMojo {
       }
    }
 
-   protected void modifyWebFile() throws JDOMException, IOException {
-      File webFile = new File("src/main/webapp/WEB-INF/web.xml");
-
+   protected void modifyWebFile(File webFile) throws JDOMException, IOException {
       if (!webFile.exists()) {
          getLog().warn(String.format("File(%s) is not found, SKIPPED.", webFile.getCanonicalPath()));
          getLog().warn("You need do CAT integration manually.");
@@ -135,8 +137,8 @@ public class CatConfigMojo extends AbstractMojo {
                Document resource = createResourceFile();
 
                saveXml(resource, new File(m_project.getBasedir(), "src/main/resources/META-INF/cat/client.xml"), false);
-               modifyWebFile();
-               modifyPomFile();
+               modifyWebFile(new File("src/main/webapp/WEB-INF/web.xml"));
+               modifyPomFile(new File("pom.xml"));
             }
          } catch (Exception e) {
             throw new MojoExecutionException("Failed to execute wizard.", e);

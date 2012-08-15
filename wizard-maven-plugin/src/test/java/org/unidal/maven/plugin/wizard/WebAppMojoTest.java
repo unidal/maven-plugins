@@ -22,15 +22,15 @@ public class WebAppMojoTest {
    @Test
    public void testPom() throws Exception {
       WebAppMojo mojo = new WebAppMojo();
-      File pomFile = new File(getClass().getResource("pom-before.xml").getFile());
-      File expectedPomFile = new File(getClass().getResource("pom-after.xml").getFile());
+      File pomFile = new File(getClass().getResource("webapp/pom-before.xml").getFile());
+      File expectedPomFile = new File(getClass().getResource("webapp/pom-after.xml").getFile());
       String expected = Files.forIO().readFrom(expectedPomFile, "utf-8");
       File tmpFile = new File("target/pom.xml");
 
       Files.forDir().copyFile(pomFile, tmpFile);
 
-      mojo.changePom(tmpFile, new Webapp().setPackage("com.dianping.test"));
-      mojo.changePom(tmpFile, new Webapp().setPackage("com.dianping.test")); // next time, change nothing
+      mojo.modifyPomFile(tmpFile, new Webapp().setPackage("com.dianping.test"));
+      mojo.modifyPomFile(tmpFile, new Webapp().setPackage("com.dianping.test")); // next time, change nothing
 
       String actual = Files.forIO().readFrom(tmpFile, "utf-8");
 

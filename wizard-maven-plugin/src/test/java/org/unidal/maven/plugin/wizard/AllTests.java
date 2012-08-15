@@ -9,7 +9,9 @@ import org.junit.runners.Suite.SuiteClasses;
 
 ProjectTest.class,
 
-WebAppMojoTest.class
+WebAppMojoTest.class,
+
+CatConfigMojoTest.class
 
 })
 public class AllTests {
