@@ -197,7 +197,7 @@ public class WebAppMojo extends AbstractMojo {
    protected void changePom(File pomFile, Webapp webapp) throws Exception {
       Document doc = new SAXBuilder().build(pomFile);
       Element root = doc.getRootElement();
-      PomBuilder b = new PomBuilder();
+      PomFileBuilder b = new PomFileBuilder();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
       Element packaging = b.findOrCreateChild(root, "packaging", "dependencies", null);
 
@@ -256,7 +256,7 @@ public class WebAppMojo extends AbstractMojo {
 
       b.findOrCreateChild(codegenPlexusConfiguration, "className").setText(webapp.getPackage() + ".build.ComponentsConfigurator");
 
-      if (b.isPomModified()) {
+      if (b.isPomFileModified()) {
          saveXml(doc, pomFile);
          getLog().info(String.format("Added dependencies to POM file(%s).", pomFile));
          getLog().info("You need run following command to setup eclipse environment:");
@@ -333,7 +333,7 @@ public class WebAppMojo extends AbstractMojo {
          parent.mkdirs();
       }
 
-      Format format = Format.getPrettyFormat();
+      Format format = Format.getPrettyFormat().setIndent("   ");
       XMLOutputter outputter = new XMLOutputter(format);
       FileWriter writer = new FileWriter(file);
 

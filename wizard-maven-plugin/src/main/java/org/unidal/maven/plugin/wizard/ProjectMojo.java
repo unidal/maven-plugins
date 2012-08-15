@@ -59,7 +59,7 @@ public class ProjectMojo extends AbstractMojo {
 
       prepare();
 
-      PomBuilder b = new PomBuilder();
+      PomFileBuilder b = new PomFileBuilder();
       Document doc = b.createDocument();
       Element project = doc.getRootElement();
 
@@ -101,7 +101,7 @@ public class ProjectMojo extends AbstractMojo {
          parent.mkdirs();
       }
 
-      Format format = Format.getPrettyFormat();
+      Format format = Format.getPrettyFormat().setIndent("   ");
       XMLOutputter outputter = new XMLOutputter(format);
       FileWriter writer = new FileWriter(file);
 

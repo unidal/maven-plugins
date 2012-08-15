@@ -6,10 +6,10 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-public class PomBuilder {
+public class PomFileBuilder {
    private static Namespace NS = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
 
-   private boolean m_pomModifed;
+   private boolean m_modifed;
 
    @SuppressWarnings("unchecked")
    public boolean checkDependency(Element dependencies, String groupId, String artifactId, String version, String scope) {
@@ -112,7 +112,7 @@ public class PomBuilder {
       }
 
       parent.addContent(child);
-      m_pomModifed = true;
+      m_modifed = true;
       return child;
    }
 
@@ -154,7 +154,7 @@ public class PomBuilder {
             parent.addContent(index, child);
          }
 
-         m_pomModifed = true;
+         m_modifed = true;
       }
 
       return child;
@@ -201,7 +201,7 @@ public class PomBuilder {
       return -1;
    }
 
-   public boolean isPomModified() {
-      return m_pomModifed;
+   public boolean isPomFileModified() {
+      return m_modifed;
    }
 }
