@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+  <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n"/>
+    </layout>
+  </appender>
+
+	<!-- Perf4J appenders -->
+	<!-- This AsyncCoalescingStatisticsAppender groups StopWatch log messages 
+		into GroupedTimingStatistics messages which it sends on the file appender 
+		defined below -->
+	<appender name="CoalescingStatistics" class="org.perf4j.log4j.AsyncCoalescingStatisticsAppender">
+		<!-- The TimeSlice option is used to determine the time window for which 
+			all received StopWatch logs are aggregated to create a single GroupedTimingStatistics 
+			log. Here we set it to 5 min, overriding the default of 30000 ms -->
+		<param name="TimeSlice" value="300000" />
+		<appender-ref ref="perf4jJmxAppender" />
+	</appender>
+
+	<!-- This JMX appender creates an MBean and publishes it to the platform 
+		MBean server by default. -->
+	<appender name="perf4jJmxAppender" class="org.perf4j.log4j.JmxAttributeStatisticsAppender">
+		<!-- The tag names whose statistics should be exposed	as MBean attributes. -->
+		<param name="TagNamesToExpose" 
+		  value="com.outbrain.pajamasproxy.memcached.server.protocol.command.AsyncGetCommand,
+		  com.outbrain.pajamasproxy.memcached.server.protocol.command.AsyncStoreCommand,
+		  com.outbrain.pajamasproxy.memcached.server.protocol.command.SimpleCommand" />
+		<!-- You can also specify an optional MBeanName param, which overrides 
+			the default MBean name of org.perf4j:type=StatisticsExposingMBean,name=Perf4J -->
+	</appender>
+
+  <logger name="org.springframework" additivity="false">
+    <level value="info" />
+    <appender-ref ref="stdout" />
+  </logger>
+
+  <logger name="com.outbrain.pajamasproxy" additivity="false">
+    <level value="info" />
+    <appender-ref ref="stdout" />
+  </logger>
+
+  <logger name="com.thimbleware.jmemcached.protocol.command.CommandQueueImpl" additivity="false">
+    <level value="info" />
+    <appender-ref ref="stdout" />
+  </logger>
+
+	<!-- The Perf4J logger. Note that org.perf4j.TimingLogger is the value of 
+		the org.perf4j.StopWatch.DEFAULT_LOGGER_NAME constant. Also, note that additivity 
+		is set to false, which is usually what is desired - this means that timing 
+		statements will only be sent to this logger and NOT to upstream loggers. -->
+	<logger name="org.perf4j.TimingLogger" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="CoalescingStatistics" />
+	</logger>
+
+  <root>
+    <priority value="info"/>
+    <appender-ref ref="stdout"/>
+  </root>
+</log4j:configuration>

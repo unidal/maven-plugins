@@ -1,15 +1,16 @@
-package org.unidal.maven.plugin.wizard;
+package org.unidal.maven.plugin.wizard.dom;
 
 import java.util.List;
 
+import org.apache.maven.plugin.logging.Log;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-public class PomFileBuilder {
+public class PomFileBuilder extends DocumentBuilder {
    private static Namespace NS = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
 
-   private boolean m_modifed;
+   private Log m_log;
 
    @SuppressWarnings("unchecked")
    public boolean checkDependency(Element dependencies, String groupId, String artifactId, String version, String scope) {
@@ -40,6 +41,11 @@ public class PomFileBuilder {
          }
 
          dependencies.addContent(dependency);
+
+         if (m_log != null) {
+            m_log.info(String.format("Dependency(%s:%s:%s) added.", groupId, artifactId, version));
+         }
+
          return false;
       } else {
          return true;
@@ -104,20 +110,8 @@ public class PomFileBuilder {
       return execution;
    }
 
-   public Element createChild(Element parent, String name, String value) {
-      Element child = new Element(name, NS);
-
-      if (value != null) {
-         child.setText(value);
-      }
-
-      parent.addContent(child);
-      m_modifed = true;
-      return child;
-   }
-
-   public Document createDocument() {
-      Element root = new Element("project", NS);
+   public Document createMavenDocument() {
+      Element root = new Element("project", getNamespace());
       Document doc = new Document(root);
       Namespace xsi = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
@@ -126,42 +120,8 @@ public class PomFileBuilder {
       return doc;
    }
 
-   public Element findOrCreateChild(Element parent, String name) {
-      return findOrCreateChild(parent, name, null, null);
-   }
-
-   public Element findOrCreateChild(Element parent, String name, String beforeElement, String afterElement) {
-      Element child = parent.getChild(name, NS);
-
-      if (child == null) {
-         int index = -1;
-
-         child = new Element(name, NS);
-
-         if (beforeElement != null) {
-            index = indexOfElement(parent, beforeElement);
-         } else if (afterElement != null) {
-            index = indexOfElement(parent, afterElement);
-
-            if (index >= 0) {
-               index++;
-            }
-         }
-
-         if (index < 0) {
-            parent.addContent(child);
-         } else {
-            parent.addContent(index, child);
-         }
-
-         m_modifed = true;
-      }
-
-      return child;
-   }
-
    @SuppressWarnings("unchecked")
-   private Element findPluginExecution(Element executions, String id) {
+   public Element findPluginExecution(Element executions, String id) {
       Element execution = null;
 
       for (Element e : (List<Element>) executions.getChildren()) {
@@ -181,27 +141,13 @@ public class PomFileBuilder {
       return execution;
    }
 
-   @SuppressWarnings("unchecked")
-   public int indexOfElement(Element parent, String name) {
-      List<Object> children = parent.getContent();
-      int index = 0;
-
-      for (Object child : children) {
-         if (child instanceof Element) {
-            Element e = (Element) child;
-
-            if (e.getName().equals(name) && e.getNamespace().equals(NS)) {
-               return index;
-            }
-         }
-
-         index++;
-      }
-
-      return -1;
+   @Override
+   protected Namespace getNamespace() {
+      return NS;
    }
 
-   public boolean isPomFileModified() {
-      return m_modifed;
+   public PomFileBuilder setLog(Log log) {
+      m_log = log;
+      return this;
    }
 }

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+   <domain name="item.1" uri-pattern="/item/*" param-name="p" log-level="warning">
+      <count-interval>1m</count-interval>
+      <check-interval>1m</check-interval>
+      <route-expr>id%100:00-49</route-expr>
+      <host-port>80</host-port>
+
+      <entry name="*" key="P_id:long" timeout="6h" ttl="1d" />
+      <entry name="GetPdt_static" />
+      <entry name="GetPdt_dynamic" />
+      <entry name="ExAttProQry" />
+      <entry name="GetBidList" />
+      <entry name="GetFixbidList" />
+      <entry name="UsrCmtLstC_PU" />
+      <entry name="UsrCmtLst2_PU" />
+      <entry name="UsrCmtLstC2_PU" />
+      <entry name="BuyerCmtLst2_PU" />
+      <entry name="UsrCmtLstC" />
+      <entry name="SellingCount" key="U_id:long" />
+      <entry name="SellingInfo" key="U_id:long" />
+      <entry name="CatGetPath" key="GCls_id:long" />
+      <entry name="TruSimpleJud" />
+      <entry name="GetCciInfo" />
+      <entry name="GetPSStatus" key="U_id:long" />
+
+      <event name="Bid" key="P_id:long,U_id@2:long" entry-list="GetPdt_dynamic,GetBidList,GetFixbidList,SellingInfo" />
+      <event name="LeaveWord" key="P_id:long" entry-list="UsrCmtLstC_PU,UsrCmtLstC,UsrCmtLst2_PU,UsrCmtLstC2_PU,BuyerCmtLst2_PU" />
+      <event name="ModifyProduct" key="P_id:long" entry-list="ExAttProQry,GetPdt_static,GetPdt_dynamic" />
+      <event name="ModifyPicture" key="P_id:long" entry-list="GetPdt_static" />
+      <event name="FutureProduct" key="U_id:long,P_id@2:long" event-list="UserDelProduct" />
+      <event name="UserDelProduct" key="U_id:long,P_id@2:long" event-list="UserInsProduct,ModifyProduct,Bid" />
+      <event name="UserInsProduct" key="U_id:long" entry-list="SellingCount,SellingInfo" />
+      <event name="GClsModify" key="GCls_id:long" entry-list="CatGetPath" />
+      <event name="BuyCci" key="P_id:long" entry-list="GetCciInfo" />
+      <event name="ModifyPS" key="U_id:long" entry-list="GetPSStatus" />
+   </domain>
+   <domain>
+      <event name="Bid" key="P_id,U_id"/>
+      <event name="ModifyProduct" key="P_id"/>
+      <event name="ModifyPicture" key="P_id,Pic_id"/>
+      
+      <entry name="GetPdt_static" key="P_id">
+         <listen-on>
+            <event>ModifyProduct</event>
+            <event>ModifyPicture</event>
+         </listen-on>
+      </entry>
+      <entry name="GetPdt_dynamic" key="P_id">
+         <listen-on>
+            <event>Bid</event>
+            <event>ModifyProduct</event>
+         </listen-on>
+      </entry>
+      <entry name="ExAttProQry" key="P_id,Attr_id">
+         <listen-on>
+            <event>ModifyProduct</event>
+         </listen-on>
+      </entry>
+   </domain>
+   <domain>
+      <event name="Bid" tables="Product,User"/>
+      <event name="ModifyProduct" key="Product"/>
+      <event name="ModifyPicture" key="Product,Picture"/>
+      
+      <entry name="GetPdt_static" tables="Product">
+         <listen-on>
+            <event>ModifyProduct</event>
+            <event>ModifyPicture</event>
+         </listen-on>
+      </entry>
+      <entry name="GetPdt_dynamic" tables="Product">
+         <listen-on>
+            <event>Bid</event>
+            <event>ModifyProduct</event>
+         </listen-on>
+      </entry>
+      <entry name="ExAttProQry" tables="Product,UserAttribute">
+         <listen-on>
+            <event>ModifyProduct</event>
+         </listen-on>
+      </entry>
+   </domain>
+</config>

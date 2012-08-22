@@ -24,6 +24,7 @@ import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.Generator;
 import org.unidal.codegen.meta.WizardMeta;
 import org.unidal.maven.plugin.common.PropertyProviders;
+import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
 import org.unidal.maven.plugin.wizard.model.entity.Webapp;
@@ -128,9 +129,9 @@ public class WebAppMojo extends AbstractMojo {
       } else {
          Webapp webapp = new Webapp();
 
-         String packageName = PropertyProviders.fromConsole().forString("package", "Java package name for webapp:", null, null);
+         String packageName = PropertyProviders.fromConsole().forString("package", "Base java package name:", null, null);
          String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
-         String name = PropertyProviders.fromConsole().forString("name", "Name for webapp:", defaultName, null);
+         String name = PropertyProviders.fromConsole().forString("name", "Webapp name:", defaultName, null);
          boolean webres = PropertyProviders.fromConsole().forBoolean("webres", "Support WebRes framework?", false);
          boolean cat = PropertyProviders.fromConsole().forBoolean("cat", "Support CAT?", true);
 
@@ -318,7 +319,7 @@ public class WebAppMojo extends AbstractMojo {
 
       b.findOrCreateChild(codegenPlexusConfiguration, "className").setText(webapp.getPackage() + ".build.ComponentsConfigurator");
 
-      if (b.isPomFileModified()) {
+      if (b.isModified()) {
          saveXml(doc, pomFile);
          getLog().info(String.format("Added dependencies to POM file(%s).", pomFile));
          getLog().info("You need run following command to setup eclipse environment:");

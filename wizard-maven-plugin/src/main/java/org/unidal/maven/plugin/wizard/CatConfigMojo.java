@@ -1,8 +1,11 @@
 package org.unidal.maven.plugin.wizard;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -17,8 +20,13 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
+import org.unidal.maven.plugin.wizard.dom.Log4jFileBuilder;
+import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
+import org.unidal.maven.plugin.wizard.dom.WebFileBuilder;
 
 import com.site.helper.Files;
+import com.site.helper.Scanners;
+import com.site.helper.Scanners.FileMatcher;
 import com.site.helper.Splitters;
 
 /**
@@ -50,46 +58,12 @@ public class CatConfigMojo extends AbstractMojo {
     */
    protected String servers;
 
-   protected void modifyPomFile(File pomFile) throws JDOMException, IOException {
-      Document doc = new SAXBuilder().build(pomFile);
-      Element root = doc.getRootElement();
-      PomFileBuilder b = new PomFileBuilder();
-      Element dependencies = b.findOrCreateChild(root, "dependencies");
-      String version = "0.3.4";
-
-      if (b.checkDependency(dependencies, "com.dianping.cat", "cat-core", version, null)) {
-         b.checkDependency(dependencies, "com.dianping.zebra", "zebra-ds-monitor-client", "0.0.6.cat", null);
-         b.checkDependency(dependencies, "com.dianping", "avatar-dao", "2.1.7", null);
-         b.checkDependency(dependencies, "com.dianping.dpsf", "dpsf-net", "1.6.1", null);
-         b.checkDependency(dependencies, "com.dianping.hawk", "hawk-client", "0.6.7", null);
-      }
-
-      if (b.isPomFileModified()) {
-         saveXml(doc, pomFile, true);
-         getLog().info(String.format("Dependency(com.dianping.cat:cat-core:%s) added.", version));
-      }
-   }
-
-   protected void modifyWebFile(File webFile) throws JDOMException, IOException {
-      if (!webFile.exists()) {
-         getLog().warn(String.format("File(%s) is not found, SKIPPED.", webFile.getCanonicalPath()));
-         getLog().warn("You need do CAT integration manually.");
-         return;
-      }
-
-      Document doc = new SAXBuilder().build(webFile);
-      Element root = doc.getRootElement();
-      WebFileBuilder b = new WebFileBuilder();
-
-      b.findOrCreateListener(root, "com.dianping.cat.servlet.CatListener");
-      b.findOrCreateFilter(root, "cat-filter", "com.dianping.cat.servlet.CatFilter");
-      b.findOrCreateFilterMapping(root, "cat-filter", "/*", "REQUEST", "FORWARD", "ERROR");
-
-      if (b.isWebFileModified()) {
-         saveXml(doc, webFile, true);
-         getLog().warn(String.format("File(%s) integrated, but you must have a double check.", webFile.getCanonicalPath()));
-      }
-   }
+   /**
+    * If the application is a web or service.
+    * 
+    * @parameter expression="${isService}"
+    */
+   protected String isService;
 
    protected Document createConfigFile() {
       Element config = new Element("config").setAttribute("mode", "client");
@@ -125,6 +99,23 @@ public class CatConfigMojo extends AbstractMojo {
       return new Document(config);
    }
 
+   protected List<String> detectLog4jConfigFile(File base) {
+      final List<String> paths = new ArrayList<String>();
+
+      Scanners.forDir().scan(base, new FileMatcher() {
+         @Override
+         public Direction matches(File base, String path) {
+            if (path.equals("log4j.xml") || path.endsWith("/log4j.xml")) {
+               paths.add(path);
+            }
+
+            return Direction.NEXT;
+         }
+      });
+
+      return paths;
+   }
+
    @Override
    public void execute() throws MojoExecutionException, MojoFailureException {
       if (prepare()) {
@@ -135,15 +126,113 @@ public class CatConfigMojo extends AbstractMojo {
 
             if ("war".equals(m_project.getPackaging())) {
                Document resource = createResourceFile();
+               File base = new File(m_project.getBasedir(), "src/main/resources");
+               List<String> canidates = detectLog4jConfigFile(base);
 
                saveXml(resource, new File(m_project.getBasedir(), "src/main/resources/META-INF/cat/client.xml"), false);
-               modifyWebFile(new File("src/main/webapp/WEB-INF/web.xml"));
                modifyPomFile(new File("pom.xml"));
+               modifyWebFile(new File("src/main/webapp/WEB-INF/web.xml"), !"true".equals(isService));
+
+               if (canidates.isEmpty()) {
+                  getLog().warn(String.format("No log4j.xml file found at %s!", base.getCanonicalPath()));
+               } else if (canidates.size() == 1) {
+                  String log4jFile = PropertyProviders.fromConsole().forString("log4jFile", "Log4j configuration file:",
+                        canidates.get(0), null);
+
+                  modifyLog4jFile(new File(base, log4jFile));
+               } else {
+                  String log4jFile = PropertyProviders.fromConsole().forString("log4jFile",
+                        "Log4j configuration files:" + canidates.toString(), null, null);
+
+                  modifyLog4jFile(new File(base, log4jFile));
+               }
             }
          } catch (Exception e) {
             throw new MojoExecutionException("Failed to execute wizard.", e);
          }
       }
+   }
+
+   protected void modifyLog4jFile(File log4jFile) throws JDOMException, IOException {
+      Document doc = buildDocument(log4jFile);
+      Element root = doc.getRootElement();
+      Log4jFileBuilder b = new Log4jFileBuilder();
+      int index = b.indexOfLastElement(root, "appender");
+      Element appender = new Element("appender").setAttribute("name", "catAppender") //
+            .setAttribute("class", "com.dianping.cat.log4j.CatAppender");
+
+      root.addContent(index + 1, appender);
+
+      b.checkAppenderRefForRoot(root, "catAppender");
+      b.checkAppenderRefForLoggers(root, "catAppender");
+
+      if (b.isModified()) {
+         saveXml(doc, log4jFile, true);
+      }
+   }
+
+   protected void modifyPomFile(File pomFile) throws JDOMException, IOException {
+      Document doc = buildDocument(pomFile);
+      Element root = doc.getRootElement();
+      PomFileBuilder b = new PomFileBuilder().setLog(getLog());
+      Element dependencies = b.findOrCreateChild(root, "dependencies");
+      String version = "0.3.4";
+
+      if (!b.checkDependency(dependencies, "com.dianping.cat", "cat-core", version, null)) {
+         b.checkDependency(dependencies, "com.dianping.zebra", "zebra-ds-monitor-client", "0.0.6.cat", null);
+         b.checkDependency(dependencies, "com.dianping", "avatar-dao", "2.1.7", null);
+         b.checkDependency(dependencies, "com.dianping", "avatar-cache", "2.2.4", null);
+         b.checkDependency(dependencies, "com.dianping.dpsf", "dpsf-net", "1.6.1", null);
+         b.checkDependency(dependencies, "com.dianping.hawk", "hawk-client", "0.6.7", null);
+      }
+
+      if (b.isModified()) {
+         saveXml(doc, pomFile, true);
+      }
+   }
+
+   protected void modifyWebFile(File webFile, boolean enableFilter) throws JDOMException, IOException {
+      if (!webFile.exists()) {
+         getLog().warn(String.format("File(%s) is not found, SKIPPED.", webFile.getCanonicalPath()));
+         getLog().warn("You need do CAT integration manually.");
+         return;
+      }
+
+      Document doc = buildDocument(webFile);
+      Element root = doc.getRootElement();
+      WebFileBuilder b = new WebFileBuilder();
+      String version = root.getAttributeValue("version");
+
+      if (version == null) {
+         version = "2.3";
+         b.setActiveNamespace(null);
+      }
+
+      b.findOrCreateListener(root, "com.dianping.cat.servlet.CatListener");
+
+      if (enableFilter) {
+         if ("2.3".equals(version)) {
+            b.findOrCreateFilterMapping(root, "cat-filter", "/*");
+         } else {
+            b.findOrCreateFilterMapping(root, "cat-filter", "/*", "REQUEST", "FORWARD", "ERROR");
+         }
+
+         b.findOrCreateFilter(root, "cat-filter", "com.dianping.cat.servlet.CatFilter");
+      }
+
+      if (b.isModified()) {
+         saveXml(doc, webFile, true);
+         getLog().warn(String.format("File(%s) integrated, but you must have a double check.", webFile.getCanonicalPath()));
+      }
+   }
+
+   protected Document buildDocument(File webFile) throws JDOMException, IOException {
+      SAXBuilder builder = new SAXBuilder();
+
+      builder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+
+      Document doc = builder.build(webFile);
+      return doc;
    }
 
    protected boolean prepare() throws MojoFailureException {
@@ -160,6 +249,10 @@ public class CatConfigMojo extends AbstractMojo {
                      return !value.contains("-");
                   }
                });
+      }
+
+      if (isService == null) {
+         isService = PropertyProviders.fromConsole().forString("isService", "Is it service?", "false", null);
       }
 
       if (servers == null) {
@@ -192,7 +285,7 @@ public class CatConfigMojo extends AbstractMojo {
 
       Format format = Format.getPrettyFormat().setIndent("   ");
       XMLOutputter outputter = new XMLOutputter(format);
-      FileWriter writer = new FileWriter(file);
+      Writer writer = new OutputStreamWriter(new FileOutputStream(file), "utf-8");
 
       try {
          outputter.output(doc, writer);

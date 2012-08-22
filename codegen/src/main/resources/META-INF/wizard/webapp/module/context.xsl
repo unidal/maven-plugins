@@ -18,15 +18,17 @@
 <xsl:if test="../@webres='true'">
 import java.io.File;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.unidal.webres.resource.runtime.ResourceConfigurator;
 import org.unidal.webres.resource.runtime.ResourceInitializer;
 import org.unidal.webres.resource.runtime.ResourceRuntime;
 import org.unidal.webres.resource.runtime.ResourceRuntimeContext;
 import org.unidal.webres.resource.spi.IResourceRegistry;
 import org.unidal.webres.tag.resource.ResourceTagConfigurator;
-import org.unidal.webres.taglib.basic.ResourceTagLibConfigurator;<xsl:value-of select="$empty"/>
+import org.unidal.webres.taglib.basic.ResourceTagLibConfigurator;<xsl:value-of select="$empty-line"/>
 </xsl:if>
 import com.site.web.mvc.Action;
 import com.site.web.mvc.ActionContext;
