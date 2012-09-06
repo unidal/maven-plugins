@@ -1,17 +1,21 @@
 package org.unidal.maven.plugin.codegen;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.GenerateContextSupport;
 import org.unidal.codegen.generator.Generator;
+
+import com.site.helper.Splitters;
 
 /**
  * DAL code generator for modeling
@@ -94,50 +98,58 @@ public class DalModelMojo extends AbstractMojo {
          return;
       }
 
+      List<String> parts = Splitters.by(',').noEmptyItem().trim().split(manifest);
+
       try {
-         File manifestFile = new File(manifest);
-
-         if (!manifestFile.exists()) {
-            throw new MojoExecutionException(String.format("Manifest(%s) not found!", manifestFile.getCanonicalPath()));
+         for (String part : parts) {
+            generateModel(part);
          }
-
-         final URL manifestXml = manifestFile.toURI().toURL();
-         final GenerateContext ctx = new GenerateContextSupport(resouceBase, m_project.getBasedir()) {
-            @Override
-            public URL getManifestXml() {
-               return manifestXml;
-            }
-
-            @Override
-            protected void configure(Map<String, String> properties) {
-               properties.put("src-main-java", sourceDir);
-            }
-
-            @Override
-            public void log(LogLevel logLevel, String message) {
-               switch (logLevel) {
-               case DEBUG:
-                  if (debug) {
-                     getLog().info(message);
-                  }
-                  break;
-               case INFO:
-                  if (debug || verbose) {
-                     getLog().info(message);
-                  }
-                  break;
-               case ERROR:
-                  getLog().error(message);
-                  break;
-               }
-            }
-         };
-
-         m_generator.generate(ctx);
-         m_project.addCompileSourceRoot(sourceDir);
-         getLog().info(ctx.getGeneratedFiles() + " files generated.");
       } catch (Exception e) {
          throw new MojoExecutionException("Code generating failed.", e);
       }
+   }
+
+   private void generateModel(String manifest) throws MojoExecutionException, IOException, MalformedURLException, Exception {
+      File manifestFile = new File(manifest);
+
+      if (!manifestFile.exists()) {
+         throw new MojoExecutionException(String.format("Manifest(%s) not found!", manifestFile.getCanonicalPath()));
+      }
+
+      final URL manifestXml = manifestFile.toURI().toURL();
+      final GenerateContext ctx = new GenerateContextSupport(resouceBase, m_project.getBasedir()) {
+         @Override
+         protected void configure(Map<String, String> properties) {
+            properties.put("src-main-java", sourceDir);
+         }
+
+         @Override
+         public URL getManifestXml() {
+            return manifestXml;
+         }
+
+         @Override
+         public void log(LogLevel logLevel, String message) {
+            switch (logLevel) {
+            case DEBUG:
+               if (debug) {
+                  getLog().info(message);
+               }
+               break;
+            case INFO:
+               if (debug || verbose) {
+                  getLog().info(message);
+               }
+               break;
+            case ERROR:
+               getLog().error(message);
+               break;
+            }
+         }
+      };
+
+      m_generator.generate(ctx);
+      m_project.addCompileSourceRoot(sourceDir);
+      getLog().info(ctx.getGeneratedFiles() + " files generated.");
    }
 }

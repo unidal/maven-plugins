@@ -16,7 +16,6 @@
       <module>project-maven-plugin</module>
       <module>webres-maven-plugin</module>
       <module>wizard-maven-plugin</module>
-      <module>config-maven-plugin</module>
    </modules>
    <dependencyManagement>
       <dependencies>
