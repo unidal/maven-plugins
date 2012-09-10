@@ -3,11 +3,11 @@ package org.unidal.codegen.generator;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-
 import org.unidal.codegen.generator.jdbc.JdbcGeneratorTest;
 import org.unidal.codegen.generator.model.all.AllGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatConsumerGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatCoreGeneratorTest;
+import org.unidal.codegen.generator.model.egret.EgretGeneratorTest;
 import org.unidal.codegen.generator.model.pom.PomGeneratorTest;
 import org.unidal.codegen.generator.model.test.TestGeneratorTest;
 import org.unidal.codegen.generator.model.webres.WebresGeneratorTest;
@@ -25,6 +25,8 @@ CatCoreGeneratorTest.class,
 CatConsumerGeneratorTest.class,
 
 PomGeneratorTest.class,
+
+EgretGeneratorTest.class,
 
 TestGeneratorTest.class,
 

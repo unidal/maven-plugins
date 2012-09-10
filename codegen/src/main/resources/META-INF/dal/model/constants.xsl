@@ -61,7 +61,7 @@
          <xsl:value-of select="$empty"/>   public static final String <xsl:value-of select="@upper-name"/> = "<xsl:value-of select="@tag-name"/>";<xsl:value-of select="$empty-line"/>
          <xsl:if test="name()='entity-ref' and (@list='true' or @map='true')" >
             <xsl:variable name="upper-names" select="@upper-names"/>
-            <xsl:if test="not(//entity/entity-ref[@upper-name=$upper-names])">
+            <xsl:if test="not(//entity/entity-ref[@upper-name=$upper-names] | //entity[@upper-name=$upper-names])">
                <xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>   public static final String <xsl:value-of select="@upper-names"/> = "<xsl:value-of select="@tag-names"/>";<xsl:value-of select="$empty-line"/>
             </xsl:if>

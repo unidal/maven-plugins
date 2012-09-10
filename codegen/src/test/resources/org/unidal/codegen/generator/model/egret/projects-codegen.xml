@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="projects" root="true">
+    <entity-ref name="project" type="list" names="projects" />
+  </entity>
+  <entity name="project">
+    <attribute name="name" value-type="String" />
+    <element name="owner" value-type="String" />
+    <entity-ref name="hosts" />
+    <entity-ref name="dependencyJars" />
+  </entity>
+  <entity name="hosts">
+    <element name="host" value-type="String" type="list" names="hosts" />
+  </entity>
+  <entity name="dependencyJars">
+    <element name="dependencyJar" value-type="String" type="list" names="dependencyJars" />
+  </entity>
+</model>
+
