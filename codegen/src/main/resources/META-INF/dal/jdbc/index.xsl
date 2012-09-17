@@ -55,7 +55,7 @@
       <xsl:with-param name="type">?</xsl:with-param>
    </xsl:call-template>
    <xsl:value-of select="$empty"/>[] { <xsl:value-of select="$empty"/>
-   <xsl:for-each select="/entities/entity">
+   <xsl:for-each select="/entities/entity[not(@gen='false')]">
       <xsl:if test="position() != 1">, </xsl:if><xsl:value-of select="@class-name"/><xsl:value-of select="$suffix"/>.class<xsl:value-of select="$empty"/>
    </xsl:for-each>
    <xsl:value-of select="$empty"/> };<xsl:value-of select="$empty-line"/>
