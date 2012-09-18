@@ -3,38 +3,52 @@ package org.unidal.maven.plugin.wizard;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.xml.sax.SAXException;
-
-import org.unidal.codegen.generator.AbstractGenerateContext;
-import org.unidal.codegen.generator.GenerateContext;
-import org.unidal.codegen.generator.Generator;
-import org.unidal.codegen.meta.WizardMeta;
-import com.site.helper.Files;
+import org.unidal.codegen.meta.TableMeta;
 import org.unidal.maven.plugin.common.PropertyProviders;
+import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
+import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
-import org.unidal.maven.plugin.wizard.model.entity.Datasources;
-import org.unidal.maven.plugin.wizard.model.entity.JdbcConnection;
+import org.unidal.maven.plugin.wizard.model.entity.Group;
+import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
+import org.unidal.maven.plugin.wizard.model.entity.Table;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;
-import org.unidal.maven.plugin.wizard.model.transform.DefaultDomParser;
+import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
+import org.xml.sax.SAXException;
+
+import com.site.helper.Files;
+import com.site.helper.Transformers;
+import com.site.helper.Transformers.IBuilder;
 
 /**
- * Create a new page of web application project.
+ * DAL Metadata generator for JDBC
  * 
  * @goal jdbc
+ * @author Frankie Wu
  */
 public class JdbcMojo extends AbstractMojo {
    /**
@@ -47,6 +61,15 @@ public class JdbcMojo extends AbstractMojo {
    protected MavenProject m_project;
 
    /**
+    * Table meta component
+    * 
+    * @component
+    * @required
+    * @readonly
+    */
+   protected TableMeta m_meta;
+
+   /**
     * Current project base directory
     * 
     * @parameter expression="${basedir}"
@@ -56,194 +79,107 @@ public class JdbcMojo extends AbstractMojo {
    protected File baseDir;
 
    /**
-    * XSL code generator implementation
-    * 
-    * @component role="org.unidal.codegen.generator.Generator"
-    *            role-hint="wizard-jdbc"
-    * @required
-    * @readonly
-    */
-   protected Generator m_generator;
-
-   /**
-    * Wizard meta component
-    * 
-    * @component
-    * @required
-    * @readonly
-    */
-   protected WizardMeta m_meta;
-
-   /**
-    * Current project base directory
-    * 
-    * @parameter expression="${sourceDir}" default-value="${basedir}"
+    * @parameter expression="${outputDir}"
+    *            default-value="${basedir}/src/main/resources/META-INF/dal/jdbc"
     * @required
     */
-   protected String sourceDir;
+   protected String outputDir;
 
    /**
-    * Location of manifest.xml file
+    * Location of wizard.xml file
     * 
     * @parameter expression="${manifest}" default-value=
-    *            "${basedir}/src/main/resources/META-INF/wizard/jdbc/manifest.xml"
+    *            "${basedir}/src/main/resources/META-INF/wizard/jdbc/wizard.xml"
     * @required
     */
-   protected String manifest;
+   protected String wizard;
 
-   /**
-    * Location of generated source directory
-    * 
-    * @parameter expression="${resource.base}" default-value="/META-INF/wizard/jdbc"
-    * @required
-    */
-   protected String resouceBase;
+   private Connection m_conn;
 
-   /**
-    * @parameter expression="${jdbc.driver}"
-    */
-   protected String driver;
+   private Jdbc m_jdbc;
 
-   /**
-    * @parameter expression="${jdbc.url}"
-    */
-   protected String url;
-
-   /**
-    * @parameter expression="${jdbc.user}"
-    */
-   protected String user;
-
-   /**
-    * @parameter expression="${jdbc.password}"
-    */
-   protected String password;
-
-   /**
-    * @parameter expression="${jdbc.connectionProperties}"
-    */
-   protected String connectionProperties;
-
-   /**
-    * @parameter expression="${packageName}"
-    */
-   protected String packageName;
-
-   /**
-    * Verbose information or not
-    * 
-    * @parameter expression="${verbose}" default-value="false"
-    */
-   protected boolean verbose;
-
-   /**
-    * Verbose information or not
-    * 
-    * @parameter expression="${debug}" default-value="false"
-    */
-   protected boolean debug;
-
-   private String detectPackageName() {
-      if (packageName != null) {
-         return packageName;
-      }
-
-      String groupId = m_project.getGroupId();
-      String artifactId = m_project.getArtifactId();
-
-      return (groupId + "." + artifactId + ".dal").replace('-', '.');
-   }
-
-   protected Wizard buildWizard(File wizardFile) throws IOException, SAXException {
+   protected Jdbc buildWizard(File wizardFile) throws IOException, SAXException {
       Wizard wizard;
 
       if (wizardFile.isFile()) {
          String content = Files.forIO().readFrom(wizardFile, "utf-8");
-         wizard = new DefaultDomParser().parse(content);
+
+         wizard = DefaultSaxParser.parse(content);
       } else {
+         String packageName = getPackageName();
+
          wizard = new Wizard();
-         wizard.setDatasources(new Datasources());
+         wizard.setPackage(packageName);
       }
 
-      Datasources datasources = wizard.getDatasources();
-      final List<String> names = new ArrayList<String>();
+      WizardBuilder builder = new WizardBuilder();
 
-      datasources.accept(new BaseVisitor() {
-         @Override
-         public void visitDatasource(Datasource datasource) {
-            names.add(datasource.getName());
-         }
-      });
-
-      String name = PropertyProviders.fromConsole().forString("datasource", "Datasource name:", names, null, null);
-      Datasource datasource = new Datasource(name);
-      JdbcConnection conn = new JdbcConnection();
-
-      datasources.addDatasource(datasource);
-      datasource.setJdbcConnection(conn);
-
-      driver = getProperty(driver, "jdbc.driver", "JDBC driver:", "com.mysql.jdbc.Driver");
-      url = getProperty(url, "jdbc.url", "JDBC URL[for example, jdbc:mysql://localhost:3306/test]:", null);
-      user = getProperty(user, "jdbc.user", "JDBC user:", null);
-      password = getProperty(password, "jdbc.password", "JDBC password:", null);
-      connectionProperties = getProperty(connectionProperties, "jdbc.connectionProperties",
-            "JDBC connection properties:", "useUnicode=true&autoReconnect=true");
-
-      conn.setDriver(driver);
-      conn.setUrl(url);
-      conn.setUser(user);
-      conn.setPassword(password);
-      conn.setProperties(connectionProperties);
-
-      String doPpackage = getProperty(packageName, "packageName", "Target package name:", detectPackageName());
-
-      datasource.setDoPackage(doPpackage);
-
-      return wizard;
+      wizard.accept(builder);
+      m_jdbc = builder.getJdbc();
+      m_conn = builder.getConnection();
+      Files.forIO().writeTo(wizardFile, wizard.toString());
+      return builder.getJdbc();
    }
 
    public void execute() throws MojoExecutionException, MojoFailureException {
       try {
-         final File manifestFile = getFile(manifest);
-         File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
-         Reader reader = new StringReader(buildWizard(wizardFile).toString());
+         final File wizardFile = getFile(wizard);
+         Jdbc jdbc = buildWizard(wizardFile);
 
-         if (!manifestFile.exists()) {
-            saveXml(m_meta.getManifest("wizard.xml"), manifestFile);
+         modifyPomFile(m_project.getFile(), m_jdbc);
+
+         for (Group group : jdbc.getGroups()) {
+            generateModel(group);
          }
-
-         saveXml(m_meta.getWizard(reader), wizardFile);
-
-         final URL manifestXml = manifestFile.toURI().toURL();
-         final GenerateContext ctx = new AbstractGenerateContext(m_project.getBasedir(), resouceBase, sourceDir) {
-            public URL getManifestXml() {
-               return manifestXml;
-            }
-
-            public void log(LogLevel logLevel, String message) {
-               switch (logLevel) {
-               case DEBUG:
-                  if (debug) {
-                     getLog().debug(message);
-                  }
-                  break;
-               case INFO:
-                  if (debug || verbose) {
-                     getLog().info(message);
-                  }
-                  break;
-               case ERROR:
-                  getLog().error(message);
-                  break;
-               }
-            }
-         };
-
-         m_generator.generate(ctx);
-         m_project.addCompileSourceRoot(sourceDir);
-         getLog().info(ctx.getGeneratedFiles() + " files generated.");
       } catch (Exception e) {
-         throw new MojoExecutionException("Code generating failed.", e);
+         throw new MojoExecutionException("Error when generating DAL meta: " + e, e);
+      } finally {
+         if (m_conn != null) {
+            try {
+               m_conn.close();
+            } catch (SQLException e) {
+               // ignore it
+            }
+         }
+      }
+   }
+
+   protected void generateModel(Group group) throws SQLException, IOException {
+      String groupName = group.getName();
+      List<Table> tables = group.getTables();
+      Element entities = new Element("entities");
+
+      for (Table table : tables) {
+         Element entity = m_meta.getTableMeta(m_conn.getMetaData(), table.getName());
+
+         entities.addContent(entity);
+      }
+
+      resolveAliasConfliction(entities);
+
+      File outDir = getFile(outputDir);
+      File outFile = new File(outDir, groupName + "-codegen.xml");
+
+      if (!outDir.exists()) {
+         outDir.mkdirs();
+      }
+
+      saveFile(new Document(entities), outFile);
+
+      File modelFile = new File(outDir, groupName + "-dal.xml");
+
+      if (!modelFile.exists()) {
+         Document model = m_meta.getModel(m_jdbc.getPackage());
+
+         saveFile(model, modelFile);
+      }
+
+      File manifestFile = new File(outDir, groupName + "-manifest.xml");
+
+      if (!manifestFile.exists()) {
+         Document manifest = m_meta.getManifest(outFile.getName(), modelFile.getName());
+
+         saveFile(manifest, manifestFile);
       }
    }
 
@@ -259,11 +195,76 @@ public class JdbcMojo extends AbstractMojo {
       return file;
    }
 
-   protected String getProperty(String value, String name, String prompt, String defaultValue) {
-      if (value != null) {
-         return value;
-      } else {
-         return PropertyProviders.fromConsole().forString(name, prompt, defaultValue, null);
+   protected String getPackageName() {
+      String groupId = m_project.getGroupId();
+      String artifactId = m_project.getArtifactId();
+      int index = artifactId.lastIndexOf('-');
+      String packageName = (groupId + "." + artifactId.substring(index + 1) + ".dal").replace('-', '.');
+
+      packageName = PropertyProviders.fromConsole().forString("package", "Please input package name:", packageName, null);
+      return packageName;
+   }
+
+   protected void modifyPomFile(File pomFile, Jdbc jdbc) throws JDOMException, IOException {
+      Document doc = new SAXBuilder().build(pomFile);
+      Element root = doc.getRootElement();
+      PomFileBuilder b = new PomFileBuilder();
+      Element dependencies = b.findOrCreateChild(root, "dependencies");
+
+      if (!b.checkDependency(dependencies, "com.site.dal", "dal-jdbc", "1.1.5", null)) {
+         b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.20", "runtime");
+      }
+
+      Element build = b.findOrCreateChild(root, "build", null, "dependencies");
+      Element plugins = b.findOrCreateChild(build, "plugins");
+      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.7");
+      Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc model");
+      Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
+      StringBuilder manifest = new StringBuilder();
+
+      for (Group group : jdbc.getGroups()) {
+         manifest.append(String.format("${basedir}/src/main/resources/META-INF/dal/jdbc/%s-manifest.xml\r\n", group.getName()));
+      }
+
+      b.findOrCreateChild(codegenGenerateConfiguration, "manifest").setText(manifest.toString());
+
+      if (b.isModified()) {
+         saveXml(doc, pomFile);
+         getLog().info(String.format("Added dependencies to POM file(%s).", pomFile));
+         getLog().info("You need run following command to setup eclipse environment:");
+         getLog().info("   mvn eclipse:clean eclipse:eclipse");
+      }
+   }
+
+   @SuppressWarnings("unchecked")
+   protected void resolveAliasConfliction(Element entities) {
+      Map<String, Integer> map = new HashMap<String, Integer>();
+      List<Element> children = entities.getChildren("entity");
+
+      for (Element entity : children) {
+         String alias = entity.getAttributeValue("alias");
+         Integer count = map.get(alias);
+
+         if (count == null) {
+            map.put(alias, 1);
+         } else {
+            count++;
+            map.put(alias, count);
+            entity.setAttribute("alias", alias + (count));
+         }
+      }
+   }
+
+   protected void saveFile(Document codegen, File file) throws IOException {
+      Format format = Format.getPrettyFormat();
+      XMLOutputter outputter = new XMLOutputter(format);
+      FileWriter writer = new FileWriter(file);
+
+      try {
+         outputter.output(codegen, writer);
+         getLog().info("File " + file.getCanonicalPath() + " generated.");
+      } finally {
+         writer.close();
       }
    }
 
@@ -274,7 +275,7 @@ public class JdbcMojo extends AbstractMojo {
          parent.mkdirs();
       }
 
-      Format format = Format.getPrettyFormat();
+      Format format = Format.getPrettyFormat().setIndent("   ");
       XMLOutputter outputter = new XMLOutputter(format);
       FileWriter writer = new FileWriter(file);
 
@@ -283,6 +284,165 @@ public class JdbcMojo extends AbstractMojo {
          getLog().info("File " + file.getCanonicalPath() + " generated.");
       } finally {
          writer.close();
+      }
+   }
+
+   static class WizardBuilder extends BaseVisitor {
+      private Jdbc m_jdbc;
+
+      private Connection m_conn;
+
+      private List<String> getAvailableTableNames(Jdbc jdbc) {
+         final Set<String> existing = new HashSet<String>();
+
+         for (Group group : jdbc.getGroups()) {
+            for (Table table : group.getTables()) {
+               existing.add(table.getName());
+            }
+         }
+
+         try {
+            List<String> tables = new ArrayList<String>();
+            ResultSet rs = m_conn.getMetaData().getTables(null, null, "%", new String[] { "TABLE" });
+
+            while (rs.next()) {
+               String table = rs.getString("TABLE_NAME");
+
+               if (!existing.contains(table)) {
+                  tables.add(table);
+               }
+            }
+
+            rs.close();
+            Collections.sort(tables);
+            return tables;
+         } catch (SQLException e) {
+            throw new RuntimeException(e);
+         }
+      }
+
+      public Connection getConnection() {
+         return m_conn;
+      }
+
+      public Jdbc getJdbc() {
+         return m_jdbc;
+      }
+
+      private Connection setupConnection(Datasource ds) {
+         Properties info = new Properties();
+
+         info.put("user", ds.getUser());
+         info.put("password", ds.getPassword());
+
+         if (ds.getProperties() != null) {
+            String[] pairs = ds.getProperties().split(Pattern.quote("&"));
+
+            for (String pair : pairs) {
+               int pos = pair.indexOf('=');
+
+               if (pos > 0) {
+                  info.put(pair.substring(0, pos), pair.substring(pos + 1));
+               } else {
+                  System.err.println("invalid property: " + pair + " ignored.");
+               }
+            }
+         }
+
+         try {
+            Class.forName(ds.getDriver());
+
+            return DriverManager.getConnection(ds.getUrl(), info);
+         } catch (Exception e) {
+            throw new RuntimeException("Can't get connection: " + e, e);
+         }
+      }
+
+      @Override
+      public void visitGroup(final Group group) {
+         final List<String> existing = new ArrayList<String>();
+
+         System.out.println("Existing tables in group(" + group.getName() + ") is: ");
+         Transformers.forList().transform(group.getTables(), new IBuilder<Table, String>() {
+            @Override
+            public String build(Table table) {
+               existing.add(table.getName());
+               System.out.println(table.getName());
+               return null;
+            }
+         });
+
+         final List<String> availableTableNames = getAvailableTableNames(m_jdbc);
+
+         System.out.println("Existing tables: " + existing);
+         PropertyProviders.fromConsole().forString("table", "Select table name below, or 'end':", availableTableNames, null,
+               new IValidator<String>() {
+                  @Override
+                  public boolean validate(String name) {
+                     if ("end".equals(name)) {
+                        return true;
+                     } else if (availableTableNames.contains(name)) {
+                        existing.add(name);
+                        availableTableNames.remove(name);
+                        System.out.println("Tables selected: " + existing);
+                        group.findOrCreateTable(name);
+                        return false; // for multiple selection
+                     }
+
+                     return false;
+                  }
+               });
+      }
+
+      @Override
+      public void visitJdbc(Jdbc jdbc) {
+         List<String> groupNames = Transformers.forList().transform(jdbc.getGroups(), new IBuilder<Group, String>() {
+            @Override
+            public String build(Group group) {
+               return group.getName();
+            }
+         });
+         String groupName = PropertyProviders.fromConsole().forString("group", "Select group name below or input a new one:",
+               groupNames, null, null);
+         Group group = jdbc.findOrCreateGroup(groupName);
+
+         visitGroup(group);
+      }
+
+      @Override
+      public void visitWizard(Wizard wizard) {
+         List<String> names = Transformers.forList().transform(wizard.getJdbcs(), new IBuilder<Jdbc, String>() {
+            @Override
+            public String build(Jdbc jdbc) {
+               return jdbc.getName();
+            }
+         });
+         String name = PropertyProviders.fromConsole().forString("jdbc", "Select jdbc name below or input a new one:", names, null,
+               null);
+         Jdbc jdbc = wizard.findJdbc(name);
+
+         if (jdbc == null) {
+            Datasource ds = new Datasource();
+
+            jdbc = new Jdbc(name);
+            wizard.addJdbc(jdbc);
+
+            jdbc.setPackage(PropertyProviders.fromConsole().forString("jdbc.package", "Jdbc Package:",
+                  wizard.getPackage() + "." + name, null));
+            jdbc.setDatasource(ds);
+
+            ds.setDriver(PropertyProviders.fromConsole().forString("driver", "JDBC driver:", "com.mysql.jdbc.Driver", null));
+            ds.setUrl(PropertyProviders.fromConsole().forString("url", "JDBC URL:", "jdbc:mysql://localhost:3306/cat", null));
+            ds.setUser(PropertyProviders.fromConsole().forString("user", "User:", null, null));
+            ds.setPassword(PropertyProviders.fromConsole().forString("password", "Password:", null, null));
+            ds.setProperties(PropertyProviders.fromConsole().forString("connectionProperties", "Connection properties:",
+                  "useUnicode=true&autoReconnect=true", null));
+         }
+
+         m_jdbc = jdbc;
+         m_conn = setupConnection(jdbc.getDatasource());
+
+         visitJdbc(jdbc);
       }
    }
 }

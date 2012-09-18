@@ -1,6 +1,6 @@
 <wizard package="com.dianping.cat">
-   <webapp package="com.dianping.cat" name="cat" webres="true">
-      <module name="dashboard" path="d">
+   <webapp package="com.dianping.cat" name="cat" webres="true" cat="true">
+      <module name="dashboard" path="d" default="true">
          <page name="home" title="Home" default="true" package="com.dianping.cat.page.home">
             <description>Home Page of Garden</description>
          </page>
@@ -14,17 +14,28 @@
          </page>
       </module>
    </webapp>
-   <datasources>
-      <datasource name="garden" do-package="com.dianping.garden.dal">
-         <jdbc-connection>
-            <driver>com.mysql.jdbc.Driver</driver>
-            <url>jdbc:mysql://localhost:3306/garden</url>
-            <user>root</user>
-            <password>Passw0rd</password>
-            <properties>useUnicode=true&amp;autoReconnect=true</properties>
-         </jdbc-connection>
-      </datasource>
+   <jdbc package="com.dianping.cat.dal" name="cat">
       <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://localhost:3306/cat</url>
+         <user>root</user>
+         <password>Passw0rd</password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
       </datasource>
-   </datasources>
+      <group name="default" package="com.dianping.cat.dal">
+      </group>
+      <group name="report" package="com.dianping.cat.dal.report">
+         <table name="report"/>
+         <table name="dailyreport"/>
+      </group>
+      <group name="graph">
+         <table name="graph"/>
+         <table name="dailygraph"/>
+      </group>
+      <group name="task">
+         <table name="task"/>
+      </group>
+   </jdbc>
+   <jdbc package="com.dianping.dog.dal" name="dog">
+   </jdbc>
 </wizard>

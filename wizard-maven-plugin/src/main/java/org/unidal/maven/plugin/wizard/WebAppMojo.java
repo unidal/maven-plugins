@@ -29,7 +29,7 @@ import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
 import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
-import org.unidal.maven.plugin.wizard.model.transform.DefaultDomParser;
+import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
 import org.xml.sax.SAXException;
 
 import com.site.helper.Files;
@@ -125,7 +125,7 @@ public class WebAppMojo extends AbstractMojo {
       if (wizardFile.isFile()) {
          String content = Files.forIO().readFrom(wizardFile, "utf-8");
 
-         wizard = new DefaultDomParser().parse(content);
+         wizard = DefaultSaxParser.parse(content);
       } else {
          Webapp webapp = new Webapp();
 
@@ -269,7 +269,7 @@ public class WebAppMojo extends AbstractMojo {
          getLog().info("Change project packaging type to war.");
       }
 
-      if (!b.checkDependency(dependencies, "com.site.common", "web-framework", "1.0.15", null)) {
+      if (!b.checkDependency(dependencies, "com.site.common", "web-framework", "1.0.16", null)) {
          b.checkDependency(dependencies, "com.site.common", "test-framework", "1.0.3", "test");
 
          if (webapp.isWebres()) {
@@ -312,7 +312,7 @@ public class WebAppMojo extends AbstractMojo {
       }
 
       Element plugins = b.findOrCreateChild(build, "plugins");
-      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.4");
+      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.7");
       Element codegenPlexus = b.checkPluginExecution(codegenPlugin, "plexus", "process-classes",
             "generate plexus component descriptor");
       Element codegenPlexusConfiguration = b.findOrCreateChild(codegenPlexus, "configuration");

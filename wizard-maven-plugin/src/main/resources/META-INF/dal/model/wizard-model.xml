@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<model model-package="org.unidal.maven.plugin.wizard.model" enable-xml-parser="true" enable-base-visitor="true">
+<model model-package="org.unidal.maven.plugin.wizard.model" enable-sax-parser="true" enable-base-visitor="true">
    <entity name="module">
       <attribute name="name" value-type="String" key="true" />
    </entity>
@@ -9,5 +9,16 @@
    </entity>
    <entity name="datasource">
       <attribute name="name" value-type="String" key="true" />
+   </entity>
+   <entity name="jdbc">
+      <attribute name="name" value-type="String" key="true"/>
+      <entity-ref name="group" type="list" names="groups" method-find-or-create="true"/>
+   </entity>
+   <entity name="group">
+      <attribute name="name" value-type="String" key="true"/>
+      <entity-ref name="table" type="list" names="tables" method-find-or-create="true"/>
+   </entity>
+   <entity name="table">
+      <attribute name="name" value-type="String" key="true"/>
    </entity>
 </model>

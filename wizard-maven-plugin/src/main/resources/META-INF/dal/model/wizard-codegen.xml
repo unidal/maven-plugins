@@ -3,7 +3,7 @@
   <entity name="wizard" root="true">
     <attribute name="package" value-type="String" />
     <entity-ref name="webapp" />
-    <entity-ref name="datasources" />
+    <entity-ref name="jdbc" type="list" names="jdbcs" />
   </entity>
   <entity name="webapp">
     <attribute name="package" value-type="String" />
@@ -28,20 +28,26 @@
     <attribute name="standalone" value-type="boolean" />
     <element name="description" value-type="String" />
   </entity>
-  <entity name="datasources">
-    <entity-ref name="datasource" type="list" names="datasources"/>
+  <entity name="jdbc">
+    <attribute name="package" value-type="String" />
+    <attribute name="name" value-type="String" />
+    <entity-ref name="datasource" />
+    <entity-ref name="group" type="list" names="groups" />
   </entity>
   <entity name="datasource">
-    <attribute name="name" value-type="String" />
-    <attribute name="do-package" value-type="String" />
-    <entity-ref name="jdbc-connection" />
-  </entity>
-  <entity name="jdbc-connection">
     <element name="driver" value-type="String" />
     <element name="url" value-type="String" />
     <element name="user" value-type="String" />
     <element name="password" value-type="String" />
     <element name="properties" value-type="String" />
+  </entity>
+  <entity name="group">
+    <attribute name="name" value-type="String" />
+    <attribute name="package" value-type="String" />
+    <entity-ref name="table" type="list" names="tables" />
+  </entity>
+  <entity name="table">
+    <attribute name="name" value-type="String" />
   </entity>
 </model>
 

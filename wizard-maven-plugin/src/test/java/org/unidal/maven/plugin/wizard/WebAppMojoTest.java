@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
-import org.unidal.maven.plugin.wizard.model.transform.DefaultDomParser;
+import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
 
 import com.site.helper.Files;
 
@@ -14,7 +14,7 @@ public class WebAppMojoTest {
    @Test
    public void testModel() throws Exception {
       String expected = Files.forIO().readFrom(getClass().getResourceAsStream("wizard.xml"), "utf-8");
-      Wizard wizard = new DefaultDomParser().parse(expected);
+      Wizard wizard = DefaultSaxParser.parse(expected);
 
       Assert.assertEquals("XML is not well parsed!", expected.replace("\r", ""), wizard.toString().replace("\r", ""));
    }

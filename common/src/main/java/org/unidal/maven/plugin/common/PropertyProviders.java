@@ -50,7 +50,7 @@ public class PropertyProviders {
       }
 
       private String getString(String name, String prompt, List<String> availableValues, String defaultValue) {
-         String value = System.getProperty(name);
+         String value = name == null ? null : System.getProperty(name);
 
          if (value != null) {
             return value;
@@ -70,17 +70,15 @@ public class PropertyProviders {
             boolean withOptions = availableValues != null && !availableValues.isEmpty();
             int index = 0;
 
-            if (withOptions) {
-               System.out.println(sb.toString());
+            System.out.println(sb.toString());
 
+            if (withOptions) {
                for (String availableValue : availableValues) {
                   System.out.println((index++) + ": " + availableValue);
                }
-
-               System.out.print("Please select:");
-            } else {
-               System.out.print(sb.toString());
             }
+
+            System.out.print("Please select:");
 
             try {
                int size = System.in.read(buffer);
