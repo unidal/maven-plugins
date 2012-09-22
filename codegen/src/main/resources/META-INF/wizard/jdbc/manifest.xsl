@@ -14,12 +14,11 @@
 
 <xsl:template name="manifest">
    <xsl:element name="manifest">
-      <xsl:apply-templates select="/wizard/datasources" />
-      <xsl:apply-templates select="/wizard/datasources/datasource[@name]" />
+      <xsl:apply-templates select="/wizard/jdbc" />
    </xsl:element>
 </xsl:template>
 
-<xsl:template match="datasources">
+<xsl:template match="jdbc">
    <!-- ComponentsConfigurator class -->
    <xsl:call-template name="generate-java">
      <xsl:with-param name="class" select="'ComponentsConfigurator'"/>
@@ -34,9 +33,7 @@
      <xsl:with-param name="package" select="/wizard/@package"/>
      <xsl:with-param name="template" select="'test/all-tests.xsl'"/>
    </xsl:call-template>
-</xsl:template>
 
-<xsl:template match="datasource">
    <!-- DatabseConfigurator class -->
    <xsl:call-template name="generate-java">
      <xsl:with-param name="class" select="@configurator-class"/>
@@ -45,7 +42,6 @@
      <xsl:with-param name="template" select="'build/database-configurator.xsl'"/>
      <xsl:with-param name="mode" select="'create_or_overwrite'"/>
    </xsl:call-template>
-
 </xsl:template>
 
 <xsl:template name="wizard-policy">

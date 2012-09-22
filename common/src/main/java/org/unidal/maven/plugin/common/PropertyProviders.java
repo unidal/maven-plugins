@@ -68,13 +68,13 @@ public class PropertyProviders {
             }
 
             boolean withOptions = availableValues != null && !availableValues.isEmpty();
-            int index = 0;
+            int count = 0;
 
             System.out.println(sb.toString());
 
             if (withOptions) {
                for (String availableValue : availableValues) {
-                  System.out.println((index++) + ": " + availableValue);
+                  System.out.println((count++) + ": " + availableValue);
                }
             }
 
@@ -92,13 +92,17 @@ public class PropertyProviders {
                } else {
                   value = new String(buffer, 0, size);
 
-                  if (withOptions && value.length() == 1) {
-                     int pos = value.charAt(0) - '0';
+                  if (withOptions) {
+                     try {
+                        int pos = Integer.parseInt(value);
 
-                     if (pos >= 0 && pos < index) {
-                        value = availableValues.get(pos);
-                     } else if (pos <= 9) {
-                        value = null;
+                        if (pos >= 0 && pos < count) {
+                           value = availableValues.get(pos);
+                        } else {
+                           value = null;
+                        }
+                     } catch (Exception e) {
+                        // ignore it
                      }
                   }
                }

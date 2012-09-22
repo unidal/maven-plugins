@@ -14,7 +14,7 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class WizardGeneratorTest extends ComponentTestCase {
-   private boolean verbose = false;
+   private boolean verbose = true;
 
    private boolean debug = false;
 

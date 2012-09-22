@@ -1,16 +1,20 @@
 package org.unidal.maven.plugin.codegen;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-
 import org.unidal.codegen.generator.AbstractGenerateContext;
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.Generator;
+
+import com.site.helper.Splitters;
 
 /**
  * DAL code generator for JDBC
@@ -94,42 +98,50 @@ public class DalJdbcMojo extends AbstractMojo {
       }
 
       try {
-         File manifestFile = new File(manifest);
+         List<String> parts = Splitters.by(',').noEmptyItem().trim().split(manifest);
 
-         if (!manifestFile.exists()) {
-            throw new MojoExecutionException(String.format("Manifest(%s) not found!", manifestFile.getCanonicalPath()));
+         for (String part : parts) {
+            generateJdbc(part);
          }
-
-         final URL manifestXml = manifestFile.toURI().toURL();
-         final GenerateContext ctx = new AbstractGenerateContext(m_project.getBasedir(), resouceBase, sourceDir) {
-            public URL getManifestXml() {
-               return manifestXml;
-            }
-
-            public void log(LogLevel logLevel, String message) {
-               switch (logLevel) {
-               case DEBUG:
-                  if (debug) {
-                     getLog().debug(message);
-                  }
-                  break;
-               case INFO:
-                  if (debug || verbose) {
-                     getLog().info(message);
-                  }
-                  break;
-               case ERROR:
-                  getLog().error(message);
-                  break;
-               }
-            }
-         };
-
-         m_generator.generate(ctx);
-         m_project.addCompileSourceRoot(sourceDir);
-         getLog().info(ctx.getGeneratedFiles() + " files generated.");
       } catch (Exception e) {
          throw new MojoExecutionException("Code generating failed.", e);
       }
+   }
+
+   private void generateJdbc(String part) throws MojoExecutionException, IOException, MalformedURLException, Exception {
+      File manifestFile = new File(part);
+
+      if (!manifestFile.exists()) {
+         throw new MojoExecutionException(String.format("Manifest(%s) not found!", manifestFile.getCanonicalPath()));
+      }
+
+      final URL manifestXml = manifestFile.toURI().toURL();
+      final GenerateContext ctx = new AbstractGenerateContext(m_project.getBasedir(), resouceBase, sourceDir) {
+         public URL getManifestXml() {
+            return manifestXml;
+         }
+
+         public void log(LogLevel logLevel, String message) {
+            switch (logLevel) {
+            case DEBUG:
+               if (debug) {
+                  getLog().debug(message);
+               }
+               break;
+            case INFO:
+               if (debug || verbose) {
+                  getLog().info(message);
+               }
+               break;
+            case ERROR:
+               getLog().error(message);
+               break;
+            }
+         }
+      };
+
+      m_generator.generate(ctx);
+      m_project.addCompileSourceRoot(sourceDir);
+      getLog().info(ctx.getGeneratedFiles() + " files generated.");
    }
 }

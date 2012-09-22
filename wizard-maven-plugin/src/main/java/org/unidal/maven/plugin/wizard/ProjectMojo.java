@@ -69,6 +69,7 @@ public class ProjectMojo extends AbstractMojo {
       b.createChild(project, "artifactId", artifactId);
       b.createChild(project, "version", version);
       b.createChild(project, "name", name);
+      b.createChild(project, "packaging", "jar");
 
       try {
          saveXml(doc, m_pomFile);

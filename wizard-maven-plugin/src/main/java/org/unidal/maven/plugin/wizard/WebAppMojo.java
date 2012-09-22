@@ -3,8 +3,6 @@ package org.unidal.maven.plugin.wizard;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +27,7 @@ import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
 import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
+import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;
 import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
 import org.xml.sax.SAXException;
 
@@ -75,7 +74,7 @@ public class WebAppMojo extends AbstractMojo {
     * @required
     * @readonly
     */
-   protected WizardMeta m_meta;
+   protected WizardMeta m_wizardMeta;
 
    /**
     * Current project base directory
@@ -117,8 +116,6 @@ public class WebAppMojo extends AbstractMojo {
     */
    protected boolean debug;
 
-   private Wizard m_wizard;
-
    protected Wizard buildWizard(File wizardFile) throws IOException, SAXException {
       Wizard wizard;
 
@@ -127,71 +124,16 @@ public class WebAppMojo extends AbstractMojo {
 
          wizard = DefaultSaxParser.parse(content);
       } else {
-         Webapp webapp = new Webapp();
-
-         String packageName = PropertyProviders.fromConsole().forString("package", "Base java package name:", null, null);
-         String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
-         String name = PropertyProviders.fromConsole().forString("name", "Webapp name:", defaultName, null);
-         boolean webres = PropertyProviders.fromConsole().forBoolean("webres", "Support WebRes framework?", false);
-         boolean cat = PropertyProviders.fromConsole().forBoolean("cat", "Support CAT?", true);
+         String packageName = getPackageName();
 
          wizard = new Wizard();
-         wizard.setWebapp(webapp);
-         webapp.setPackage(packageName);
-         webapp.setName(name);
-         webapp.setWebres(webres);
-         webapp.setCat(cat);
+         wizard.setPackage(packageName);
       }
 
-      Webapp webapp = wizard.getWebapp();
-      List<Module> modules = webapp.getModules();
-      List<String> moduleNames = new ArrayList<String>(modules.size());
+      WizardBuilder builder = new WizardBuilder();
 
-      for (Module module : modules) {
-         moduleNames.add(module.getName());
-      }
-
-      String moduleName = PropertyProviders.fromConsole().forString("module", "Select module name below or input a new one:",
-            moduleNames, null, null);
-      Module module = webapp.findModule(moduleName);
-
-      if (module == null) {
-         String path = PropertyProviders.fromConsole().forString("module.path", "Module path:", moduleName.substring(0, 1), null);
-
-         module = new Module(moduleName);
-
-         module.setPath(path);
-         module.setDefault(modules.isEmpty());
-         webapp.addModule(module);
-      }
-
-      List<String> pageNames = new ArrayList<String>(module.getPages().size());
-
-      for (Page page : module.getPages()) {
-         pageNames.add(page.getName());
-      }
-
-      String pageName = PropertyProviders.fromConsole().forString("page", "Select page name below or input a new one:", pageNames,
-            null, null);
-      Page page = module.findPage(pageName);
-
-      if (page == null) {
-         String path = PropertyProviders.fromConsole().forString("page.path", "Page path:", pageName, null);
-
-         page = new Page(pageName);
-
-         if (module.getPages().isEmpty()) {
-            page.setDefault(true);
-         }
-
-         String caption = Character.toUpperCase(pageName.charAt(0)) + pageName.substring(1);
-
-         page.setPath(path);
-         page.setTitle(caption);
-         page.setDescription(caption);
-         module.addPage(page);
-      }
-
+      wizard.accept(builder);
+      Files.forIO().writeTo(wizardFile, wizard.toString());
       return wizard;
    }
 
@@ -199,16 +141,11 @@ public class WebAppMojo extends AbstractMojo {
       try {
          final File manifestFile = getFile(manifest);
          File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
-
-         m_wizard = buildWizard(wizardFile);
-
-         Reader reader = new StringReader(m_wizard.toString());
+         Wizard wizard = buildWizard(wizardFile);
 
          if (!manifestFile.exists()) {
-            saveXml(m_meta.getManifest("wizard.xml"), manifestFile);
+            saveXml(m_wizardMeta.getManifest("wizard.xml"), manifestFile);
          }
-
-         saveXml(m_meta.getWizard(reader), wizardFile);
 
          final URL manifestXml = manifestFile.toURI().toURL();
          final GenerateContext ctx = new AbstractGenerateContext(m_project.getBasedir(), resouceBase, sourceDir) {
@@ -236,11 +173,11 @@ public class WebAppMojo extends AbstractMojo {
          };
 
          m_generator.generate(ctx);
-         m_project.addCompileSourceRoot(sourceDir);
          getLog().info(ctx.getGeneratedFiles() + " files generated.");
 
-         modifyPomFile(m_project.getFile(), m_wizard.getWebapp());
+         modifyPomFile(m_project.getFile(), wizard.getWebapp());
       } catch (Exception e) {
+         e.printStackTrace();
          throw new MojoExecutionException("Code generating failed.", e);
       }
    }
@@ -255,6 +192,17 @@ public class WebAppMojo extends AbstractMojo {
       }
 
       return file;
+   }
+
+   protected String getPackageName() {
+      String groupId = m_project.getGroupId();
+      String artifactId = m_project.getArtifactId();
+      int index = artifactId.lastIndexOf('-');
+      String packageName = (groupId + "." + artifactId.substring(index + 1)).replace('-', '.');
+
+      packageName = PropertyProviders.fromConsole().forString("package", "Please input project-level package name:", packageName,
+            null);
+      return packageName;
    }
 
    protected void modifyPomFile(File pomFile, Webapp webapp) throws Exception {
@@ -302,9 +250,9 @@ public class WebAppMojo extends AbstractMojo {
 
       b.findOrCreateChild(file, "name").setText(".settings/org.eclipse.jdt.core.prefs");
 
-      Element content = b.findOrCreateChild(file, "content");
-      if (content.getChildren().isEmpty()) {
-         content.addContent(new CDATA( //
+      Element contentElement = b.findOrCreateChild(file, "content");
+      if (contentElement.getChildren().isEmpty()) {
+         contentElement.addContent(new CDATA( //
                "org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6\r\n" + //
                      "eclipse.preferences.version=1\r\n" + //
                      "org.eclipse.jdt.core.compiler.source=1.6\r\n" + //
@@ -312,7 +260,7 @@ public class WebAppMojo extends AbstractMojo {
       }
 
       Element plugins = b.findOrCreateChild(build, "plugins");
-      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.7");
+      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.8");
       Element codegenPlexus = b.checkPluginExecution(codegenPlugin, "plexus", "process-classes",
             "generate plexus component descriptor");
       Element codegenPlexusConfiguration = b.findOrCreateChild(codegenPlexus, "configuration");
@@ -343,6 +291,87 @@ public class WebAppMojo extends AbstractMojo {
          getLog().info("File " + file.getCanonicalPath() + " generated.");
       } finally {
          writer.close();
+      }
+   }
+
+   static class WizardBuilder extends BaseVisitor {
+      @Override
+      public void visitModule(Module module) {
+         List<String> pageNames = new ArrayList<String>(module.getPages().size());
+
+         for (Page page : module.getPages()) {
+            pageNames.add(page.getName());
+         }
+
+         String pageName = PropertyProviders.fromConsole().forString("page", "Select page name below or input a new one:",
+               pageNames, null, null);
+         Page page = module.findPage(pageName);
+
+         if (page == null) {
+            String path = PropertyProviders.fromConsole().forString("page.path", "Page path:", pageName, null);
+
+            page = new Page(pageName);
+
+            if (module.getPages().isEmpty()) {
+               page.setDefault(true);
+            }
+
+            String caption = Character.toUpperCase(pageName.charAt(0)) + pageName.substring(1);
+
+            page.setPath(path);
+            page.setTitle(caption);
+            page.setDescription(caption);
+            module.addPage(page);
+         }
+      }
+
+      @Override
+      public void visitWebapp(Webapp webapp) {
+         List<Module> modules = webapp.getModules();
+         List<String> moduleNames = new ArrayList<String>(modules.size());
+
+         for (Module module : modules) {
+            moduleNames.add(module.getName());
+         }
+
+         String moduleName = PropertyProviders.fromConsole().forString("module", "Select module name below or input a new one:",
+               moduleNames, null, null);
+         Module module = webapp.findModule(moduleName);
+
+         if (module == null) {
+            String path = PropertyProviders.fromConsole()
+                  .forString("module.path", "Module path:", moduleName.substring(0, 1), null);
+
+            module = new Module(moduleName);
+
+            module.setPath(path);
+            module.setDefault(modules.isEmpty());
+            webapp.addModule(module);
+         }
+
+         visitModule(module);
+      }
+
+      @Override
+      public void visitWizard(Wizard wizard) {
+         Webapp webapp = wizard.getWebapp();
+
+         if (webapp == null) {
+            webapp = new Webapp();
+            String packageName = wizard.getPackage();
+            String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
+            String name = PropertyProviders.fromConsole().forString("name", "Webapp name:", defaultName, null);
+            boolean webres = PropertyProviders.fromConsole().forBoolean("webres", "Support WebRes framework?", false);
+            boolean cat = PropertyProviders.fromConsole().forBoolean("cat", "Support CAT?", true);
+
+            wizard.setWebapp(webapp);
+            webapp.setPackage(packageName);
+            webapp.setName(name);
+            webapp.setWebres(webres);
+            webapp.setCat(cat);
+         }
+
+         visitWebapp(webapp);
       }
    }
 }

@@ -21,15 +21,7 @@
    </xsl:copy>
 </xsl:template>
 
-<xsl:template match="datasources">
-   <xsl:copy>
-      <xsl:copy-of select="@*"/>
-
-      <xsl:apply-templates/>
-   </xsl:copy>
-</xsl:template>
-
-<xsl:template match="datasource">
+<xsl:template match="jdbc">
    <xsl:copy>
       <xsl:copy-of select="@*"/>
       
@@ -57,6 +49,21 @@
          <xsl:choose>
             <xsl:when test="@configurator-class"><xsl:value-of select="@configurator-class"/></xsl:when>
             <xsl:otherwise><xsl:value-of select="$capital-name"/>DatabaseConfigurator</xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
+      
+      <xsl:apply-templates/>
+   </xsl:copy>
+</xsl:template>
+
+<xsl:template match="group">
+   <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      
+      <xsl:attribute name="package">
+         <xsl:choose>
+            <xsl:when test="@package"><xsl:value-of select="@package"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="../@package"/>.@name</xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
       

@@ -11,16 +11,16 @@
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
 
 <xsl:template match="/">
-   <xsl:apply-templates select="/wizard/datasources/datasource[@name=$name]"/>
+   <xsl:apply-templates select="/wizard/jdbc[@name=$name]"/>
 </xsl:template>
 
-<xsl:template match="datasource">
+<xsl:template match="jdbc">
+<xsl:variable name="database" select="@name"/>
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package" />;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import <xsl:value-of select="@do-package" />._INDEX;
 import com.site.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -29,12 +29,11 @@ final class <xsl:value-of select="$class" /> extends AbstractJdbcResourceConfigu
    public List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> defineComponents() {
       List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/>();
 
-      all.add(defineJdbcDataSourceConfigurationManagerComponent("datasources.xml"));
-      all.add(defineJdbcDataSourceComponent("<xsl:value-of select="@name"/>", "<xsl:value-of select="normalize-space(jdbc-connection/driver)"/>", "<xsl:value-of select="normalize-space(jdbc-connection/url)"/>", "<xsl:value-of select="normalize-space(jdbc-connection/user)"/>", "<xsl:value-of select="normalize-space(jdbc-connection/password)"/>", "<xsl:value-of select="'&lt;![CDATA['" disable-output-escaping="yes"/><xsl:value-of select="normalize-space(jdbc-connection/properties)" disable-output-escaping="yes"/><xsl:value-of select="']]&gt;'" disable-output-escaping="yes"/>"));
-
-      defineSimpleTableProviderComponents(all, "<xsl:value-of select="@name" />", _INDEX.getEntityClasses());
-      defineDaoComponents(all, _INDEX.getDaoClasses());
-
+      all.add(defineJdbcDataSourceComponent("<xsl:value-of select="$database"/>", "<xsl:value-of select="normalize-space(datasource/driver)"/>", "<xsl:value-of select="normalize-space(datasource/url)"/>", "<xsl:value-of select="normalize-space(datasource/user)"/>", "<xsl:value-of select="normalize-space(datasource/password)"/>", "<xsl:value-of select="'&lt;![CDATA['" disable-output-escaping="yes"/><xsl:value-of select="normalize-space(datasource/properties)" disable-output-escaping="yes"/><xsl:value-of select="']]&gt;'" disable-output-escaping="yes"/>"));
+<xsl:for-each select="group">
+      defineSimpleTableProviderComponents(all, "<xsl:value-of select="$database" />", <xsl:value-of select="@package" />._INDEX.getEntityClasses());
+      defineDaoComponents(all, <xsl:value-of select="@package" />._INDEX.getDaoClasses());
+</xsl:for-each>
       return all;
    }
 }

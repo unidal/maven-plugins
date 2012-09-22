@@ -11,6 +11,8 @@ ProjectTest.class,
 
 WebAppMojoTest.class,
 
+JdbcMojoTest.class,
+
 CatConfigMojoTest.class
 
 })

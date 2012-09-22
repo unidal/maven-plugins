@@ -3,6 +3,7 @@ package org.unidal.maven.plugin.wizard;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,13 +22,18 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.jdom.CDATA;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.unidal.codegen.generator.AbstractGenerateContext;
+import org.unidal.codegen.generator.GenerateContext;
+import org.unidal.codegen.generator.Generator;
 import org.unidal.codegen.meta.TableMeta;
+import org.unidal.codegen.meta.WizardMeta;
 import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
 import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
@@ -67,7 +73,7 @@ public class JdbcMojo extends AbstractMojo {
     * @required
     * @readonly
     */
-   protected TableMeta m_meta;
+   protected TableMeta m_tableMeta;
 
    /**
     * Current project base directory
@@ -79,6 +85,51 @@ public class JdbcMojo extends AbstractMojo {
    protected File baseDir;
 
    /**
+    * XSL code generator implementation
+    * 
+    * @component role="org.unidal.codegen.generator.Generator"
+    *            role-hint="wizard-jdbc"
+    * @required
+    * @readonly
+    */
+   protected Generator m_generator;
+
+   /**
+    * Wizard meta component
+    * 
+    * @component
+    * @required
+    * @readonly
+    */
+   protected WizardMeta m_wizardMeta;
+
+   /**
+    * Current project base directory
+    * 
+    * @parameter expression="${sourceDir}" default-value="${basedir}"
+    * @required
+    */
+   protected String sourceDir;
+
+   /**
+    * Location of manifest.xml file
+    * 
+    * @parameter expression="${manifest}" default-value=
+    *            "${basedir}/src/main/resources/META-INF/wizard/jdbc/manifest.xml"
+    * @required
+    */
+   protected String manifest;
+
+   /**
+    * Location of generated source directory
+    * 
+    * @parameter expression="${resource.base}"
+    *            default-value="/META-INF/wizard/jdbc"
+    * @required
+    */
+   protected String resouceBase;
+
+   /**
     * @parameter expression="${outputDir}"
     *            default-value="${basedir}/src/main/resources/META-INF/dal/jdbc"
     * @required
@@ -86,17 +137,20 @@ public class JdbcMojo extends AbstractMojo {
    protected String outputDir;
 
    /**
-    * Location of wizard.xml file
+    * Verbose information or not
     * 
-    * @parameter expression="${manifest}" default-value=
-    *            "${basedir}/src/main/resources/META-INF/wizard/jdbc/wizard.xml"
-    * @required
+    * @parameter expression="${verbose}" default-value="false"
     */
-   protected String wizard;
+   protected boolean verbose;
+
+   /**
+    * Verbose information or not
+    * 
+    * @parameter expression="${debug}" default-value="false"
+    */
+   protected boolean debug;
 
    private Connection m_conn;
-
-   private Jdbc m_jdbc;
 
    protected Jdbc buildWizard(File wizardFile) throws IOException, SAXException {
       Wizard wizard;
@@ -115,7 +169,6 @@ public class JdbcMojo extends AbstractMojo {
       WizardBuilder builder = new WizardBuilder();
 
       wizard.accept(builder);
-      m_jdbc = builder.getJdbc();
       m_conn = builder.getConnection();
       Files.forIO().writeTo(wizardFile, wizard.toString());
       return builder.getJdbc();
@@ -123,15 +176,49 @@ public class JdbcMojo extends AbstractMojo {
 
    public void execute() throws MojoExecutionException, MojoFailureException {
       try {
-         final File wizardFile = getFile(wizard);
+         final File manifestFile = getFile(manifest);
+         File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
          Jdbc jdbc = buildWizard(wizardFile);
-
-         modifyPomFile(m_project.getFile(), m_jdbc);
 
          for (Group group : jdbc.getGroups()) {
             generateModel(group);
          }
+
+         if (!manifestFile.exists()) {
+            saveXml(m_wizardMeta.getManifest("wizard.xml"), manifestFile);
+         }
+
+         final URL manifestXml = manifestFile.toURI().toURL();
+         final GenerateContext ctx = new AbstractGenerateContext(m_project.getBasedir(), resouceBase, sourceDir) {
+            public URL getManifestXml() {
+               return manifestXml;
+            }
+
+            public void log(LogLevel logLevel, String message) {
+               switch (logLevel) {
+               case DEBUG:
+                  if (debug) {
+                     getLog().debug(message);
+                  }
+                  break;
+               case INFO:
+                  if (debug || verbose) {
+                     getLog().info(message);
+                  }
+                  break;
+               case ERROR:
+                  getLog().error(message);
+                  break;
+               }
+            }
+         };
+
+         m_generator.generate(ctx);
+         getLog().info(ctx.getGeneratedFiles() + " files generated.");
+
+         modifyPomFile(m_project.getFile(), jdbc);
       } catch (Exception e) {
+         e.printStackTrace();
          throw new MojoExecutionException("Error when generating DAL meta: " + e, e);
       } finally {
          if (m_conn != null) {
@@ -150,7 +237,7 @@ public class JdbcMojo extends AbstractMojo {
       Element entities = new Element("entities");
 
       for (Table table : tables) {
-         Element entity = m_meta.getTableMeta(m_conn.getMetaData(), table.getName());
+         Element entity = m_tableMeta.getTableMeta(m_conn.getMetaData(), table.getName());
 
          entities.addContent(entity);
       }
@@ -169,7 +256,7 @@ public class JdbcMojo extends AbstractMojo {
       File modelFile = new File(outDir, groupName + "-dal.xml");
 
       if (!modelFile.exists()) {
-         Document model = m_meta.getModel(m_jdbc.getPackage());
+         Document model = m_tableMeta.getModel(group.getPackage());
 
          saveFile(model, modelFile);
       }
@@ -177,7 +264,7 @@ public class JdbcMojo extends AbstractMojo {
       File manifestFile = new File(outDir, groupName + "-manifest.xml");
 
       if (!manifestFile.exists()) {
-         Document manifest = m_meta.getManifest(outFile.getName(), modelFile.getName());
+         Document manifest = m_tableMeta.getManifest(outFile.getName(), modelFile.getName());
 
          saveFile(manifest, manifestFile);
       }
@@ -199,9 +286,10 @@ public class JdbcMojo extends AbstractMojo {
       String groupId = m_project.getGroupId();
       String artifactId = m_project.getArtifactId();
       int index = artifactId.lastIndexOf('-');
-      String packageName = (groupId + "." + artifactId.substring(index + 1) + ".dal").replace('-', '.');
+      String packageName = (groupId + "." + artifactId.substring(index + 1)).replace('-', '.');
 
-      packageName = PropertyProviders.fromConsole().forString("package", "Please input package name:", packageName, null);
+      packageName = PropertyProviders.fromConsole().forString("package", "Please input project-level package name:", packageName,
+            null);
       return packageName;
    }
 
@@ -211,22 +299,30 @@ public class JdbcMojo extends AbstractMojo {
       PomFileBuilder b = new PomFileBuilder();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
-      if (!b.checkDependency(dependencies, "com.site.dal", "dal-jdbc", "1.1.5", null)) {
+      if (!b.checkDependency(dependencies, "com.site.dal", "dal-jdbc", "1.1.7", null)) {
          b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.20", "runtime");
       }
 
-      Element build = b.findOrCreateChild(root, "build", null, "dependencies");
-      Element plugins = b.findOrCreateChild(build, "plugins");
-      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.7");
-      Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc model");
-      Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
-      StringBuilder manifest = new StringBuilder();
+      if (jdbc != null) {
+         Element build = b.findOrCreateChild(root, "build", null, "dependencies");
+         Element plugins = b.findOrCreateChild(build, "plugins");
+         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.8");
+         Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc model");
+         Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
+         StringBuilder manifest = new StringBuilder();
 
-      for (Group group : jdbc.getGroups()) {
-         manifest.append(String.format("${basedir}/src/main/resources/META-INF/dal/jdbc/%s-manifest.xml\r\n", group.getName()));
+         manifest.append("\r\n");
+
+         for (Group group : jdbc.getGroups()) {
+            manifest.append(String.format("${basedir}/src/main/resources/META-INF/dal/jdbc/%s-manifest.xml,\r\n", group.getName()));
+         }
+
+         Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");
+
+         if (manifestElement.getChildren().isEmpty()) {
+            manifestElement.addContent(new CDATA(manifest.toString()));
+         }
       }
-
-      b.findOrCreateChild(codegenGenerateConfiguration, "manifest").setText(manifest.toString());
 
       if (b.isModified()) {
          saveXml(doc, pomFile);
@@ -406,6 +502,10 @@ public class JdbcMojo extends AbstractMojo {
                groupNames, null, null);
          Group group = jdbc.findOrCreateGroup(groupName);
 
+         if (group.getPackage() == null) {
+            group.setPackage(jdbc.getPackage() + "." + group.getName().toLowerCase());
+         }
+
          visitGroup(group);
       }
 
@@ -417,8 +517,8 @@ public class JdbcMojo extends AbstractMojo {
                return jdbc.getName();
             }
          });
-         String name = PropertyProviders.fromConsole().forString("jdbc", "Select jdbc name below or input a new one:", names, null,
-               null);
+         String name = PropertyProviders.fromConsole().forString("jdbc", "Select datasource name below or input a new one:", names,
+               null, null);
          Jdbc jdbc = wizard.findJdbc(name);
 
          if (jdbc == null) {
@@ -428,11 +528,11 @@ public class JdbcMojo extends AbstractMojo {
             wizard.addJdbc(jdbc);
 
             jdbc.setPackage(PropertyProviders.fromConsole().forString("jdbc.package", "Jdbc Package:",
-                  wizard.getPackage() + "." + name, null));
+                  wizard.getPackage() + ".dal", null));
             jdbc.setDatasource(ds);
 
             ds.setDriver(PropertyProviders.fromConsole().forString("driver", "JDBC driver:", "com.mysql.jdbc.Driver", null));
-            ds.setUrl(PropertyProviders.fromConsole().forString("url", "JDBC URL:", "jdbc:mysql://localhost:3306/cat", null));
+            ds.setUrl(PropertyProviders.fromConsole().forString("url", "JDBC URL:", "jdbc:mysql://localhost:3306/mysql", null));
             ds.setUser(PropertyProviders.fromConsole().forString("user", "User:", null, null));
             ds.setPassword(PropertyProviders.fromConsole().forString("password", "Password:", null, null));
             ds.setProperties(PropertyProviders.fromConsole().forString("connectionProperties", "Connection properties:",

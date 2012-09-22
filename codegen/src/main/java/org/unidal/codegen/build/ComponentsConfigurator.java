@@ -1,4 +1,4 @@
-package org.unidal.codegen;
+package org.unidal.codegen.build;
 
 import java.util.ArrayList;
 import java.util.List;

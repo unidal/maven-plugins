@@ -21,7 +21,7 @@
    <xsl:value-of select="$empty"/>package <xsl:value-of select="$do-package"/>;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:call-template name='import-list'/>
-   <xsl:value-of select="$empty"/>@Entity(logicalName = "<xsl:value-of select='@name'/>", alias = "<xsl:value-of select='@alias'/>")<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>@Entity(logicalName = "<xsl:value-of select='@name'/>", physicalName = "<xsl:value-of select='@table'/>", alias = "<xsl:value-of select='@alias'/>")<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>public class <xsl:value-of select='@entity-class'/> {<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:call-template name="relation-definition"/>

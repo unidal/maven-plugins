@@ -10,10 +10,10 @@
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
 
 <xsl:template match="/">
-   <xsl:apply-templates select="/wizard/datasources"/>
+   <xsl:apply-templates select="/wizard"/>
 </xsl:template>
 
-<xsl:template match="datasources">
+<xsl:template match="wizard">
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;
 
 import java.util.ArrayList;
@@ -26,10 +26,9 @@ public class <xsl:value-of select="$class"/> extends AbstractResourceConfigurato
    @Override
    public List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> defineComponents() {
       List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/>();
-<xsl:for-each select="datasource[@name]">
+<xsl:for-each select="jdbc">
       all.addAll(new <xsl:value-of select="@configurator-class"/>().defineComponents());
 </xsl:for-each>
-
       return all;
    }
 
