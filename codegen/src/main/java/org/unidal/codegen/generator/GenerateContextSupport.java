@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.codehaus.plexus.util.IOUtil;
-
 import org.unidal.codegen.manifest.FileMode;
 import org.unidal.codegen.manifest.Manifest;
 
@@ -32,7 +31,7 @@ public abstract class GenerateContextSupport implements GenerateContext {
       m_properties.put("src-main-webapp", "src/main/webapp");
       m_properties.put("src-test-java", "src/test/java");
       m_properties.put("src-test-resources", "src/test/resources");
-      
+
       configure(m_properties);
    }
 
@@ -55,7 +54,7 @@ public abstract class GenerateContextSupport implements GenerateContext {
 
       if (path == null) {
          return new File(m_projectBaseDir, "target/" + name.replace('.', '/'));
-      } else if (path.startsWith("/")) {
+      } else if (path.startsWith("/") || path.contains(":")) {
          return new File(path);
       } else {
          return new File(m_projectBaseDir, path);
@@ -69,7 +68,7 @@ public abstract class GenerateContextSupport implements GenerateContext {
    public void addFileToStorage(Manifest manifest, String content) throws IOException {
       FileMode mode = manifest.getMode();
       Writer writer = null;
-      File file = new File(m_projectBaseDir, manifest.getPath()).getCanonicalFile();
+      File file = getPath(manifest.getPath()).getCanonicalFile();
 
       file.getParentFile().mkdirs();
 

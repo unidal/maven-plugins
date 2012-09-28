@@ -48,7 +48,7 @@ public class DalIbatisMojo extends AbstractMojo {
     * Current project base directory
     * 
     * @parameter expression="${sourceDir}"
-    *            default-value="${basedir}/target/generated-sources/dal-ibatis/src/main/java"
+    *            default-value="target/generated-sources/dal-ibatis/src/main/java"
     * @required
     */
    protected String sourceDir;
@@ -57,7 +57,7 @@ public class DalIbatisMojo extends AbstractMojo {
     * Current project base directory
     * 
     * @parameter expression="${resourceDir}"
-    *            default-value="${basedir}/target/generated-sources/dal-ibatis/src/main/resources"
+    *            default-value="target/generated-sources/dal-ibatis/src/main/resources"
     * @required
     */
    protected String resourceDir;
