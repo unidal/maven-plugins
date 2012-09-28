@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities>
+	<entity name="arch" table="arch" alias="a">
+		<member name="zhangyi" field="zhangyi" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+		<member name="youyong" field="youyong" value-type="String" length="255" nullable="false" />
+		<member name="jiange" field="jiange" value-type="Date" />
+		<member name="renyuan" field="renyuan" value-type="Date" nullable="false" />
+		<member name="figo" field="figo" value-type="boolean" />
+		<var name="key-zhangyi" value-type="int" key-member="zhangyi" />
+		<primary-key name="PRIMARY" members="zhangyi" />
+		<readsets>
+			<readset name="FULL" all="true" />
+		</readsets>
+		<updatesets>
+			<updateset name="FULL" all="true" />
+		</updatesets>
+		<query-defs>
+			<query name="find-by-PK" type="SELECT">
+				<param name="key-zhangyi" />
+				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='zhangyi'/> = ${key-zhangyi}]]></statement>
+			</query>
+			<query name="insert" type="INSERT">
+				<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+			</query>
+			<query name="update-by-PK" type="UPDATE">
+				<param name="key-zhangyi" />
+				<statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='zhangyi'/> = ${key-zhangyi}]]></statement>
+			</query>
+			<query name="delete-by-PK" type="DELETE">
+				<param name="key-zhangyi" />
+				<statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='zhangyi'/> = ${key-zhangyi}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="article" table="article" alias="a2">
+		<member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+		<member name="title" field="title" value-type="String" length="250" nullable="false" />
+		<member name="author" field="author" value-type="String" length="40" />
+		<member name="publish-date" field="publish_date" value-type="Date" />
+		<member name="abstraction" field="abstraction" value-type="String" length="2000" />
+		<member name="origin-content" field="origin_content" value-type="String" length="65535" />
+		<member name="origin-link" field="origin_link" value-type="String" length="250" nullable="false" />
+		<member name="source-type" field="source_type" value-type="String" length="20" nullable="false" />
+		<member name="source-id" field="source_id" value-type="int" length="10" nullable="false" />
+		<member name="tags" field="tags" value-type="String" length="200" nullable="false" />
+		<member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+		<var name="key-id" value-type="int" key-member="id" />
+		<primary-key name="PRIMARY" members="id" />
+		<index name="idx_origin_link" unique="true" members="origin_link ASC" />
+		<readsets>
+			<readset name="FULL" all="true" />
+		</readsets>
+		<updatesets>
+			<updateset name="FULL" all="true" />
+		</updatesets>
+		<query-defs>
+			<query name="find-by-PK" type="SELECT">
+				<param name="key-id" />
+				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+			<query name="insert" type="INSERT">
+				<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+			</query>
+			<query name="update-by-PK" type="UPDATE">
+				<param name="key-id" />
+				<statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+			<query name="delete-by-PK" type="DELETE">
+				<param name="key-id" />
+				<statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="trend" table="trend" alias="t">
+		<member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+		<member name="type" field="type" value-type="String" length="20" nullable="false" />
+		<member name="update-interval" field="update_interval" value-type="int" length="10" nullable="false" />
+		<member name="base-url" field="base_url" value-type="String" length="256" nullable="false" />
+		<member name="status" field="status" value-type="int" length="10" nullable="false" />
+		<member name="last-refresh-date" field="last_refresh_date" value-type="Date" />
+		<member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+		<member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" />
+		<var name="key-id" value-type="int" key-member="id" />
+		<primary-key name="PRIMARY" members="id" />
+		<readsets>
+			<readset name="FULL" all="true" />
+		</readsets>
+		<updatesets>
+			<updateset name="FULL" all="true" />
+		</updatesets>
+		<query-defs>
+			<query name="find-by-PK" type="SELECT">
+				<param name="key-id" />
+				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+			<query name="insert" type="INSERT">
+				<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+			</query>
+			<query name="update-by-PK" type="UPDATE">
+				<param name="key-id" />
+				<statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+			<query name="delete-by-PK" type="DELETE">
+				<param name="key-id" />
+				<statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="trend-detail" table="trend_detail" alias="td">
+		<member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+		<member name="trend-id" field="trend_id" value-type="int" length="10" nullable="false" />
+		<member name="article-number" field="article_number" value-type="int" length="10" nullable="false" />
+		<member name="origin-url" field="origin_url" value-type="String" length="200" nullable="false" />
+		<member name="origin-content" field="origin_content" value-type="String" length="65535" nullable="false" />
+		<member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+		<member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" />
+		<var name="key-id" value-type="int" key-member="id" />
+		<primary-key name="PRIMARY" members="id" />
+		<index name="idx_origin_url" unique="true" members="origin_url ASC" />
+		<readsets>
+			<readset name="FULL" all="true" />
+		</readsets>
+		<updatesets>
+			<updateset name="FULL" all="true" />
+		</updatesets>
+		<query-defs>
+			<query name="find-by-PK" type="SELECT">
+				<param name="key-id" />
+				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+			<query name="insert" type="INSERT">
+				<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+			</query>
+			<query name="update-by-PK" type="UPDATE">
+				<param name="key-id" />
+				<statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+			<query name="delete-by-PK" type="DELETE">
+				<param name="key-id" />
+				<statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="user" table="user" alias="u">
+		<member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+		<member name="title" field="title" value-type="String" length="250" nullable="false" />
+		<member name="author" field="author" value-type="String" length="40" />
+		<member name="origin-link" field="origin_link" value-type="String" length="250" nullable="false" />
+		<member name="source-type" field="source_type" value-type="String" length="20" nullable="false" />
+		<member name="source-id" field="source_id" value-type="int" length="10" nullable="false" />
+		<member name="tags" field="tags" value-type="String" length="200" nullable="false" />
+		<member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+		<var name="key-id" value-type="int" key-member="id" />
+		<primary-key name="PRIMARY" members="id" />
+		<index name="idx_origin_link" unique="true" members="origin_link ASC" />
+		<readsets>
+			<readset name="FULL" all="true" />
+		</readsets>
+		<updatesets>
+			<updateset name="FULL" all="true" />
+		</updatesets>
+		<query-defs>
+			<query name="find-by-PK" type="SELECT">
+				<param name="key-id" />
+				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+			<query name="insert" type="INSERT">
+				<statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+			</query>
+			<query name="update-by-PK" type="UPDATE">
+				<param name="key-id" />
+				<statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+			<query name="delete-by-PK" type="DELETE">
+				<param name="key-id" />
+				<statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+</entities>
+

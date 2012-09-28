@@ -75,7 +75,7 @@ public class DalXmlMojo extends AbstractMojo {
    protected String sourceDir;
 
    /**
-    * Location of generated source directory
+    * Location of XSL template base.
     * 
     * @parameter expression="${resource.base}" default-value="/META-INF/dal/xml"
     * @required

@@ -9,11 +9,16 @@ import org.unidal.codegen.manifest.Manifest;
 import org.unidal.codegen.manifest.ManifestParser;
 import org.unidal.codegen.transformer.XslTransformer;
 
+import com.site.lookup.annotation.Inject;
+
 public class XslGenerator implements Generator {
+   @Inject
    private XmlAggregator m_xmlAggregator;
 
+   @Inject
    private XslTransformer m_xslTransformer;
 
+   @Inject
    private ManifestParser m_manifestParser;
 
    public void generate(GenerateContext ctx) throws Exception {

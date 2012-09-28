@@ -46,7 +46,7 @@ public class DalJdbcMojo extends AbstractMojo {
    /**
     * Current project base directory
     * 
-    * @parameter expression="${sourceOutput}"
+    * @parameter expression="${sourceDir}"
     *            default-value="${basedir}/target/generated-sources/dal-jdbc"
     * @required
     */
@@ -62,7 +62,7 @@ public class DalJdbcMojo extends AbstractMojo {
    protected String manifest;
 
    /**
-    * Location of generated source directory
+    * Location of XSL template base.
     * 
     * @parameter expression="${resource.base}"
     *            default-value="/META-INF/dal/jdbc"

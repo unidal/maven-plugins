@@ -18,18 +18,18 @@ import org.unidal.codegen.generator.Generator;
 import com.site.helper.Splitters;
 
 /**
- * DAL code generator for modeling
+ * DAL code generator for iBatis.
  * 
- * @goal dal-model
- * @phase generate-sources
+ * @goal dal-ibatis
  * @author Frankie Wu
  */
-public class DalModelMojo extends AbstractMojo {
+public class DalIbatisMojo extends AbstractMojo {
+
    /**
     * XSL code generator implementation
     * 
     * @component role="org.unidal.codegen.generator.Generator"
-    *            role-hint="dal-model"
+    *            role-hint="dal-ibatis"
     * @required
     * @readonly
     */
@@ -48,16 +48,25 @@ public class DalModelMojo extends AbstractMojo {
     * Current project base directory
     * 
     * @parameter expression="${sourceDir}"
-    *            default-value="target/generated-sources/dal-model"
+    *            default-value="${basedir}/target/generated-sources/dal-ibatis/src/main/java"
     * @required
     */
    protected String sourceDir;
+   
+   /**
+    * Current project base directory
+    * 
+    * @parameter expression="${resourceDir}"
+    *            default-value="${basedir}/target/generated-sources/dal-ibatis/src/main/resources"
+    * @required
+    */
+   protected String resourceDir;
 
    /**
     * Location of manifest.xml file
     * 
     * @parameter expression="${manifest}" default-value=
-    *            "${basedir}/src/main/resources/META-INF/dal/model/manifest.xml"
+    *            "${basedir}/src/main/resources/META-INF/dal/jdbc/manifest.xml"
     * @required
     */
    protected String manifest;
@@ -66,7 +75,7 @@ public class DalModelMojo extends AbstractMojo {
     * Location of XSL template base.
     * 
     * @parameter expression="${resource.base}"
-    *            default-value="/META-INF/dal/model"
+    *            default-value="/META-INF/dal/ibatis"
     * @required
     */
    protected String resouceBase;
@@ -98,19 +107,19 @@ public class DalModelMojo extends AbstractMojo {
          return;
       }
 
-      List<String> parts = Splitters.by(',').noEmptyItem().trim().split(manifest);
-
       try {
+         List<String> parts = Splitters.by(',').noEmptyItem().trim().split(manifest);
+
          for (String part : parts) {
-            generateModel(part);
+            generateJdbc(part);
          }
       } catch (Exception e) {
          throw new MojoExecutionException("Code generating failed.", e);
       }
    }
 
-   private void generateModel(String manifest) throws MojoExecutionException, IOException, MalformedURLException, Exception {
-      File manifestFile = new File(manifest);
+   private void generateJdbc(String part) throws MojoExecutionException, IOException, MalformedURLException, Exception {
+      File manifestFile = new File(part);
 
       if (!manifestFile.exists()) {
          throw new MojoExecutionException(String.format("Manifest(%s) not found!", manifestFile.getCanonicalPath()));
@@ -121,19 +130,18 @@ public class DalModelMojo extends AbstractMojo {
          @Override
          protected void configure(Map<String, String> properties) {
             properties.put("src-main-java", sourceDir);
+            properties.put("src-main-resources", resourceDir);
          }
 
-         @Override
          public URL getManifestXml() {
             return manifestXml;
          }
 
-         @Override
          public void log(LogLevel logLevel, String message) {
             switch (logLevel) {
             case DEBUG:
                if (debug) {
-                  getLog().info(message);
+                  getLog().debug(message);
                }
                break;
             case INFO:

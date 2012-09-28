@@ -534,9 +534,13 @@ public class JdbcMojo extends AbstractMojo {
             ds.setDriver(PropertyProviders.fromConsole().forString("driver", "JDBC driver:", "com.mysql.jdbc.Driver", null));
             ds.setUrl(PropertyProviders.fromConsole().forString("url", "JDBC URL:", "jdbc:mysql://localhost:3306/mysql", null));
             ds.setUser(PropertyProviders.fromConsole().forString("user", "User:", null, null));
-            ds.setPassword(PropertyProviders.fromConsole().forString("password", "Password:", null, null));
+            ds.setPassword(PropertyProviders.fromConsole().forString("password", "Password:(use '<none>' if no password)", null, null));
             ds.setProperties(PropertyProviders.fromConsole().forString("connectionProperties", "Connection properties:",
                   "useUnicode=true&autoReconnect=true", null));
+
+            if (ds.getPassword().equals("<none>")) {
+               ds.setPassword("");
+            }
          }
 
          m_jdbc = jdbc;

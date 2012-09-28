@@ -3,6 +3,7 @@ package org.unidal.codegen.generator;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.unidal.codegen.generator.ibatis.IbatisGeneratorTest;
 import org.unidal.codegen.generator.jdbc.JdbcGeneratorTest;
 import org.unidal.codegen.generator.model.all.AllGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatConsumerGeneratorTest;
@@ -37,6 +38,8 @@ WizardModelGeneratorTest.class,
 WizardGeneratorTest.class,
 
 JdbcGeneratorTest.class,
+
+IbatisGeneratorTest.class,
 
 XmlGeneratorTest.class
 
