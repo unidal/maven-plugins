@@ -158,6 +158,7 @@ public class DalIbatisMojo extends AbstractMojo {
 
       m_generator.generate(ctx);
       m_project.addCompileSourceRoot(sourceDir);
+      m_project.addCompileSourceRoot(resourceDir);
       getLog().info(ctx.getGeneratedFiles() + " files generated.");
    }
 }

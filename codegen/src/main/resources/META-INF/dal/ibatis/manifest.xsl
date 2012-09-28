@@ -93,7 +93,7 @@
          
          <xsl:attribute name="template">mapper.xsl</xsl:attribute>
          
-         <xsl:attribute name="mode">create_or_overwrite</xsl:attribute>
+         <xsl:attribute name="mode">create_if_not_exists</xsl:attribute>
          
          <xsl:value-of select="$empty-line"/>
          <xsl:element name="property">
