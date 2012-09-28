@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entities do-package="com.dianping.garden.app.demo.dal" gen="true" />
+<entities do-package="com.dianping.garden.app.demo.dal" gen="true">
+   <entity name="article" table="article" alias="a2">
+      <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+   </entity>
+   <entity name="trend" table="trend" alias="t">
+      <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+      <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false"
+         insert-expr="NOW()" update-expr="NOW()" />
+   </entity>
+</entities>
 

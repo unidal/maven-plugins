@@ -54,6 +54,35 @@
          <xsl:value-of select="$empty-line"/>
       </xsl:element>
       
+      <!-- Mapper class -->
+      <xsl:value-of select="$empty-line"/>
+      <xsl:element name="file">
+         <xsl:attribute name="path">
+            <xsl:value-of select="$src-main-java"/>/<xsl:value-of select="translate(@do-package,'.','/')"/>/<xsl:value-of select="$empty"/>
+            <xsl:value-of select="@dao-class"/>.java<xsl:value-of select="$empty"/>
+         </xsl:attribute>
+         
+         <xsl:attribute name="template">dao.xsl</xsl:attribute>
+         
+         <xsl:attribute name="mode">create_or_overwrite</xsl:attribute>
+         
+         <xsl:value-of select="$empty-line"/>
+         <xsl:element name="property">
+            <xsl:attribute name="name">do-package</xsl:attribute>
+            
+            <xsl:value-of select="@do-package"/>
+         </xsl:element>
+         
+         <xsl:value-of select="$empty-line"/>
+         <xsl:element name="property">
+            <xsl:attribute name="name">name</xsl:attribute>
+            
+            <xsl:value-of select="@name"/>
+         </xsl:element>
+         
+         <xsl:value-of select="$empty-line"/>
+      </xsl:element>
+      
       <!-- Mapper XML file -->
       <xsl:value-of select="$empty-line"/>
       <xsl:element name="file">
