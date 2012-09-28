@@ -54,9 +54,9 @@ public abstract class GenerateContextSupport implements GenerateContext {
 
       if (path == null) {
          if (name.startsWith("/") || name.contains(":")) {
-            return new File(name.replace('.', '/'));
+            return new File(name);
          } else {
-            return new File(m_projectBaseDir, "target/" + name.replace('.', '/'));
+            return new File(m_projectBaseDir, name);
          }
       } else if (path.startsWith("/") || path.contains(":")) {
          return new File(path);
