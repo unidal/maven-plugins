@@ -53,7 +53,11 @@ public abstract class GenerateContextSupport implements GenerateContext {
       String path = m_properties.get(name);
 
       if (path == null) {
-         return new File(m_projectBaseDir, "target/" + name.replace('.', '/'));
+         if (name.startsWith("/") || name.contains(":")) {
+            return new File(name.replace('.', '/'));
+         } else {
+            return new File(m_projectBaseDir, "target/" + name.replace('.', '/'));
+         }
       } else if (path.startsWith("/") || path.contains(":")) {
          return new File(path);
       } else {
