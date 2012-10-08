@@ -20,6 +20,7 @@
    <xsl:call-template name='import-list'/>
    <xsl:value-of select="$empty"/>public class <xsl:value-of select='@do-class'/> extends DataObject {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name="declare-field-variables"/>
+   <xsl:call-template name="method-after-load"/>
    <xsl:call-template name="method-get-fields"/>
    <xsl:call-template name="method-set-fields"/>
    <xsl:call-template name="method-toString"/>
@@ -55,6 +56,19 @@
       <xsl:value-of select='@field-name'/>;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:for-each>
+</xsl:template>
+
+<xsl:template name="method-after-load">
+   <xsl:variable name="entity" select="."/>
+   <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   public void afterLoad() {<xsl:value-of select="$empty-line"/>
+   <xsl:for-each select="var[@key-member]">
+      <xsl:variable name="name" select="@key-member"/>
+      <xsl:variable name="member" select="$entity/member[@key='true'][@name=$name]"/>
+      <xsl:value-of select="'      '"/><xsl:value-of select='@field-name'/> = <xsl:value-of select='$member/@field-name'/>;<xsl:value-of select="$empty-line"/>
+   </xsl:for-each>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
 </xsl:template>
 
 <xsl:template name="method-get-fields">

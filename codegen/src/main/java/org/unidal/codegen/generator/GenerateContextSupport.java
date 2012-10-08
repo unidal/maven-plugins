@@ -21,11 +21,12 @@ public abstract class GenerateContextSupport implements GenerateContext {
 
    private Map<String, String> m_properties;
 
-   public GenerateContextSupport(String resourceBasePath, File projectBaseDir) {
-      m_projectBaseDir = projectBaseDir;
+   public GenerateContextSupport(String resourceBasePath, File projectBaseDir) throws IOException {
+      m_projectBaseDir = projectBaseDir.getCanonicalFile();
       m_resourceBasePath = resourceBasePath;
       m_properties = new HashMap<String, String>();
 
+      m_properties.put("generated-java", m_projectBaseDir.getPath());
       m_properties.put("src-main-java", "src/main/java");
       m_properties.put("src-main-resources", "src/main/resources");
       m_properties.put("src-main-webapp", "src/main/webapp");
@@ -50,18 +51,10 @@ public abstract class GenerateContextSupport implements GenerateContext {
    }
 
    public File getPath(String name) {
-      String path = m_properties.get(name);
-
-      if (path == null) {
-         if (name.startsWith("/") || name.contains(":")) {
-            return new File(name);
-         } else {
-            return new File(m_projectBaseDir, name);
-         }
-      } else if (path.startsWith("/") || path.contains(":")) {
-         return new File(path);
+      if (name.startsWith("/") || name.contains(":")) {
+         return new File(name);
       } else {
-         return new File(m_projectBaseDir, path);
+         return new File(m_projectBaseDir, name);
       }
    }
 

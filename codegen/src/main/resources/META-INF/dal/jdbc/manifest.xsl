@@ -4,6 +4,7 @@
 <xsl:output method="xml" indent="yes" media-type="text/xml" encoding="utf-8"/>
 
 <xsl:param name="xsl-dir"/>
+<xsl:param name="generated-java"/>
 <xsl:variable name="space" select="' '"/>
 <xsl:variable name="empty" select="''"/>
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
@@ -19,7 +20,7 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:element name="file">
          <xsl:attribute name="path">
-            <xsl:value-of select="@src-dir"/>/<xsl:value-of select="translate($do-package,'.','/')"/>/<xsl:value-of select="$empty"/>
+            <xsl:value-of select="$generated-java"/>/<xsl:value-of select="translate($do-package,'.','/')"/>/<xsl:value-of select="$empty"/>
             <xsl:value-of select="'_INDEX'"/>.java<xsl:value-of select="$empty"/>
          </xsl:attribute>
          
@@ -47,7 +48,7 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:element name="file">
          <xsl:attribute name="path">
-            <xsl:value-of select="@src-dir"/>/<xsl:value-of select="translate(@do-package,'.','/')"/>/<xsl:value-of select="$empty"/>
+            <xsl:value-of select="$generated-java"/>/<xsl:value-of select="translate(@do-package,'.','/')"/>/<xsl:value-of select="$empty"/>
             <xsl:value-of select="@do-class"/>.java<xsl:value-of select="$empty"/>
          </xsl:attribute>
          
@@ -76,7 +77,7 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:element name="file">
          <xsl:attribute name="path">
-            <xsl:value-of select="@src-dir"/>/<xsl:value-of select="translate(@do-package,'.','/')"/>/<xsl:value-of select="$empty"/>
+            <xsl:value-of select="$generated-java"/>/<xsl:value-of select="translate(@do-package,'.','/')"/>/<xsl:value-of select="$empty"/>
             <xsl:value-of select="@entity-class"/>.java<xsl:value-of select="$empty"/>
          </xsl:attribute>
          
@@ -105,7 +106,7 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:element name="file">
          <xsl:attribute name="path">
-            <xsl:value-of select="@do-src-dir"/>/<xsl:value-of select="translate(@do-package,'.','/')"/>/<xsl:value-of select="$empty"/>
+            <xsl:value-of select="$generated-java"/>/<xsl:value-of select="translate(@do-package,'.','/')"/>/<xsl:value-of select="$empty"/>
             <xsl:value-of select="@dao-class"/>.java<xsl:value-of select="$empty"/>
          </xsl:attribute>
          
@@ -136,7 +137,7 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:element name="file">
          <xsl:attribute name="path">
-            <xsl:value-of select="@src-dir"/>/<xsl:value-of select="translate(@bo-package,'.','/')"/>/<xsl:value-of select="$empty"/>
+            <xsl:value-of select="$generated-java"/>/<xsl:value-of select="translate(@bo-package,'.','/')"/>/<xsl:value-of select="$empty"/>
             <xsl:value-of select="@bo-class"/>.java<xsl:value-of select="$empty"/>
          </xsl:attribute>
          
@@ -165,7 +166,7 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:element name="file">
          <xsl:attribute name="path">
-            <xsl:value-of select="@src-dir"/>/<xsl:value-of select="translate(@bo-package,'.','/')"/>/<xsl:value-of select="$empty"/>
+            <xsl:value-of select="$generated-java"/>/<xsl:value-of select="translate(@bo-package,'.','/')"/>/<xsl:value-of select="$empty"/>
             <xsl:value-of select="@bof-class"/>.java<xsl:value-of select="$empty"/>
          </xsl:attribute>
          

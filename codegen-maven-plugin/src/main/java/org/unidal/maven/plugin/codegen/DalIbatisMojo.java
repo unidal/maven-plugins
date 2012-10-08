@@ -45,19 +45,19 @@ public class DalIbatisMojo extends AbstractMojo {
    protected MavenProject m_project;
 
    /**
-    * Current project base directory
+    * Source directory.
     * 
     * @parameter expression="${sourceDir}"
-    *            default-value="target/generated-sources/dal-ibatis/src/main/java"
+    *            default-value="${basedir}/src/main/java"
     * @required
     */
    protected String sourceDir;
    
    /**
-    * Current project base directory
+    * Resource directory
     * 
     * @parameter expression="${resourceDir}"
-    *            default-value="target/generated-sources/dal-ibatis/src/main/resources"
+    *            default-value="${basedir}/src/main/resources"
     * @required
     */
    protected String resourceDir;
