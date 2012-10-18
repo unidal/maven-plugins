@@ -198,11 +198,19 @@
    public void endElement(String uri, String localName, String qName) throws SAXException {
       if (uri == null || uri.length() == 0) {<xsl:value-of select="$empty-line"/>
             <xsl:choose>
-               <xsl:when test="//entity[element]">
+               <xsl:when test="//entity[element[not(@render='false')]]">
                   <xsl:value-of select="$empty"/>         Object currentObj = m_objs.pop();<xsl:value-of select="$empty-line"/>
-                  <xsl:value-of select="$empty"/>         String currentTag = m_tags.pop();<xsl:value-of select="$empty-line"/>
+                  <xsl:choose>
+                     <xsl:when test="element[not(@text='true')]">
+                        <xsl:value-of select="$empty"/>         String currentTag = m_tags.pop();<xsl:value-of select="$empty-line"/>
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <xsl:value-of select="$empty-line"/>
+                        <xsl:value-of select="$empty"/>         m_tags.pop();<xsl:value-of select="$empty-line"/>
+                     </xsl:otherwise>
+                  </xsl:choose>
                   <xsl:value-of select="$empty-line"/>
-                  <xsl:for-each select="//entity[element]">
+                  <xsl:for-each select="//entity[element[not(@render='false')]]">
                      <xsl:variable name="entity" select="."/>
                      
                      <xsl:choose>
@@ -220,7 +228,7 @@
                      <xsl:value-of select="$empty"/>if (currentObj instanceof <xsl:value-of select="@entity-class"/>) {<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$indent"/><xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name"/> = (<xsl:value-of select="@entity-class"/>) currentObj;<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$empty-line"/>
-                     <xsl:for-each select="element">
+                     <xsl:for-each select="element[not(@render='false')]">
                         <xsl:sort select="@text='true'"/>
                         
                         <xsl:choose>
@@ -230,7 +238,7 @@
                         <xsl:choose>
                            <xsl:when test="@text='true'">
                               <xsl:choose>
-                                 <xsl:when test="../element[not(@text='true')]">
+                                 <xsl:when test="../element[not(@text='true')][not(@render='false')]">
                                     <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
                                     <xsl:value-of select="$indent"/>   <xsl:value-of select="'   '"/><xsl:value-of select="$entity/@local-name"/>.<xsl:value-of select="@set-method"/>(<xsl:value-of select="$empty"/>
                                     <xsl:call-template name="convert-type">

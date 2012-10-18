@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.phoenix.bootstrap.rule" enable-sax-parser="true" enable-merger="true">
+   <entity name="config" root="true">
+      <entity-ref name="rule" type="list" names="rules" />
+   </entity>
+   <entity name="rule">
+      <attribute name="artifactId" value-type="String" key="true" />
+      <element name="matcher" value-type="java.lang.Object" render="false" />
+   </entity>
+</model>
+

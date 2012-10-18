@@ -231,32 +231,35 @@ public class WebAppMojo extends AbstractMojo {
       }
 
       Element build = b.findOrCreateChild(root, "build", null, "dependencies");
-      Element pluginManagement = b.findOrCreateChild(build, "pluginManagement");
-      Element pluginManagementPlugins = b.findOrCreateChild(pluginManagement, "plugins");
-      Element compilerPlugin = b.checkPlugin(pluginManagementPlugins, null, "maven-compiler-plugin", "2.3.2");
-      Element compilerConfiguration = b.findOrCreateChild(compilerPlugin, "configuration");
 
-      b.findOrCreateChild(compilerConfiguration, "source").setText("1.6");
-      b.findOrCreateChild(compilerConfiguration, "target").setText("1.6");
+      if (webapp.isPluginManagement()) {
+         Element pluginManagement = b.findOrCreateChild(build, "pluginManagement");
+         Element pluginManagementPlugins = b.findOrCreateChild(pluginManagement, "plugins");
+         Element compilerPlugin = b.checkPlugin(pluginManagementPlugins, null, "maven-compiler-plugin", "2.3.2");
+         Element compilerConfiguration = b.findOrCreateChild(compilerPlugin, "configuration");
 
-      Element eclipsePlugin = b.checkPlugin(pluginManagementPlugins, null, "maven-eclipse-plugin", "2.8");
-      Element eclipseConfiguration = b.findOrCreateChild(eclipsePlugin, "configuration");
+         b.findOrCreateChild(compilerConfiguration, "source").setText("1.6");
+         b.findOrCreateChild(compilerConfiguration, "target").setText("1.6");
 
-      b.findOrCreateChild(eclipseConfiguration, "downloadSources").setText("true");
-      b.findOrCreateChild(eclipseConfiguration, "ajdtVersion").setText("none");
+         Element eclipsePlugin = b.checkPlugin(pluginManagementPlugins, null, "maven-eclipse-plugin", "2.8");
+         Element eclipseConfiguration = b.findOrCreateChild(eclipsePlugin, "configuration");
 
-      Element additionalConfig = b.findOrCreateChild(eclipseConfiguration, "additionalConfig");
-      Element file = b.findOrCreateChild(additionalConfig, "file");
+         b.findOrCreateChild(eclipseConfiguration, "downloadSources").setText("true");
+         b.findOrCreateChild(eclipseConfiguration, "ajdtVersion").setText("none");
 
-      b.findOrCreateChild(file, "name").setText(".settings/org.eclipse.jdt.core.prefs");
+         Element additionalConfig = b.findOrCreateChild(eclipseConfiguration, "additionalConfig");
+         Element file = b.findOrCreateChild(additionalConfig, "file");
 
-      Element contentElement = b.findOrCreateChild(file, "content");
-      if (contentElement.getChildren().isEmpty()) {
-         contentElement.addContent(new CDATA( //
-               "org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6\r\n" + //
-                     "eclipse.preferences.version=1\r\n" + //
-                     "org.eclipse.jdt.core.compiler.source=1.6\r\n" + //
-                     "org.eclipse.jdt.core.compiler.compliance=1.6\r\n"));
+         b.findOrCreateChild(file, "name").setText(".settings/org.eclipse.jdt.core.prefs");
+
+         Element contentElement = b.findOrCreateChild(file, "content");
+         if (contentElement.getChildren().isEmpty()) {
+            contentElement.addContent(new CDATA( //
+                  "org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6\r\n" + //
+                        "eclipse.preferences.version=1\r\n" + //
+                        "org.eclipse.jdt.core.compiler.source=1.6\r\n" + //
+                        "org.eclipse.jdt.core.compiler.compliance=1.6\r\n"));
+         }
       }
 
       Element plugins = b.findOrCreateChild(build, "plugins");
@@ -363,12 +366,14 @@ public class WebAppMojo extends AbstractMojo {
             String name = PropertyProviders.fromConsole().forString("name", "Webapp name:", defaultName, null);
             boolean webres = PropertyProviders.fromConsole().forBoolean("webres", "Support WebRes framework?", false);
             boolean cat = PropertyProviders.fromConsole().forBoolean("cat", "Support CAT?", true);
+            boolean pluginManagement = PropertyProviders.fromConsole().forBoolean("pluginManagement", "Support POM plugin management for Java Compiler and Eclipse?", true);
 
             wizard.setWebapp(webapp);
             webapp.setPackage(packageName);
             webapp.setName(name);
             webapp.setWebres(webres);
             webapp.setCat(cat);
+            webapp.setPluginManagement(pluginManagement);
          }
 
          visitWebapp(webapp);

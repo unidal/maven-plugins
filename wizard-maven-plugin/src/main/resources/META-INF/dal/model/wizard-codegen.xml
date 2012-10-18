@@ -10,6 +10,7 @@
     <attribute name="name" value-type="String" />
     <attribute name="webres" value-type="boolean" />
     <attribute name="cat" value-type="boolean" />
+    <attribute name="plugin-management" value-type="boolean"/>
     <entity-ref name="module" type="list" names="modules" />
   </entity>
   <entity name="module">

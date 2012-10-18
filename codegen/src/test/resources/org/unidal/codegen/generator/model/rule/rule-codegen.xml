@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="config" root="true">
+    <entity-ref name="rule" type="list" names="rules" />
+  </entity>
+  <entity name="rule">
+    <attribute name="artifactId" value-type="String" />
+    <attribute name="use" value-type="String" />
+    <attribute name="version" value-type="String" />
+    <element name="description" value-type="String" text="true" />
+  </entity>
+</model>
+
