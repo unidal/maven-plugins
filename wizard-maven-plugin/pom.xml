@@ -10,17 +10,17 @@
    <artifactId>wizard-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
    <name>Maven Wizard Plugin</name>
-   <version>1.1.8</version>
+   <version>1.1.9</version>
    <dependencies>
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
          <artifactId>common</artifactId>
-         <version>1.1.1</version>
+         <version>1.1.2</version>
       </dependency>
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
          <artifactId>codegen</artifactId>
-         <version>1.1.9</version>
+         <version>1.2.3</version>
       </dependency>
       <dependency>
          <groupId>mysql</groupId>
@@ -33,7 +33,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>1.1.1</version>
+            <version>1.2.3</version>
             <executions>
                <execution>
                   <id>default-cli</id>

@@ -9,7 +9,7 @@
    <modelVersion>4.0.0</modelVersion>
    <artifactId>common</artifactId>
    <name>Common Facilities</name>
-   <version>1.1.1</version>
+   <version>1.1.2</version>
    <prerequisites>
       <maven>3.0.3</maven>
    </prerequisites>
@@ -17,7 +17,7 @@
       <dependency>
          <groupId>com.site.common</groupId>
          <artifactId>lookup</artifactId>
-         <version>1.1.0</version>
+         <version>1.1.4</version>
       </dependency>
       <dependency>
          <groupId>org.apache.maven</groupId>

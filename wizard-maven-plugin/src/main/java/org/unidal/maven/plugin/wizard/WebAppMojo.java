@@ -174,7 +174,7 @@ public class WebAppMojo extends AbstractMojo {
 
          m_generator.generate(ctx);
          getLog().info(ctx.getGeneratedFiles() + " files generated.");
-
+         
          modifyPomFile(m_project.getFile(), wizard.getWebapp());
       } catch (Exception e) {
          e.printStackTrace();
@@ -213,19 +213,22 @@ public class WebAppMojo extends AbstractMojo {
       Element packaging = b.findOrCreateChild(root, "packaging", "dependencies", null);
 
       if (!"war".equals(packaging.getText())) {
+         getLog().info(String.format("Change project packaging type from %s to war.", packaging.getText()));
          packaging.setText("war");
-         getLog().info("Change project packaging type to war.");
       }
 
-      if (!b.checkDependency(dependencies, "com.site.common", "web-framework", "1.0.16", null)) {
-         b.checkDependency(dependencies, "com.site.common", "test-framework", "1.0.3", "test");
-
+      if (!b.checkDependency(dependencies, "com.site.common", "web-framework", "1.0.19", null)) {
+         if (webapp.isJstl()) {
+            b.checkDependency(dependencies, "javax.servlet", "jstl", "1.2", null);
+         }
+         
          if (webapp.isWebres()) {
             b.checkDependency(dependencies, "org.unidal.webres", "WebResServer", "1.2.0", null);
          }
 
          b.checkDependency(dependencies, "javax.servlet", "servlet-api", "2.5", "provided");
          b.checkDependency(dependencies, "junit", "junit", "4.8.1", "test");
+         b.checkDependency(dependencies, "com.site.common", "test-framework", "1.0.3", "test");
          b.checkDependency(dependencies, "org.mortbay.jetty", "jetty", "6.1.14", "test");
          b.checkDependency(dependencies, "org.mortbay.jetty", "jsp-2.1", "6.1.14", "test");
       }
@@ -263,7 +266,7 @@ public class WebAppMojo extends AbstractMojo {
       }
 
       Element plugins = b.findOrCreateChild(build, "plugins");
-      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.8");
+      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.2.3");
       Element codegenPlexus = b.checkPluginExecution(codegenPlugin, "plexus", "process-classes",
             "generate plexus component descriptor");
       Element codegenPlexusConfiguration = b.findOrCreateChild(codegenPlexus, "configuration");
@@ -366,13 +369,16 @@ public class WebAppMojo extends AbstractMojo {
             String name = PropertyProviders.fromConsole().forString("name", "Webapp name:", defaultName, null);
             boolean webres = PropertyProviders.fromConsole().forBoolean("webres", "Support WebRes framework?", false);
             boolean cat = PropertyProviders.fromConsole().forBoolean("cat", "Support CAT?", true);
-            boolean pluginManagement = PropertyProviders.fromConsole().forBoolean("pluginManagement", "Support POM plugin management for Java Compiler and Eclipse?", true);
+            boolean jstl = PropertyProviders.fromConsole().forBoolean("cat", "Support JSTL?", true);
+            boolean pluginManagement = PropertyProviders.fromConsole().forBoolean("pluginManagement",
+                  "Support POM plugin management for Java Compiler and Eclipse?", true);
 
             wizard.setWebapp(webapp);
             webapp.setPackage(packageName);
             webapp.setName(name);
             webapp.setWebres(webres);
             webapp.setCat(cat);
+            webapp.setJstl(jstl);
             webapp.setPluginManagement(pluginManagement);
          }
 
