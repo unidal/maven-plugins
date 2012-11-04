@@ -49,6 +49,7 @@ import org.xml.sax.SAXException;
 import com.site.helper.Files;
 import com.site.helper.Transformers;
 import com.site.helper.Transformers.IBuilder;
+import com.site.lookup.tuple.Pair;
 
 /**
  * DAL Metadata generator for JDBC
@@ -152,7 +153,7 @@ public class JdbcMojo extends AbstractMojo {
 
    private Connection m_conn;
 
-   protected Jdbc buildWizard(File wizardFile) throws IOException, SAXException {
+   protected Pair<Wizard, Jdbc> buildWizard(File wizardFile) throws IOException, SAXException {
       Wizard wizard;
 
       if (wizardFile.isFile()) {
@@ -171,14 +172,15 @@ public class JdbcMojo extends AbstractMojo {
       wizard.accept(builder);
       m_conn = builder.getConnection();
       Files.forIO().writeTo(wizardFile, wizard.toString());
-      return builder.getJdbc();
+      return new Pair<Wizard, Jdbc>(wizard, builder.getJdbc());
    }
 
    public void execute() throws MojoExecutionException, MojoFailureException {
       try {
          final File manifestFile = getFile(manifest);
          File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
-         Jdbc jdbc = buildWizard(wizardFile);
+         Pair<Wizard, Jdbc> pair = buildWizard(wizardFile);
+         Jdbc jdbc = pair.getValue();
 
          for (Group group : jdbc.getGroups()) {
             generateModel(group);
@@ -216,7 +218,7 @@ public class JdbcMojo extends AbstractMojo {
          m_generator.generate(ctx);
          getLog().info(ctx.getGeneratedFiles() + " files generated.");
 
-         modifyPomFile(m_project.getFile(), jdbc);
+         modifyPomFile(m_project.getFile(), pair.getKey(), jdbc);
       } catch (Exception e) {
          e.printStackTrace();
          throw new MojoExecutionException("Error when generating DAL meta: " + e, e);
@@ -293,20 +295,20 @@ public class JdbcMojo extends AbstractMojo {
       return packageName;
    }
 
-   protected void modifyPomFile(File pomFile, Jdbc jdbc) throws JDOMException, IOException {
+   protected void modifyPomFile(File pomFile, Wizard wizard, Jdbc jdbc) throws JDOMException, IOException {
       Document doc = new SAXBuilder().build(pomFile);
       Element root = doc.getRootElement();
       PomFileBuilder b = new PomFileBuilder();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
-      if (!b.checkDependency(dependencies, "com.site.dal", "dal-jdbc", "1.1.7", null)) {
+      if (!b.checkDependency(dependencies, "com.site.dal", "dal-jdbc", "1.1.9", null)) {
          b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.20", "runtime");
       }
 
       if (jdbc != null) {
          Element build = b.findOrCreateChild(root, "build", null, "dependencies");
          Element plugins = b.findOrCreateChild(build, "plugins");
-         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.1.8");
+         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.2.4");
          Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc model");
          Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
          StringBuilder manifest = new StringBuilder();
@@ -321,6 +323,21 @@ public class JdbcMojo extends AbstractMojo {
 
          if (manifestElement.getChildren().isEmpty()) {
             manifestElement.addContent(new CDATA(manifest.toString()));
+         }
+
+         Element codegenPlexus = b.checkPluginExecution(codegenPlugin, "plexus", "process-classes",
+               "generate plexus component descriptor");
+         Element codegenPlexusConfiguration = b.findOrCreateChild(codegenPlexus, "configuration");
+
+         b.findOrCreateChild(codegenPlexusConfiguration, "className")
+               .setText(wizard.getPackage() + ".build.ComponentsConfigurator");
+
+         // properties
+         Element properties = b.findOrCreateChild(root, "properties");
+         Element sourceEncoding = b.findOrCreateChild(properties, "project.build.sourceEncoding");
+
+         if (sourceEncoding.getText().length() == 0) {
+            sourceEncoding.setText("utf-8");
          }
       }
 
@@ -517,7 +534,7 @@ public class JdbcMojo extends AbstractMojo {
                return jdbc.getName();
             }
          });
-         String name = PropertyProviders.fromConsole().forString("jdbc", "Select datasource name below or input a new one:", names,
+         String name = PropertyProviders.fromConsole().forString("datasource", "Select datasource name below or input a new one:", names,
                null, null);
          Jdbc jdbc = wizard.findJdbc(name);
 
@@ -534,7 +551,8 @@ public class JdbcMojo extends AbstractMojo {
             ds.setDriver(PropertyProviders.fromConsole().forString("driver", "JDBC driver:", "com.mysql.jdbc.Driver", null));
             ds.setUrl(PropertyProviders.fromConsole().forString("url", "JDBC URL:", "jdbc:mysql://localhost:3306/mysql", null));
             ds.setUser(PropertyProviders.fromConsole().forString("user", "User:", null, null));
-            ds.setPassword(PropertyProviders.fromConsole().forString("password", "Password:(use '<none>' if no password)", null, null));
+            ds.setPassword(PropertyProviders.fromConsole().forString("password", "Password:(use '<none>' if no password)", null,
+                  null));
             ds.setProperties(PropertyProviders.fromConsole().forString("connectionProperties", "Connection properties:",
                   "useUnicode=true&autoReconnect=true", null));
 

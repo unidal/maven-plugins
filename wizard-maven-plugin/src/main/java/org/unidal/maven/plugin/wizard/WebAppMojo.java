@@ -174,8 +174,8 @@ public class WebAppMojo extends AbstractMojo {
 
          m_generator.generate(ctx);
          getLog().info(ctx.getGeneratedFiles() + " files generated.");
-         
-         modifyPomFile(m_project.getFile(), wizard.getWebapp());
+
+         modifyPomFile(m_project.getFile(), wizard, wizard.getWebapp());
       } catch (Exception e) {
          e.printStackTrace();
          throw new MojoExecutionException("Code generating failed.", e);
@@ -205,7 +205,7 @@ public class WebAppMojo extends AbstractMojo {
       return packageName;
    }
 
-   protected void modifyPomFile(File pomFile, Webapp webapp) throws Exception {
+   protected void modifyPomFile(File pomFile, Wizard wizard, Webapp webapp) throws Exception {
       Document doc = new SAXBuilder().build(pomFile);
       Element root = doc.getRootElement();
       PomFileBuilder b = new PomFileBuilder();
@@ -217,11 +217,12 @@ public class WebAppMojo extends AbstractMojo {
          packaging.setText("war");
       }
 
-      if (!b.checkDependency(dependencies, "com.site.common", "web-framework", "1.0.19", null)) {
+      // dependencies
+      if (!b.checkDependency(dependencies, "com.site.common", "web-framework", "1.0.20", null)) {
          if (webapp.isJstl()) {
             b.checkDependency(dependencies, "javax.servlet", "jstl", "1.2", null);
          }
-         
+
          if (webapp.isWebres()) {
             b.checkDependency(dependencies, "org.unidal.webres", "WebResServer", "1.2.0", null);
          }
@@ -235,6 +236,7 @@ public class WebAppMojo extends AbstractMojo {
 
       Element build = b.findOrCreateChild(root, "build", null, "dependencies");
 
+      // pluginManagement
       if (webapp.isPluginManagement()) {
          Element pluginManagement = b.findOrCreateChild(build, "pluginManagement");
          Element pluginManagementPlugins = b.findOrCreateChild(pluginManagement, "plugins");
@@ -265,13 +267,22 @@ public class WebAppMojo extends AbstractMojo {
          }
       }
 
+      // plugins
       Element plugins = b.findOrCreateChild(build, "plugins");
       Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.2.3");
       Element codegenPlexus = b.checkPluginExecution(codegenPlugin, "plexus", "process-classes",
             "generate plexus component descriptor");
       Element codegenPlexusConfiguration = b.findOrCreateChild(codegenPlexus, "configuration");
 
-      b.findOrCreateChild(codegenPlexusConfiguration, "className").setText(webapp.getPackage() + ".build.ComponentsConfigurator");
+      b.findOrCreateChild(codegenPlexusConfiguration, "className").setText(wizard.getPackage() + ".build.ComponentsConfigurator");
+
+      // properties
+      Element properties = b.findOrCreateChild(root, "properties");
+      Element sourceEncoding = b.findOrCreateChild(properties, "project.build.sourceEncoding");
+
+      if (sourceEncoding.getText().length() == 0) {
+         sourceEncoding.setText("utf-8");
+      }
 
       if (b.isModified()) {
          saveXml(doc, pomFile);

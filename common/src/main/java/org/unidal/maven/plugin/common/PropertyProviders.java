@@ -70,15 +70,17 @@ public class PropertyProviders {
             boolean withOptions = availableValues != null && !availableValues.isEmpty();
             int count = 0;
 
-            System.out.println(sb.toString());
-
             if (withOptions) {
+               System.out.println(sb.toString());
+
                for (String availableValue : availableValues) {
                   System.out.println((count++) + ": " + availableValue);
                }
-            }
 
-            System.out.print("Please select:");
+               System.out.print("Please select:");
+            } else {
+               System.out.print(sb.toString());
+            }
 
             try {
                int size = System.in.read(buffer);

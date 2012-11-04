@@ -26,11 +26,12 @@ public class WebAppMojoTest {
       File expectedPomFile = new File(getClass().getResource("webapp/pom-after.xml").getFile());
       String expected = Files.forIO().readFrom(expectedPomFile, "utf-8");
       File tmpFile = new File("target/pom.xml");
+      Wizard wizard = new Wizard().setPackage("com.dianping.test");
 
       Files.forDir().copyFile(pomFile, tmpFile);
 
-      mojo.modifyPomFile(tmpFile, new Webapp().setPackage("com.dianping.test"));
-      mojo.modifyPomFile(tmpFile, new Webapp().setPackage("com.dianping.test")); // next time, change nothing
+      mojo.modifyPomFile(tmpFile, wizard, new Webapp().setPackage("com.dianping.test"));
+      mojo.modifyPomFile(tmpFile, wizard, new Webapp().setPackage("com.dianping.test")); // next time, change nothing
 
       String actual = Files.forIO().readFrom(tmpFile, "utf-8");
 

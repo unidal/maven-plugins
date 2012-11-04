@@ -34,7 +34,7 @@
       <dependency>
          <groupId>com.site.common</groupId>
          <artifactId>web-framework</artifactId>
-         <version>1.0.19</version>
+         <version>1.0.20</version>
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
@@ -111,5 +111,8 @@ org.eclipse.jdt.core.compiler.compliance=1.6]]></content>
          </plugin>
       </plugins>
    </build>
+   <properties>
+      <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+   </properties>
 </project>
 

@@ -19,6 +19,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -26,6 +27,9 @@ public class <xsl:value-of select="$class"/> extends AbstractResourceConfigurato
    @Override
    public List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> defineComponents() {
       List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/>();
+
+      // move following line to top-level project if necessary
+      all.add(C(JdbcDataSourceConfigurationManager.class));
 <xsl:for-each select="jdbc">
       all.addAll(new <xsl:value-of select="@configurator-class"/>().defineComponents());
 </xsl:for-each>

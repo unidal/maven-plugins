@@ -22,8 +22,8 @@ public class JdbcMojoTest extends ComponentTestCase {
 
       Files.forDir().copyFile(pomFile, tmpFile);
 
-      mojo.modifyPomFile(tmpFile, null);
-      mojo.modifyPomFile(tmpFile, null);
+      mojo.modifyPomFile(tmpFile, null, null);
+      mojo.modifyPomFile(tmpFile, null, null);
 
       String actual = Files.forIO().readFrom(tmpFile, "utf-8");
 
