@@ -47,7 +47,7 @@
             
             <xsl:if test="generate-id(//entity/element[@build-method=$build-method][(@list='true' or @set='true') and not(@render='false')][1])=generate-id()">
                <xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>   public <xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@build-method"/>(T node);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>   public <xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@build-method"/>(T node);<xsl:value-of select="$empty-line"/>
             </xsl:if>
          </xsl:when>
          <xsl:otherwise>

@@ -219,6 +219,15 @@
       }
    }
 </xsl:if>
+<xsl:if test="$properties[@value-type='Class&lt;?&gt;']">
+   private void writeClass(Class<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> value) {
+      try {
+         m_out.writeUTF(value.getName());
+      } catch (IOException e) {
+         throw new RuntimeException(e);
+      }
+   }
+</xsl:if>
 <xsl:if test="$properties[@value-type='date' or @value-type='java.util.Date']">
    private void writeDate(java.util.Date value) {
       try {
@@ -246,7 +255,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='int' or @value-type='Integer'] | element[@list='true' or @set='true'] or entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or any">
+<xsl:if test="$properties[@value-type='int' or @value-type='Integer'] | //entity/element[@list='true' or @set='true'] or //entity/entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or //entity/any">
    private void writeInt(int value) {
       try {
          writeVarint(value);

@@ -265,6 +265,15 @@
       }
    }
 </xsl:if>
+<xsl:if test="$properties[@value-type='Class&lt;?&gt;']">
+   private Class<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> readClass() {
+      try {
+         return Class.forName(m_in.readUTF());
+      } catch (Exception e) {
+         throw new RuntimeException(e);
+      }
+   }
+</xsl:if>
 <xsl:if test="$properties[@value-type='date' or @value-type='java.util.Date']">
    private java.util.Date readDate() {
       try {
@@ -292,7 +301,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='int' or @value-type='Integer'] | element[@list='true' or @set='true'] or entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or any">
+<xsl:if test="$properties[@value-type='int' or @value-type='Integer'] | //entity/element[@list='true' or @set='true'] or //entity/entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or //entity/any">
    private int readInt() {
       try {
          return (int) readVarint(32);

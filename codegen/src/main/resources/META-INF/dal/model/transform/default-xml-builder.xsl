@@ -320,7 +320,7 @@
                <xsl:value-of select="$empty"/>         startTag(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
             </xsl:if>
-            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$suffix"/>) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$suffix"/>) {<xsl:value-of select="$empty-line"/>
             <xsl:choose>
                <xsl:when test="@value-type-element='String'">
                   <xsl:value-of select="$empty"/>            tagWithText(<xsl:value-of select="@upper-name-element"/>, <xsl:value-of select="@local-name-element"/>);<xsl:value-of select="$empty-line"/>

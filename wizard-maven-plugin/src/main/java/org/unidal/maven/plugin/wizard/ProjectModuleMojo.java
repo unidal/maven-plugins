@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
@@ -16,12 +17,20 @@ import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
 
 /**
- * Create an empty project POM.
+ * Create an empty module project POM.
  * 
- * @goal project
- * @requiresProject false
+ * @goal project.module
  */
-public class ProjectMojo extends AbstractMojo {
+public class ProjectModuleMojo extends AbstractMojo {
+   /**
+    * Current project
+    * 
+    * @parameter expression="${project}"
+    * @required
+    * @readonly
+    */
+   protected MavenProject m_project;
+
    /**
     * Project group id.
     * 
@@ -57,13 +66,16 @@ public class ProjectMojo extends AbstractMojo {
     */
    protected String packaging;
 
-   // for test purpose
-   protected File m_pomFile = new File("pom.xml");
-
-   protected Document createPom() {
+   protected Document createModulePom() {
       PomFileBuilder b = new PomFileBuilder();
       Document doc = b.createMavenDocument();
       Element project = doc.getRootElement();
+      Element parent = b.findOrCreateChild(project, "parent");
+
+      b.createChild(parent, "groupId", m_project.getGroupId());
+      b.createChild(parent, "artifactId", m_project.getArtifactId());
+      b.createChild(parent, "version", m_project.getVersion());
+      b.createChild(parent, "relativePath", "../pom.xml");
 
       b.createChild(project, "modelVersion", "4.0.0");
       b.createChild(project, "groupId", groupId);
@@ -71,22 +83,30 @@ public class ProjectMojo extends AbstractMojo {
       b.createChild(project, "version", version);
       b.createChild(project, "name", name);
       b.createChild(project, "packaging", packaging);
+
       return doc;
    }
 
    @Override
    public void execute() throws MojoExecutionException, MojoFailureException {
-      if (m_pomFile.exists()) {
-         getLog().warn("pom.xml file is already existed! SKIPPED");
-         return;
+      if (!"pom".equals(m_project.getPackaging())) {
+         throw new MojoFailureException("The project is not an POM project!");
       }
 
       prepare();
 
-      Document doc = createPom();
+      File dir = new File(m_project.getBasedir(), artifactId);
+
+      if (dir.exists() && new File(dir, "pom.xml").exists()) {
+         throw new MojoFailureException(String.format("The project(%s) is already existed!", artifactId));
+      }
+
+      Document parentDoc = modifyParentPom();
+      Document doc = createModulePom();
 
       try {
-         saveXml(doc, m_pomFile);
+         saveXml(doc, new File(m_project.getBasedir(), artifactId + "/pom.xml"));
+         saveXml(parentDoc, m_project.getFile());
       } catch (Exception e) {
          throw new MojoExecutionException("Failed to generate pom.xml.", e);
       }
@@ -111,9 +131,19 @@ public class ProjectMojo extends AbstractMojo {
       return sb.toString();
    }
 
+   protected Document modifyParentPom() {
+      PomFileBuilder b = new PomFileBuilder();
+      Document doc = b.openMavenDocument(m_project.getFile());
+      Element project = doc.getRootElement();
+      Element modules = b.findOrCreateChild(project, "modules", "build", null);
+
+      b.createChild(modules, "module", artifactId);
+      return doc;
+   }
+
    protected void prepare() {
       if (groupId == null) {
-         groupId = PropertyProviders.fromConsole().forString("groupId", "Project group id:", null, null);
+         groupId = PropertyProviders.fromConsole().forString("groupId", "Project group id:", m_project.getGroupId(), null);
       }
 
       if (artifactId == null) {
@@ -128,7 +158,6 @@ public class ProjectMojo extends AbstractMojo {
          name = PropertyProviders.fromConsole().forString("groupId", "Project name:", getProjectName(artifactId), null);
       }
    }
-
    protected void saveXml(Document doc, File file) throws IOException {
       File parent = file.getCanonicalFile().getParentFile();
 

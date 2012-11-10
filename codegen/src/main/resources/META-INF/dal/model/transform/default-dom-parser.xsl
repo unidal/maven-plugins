@@ -225,7 +225,7 @@
          <xsl:otherwise>getChildTagNodes(node, <xsl:value-of select="@upper-name-element"/>)</xsl:otherwise>
       </xsl:choose>
       <xsl:value-of select="$empty"/>) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$indent"/>   <xsl:value-of select="'   '"/><xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> = maker.<xsl:value-of select="@build-method"/>(child);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$indent"/>   <xsl:value-of select="'   '"/><xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> = maker.<xsl:value-of select="@build-method"/>(child);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$indent"/>   parent.<xsl:value-of select="@add-method"/>(<xsl:value-of select="@local-name-element"/>);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>

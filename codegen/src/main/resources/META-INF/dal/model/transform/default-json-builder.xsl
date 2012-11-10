@@ -287,7 +287,7 @@
                   <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty"/>         arrayBegin(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty-line"/>
-                  <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name-element"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name-element"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty"/>            indent();<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty"/>            m_sb.append('"').append(<xsl:value-of select="@param-name-element"/>).append(m_compact ? "\"," : "\",\r\n");<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>

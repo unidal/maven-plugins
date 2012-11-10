@@ -1,31 +1,21 @@
 package org.unidal.maven.plugin.wizard.dom;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.maven.plugin.logging.Log;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.jdom.input.SAXBuilder;
 
 public class PomFileBuilder extends DocumentBuilder {
    private static Namespace NS = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
 
    private Log m_log;
 
-   @SuppressWarnings("unchecked")
    public boolean checkDependency(Element dependencies, String groupId, String artifactId, String version, String scope) {
-      List<Element> children = dependencies.getChildren("dependency", NS);
-      Element dependency = null;
-
-      for (Element child : children) {
-         String g = child.getChildText("groupId", NS);
-         String a = child.getChildText("artifactId", NS);
-
-         if (groupId.equals(g) && artifactId.equals(a)) {
-            dependency = child;
-            break;
-         }
-      }
+      Element dependency = findDependency(dependencies, groupId, artifactId);
 
       if (dependency == null) {
          dependency = new Element("dependency", NS);
@@ -45,6 +35,23 @@ public class PomFileBuilder extends DocumentBuilder {
          if (m_log != null) {
             m_log.info(String.format("Dependency(%s:%s:%s) added.", groupId, artifactId, version));
          }
+
+         return false;
+      } else {
+         return true;
+      }
+   }
+
+   public boolean checkExclusion(Element dependency, String groupId, String artifactId) {
+      Element exclusions = findOrCreateChild(dependency, "exclusions");
+      Element exclusion = findExclusion(exclusions, groupId, artifactId);
+
+      if (exclusion == null) {
+         exclusion = new Element("exclusion", NS);
+         createChild(exclusion, "groupId", groupId);
+         createChild(exclusion, "artifactId", artifactId);
+
+         exclusions.addContent(exclusion);
 
          return false;
       } else {
@@ -121,6 +128,42 @@ public class PomFileBuilder extends DocumentBuilder {
    }
 
    @SuppressWarnings("unchecked")
+   public Element findDependency(Element dependencies, String groupId, String artifactId) {
+      List<Element> children = dependencies.getChildren("dependency", NS);
+      Element dependency = null;
+
+      for (Element child : children) {
+         String g = child.getChildText("groupId", NS);
+         String a = child.getChildText("artifactId", NS);
+
+         if (groupId.equals(g) && artifactId.equals(a)) {
+            dependency = child;
+            break;
+         }
+      }
+
+      return dependency;
+   }
+
+   @SuppressWarnings("unchecked")
+   public Element findExclusion(Element exclusions, String groupId, String artifactId) {
+      List<Element> children = exclusions.getChildren("exclusion", NS);
+      Element dependency = null;
+
+      for (Element child : children) {
+         String g = child.getChildText("groupId", NS);
+         String a = child.getChildText("artifactId", NS);
+
+         if (groupId.equals(g) && artifactId.equals(a)) {
+            dependency = child;
+            break;
+         }
+      }
+
+      return dependency;
+   }
+
+   @SuppressWarnings("unchecked")
    public Element findPluginExecution(Element executions, String id) {
       Element execution = null;
 
@@ -144,6 +187,14 @@ public class PomFileBuilder extends DocumentBuilder {
    @Override
    protected Namespace getNamespace() {
       return NS;
+   }
+
+   public Document openMavenDocument(File pomFile) {
+      try {
+         return new SAXBuilder().build(pomFile);
+      } catch (Exception e) {
+         throw new RuntimeException(String.format("Error when opening pom file: %s!", pomFile), e);
+      }
    }
 
    public PomFileBuilder setLog(Log log) {

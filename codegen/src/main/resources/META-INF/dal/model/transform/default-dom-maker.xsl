@@ -91,7 +91,7 @@
             <xsl:if test="generate-id(//entity/element[@build-method=$build-method][(@list='true' or @set='true') and not(@render='false')][1])=generate-id()">
                <xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>   public <xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@build-method"/>(Node node) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>   public <xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@build-method"/>(Node node) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      return <xsl:value-of select="$empty"/>
                <xsl:call-template name="convert-type">
                   <xsl:with-param name="value-type" select="@value-type-element"/>

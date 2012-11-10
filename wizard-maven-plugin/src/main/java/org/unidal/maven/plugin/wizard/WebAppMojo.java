@@ -240,13 +240,13 @@ public class WebAppMojo extends AbstractMojo {
       if (webapp.isPluginManagement()) {
          Element pluginManagement = b.findOrCreateChild(build, "pluginManagement");
          Element pluginManagementPlugins = b.findOrCreateChild(pluginManagement, "plugins");
-         Element compilerPlugin = b.checkPlugin(pluginManagementPlugins, null, "maven-compiler-plugin", "2.3.2");
+         Element compilerPlugin = b.checkPlugin(pluginManagementPlugins, null, "maven-compiler-plugin", "2.5.1");
          Element compilerConfiguration = b.findOrCreateChild(compilerPlugin, "configuration");
 
          b.findOrCreateChild(compilerConfiguration, "source").setText("1.6");
          b.findOrCreateChild(compilerConfiguration, "target").setText("1.6");
 
-         Element eclipsePlugin = b.checkPlugin(pluginManagementPlugins, null, "maven-eclipse-plugin", "2.8");
+         Element eclipsePlugin = b.checkPlugin(pluginManagementPlugins, null, "maven-eclipse-plugin", "2.9");
          Element eclipseConfiguration = b.findOrCreateChild(eclipsePlugin, "configuration");
 
          b.findOrCreateChild(eclipseConfiguration, "downloadSources").setText("true");

@@ -73,7 +73,7 @@
             <xsl:if test="generate-id(//entity/element[@build-method=$build-method][(@list='true' or @set='true') and not(@render='false')][1])=generate-id()">
                <xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>   public <xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@build-method"/>(Attributes attributes) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>   public <xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@build-method"/>(Attributes attributes) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      throw new UnsupportedOperationException();<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
             </xsl:if>

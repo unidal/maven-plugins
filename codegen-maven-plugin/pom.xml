@@ -11,7 +11,7 @@
    <artifactId>codegen-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
    <name>Code Generation Maven Plugin</name>
-   <version>1.2.4</version>
+   <version>1.2.5</version>
    <prerequisites>
       <maven>3.0.3</maven>
    </prerequisites>
@@ -19,7 +19,7 @@
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
          <artifactId>codegen</artifactId>
-         <version>1.2.4</version>
+         <version>1.2.5</version>
       </dependency>
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
