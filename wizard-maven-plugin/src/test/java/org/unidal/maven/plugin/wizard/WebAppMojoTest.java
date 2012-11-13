@@ -8,7 +8,7 @@ import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
 
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public class WebAppMojoTest {
    @Test

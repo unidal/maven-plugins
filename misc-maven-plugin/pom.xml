@@ -10,12 +10,12 @@
    <artifactId>misc-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
    <name>Miscellaneous Maven Plugin</name>
-   <version>1.1.1</version>
+   <version>2.0.0</version>
    <dependencies>
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
          <artifactId>common</artifactId>
-         <version>1.1.1</version>
+         <version>2.0.0</version>
       </dependency>
    </dependencies>
 </project>

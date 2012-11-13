@@ -24,10 +24,10 @@ import org.unidal.maven.plugin.wizard.dom.Log4jFileBuilder;
 import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
 import org.unidal.maven.plugin.wizard.dom.WebFileBuilder;
 
-import com.site.helper.Files;
-import com.site.helper.Scanners;
-import com.site.helper.Scanners.FileMatcher;
-import com.site.helper.Splitters;
+import org.unidal.helper.Files;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Splitters;
 
 /**
  * Create the default CAT client configuration files.

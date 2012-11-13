@@ -15,7 +15,7 @@ import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
 
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 /**
  * Package a normal job (named MyJob) into MyJob-installer.jar, which can be

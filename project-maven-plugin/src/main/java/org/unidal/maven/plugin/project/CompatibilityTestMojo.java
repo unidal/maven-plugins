@@ -20,10 +20,10 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.archiver.UnArchiver;
 import org.codehaus.plexus.archiver.manager.ArchiverManager;
 
-import com.site.helper.Files;
-import com.site.helper.Scanners;
-import com.site.helper.Scanners.FileMatcher;
-import com.site.helper.Splitters;
+import org.unidal.helper.Files;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Splitters;
 import org.unidal.maven.plugin.common.AbstractMojoWithDependency;
 import org.unidal.maven.plugin.project.model.entity.ConstructorModel;
 import org.unidal.maven.plugin.project.model.entity.Failure;

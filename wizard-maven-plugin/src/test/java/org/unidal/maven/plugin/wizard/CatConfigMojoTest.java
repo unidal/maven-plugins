@@ -5,7 +5,7 @@ import java.io.File;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public class CatConfigMojoTest {
    @Test

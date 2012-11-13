@@ -6,7 +6,7 @@ import org.apache.maven.model.Build;
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 import org.unidal.maven.plugin.common.Injector;
 
 public class CreateTemplateMojoTest extends ComponentTestCase {

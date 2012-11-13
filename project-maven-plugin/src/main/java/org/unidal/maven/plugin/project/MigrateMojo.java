@@ -14,11 +14,11 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.unidal.maven.plugin.common.PropertyProviders;
 
-import com.site.helper.Files;
-import com.site.helper.Joiners;
-import com.site.helper.Scanners;
-import com.site.helper.Scanners.FileMatcher;
-import com.site.helper.Splitters;
+import org.unidal.helper.Files;
+import org.unidal.helper.Joiners;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Splitters;
 
 /**
  * Migrate all source files from one project to another project using a

@@ -31,7 +31,7 @@ import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;
 import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
 import org.xml.sax.SAXException;
 
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 /**
  * Create a new page of web application project.
@@ -218,7 +218,7 @@ public class WebAppMojo extends AbstractMojo {
       }
 
       // dependencies
-      if (!b.checkDependency(dependencies, "com.site.common", "web-framework", "1.0.20", null)) {
+      if (!b.checkDependency(dependencies, "org.unidal.common", "web-framework", "1.0.20", null)) {
          if (webapp.isJstl()) {
             b.checkDependency(dependencies, "javax.servlet", "jstl", "1.2", null);
          }
@@ -229,7 +229,7 @@ public class WebAppMojo extends AbstractMojo {
 
          b.checkDependency(dependencies, "javax.servlet", "servlet-api", "2.5", "provided");
          b.checkDependency(dependencies, "junit", "junit", "4.8.1", "test");
-         b.checkDependency(dependencies, "com.site.common", "test-framework", "1.0.3", "test");
+         b.checkDependency(dependencies, "org.unidal.common", "test-framework", "1.0.3", "test");
          b.checkDependency(dependencies, "org.mortbay.jetty", "jetty", "6.1.14", "test");
          b.checkDependency(dependencies, "org.mortbay.jetty", "jsp-2.1", "6.1.14", "test");
       }

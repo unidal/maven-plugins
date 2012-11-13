@@ -18,7 +18,7 @@ import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
 import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
 
-import com.site.helper.Splitters;
+import org.unidal.helper.Splitters;
 
 /**
  * Add dependency to the project POM.

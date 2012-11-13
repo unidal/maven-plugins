@@ -17,8 +17,8 @@ import org.codehaus.plexus.archiver.Archiver;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
 
-import com.site.helper.Files;
-import com.site.helper.Files.AutoClose;
+import org.unidal.helper.Files;
+import org.unidal.helper.Files.AutoClose;
 
 /**
  * Package a hadoop job (named MyJob) into MyJob-1.0.0.jar, which can be

@@ -34,6 +34,9 @@ import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.Generator;
 import org.unidal.codegen.meta.TableMeta;
 import org.unidal.codegen.meta.WizardMeta;
+import org.unidal.helper.Files;
+import org.unidal.helper.Transformers;
+import org.unidal.helper.Transformers.IBuilder;
 import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
 import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
@@ -44,12 +47,8 @@ import org.unidal.maven.plugin.wizard.model.entity.Table;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;
 import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
+import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
-
-import com.site.helper.Files;
-import com.site.helper.Transformers;
-import com.site.helper.Transformers.IBuilder;
-import com.site.lookup.tuple.Pair;
 
 /**
  * DAL Metadata generator for JDBC
@@ -301,7 +300,7 @@ public class JdbcMojo extends AbstractMojo {
       PomFileBuilder b = new PomFileBuilder();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
-      if (!b.checkDependency(dependencies, "com.site.dal", "dal-jdbc", "1.1.9", null)) {
+      if (!b.checkDependency(dependencies, "org.unidal.dal", "dal-jdbc", "1.1.9", null)) {
          b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.20", "runtime");
       }
 

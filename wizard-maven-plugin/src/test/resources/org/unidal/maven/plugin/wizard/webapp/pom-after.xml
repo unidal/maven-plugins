@@ -32,7 +32,7 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>com.site.common</groupId>
+         <groupId>org.unidal.common</groupId>
          <artifactId>web-framework</artifactId>
          <version>1.0.20</version>
       </dependency>
@@ -43,7 +43,7 @@
          <scope>provided</scope>
       </dependency>
       <dependency>
-         <groupId>com.site.common</groupId>
+         <groupId>org.unidal.common</groupId>
          <artifactId>test-framework</artifactId>
          <version>1.0.3</version>
          <scope>test</scope>
