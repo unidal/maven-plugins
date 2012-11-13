@@ -4,7 +4,7 @@
 <xsl:output method="html" indent="no" media-type="text/plain" encoding="utf-8"/>
 <xsl:param name="name"/>
 <xsl:variable name="space" select="' '"/>
-<xsl:variable name="empty" select="''"/>
+<xsl:variable name="$empty" select="''"/>
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
 <xsl:variable name="generic-do-class">
    <xsl:call-template name="generic-type">
@@ -36,20 +36,20 @@
 <xsl:template name="import-list">
    <xsl:call-template name="import-entity-classes"/>
    <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.DataField;<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="empty"/>import org.unidal.dal.jdbc.QueryDef;<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="empty"/>import org.unidal.dal.jdbc.QueryType;<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="empty"/>import org.unidal.dal.jdbc.Readset;<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="empty"/>import org.unidal.dal.jdbc.Updateset;<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="empty"/>import org.unidal.dal.jdbc.annotation.Attribute;<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="empty"/>import org.unidal.dal.jdbc.annotation.Entity;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.QueryDef;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.QueryType;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.Readset;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.Updateset;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.annotation.Attribute;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.annotation.Entity;<xsl:value-of select="$empty-line"/>
    <xsl:if test="relation">
-      <xsl:value-of select="empty"/>import org.unidal.dal.jdbc.annotation.Relation;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.annotation.Relation;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:if test="readsets/readset/readset-ref">
-      <xsl:value-of select="empty"/>import org.unidal.dal.jdbc.annotation.SubObjects;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.annotation.SubObjects;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:if test="count(var) != 0">
-      <xsl:value-of select="empty"/>import org.unidal.dal.jdbc.annotation.Variable;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.annotation.Variable;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:value-of select="$empty-line"/>
 </xsl:template>
