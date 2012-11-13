@@ -8,14 +8,10 @@ import org.jdom.Document;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import org.unidal.codegen.meta.ModelMeta;
-import com.site.helper.Files;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.helper.Files;
+import org.unidal.lookup.ComponentTestCase;
 
-@RunWith(JUnit4.class)
 public class MetaGeneratorTest extends ComponentTestCase {
 	private boolean m_verbose = true;
 

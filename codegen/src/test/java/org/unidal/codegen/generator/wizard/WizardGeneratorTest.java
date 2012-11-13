@@ -4,15 +4,11 @@ import java.io.File;
 import java.net.URL;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import org.unidal.codegen.generator.AbstractGenerateContext;
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.Generator;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
-@RunWith(JUnit4.class)
 public class WizardGeneratorTest extends ComponentTestCase {
    private boolean verbose = true;
 
@@ -21,7 +17,7 @@ public class WizardGeneratorTest extends ComponentTestCase {
    @Test
    public void testWebapp() throws Exception {
       Generator g = lookup(Generator.class, "wizard-webapp");
-      URL manifestXml = getResourceFile("manifest.xml").toURI().toURL();
+      URL manifestXml = getClass().getResource("manifest.xml");
       GenerateContext ctx = new WizardGenerateContext(new File("."), "webapp", manifestXml);
       long start = System.currentTimeMillis();
 
@@ -37,7 +33,7 @@ public class WizardGeneratorTest extends ComponentTestCase {
    @Test
    public void testJdbc() throws Exception {
       Generator g = lookup(Generator.class, "wizard-jdbc");
-      URL manifestXml = getResourceFile("manifest.xml").toURI().toURL();
+      URL manifestXml = getClass().getResource("manifest.xml");
       GenerateContext ctx = new WizardGenerateContext(new File("."), "jdbc", manifestXml);
       long start = System.currentTimeMillis();
 

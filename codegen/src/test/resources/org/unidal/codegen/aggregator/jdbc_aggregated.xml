@@ -1,5 +1,5 @@
 <entities gen="true">
-   <entity name="user" table="user" alias="u" do-package="com.site.app.user.dal" bo-package="com.site.app.user.dal">
+   <entity name="user" table="user" alias="u" do-package="org.unidal.app.user.dal" bo-package="org.unidal.app.user.dal">
       <member name="user-id" field="user_id" value-type="int" nullable="false" key="true" auto-increment="true"/>
       <member name="user-name" field="full_name" value-type="String" nullable="false"/>
       <member name="creation-date" field="creation_date" value-type="Date" insert-expr="NOW()"/>
@@ -80,7 +80,7 @@
       <relation name="office-address" entity-name="user-address" entity-alias="oua" join="u.user_id=oua.user_id and hua.type='O'"/>
       <relation name="billing-address" entity-name="user-address" entity-alias="bua" join="u.user_id=bua.user_id and hua.type='B'"/>
    </entity>
-   <entity name="user-address" table="user_address" alias="ua" do-package="com.site.app.useraddress.dal" bo-package="com.site.app.useraddress.dal">
+   <entity name="user-address" table="user_address" alias="ua" do-package="org.unidal.app.useraddress.dal" bo-package="org.unidal.app.useraddress.dal">
       <member name="user-id" field="user_id" value-type="int" nullable="false" key="true"/>
       <member name="type" field="type" value-type="String" nullable="false" key="true"/>
       <member name="address" field="address" value-type="String" nullable="false"/>

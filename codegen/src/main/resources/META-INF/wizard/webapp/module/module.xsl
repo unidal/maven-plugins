@@ -16,9 +16,9 @@
 <xsl:template match="module">
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;
 
-import com.site.web.mvc.AbstractModule;
-import com.site.web.mvc.annotation.ModuleMeta;
-import com.site.web.mvc.annotation.ModulePagesMeta;
+import org.unidal.web.mvc.AbstractModule;
+import org.unidal.web.mvc.annotation.ModuleMeta;
+import org.unidal.web.mvc.annotation.ModulePagesMeta;
 
 @ModuleMeta(name = "<xsl:value-of select="@path"/>", defaultInboundAction = "<xsl:value-of select="page[@default='true']/@name"/>", defaultTransition = "default", defaultErrorAction = "default")
 @ModulePagesMeta({

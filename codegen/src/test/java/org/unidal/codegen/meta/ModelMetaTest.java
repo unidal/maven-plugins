@@ -7,13 +7,10 @@ import org.codehaus.plexus.util.IOUtil;
 import org.jdom.Document;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.unidal.lookup.ComponentTestCase;
 
-import com.site.lookup.ComponentTestCase;
-
-@RunWith(JUnit4.class)
 public class ModelMetaTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
@@ -27,6 +24,6 @@ public class ModelMetaTest extends ComponentTestCase {
 		String result = writer.toString();
 		String expected = IOUtil.toString(getClass().getResourceAsStream("model_meta.xml"));
 
-		assertEquals(expected.replaceAll("\\r", ""), result.replaceAll("\\r", ""));
+		Assert.assertEquals(expected.replaceAll("\\r", ""), result.replaceAll("\\r", ""));
 	}
 }

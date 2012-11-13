@@ -6,13 +6,9 @@ import java.io.InputStream;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.unidal.helper.Files;
+import org.unidal.lookup.ComponentTestCase;
 
-import com.site.helper.Files;
-import com.site.lookup.ComponentTestCase;
-
-@RunWith(JUnit4.class)
 public class XslDecorateTest extends ComponentTestCase {
 	private static final String JDBC_NORMALIZE_XSL = "/META-INF/dal/jdbc/decorate.xsl";
 

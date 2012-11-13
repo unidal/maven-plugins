@@ -20,9 +20,9 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
 
-import com.site.helper.Joiners;
-import com.site.helper.Splitters;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.helper.Joiners;
+import org.unidal.helper.Splitters;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.maven.plugins.plexus.profile.entity.Env;
 import org.unidal.maven.plugins.plexus.profile.entity.Profile;
 import org.unidal.maven.plugins.plexus.profile.entity.Property;

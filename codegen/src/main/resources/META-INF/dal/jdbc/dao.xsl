@@ -42,20 +42,20 @@
       <xsl:value-of select='$empty'/>import java.util.List;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:if test="query-defs/query">
-      <xsl:value-of select='$empty'/>import com.site.dal.jdbc.DalException;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.DalException;<xsl:value-of select='$empty-line'/>
    </xsl:if>
-   <xsl:value-of select='$empty'/>import com.site.dal.jdbc.AbstractDao;<xsl:value-of select='$empty-line'/>
+   <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.AbstractDao;<xsl:value-of select='$empty-line'/>
    <xsl:if test="query-defs/query[@type = 'SELECT']/param[@in = 'true' and @out = 'true']">
-      <xsl:value-of select='$empty'/>import com.site.dal.DalRuntimeException;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.DalRuntimeException;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:if test="query-defs/query[@type = 'SELECT']">
-      <xsl:value-of select='$empty'/>import com.site.dal.jdbc.Readset;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.Readset;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:if test="query-defs/query[@type = 'UPDATE']">
-      <xsl:value-of select='$empty'/>import com.site.dal.jdbc.Updateset;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.Updateset;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:if test="query-defs/query[@type = 'SELECT']/param[@out = 'true']">
-      <xsl:value-of select='$empty'/>import com.site.dal.jdbc.Ref;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.Ref;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:value-of select='$empty-line'/>
 </xsl:template>

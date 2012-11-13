@@ -3,10 +3,7 @@ package org.unidal.codegen.generator.xml;
 import java.io.File;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
-@RunWith(JUnit4.class)
 public class XmlGeneratorTest extends XmlGenerateTestSupport {
    @Override
    protected File getProjectBaseDir() {

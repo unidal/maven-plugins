@@ -3,7 +3,7 @@ package org.unidal.maven.plugin.codegen.plexus;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 import org.unidal.maven.plugins.plexus.profile.entity.Profile;
 import org.unidal.maven.plugins.plexus.profile.transform.DefaultDomParser;
 

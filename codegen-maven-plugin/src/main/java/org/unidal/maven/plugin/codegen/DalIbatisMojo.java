@@ -15,7 +15,7 @@ import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.GenerateContextSupport;
 import org.unidal.codegen.generator.Generator;
 
-import com.site.helper.Splitters;
+import org.unidal.helper.Splitters;
 
 /**
  * DAL code generator for iBatis.

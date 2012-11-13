@@ -16,7 +16,7 @@
    	version="2.5">
    	<servlet>
    		<servlet-name>mvc-servlet</servlet-name>
-   		<servlet-class>com.site.web.MVC</servlet-class>
+   		<servlet-class>org.unidal.web.MVC</servlet-class>
    		<init-param>
    			<param-name>cat-client-xml</param-name>
    			<param-value>/data/appdatas/cat/client.xml</param-value>

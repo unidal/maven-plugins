@@ -21,8 +21,8 @@ import java.util.List;
 import <xsl:value-of select="@package"/>.<xsl:value-of select="@module-class"/>;<xsl:value-of select="$empty"/>
 </xsl:for-each>
 
-import com.site.lookup.configuration.Component;
-import com.site.web.configuration.AbstractWebComponentsConfigurator;
+import org.unidal.lookup.configuration.Component;
+import org.unidal.web.configuration.AbstractWebComponentsConfigurator;
 
 class WebComponentConfigurator extends AbstractWebComponentsConfigurator {
 	@SuppressWarnings("unchecked")

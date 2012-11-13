@@ -50,25 +50,25 @@
    </xsl:if>
    <xsl:value-of select="$empty-line"/>
    <xsl:if test="attribute">
-      <xsl:value-of select="$empty"/>import com.site.dal.xml.annotation.XmlAttribute;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import org.unidal.dal.xml.annotation.XmlAttribute;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:if test="not(@root='true') or element[not(@value='true')] or element-ref">
-      <xsl:value-of select="$empty"/>import com.site.dal.xml.annotation.XmlElement;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import org.unidal.dal.xml.annotation.XmlElement;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:if test="element[@list='true' and @list-name] or element-ref[@list='true' and @list-name]">
-      <xsl:value-of select="$empty"/>import com.site.dal.xml.annotation.XmlElementWrapper;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import org.unidal.dal.xml.annotation.XmlElementWrapper;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:if test="@root='true'">
-      <xsl:value-of select="$empty"/>import com.site.dal.xml.annotation.XmlRootElement;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import org.unidal.dal.xml.annotation.XmlRootElement;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:if test="element[@list='true' and not(@list-name)] or element-ref[@list='true' and not(@list-name)]">
-      <xsl:value-of select="$empty"/>import com.site.dal.xml.annotation.XmlElements;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import org.unidal.dal.xml.annotation.XmlElements;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:if test="element[@value='true']">
-      <xsl:value-of select="$empty"/>import com.site.dal.xml.annotation.XmlValue;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import org.unidal.dal.xml.annotation.XmlValue;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:if test="@has-dynamic-attributes='true'">
-      <xsl:value-of select="$empty"/>import com.site.dal.xml.dynamic.DynamicAttributes;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import org.unidal.dal.xml.dynamic.DynamicAttributes;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:value-of select="$empty-line"/>
 </xsl:template>

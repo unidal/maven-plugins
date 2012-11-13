@@ -1,4 +1,4 @@
-<root do-package="com.site.app.game.xml">
+<root do-package="org.unidal.app.game.xml">
    <element name="game" root="true">
       <element name="script" value-type="String"/>
       <element name="time" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>

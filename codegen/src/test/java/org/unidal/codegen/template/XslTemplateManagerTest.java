@@ -4,25 +4,21 @@ import java.net.URL;
 
 import javax.xml.transform.Templates;
 
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.unidal.lookup.ComponentTestCase;
 
-import org.unidal.codegen.template.XslTemplateManager;
-import com.site.lookup.ComponentTestCase;
-
-@RunWith(JUnit4.class)
 public class XslTemplateManagerTest extends ComponentTestCase {
    private void checkTemplate(String resource) throws Exception {
       XslTemplateManager manager = lookup(XslTemplateManager.class);
       URL url = getClass().getResource(resource);
 
-      assertNotNull("Resource " + resource + " is not found.", url);
+      Assert.assertNotNull("Resource " + resource + " is not found.", url);
 
       Templates templates = manager.getTemplates(url);
 
-      assertNotNull(templates);
-      assertNotNull(templates.newTransformer());
+      Assert.assertNotNull(templates);
+      Assert.assertNotNull(templates.newTransformer());
    }
 
    @Test

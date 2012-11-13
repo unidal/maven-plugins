@@ -17,7 +17,7 @@
 <xsl:template match="page">
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;
 
-public enum <xsl:value-of select="@action-class"/> implements com.site.web.mvc.Action {
+public enum <xsl:value-of select="@action-class"/> implements org.unidal.web.mvc.Action {
 	VIEW("view");
 
 	private String m_name;

@@ -19,9 +19,9 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 public class <xsl:value-of select="$class"/> extends AbstractResourceConfigurator {
    @Override

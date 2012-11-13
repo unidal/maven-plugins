@@ -2,14 +2,10 @@ package org.unidal.codegen.generator.xml;
 
 import java.io.File;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.Generator;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
-@RunWith(JUnit4.class)
 public abstract class XmlGenerateTestSupport extends ComponentTestCase {
    protected void generate(GenerateContext ctx) throws Exception {
       Generator g = lookup(Generator.class, "dal-xml");
@@ -26,7 +22,7 @@ public abstract class XmlGenerateTestSupport extends ComponentTestCase {
 
    protected void generate(String manifestXml) throws Exception {
       Generator g = lookup(Generator.class, "dal-xml");
-      File manifest = getResourceFile(manifestXml);
+      File manifest = new File(getClass().getResource(manifestXml).getFile());
       GenerateContext ctx = new XmlGenerateContext(getProjectBaseDir(), manifest, isVerbose(), isDebug());
       long start = System.currentTimeMillis();
 

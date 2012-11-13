@@ -1,17 +1,14 @@
 package org.unidal.codegen.manifest;
 
+import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.unidal.lookup.ComponentTestCase;
 
-import com.site.lookup.ComponentTestCase;
-
-@RunWith(JUnit4.class)
 public class ManifestCreatorTest extends ComponentTestCase {
    @Test
    public void testCreate() throws Exception {
       ManifestCreator creator = lookup(ManifestCreator.class);
       
-      assertNotNull(creator.create("123", "456"));
+      Assert.assertNotNull(creator.create("123", "456"));
    }
 }

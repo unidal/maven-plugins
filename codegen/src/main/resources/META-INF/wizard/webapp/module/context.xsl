@@ -30,10 +30,10 @@ import org.unidal.webres.resource.spi.IResourceRegistry;
 import org.unidal.webres.tag.resource.ResourceTagConfigurator;
 import org.unidal.webres.taglib.basic.ResourceTagLibConfigurator;<xsl:value-of select="$empty-line"/>
 </xsl:if>
-import com.site.web.mvc.Action;
-import com.site.web.mvc.ActionContext;
-import com.site.web.mvc.ActionPayload;
-import com.site.web.mvc.Page;
+import org.unidal.web.mvc.Action;
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.ActionPayload;
+import org.unidal.web.mvc.Page;
 <xsl:variable name="type">
 	<xsl:value-of select="'T extends ActionPayload'"/>
 	<xsl:call-template name="generic-type">

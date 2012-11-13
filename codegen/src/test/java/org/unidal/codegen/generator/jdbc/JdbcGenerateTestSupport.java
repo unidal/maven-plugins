@@ -2,14 +2,10 @@ package org.unidal.codegen.generator.jdbc;
 
 import java.io.File;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.Generator;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
-@RunWith(JUnit4.class)
 public abstract class JdbcGenerateTestSupport extends ComponentTestCase {
    protected void generate(GenerateContext ctx) throws Exception {
       Generator g = lookup(Generator.class, "dal-jdbc");
@@ -26,7 +22,7 @@ public abstract class JdbcGenerateTestSupport extends ComponentTestCase {
 
    protected void generate(String manifestXml) throws Exception {
       Generator g = lookup(Generator.class, "dal-jdbc");
-      File manifest = getResourceFile(manifestXml);
+      File manifest = new File(getClass().getResource(manifestXml).getFile());
       GenerateContext ctx = new JdbcGenerateContext(getProjectBaseDir(), manifest, isVerbose(), isDebug());
       long start = System.currentTimeMillis();
 

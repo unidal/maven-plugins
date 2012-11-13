@@ -34,21 +34,21 @@
       <xsl:value-of select='$empty'/>import java.util.List;<xsl:value-of select='$empty-line'/>
       <xsl:value-of select='$empty-line'/>
    </xsl:if>
-   <xsl:value-of select='$empty'/>import com.site.dal.jdbc.BizObjectHelper;<xsl:value-of select='$empty-line'/>
+   <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.BizObjectHelper;<xsl:value-of select='$empty-line'/>
    <xsl:if test="query-defs/query[@type = 'INSERT' or @type = 'UPDATE' or @type = 'SELECT' and not(@multiple = 'true')]">
-      <xsl:value-of select='$empty'/>import com.site.dal.jdbc.DalException;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.DalException;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:if test="query-defs/query[@paged='true'] or query-defs/query[@type = 'SELECT']/param[@in = 'true' and @out = 'true']">
-      <xsl:value-of select='$empty'/>import com.site.dal.DalRuntimeException;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.DalRuntimeException;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:if test="query-defs/query[@type = 'SELECT']/param[@out = 'true']">
-      <xsl:value-of select='$empty'/>import com.site.dal.jdbc.Ref;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.Ref;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:if test="query-defs/query[@type = 'SELECT']">
-      <xsl:value-of select='$empty'/>import com.site.dal.jdbc.Readset;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.Readset;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:if test="query-defs/query[@type = 'UPDATE']">
-      <xsl:value-of select='$empty'/>import com.site.dal.jdbc.Updateset;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.Updateset;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:if test="@bo-package!=@do-package">
       <xsl:value-of select='$empty'/>import <xsl:value-of select="@do-package"/>.<xsl:value-of select="@dao-class"/>;<xsl:value-of select='$empty-line'/>

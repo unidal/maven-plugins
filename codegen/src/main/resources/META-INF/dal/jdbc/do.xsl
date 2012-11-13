@@ -35,7 +35,7 @@
       <xsl:value-of select="$empty"/>import static <xsl:value-of select="$entity/@do-package"/>.<xsl:value-of select="$entity/@entity-class"/>.<xsl:value-of select='@upper-name'/>;<xsl:value-of select="$empty-line"/>
    </xsl:for-each>
    <xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="$empty"/>import com.site.dal.jdbc.DataObject;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.DataObject;<xsl:value-of select="$empty-line"/>
    <xsl:for-each select="relation">
       <xsl:sort select="@name"/>
       

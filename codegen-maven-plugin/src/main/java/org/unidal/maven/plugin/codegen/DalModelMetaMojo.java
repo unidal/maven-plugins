@@ -16,7 +16,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 import org.unidal.codegen.meta.ModelMeta;
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 import org.unidal.maven.plugin.common.PropertyProviders;
 
 /**

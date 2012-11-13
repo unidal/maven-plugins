@@ -9,7 +9,7 @@ import org.unidal.codegen.manifest.Manifest;
 import org.unidal.codegen.manifest.ManifestParser;
 import org.unidal.codegen.transformer.XslTransformer;
 
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class XslGenerator implements Generator {
    @Inject

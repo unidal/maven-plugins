@@ -3,10 +3,7 @@ package org.unidal.codegen.generator.ibatis;
 import java.io.File;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
-@RunWith(JUnit4.class)
 public class IbatisGeneratorTest extends IbatisGenerateTestSupport {
    @Override
    protected File getProjectBaseDir() {

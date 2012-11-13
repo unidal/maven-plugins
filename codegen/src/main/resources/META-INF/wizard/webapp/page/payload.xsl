@@ -18,9 +18,9 @@
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;
 
 import <xsl:value-of select="../@package"></xsl:value-of>.<xsl:value-of select="../@page-class"/>;
-import com.site.web.mvc.ActionContext;
-import com.site.web.mvc.ActionPayload;
-import com.site.web.mvc.payload.annotation.FieldMeta;
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.ActionPayload;
+import org.unidal.web.mvc.payload.annotation.FieldMeta;
 <xsl:variable name="type">
 	<xsl:value-of select="../@page-class"/>
 	<xsl:value-of select="', '"/>

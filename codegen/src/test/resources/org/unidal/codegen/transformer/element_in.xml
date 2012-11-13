@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<root do-package="com.site.app.game.xml">
+<root do-package="org.unidal.app.game.xml">
 	<element name="game" root="true" root-name="game">
 		<element name="id" value-type="int"/>
 		<element name="enabled" value-type="boolean"/>

@@ -27,9 +27,9 @@
 </xsl:template>
 
 <xsl:template name="import-list">
-   <xsl:value-of select='$empty'/>import com.site.dal.jdbc.BizObject;<xsl:value-of select='$empty-line'/>
+   <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.BizObject;<xsl:value-of select='$empty-line'/>
    <xsl:if test="relation">
-      <xsl:value-of select='$empty'/>import com.site.dal.jdbc.BizObjectHelper;<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>import org.unidal.dal.jdbc.BizObjectHelper;<xsl:value-of select='$empty-line'/>
    </xsl:if>
    <xsl:if test="@bo-package != @do-package">
       <xsl:value-of select="$empty"/>import <xsl:value-of select="@do-package"/>.<xsl:value-of select="@do-class"/>;<xsl:value-of select="$empty-line"/>

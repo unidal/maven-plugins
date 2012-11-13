@@ -24,7 +24,7 @@ import <xsl:value-of select="$package"/>.entity.<xsl:value-of select="$entity/@e
 <xsl:if test="/model/@enable-json-builder='true'">import <xsl:value-of select="$package"/>.transform.DefaultJsonBuilder;</xsl:if>
 import <xsl:value-of select="$package"/>.transform.DefaultDomParser;
 import <xsl:value-of select="$package"/>.transform.DefaultXmlBuilder;
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public class <xsl:value-of select="$class"/> {
    @Test
