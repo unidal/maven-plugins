@@ -16,7 +16,7 @@ import org.unidal.webres.tag.meta.TagLibMeta;
 
 /**
  * Tag library generation plugin for definition class derived from
- * com.ebay.webres.tag.core.BaseTagLibDefinition.
+ * org.unidal.webres.tag.core.BaseTagLibDefinition.
  * 
  * @goal taglib
  * @phase process-classes
