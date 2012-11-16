@@ -57,7 +57,7 @@ public class TestServer extends JettyServer {
    }
 
    @Test
-   public void showReport() throws Exception {
+   public void startWebapp() throws Exception {
       // open the page in the default browser
       display("/<xsl:value-of select="@name"/>/<xsl:value-of select="module[@default='true']/@path"/>");
       waitForAnyKey();
