@@ -274,7 +274,7 @@ public class JdbcMojo extends AbstractMojo {
    protected File getFile(String path) {
       File file;
 
-      if (path.startsWith("/") || path.indexOf(':') > 0) {
+      if (path.startsWith("/") || path.indexOf(':') == 1) {
          file = new File(path);
       } else {
          file = new File(baseDir, path);
@@ -300,14 +300,14 @@ public class JdbcMojo extends AbstractMojo {
       PomFileBuilder b = new PomFileBuilder();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
-      if (!b.checkDependency(dependencies, "org.unidal.dal", "dal-jdbc", "1.1.9", null)) {
+      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "2.0.0", null)) {
          b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.20", "runtime");
       }
 
       if (jdbc != null) {
          Element build = b.findOrCreateChild(root, "build", null, "dependencies");
          Element plugins = b.findOrCreateChild(build, "plugins");
-         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "1.2.4");
+         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.0");
          Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc model");
          Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
          StringBuilder manifest = new StringBuilder();
@@ -533,8 +533,8 @@ public class JdbcMojo extends AbstractMojo {
                return jdbc.getName();
             }
          });
-         String name = PropertyProviders.fromConsole().forString("datasource", "Select datasource name below or input a new one:", names,
-               null, null);
+         String name = PropertyProviders.fromConsole().forString("datasource", "Select datasource name below or input a new one:",
+               names, null, null);
          Jdbc jdbc = wizard.findJdbc(name);
 
          if (jdbc == null) {
