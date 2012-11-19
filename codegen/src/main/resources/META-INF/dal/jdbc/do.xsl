@@ -67,6 +67,7 @@
       <xsl:variable name="member" select="$entity/member[@key='true'][@name=$name]"/>
       <xsl:value-of select="'      '"/><xsl:value-of select='@field-name'/> = <xsl:value-of select='$member/@field-name'/>;<xsl:value-of select="$empty-line"/>
    </xsl:for-each>
+   <xsl:value-of select="$empty"/>      super.clearUsage();
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
 </xsl:template>

@@ -101,7 +101,7 @@
 
 <xsl:template name="query-methods-find-multiple">
    <xsl:variable name="entity" select="."/>
-   <xsl:for-each select="query-defs/query[@type = 'SELECT' and @multiple = 'true']">
+   <xsl:for-each select="query-defs/query[@type = 'SELECT' and @multiple = 'true'][not(@enabled='false')]">
    public List<xsl:call-template name="tag-start"/><xsl:value-of select='$entity/@do-class'/><xsl:call-template name="tag-end"/><xsl:value-of select="$space"/><xsl:value-of select='@name'/>(<xsl:value-of select='$empty'/>
       <xsl:for-each select="param">
          <xsl:value-of select='$empty'/><xsl:value-of select="@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> 
@@ -145,7 +145,7 @@
 
 <xsl:template name="query-methods-find-single">
    <xsl:variable name="entity" select="."/>
-   <xsl:for-each select="query-defs/query[@type = 'SELECT' and not(@multiple = 'true')]">
+   <xsl:for-each select="query-defs/query[@type = 'SELECT' and not(@multiple = 'true')][not(@enabled='false')]">
    public <xsl:value-of select='$entity/@do-class'/><xsl:value-of select="$space"/><xsl:value-of select='@name'/>(<xsl:value-of select='$empty'/>
       <xsl:for-each select="param">
          <xsl:value-of select='$empty'/><xsl:value-of select="@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> 
@@ -191,14 +191,14 @@
 
 <xsl:template name="query-methods-insert">
    <xsl:variable name="entity" select="."/>
-   <xsl:for-each select="query-defs/query[@type = 'INSERT' and @batch = 'true']">
+   <xsl:for-each select="query-defs/query[@type = 'INSERT' and @batch = 'true'][not(@enabled='false')]">
    public int[] <xsl:value-of select="@name"/>(<xsl:value-of select='$entity/@do-class'/>[] protos) throws DalException {
       return getQueryEngine().insertBatch(
             <xsl:value-of select='$entity/@entity-class'/>.<xsl:value-of select="@upper-name"/>,
             protos);
    }
    </xsl:for-each>
-   <xsl:for-each select="query-defs/query[@type = 'INSERT']">
+   <xsl:for-each select="query-defs/query[@type = 'INSERT'][not(@enabled='false')]">
    public int <xsl:value-of select="@name"/>(<xsl:value-of select='$entity/@do-class'/> proto) throws DalException {
       return getQueryEngine().insertSingle(
             <xsl:value-of select='$entity/@entity-class'/>.<xsl:value-of select="@upper-name"/>,
@@ -209,7 +209,7 @@
 
 <xsl:template name="query-methods-update">
    <xsl:variable name="entity" select="."/>
-   <xsl:for-each select="query-defs/query[@type = 'UPDATE' and @batch = 'true']">
+   <xsl:for-each select="query-defs/query[@type = 'UPDATE' and @batch = 'true'][not(@enabled='false')]">
    public int[] <xsl:value-of select="@name"/>(<xsl:value-of select='$entity/@do-class'/>[] protos, Updateset<xsl:value-of select="$generic-do-class" disable-output-escaping="yes"/> updateset) throws DalException {
       return getQueryEngine().updateBatch(
             <xsl:value-of select='$entity/@entity-class'/>.<xsl:value-of select="@upper-name"/>,
@@ -217,7 +217,7 @@
             updateset);
    }
    </xsl:for-each>
-   <xsl:for-each select="query-defs/query[@type = 'UPDATE']">
+   <xsl:for-each select="query-defs/query[@type = 'UPDATE'][not(@enabled='false')]">
    public int <xsl:value-of select="@name"/>(<xsl:value-of select='$entity/@do-class'/> proto, Updateset<xsl:value-of select="$generic-do-class" disable-output-escaping="yes"/> updateset) throws DalException {
       return getQueryEngine().updateSingle(
             <xsl:value-of select='$entity/@entity-class'/>.<xsl:value-of select="@upper-name"/>,
@@ -229,14 +229,14 @@
 
 <xsl:template name="query-methods-delete">
    <xsl:variable name="entity" select="."/>
-   <xsl:for-each select="query-defs/query[@type = 'DELETE' and @batch = 'true']">
+   <xsl:for-each select="query-defs/query[@type = 'DELETE' and @batch = 'true'][not(@enabled='false')]">
    public int[] <xsl:value-of select="@name"/>(<xsl:value-of select='$entity/@do-class'/>[] protos) throws DalException {
       return getQueryEngine().deleteBatch(
             <xsl:value-of select='$entity/@entity-class'/>.<xsl:value-of select="@upper-name"/>,
             protos);
    }
    </xsl:for-each>
-   <xsl:for-each select="query-defs/query[@type = 'DELETE']">
+   <xsl:for-each select="query-defs/query[@type = 'DELETE'][not(@enabled='false')]">
    public int <xsl:value-of select="@name"/>(<xsl:value-of select='$entity/@do-class'/> proto) throws DalException {
       return getQueryEngine().deleteSingle(
             <xsl:value-of select='$entity/@entity-class'/>.<xsl:value-of select="@upper-name"/>,

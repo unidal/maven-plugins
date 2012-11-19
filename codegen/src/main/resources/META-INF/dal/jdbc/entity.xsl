@@ -4,7 +4,7 @@
 <xsl:output method="html" indent="no" media-type="text/plain" encoding="utf-8"/>
 <xsl:param name="name"/>
 <xsl:variable name="space" select="' '"/>
-<xsl:variable name="$empty" select="''"/>
+<xsl:variable name="empty" select="''"/>
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
 <xsl:variable name="generic-do-class">
    <xsl:call-template name="generic-type">

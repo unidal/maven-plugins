@@ -107,8 +107,7 @@ public class DefaultTableMeta implements TableMeta {
       }
    }
 
-   private void addMembers(Element entity, DatabaseMetaData meta, String table, List<String> keyMembers)
-         throws SQLException {
+   private void addMembers(Element entity, DatabaseMetaData meta, String table, List<String> keyMembers) throws SQLException {
       ResultSet rs = meta.getColumns(null, null, table, null);
 
       while (rs.next()) {
@@ -144,7 +143,8 @@ public class DefaultTableMeta implements TableMeta {
       StringBuilder sb = new StringBuilder();
 
       sb.append("DELETE FROM <TABLE/>");
-      sb.append(getQueryKeyClause(keyMembers));
+      sb.append("\r\n").append(tab(4));
+      sb.append(getQueryKeyClause(keyMembers).trim());
       statement.addContent(new CDATA(sb.toString()));
    }
 
@@ -162,9 +162,22 @@ public class DefaultTableMeta implements TableMeta {
 
       StringBuilder sb = new StringBuilder();
 
-      sb.append("SELECT <FIELDS/> FROM <TABLE/>");
-      sb.append(getQueryKeyClause(keyMembers));
+      sb.append("SELECT <FIELDS/>");
+      sb.append("\r\n").append(tab(4));
+      sb.append("FROM <TABLE/>");
+      sb.append("\r\n").append(tab(4));
+      sb.append(getQueryKeyClause(keyMembers).trim());
       statement.addContent(new CDATA(sb.toString()));
+   }
+
+   private String tab(int count) {
+      StringBuilder sb = new StringBuilder(2 * count);
+
+      for (int i = 0; i < count; i++) {
+         sb.append("  ");
+      }
+
+      return sb.toString();
    }
 
    private void addQueryInsert(Element queryDefs, List<String> keyMembers) {
@@ -179,7 +192,9 @@ public class DefaultTableMeta implements TableMeta {
 
       StringBuilder sb = new StringBuilder();
 
-      sb.append("INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)");
+      sb.append("INSERT INTO <TABLE/>(<FIELDS/>)");
+      sb.append("\r\n").append(tab(4));
+      sb.append("VALUES(<VALUES/>)");
       statement.addContent(new CDATA(sb.toString()));
    }
 
@@ -206,8 +221,11 @@ public class DefaultTableMeta implements TableMeta {
 
       StringBuilder sb = new StringBuilder();
 
-      sb.append("UPDATE <TABLE/> SET <FIELDS/>");
-      sb.append(getQueryKeyClause(keyMembers));
+      sb.append("UPDATE <TABLE/>");
+      sb.append("\r\n").append(tab(4));
+      sb.append("SET <FIELDS/>");
+      sb.append("\r\n").append(tab(4));
+      sb.append(getQueryKeyClause(keyMembers).trim());
       statement.addContent(new CDATA(sb.toString()));
    }
 

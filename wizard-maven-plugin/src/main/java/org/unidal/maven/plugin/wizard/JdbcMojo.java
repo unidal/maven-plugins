@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -236,6 +237,13 @@ public class JdbcMojo extends AbstractMojo {
       String groupName = group.getName();
       List<Table> tables = group.getTables();
       Element entities = new Element("entities");
+
+      Collections.sort(tables, new Comparator<Table>() {
+         @Override
+         public int compare(Table t1, Table t2) {
+            return t1.getName().compareTo(t2.getName());
+         }
+      });
 
       for (Table table : tables) {
          Element entity = m_tableMeta.getTableMeta(m_conn.getMetaData(), table.getName());

@@ -369,6 +369,8 @@
 
 <xsl:template match="query">
 	<xsl:copy>
+		<xsl:copy-of select="@*"/>
+
 		<!-- variable definition -->
 		<xsl:variable name="name">
 			<xsl:call-template name="normalize">
@@ -390,8 +392,6 @@
 				<xsl:with-param name="name" select="@type"/>
 			</xsl:call-template>
 		</xsl:attribute>
-
-		<xsl:copy-of select="@multiple | @sp | @batch"/>
 
 		<xsl:apply-templates/>
 	</xsl:copy>
