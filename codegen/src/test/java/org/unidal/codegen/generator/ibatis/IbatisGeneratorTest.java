@@ -17,7 +17,7 @@ public class IbatisGeneratorTest extends IbatisGenerateTestSupport {
 
    @Override
    protected boolean isVerbose() {
-      return true;
+      return false;
    }
 
    @Test

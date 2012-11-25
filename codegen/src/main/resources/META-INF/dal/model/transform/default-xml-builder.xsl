@@ -86,6 +86,7 @@
 
    public String buildXml(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
       m_sb.setLength(0);
+      m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>?xml version=\"1.0\" encoding=\"utf-8\"?<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
       entity.accept(this);
       return m_sb.toString();
    }
@@ -320,7 +321,7 @@
                <xsl:value-of select="$empty"/>         startTag(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
             </xsl:if>
-            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$suffix"/>) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$suffix"/>.toArray(new <xsl:value-of select="@value-type-element" disable-output-escaping="yes"/>[0])) {<xsl:value-of select="$empty-line"/>
             <xsl:choose>
                <xsl:when test="@value-type-element='String'">
                   <xsl:value-of select="$empty"/>            tagWithText(<xsl:value-of select="@upper-name-element"/>, <xsl:value-of select="@local-name-element"/>);<xsl:value-of select="$empty-line"/>
@@ -365,7 +366,7 @@
                <xsl:value-of select="$empty"/>         startTag(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
             </xsl:if>
-            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$suffix"/>) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$suffix"/>.toArray(new <xsl:value-of select="$entity/@entity-class"/>[0])) {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="$entity/@visit-method"/>(<xsl:value-of select="@local-name-element"/>);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
             <xsl:if test="@xml-indent='true'">

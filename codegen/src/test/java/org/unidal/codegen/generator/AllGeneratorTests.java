@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.unidal.codegen.generator.ibatis.IbatisGeneratorTest;
 import org.unidal.codegen.generator.jdbc.JdbcGeneratorTest;
+import org.unidal.codegen.generator.jdbc.phoenix.PhoenixJdbcGeneratorTest;
 import org.unidal.codegen.generator.model.all.AllGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatConsumerGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatCoreGeneratorTest;
@@ -38,6 +39,8 @@ WizardModelGeneratorTest.class,
 WizardGeneratorTest.class,
 
 JdbcGeneratorTest.class,
+
+PhoenixJdbcGeneratorTest.class,
 
 IbatisGeneratorTest.class,
 

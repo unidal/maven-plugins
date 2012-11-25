@@ -6,7 +6,7 @@
 		<member name="creation-date" field="creation_date" value-type="java.util.Date" nullable="false" field-name="m_creationDate" param-name="creationDate" upper-name="CREATION_DATE" get-method="getCreationDate" set-method="setCreationDate" all="true"/>
 		<member name="last-modified-date" field="last_modified_date" value-type="java.util.Date" nullable="false" field-name="m_lastModifiedDate" param-name="lastModifiedDate" upper-name="LAST_MODIFIED_DATE" get-method="getLastModifiedDate" set-method="setLastModifiedDate" all="true"/>
 		<query-defs>
-			<query name="findByUserName" upper-name="FIND_BY_USER_NAME" type="SELECT">
+			<query name="findByUserName" type="SELECT" upper-name="FIND_BY_USER_NAME">
 				<param name="user-name" value-type="String" get-method="getUserName" set-method="setUserName" param-name="userName" upper-name="USER_NAME" in="true" out="false"/>
 				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='user-name'/> = ${user-name}]]></statement>
 			</query>

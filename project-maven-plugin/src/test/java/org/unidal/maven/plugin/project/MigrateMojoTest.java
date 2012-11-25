@@ -9,14 +9,14 @@ import junit.framework.Assert;
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.unidal.maven.plugin.common.Injector;
-
 import org.unidal.lookup.ComponentTestCase;
+import org.unidal.maven.plugin.common.Injector;
 
 @RunWith(JUnit4.class)
 public class MigrateMojoTest extends ComponentTestCase {
@@ -55,6 +55,7 @@ public class MigrateMojoTest extends ComponentTestCase {
    }
 
    @Test
+   @Ignore
    public void testMigrate() throws Exception {
       MigrateMojo mojo = new MigrateMojo();
 

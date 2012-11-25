@@ -4,6 +4,7 @@
 		<relation name="home-address" entity-name="user-address" entity-alias="hua" join="u.user_id=hua.user_id and hua.type='H'" />
 		<relation name="office-address" entity-name="user-address" entity-alias="oua" join="u.user_id=oua.user_id and oua.type='O'" />
 		<relation name="billing-address" entity-name="user-address" entity-alias="bua" join="u.user_id=bua.user_id and bua.type='B'" />
+		<relation name="addresses" multiple="true" entity-name="user-address" entity-alias="a" join="u.user_id=a.user_id and a.type='B'" />
 		<member name="user-id" field="user_id" value-type="int" length="11" nullable="false" key="true" />
 		<member name="full-name" alias="user-name" field="full_name" value-type="String" length="30" nullable="false" />
 		<member name="creation-date" field="creation_date" value-type="Date" nullable="false" />

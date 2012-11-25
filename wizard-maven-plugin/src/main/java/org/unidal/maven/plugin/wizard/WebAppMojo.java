@@ -218,7 +218,7 @@ public class WebAppMojo extends AbstractMojo {
       }
 
       // dependencies
-      if (!b.checkDependency(dependencies, "org.unidal.common", "web-framework", "1.0.20", null)) {
+      if (!b.checkDependency(dependencies, "org.unidal.framework", "web-framework", "2.0.0", null)) {
          if (webapp.isJstl()) {
             b.checkDependency(dependencies, "javax.servlet", "jstl", "1.2", null);
          }
@@ -229,7 +229,7 @@ public class WebAppMojo extends AbstractMojo {
 
          b.checkDependency(dependencies, "javax.servlet", "servlet-api", "2.5", "provided");
          b.checkDependency(dependencies, "junit", "junit", "4.8.1", "test");
-         b.checkDependency(dependencies, "org.unidal.common", "test-framework", "1.0.3", "test");
+         b.checkDependency(dependencies, "org.unidal.framework", "test-framework", "2.0.0", "test");
          b.checkDependency(dependencies, "org.mortbay.jetty", "jetty", "6.1.14", "test");
          b.checkDependency(dependencies, "org.mortbay.jetty", "jsp-2.1", "6.1.14", "test");
       }

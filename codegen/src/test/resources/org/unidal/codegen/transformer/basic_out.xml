@@ -14,18 +14,18 @@
       <updateset name="FULL" all="true" upper-name="FULL"/>
     </updatesets>
     <query-defs>
-      <query name="findByPK" upper-name="FIND_BY_PK" type="SELECT">
+      <query name="findByPK" type="SELECT" upper-name="FIND_BY_PK">
         <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
         <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='user-id'/> = ${key-user-id}]]></statement>
       </query>
-      <query name="insert" upper-name="INSERT" type="INSERT">
+      <query name="insert" type="INSERT" upper-name="INSERT">
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
       </query>
-      <query name="updateByPK" upper-name="UPDATE_BY_PK" type="UPDATE">
+      <query name="updateByPK" type="UPDATE" upper-name="UPDATE_BY_PK">
         <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
         <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='user-id'/> = ${key-user-id}]]></statement>
       </query>
-      <query name="deleteByPK" upper-name="DELETE_BY_PK" type="DELETE">
+      <query name="deleteByPK" type="DELETE" upper-name="DELETE_BY_PK">
         <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
         <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='user-id'/> = ${key-user-id}]]></statement>
       </query>
@@ -45,20 +45,20 @@
       <updateset name="FULL" all="true" upper-name="FULL"/>
     </updatesets>
     <query-defs>
-      <query name="findByPK" upper-name="FIND_BY_PK" type="SELECT">
+      <query name="findByPK" type="SELECT" upper-name="FIND_BY_PK">
         <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
         <param name="key-type" value-type="String" get-method="getKeyType" set-method="setKeyType" param-name="keyType" upper-name="KEY_TYPE" in="true" out="false"/>
         <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='user-id'/> = ${key-user-id} AND <FIELD name='type'/> = ${key-type}]]></statement>
       </query>
-      <query name="insert" upper-name="INSERT" type="INSERT">
+      <query name="insert" type="INSERT" upper-name="INSERT">
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
       </query>
-      <query name="updateByPK" upper-name="UPDATE_BY_PK" type="UPDATE">
+      <query name="updateByPK" type="UPDATE" upper-name="UPDATE_BY_PK">
         <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
         <param name="key-type" value-type="String" get-method="getKeyType" set-method="setKeyType" param-name="keyType" upper-name="KEY_TYPE" in="true" out="false"/>
         <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='user-id'/> = ${key-user-id} AND <FIELD name='type'/> = ${key-type}]]></statement>
       </query>
-      <query name="deleteByPK" upper-name="DELETE_BY_PK" type="DELETE">
+      <query name="deleteByPK" type="DELETE" upper-name="DELETE_BY_PK">
         <param name="key-user-id" value-type="int" get-method="getKeyUserId" set-method="setKeyUserId" param-name="keyUserId" upper-name="KEY_USER_ID" in="true" out="false"/>
         <param name="key-type" value-type="String" get-method="getKeyType" set-method="setKeyType" param-name="keyType" upper-name="KEY_TYPE" in="true" out="false"/>
         <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='user-id'/> = ${key-user-id} AND <FIELD name='type'/> = ${key-type}]]></statement>

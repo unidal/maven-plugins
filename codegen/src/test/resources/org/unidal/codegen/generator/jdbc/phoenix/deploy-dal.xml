@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dianping.phoenix.console.dal.deploy" gen="true" >
+  <entity name="version" table="version" alias="v">
+    <member name="release-notes" field="release_notes" value-type="String" length="200" nullable="false" />
+    <member name="status" field="status" value-type="int" length="10" nullable="false" />
+    <member name="created-by" field="created_by" value-type="String" length="64" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+    <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" insert-expr="NOW()" update-expr="NOW()" />
+    <query-defs>
+      <query name="find-by-domain-version" type="SELECT">
+        <param name="domain" />
+        <param name="version" />
+        <statement><![CDATA[
+        SELECT <FIELDS/> 
+        FROM <TABLE/> 
+        WHERE <FIELD name='domain'/> = ${domain}
+        	AND <FIELD name='version'/> = ${version}
+        	AND <FIELD name='status'/> = 0
+        ]]></statement>
+      </query>
+      <query name="find-all-active" type="SELECT" multiple="true">
+        <param name="domain" />
+        <statement><![CDATA[
+        SELECT <FIELDS/> 
+        FROM <TABLE/> 
+        WHERE <FIELD name='domain'/> = ${domain}
+        	AND <FIELD name='status'/> = 0
+        ]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE" enabled="false"/>
+    </query-defs>
+  </entity>
+  <entity name="deployment" table="deployment" alias="d">
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+    <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" insert-expr="NOW()" update-expr="NOW()" />
+    <relation name="details-list" multiple="true" entity-name="deployment-details" entity-alias="dd" join="d.id = dd.deployment_id"/>
+    <relation name="log-list" multiple="true" entity-name="deployment-log" entity-alias="dl" join="d.id = dl.deployment_id"/>
+  </entity>
+  <entity name="deployment-details" table="deployment_details" alias="dd">
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+    <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" insert-expr="NOW()" update-expr="NOW()" />
+    <query-defs>
+      <query name="insert" type="INSERT" batch="true"/>
+      <query name="delete-by-PK" type="DELETE" enabled="false"/>
+    </query-defs>    
+  </entity>
+  <entity name="deployment-log" table="deployment_log" alias="dl">
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+    <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" insert-expr="NOW()" update-expr="NOW()" />
+  </entity>
+</entities>
+

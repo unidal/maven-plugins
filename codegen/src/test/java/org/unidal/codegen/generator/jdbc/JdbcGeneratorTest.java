@@ -7,7 +7,7 @@ import org.junit.Test;
 public class JdbcGeneratorTest extends JdbcGenerateTestSupport {
    @Override
    protected File getProjectBaseDir() {
-      return new File("target/generated-java-jdbc");
+      return new File("target/generated-jdbc");
    }
 
    @Override

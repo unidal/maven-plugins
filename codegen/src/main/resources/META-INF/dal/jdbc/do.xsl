@@ -29,11 +29,16 @@
 
 <xsl:template name="import-list">
    <xsl:variable name="entity" select="."/>
-   <xsl:for-each select="relation | member | var">
+   <xsl:for-each select="relation[not(@multiple='true')] | member | var">
       <xsl:sort select="@name"/>
       
       <xsl:value-of select="$empty"/>import static <xsl:value-of select="$entity/@do-package"/>.<xsl:value-of select="$entity/@entity-class"/>.<xsl:value-of select='@upper-name'/>;<xsl:value-of select="$empty-line"/>
    </xsl:for-each>
+   <xsl:if test="relation[@multiple='true']">
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import java.util.ArrayList;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import java.util.List;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
    <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import org.unidal.dal.jdbc.DataObject;<xsl:value-of select="$empty-line"/>
    <xsl:for-each select="relation">
@@ -52,8 +57,16 @@
 
 <xsl:template name="declare-field-variables">
    <xsl:for-each select="relation | member | var">
-      <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type'/><xsl:value-of select="$space"/>
-      <xsl:value-of select='@field-name'/>;<xsl:value-of select="$empty-line"/>
+      <xsl:choose>
+         <xsl:when test="name()='relation' and @multiple='true'">
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/>
+            <xsl:value-of select='@field-name'/> = new Array<xsl:value-of select='@value-type' disable-output-escaping="yes"/>();<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/>
+            <xsl:value-of select='@field-name'/>;<xsl:value-of select="$empty-line"/>
+         </xsl:otherwise>
+      </xsl:choose>
       <xsl:value-of select="$empty-line"/>
    </xsl:for-each>
 </xsl:template>
@@ -76,7 +89,7 @@
    <xsl:for-each select="relation | member | var">
       <xsl:sort select="@name"/>
       
-      <xsl:value-of select="$empty"/>   public <xsl:value-of select="@value-type"/><xsl:value-of select="$space"/><xsl:value-of select='@get-method'/>() {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public <xsl:value-of select="@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@get-method'/>() {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      return <xsl:value-of select='@field-name'/>;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
@@ -85,10 +98,10 @@
 
 <xsl:template name="method-set-fields">
    <xsl:variable name="entity" select="."/>
-   <xsl:for-each select="relation | member | var">
+   <xsl:for-each select="relation[not(@multiple='true')] | member | var">
       <xsl:sort select="@name"/>
       
-      <xsl:value-of select="$empty"/>   public void <xsl:value-of select='@set-method'/>(<xsl:value-of select='@value-type'/><xsl:value-of select="$space"/><xsl:value-of select='@param-name'/>) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public void <xsl:value-of select='@set-method'/>(<xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@param-name'/>) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      setFieldUsed(<xsl:value-of select='@upper-name'/>, true);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/><xsl:text>      </xsl:text><xsl:value-of select='@field-name'/> = <xsl:value-of select='@param-name'/>;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
