@@ -4,14 +4,15 @@
     <attribute name="package" value-type="String" />
     <entity-ref name="webapp" />
     <entity-ref name="jdbc" type="list" names="jdbcs" />
+    <entity-ref name="model" type="list" names="models" />
   </entity>
   <entity name="webapp">
     <attribute name="package" value-type="String" />
     <attribute name="name" value-type="String" />
     <attribute name="webres" value-type="boolean" />
     <attribute name="cat" value-type="boolean" />
+    <attribute name="plugin-management" value-type="boolean" />
     <attribute name="jstl" value-type="boolean" />
-    <attribute name="plugin-management" value-type="boolean"/>
     <entity-ref name="module" type="list" names="modules" />
   </entity>
   <entity name="module">
@@ -50,6 +51,11 @@
   </entity>
   <entity name="table">
     <attribute name="name" value-type="String" />
+  </entity>
+  <entity name="model">
+    <attribute name="package" value-type="String" />
+    <attribute name="name" value-type="String" />
+    <element name="sample-model" value-type="String" />
   </entity>
 </model>
 

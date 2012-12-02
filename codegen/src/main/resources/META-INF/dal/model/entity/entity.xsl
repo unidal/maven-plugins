@@ -552,7 +552,7 @@
 
 <xsl:template name="field-default-value">
 	<xsl:choose>
-      <xsl:when test="@value-type = 'String'">"<xsl:value-of select="@default-value"/>"</xsl:when>
+      <xsl:when test="@value-type = 'String'">"<xsl:value-of select="@default-value" disable-output-escaping="yes"/>"</xsl:when>
       <xsl:when test="@value-type = 'Time'"><xsl:value-of select="@default-value"/>L</xsl:when>
       <xsl:when test="@value-type = 'boolean'"><xsl:value-of select="@default-value"/></xsl:when>
       <xsl:when test="@value-type = 'Boolean'"><xsl:value-of select="@default-value"/></xsl:when>
@@ -570,8 +570,8 @@
       <xsl:when test="@value-type = 'Float'"><xsl:value-of select="@default-value"/>f</xsl:when>
       <xsl:when test="@value-type = 'double'"><xsl:value-of select="@default-value"/>d</xsl:when>
       <xsl:when test="@value-type = 'Double'"><xsl:value-of select="@default-value"/>d</xsl:when>
-      <xsl:when test="@value-type = 'java.util.Date'">toDate("<xsl:value-of select="@format"/>", "<xsl:value-of select="@default-value"/>")</xsl:when>
-      <xsl:otherwise><xsl:value-of select="@default-value"/></xsl:otherwise>
+      <xsl:when test="@value-type = 'java.util.Date'">toDate("<xsl:value-of select="@format" disable-output-escaping="yes"/>", "<xsl:value-of select="@default-value" disable-output-escaping="yes"/>")</xsl:when>
+      <xsl:otherwise><xsl:value-of select="@default-value" disable-output-escaping="yes"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
 

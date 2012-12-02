@@ -9,9 +9,13 @@ import org.junit.runners.Suite.SuiteClasses;
 
 ProjectTest.class,
 
+WizardModelTest.class,
+
 WebAppMojoTest.class,
 
 JdbcMojoTest.class,
+
+ModelMojoTest.class,
 
 CatConfigMojoTest.class
 

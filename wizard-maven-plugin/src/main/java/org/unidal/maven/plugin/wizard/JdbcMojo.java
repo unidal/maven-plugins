@@ -52,7 +52,7 @@ import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
 /**
- * DAL Metadata generator for JDBC
+ * Enable project to access database via java jdbc.
  * 
  * @goal jdbc
  * @author Frankie Wu
@@ -172,6 +172,7 @@ public class JdbcMojo extends AbstractMojo {
       wizard.accept(builder);
       m_conn = builder.getConnection();
       Files.forIO().writeTo(wizardFile, wizard.toString());
+      getLog().info("File " + wizardFile.getCanonicalPath() + " generated.");
       return new Pair<Wizard, Jdbc>(wizard, builder.getJdbc());
    }
 

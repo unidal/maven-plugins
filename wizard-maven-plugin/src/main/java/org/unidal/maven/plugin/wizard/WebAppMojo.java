@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
 import org.unidal.helper.Files;
 
 /**
- * Create a new page of web application project.
+ * Create web application project, modules and pages.
  * 
  * @goal webapp
  */
@@ -134,6 +134,7 @@ public class WebAppMojo extends AbstractMojo {
 
       wizard.accept(builder);
       Files.forIO().writeTo(wizardFile, wizard.toString());
+      getLog().info("File " + wizardFile.getCanonicalPath() + " generated.");
       return wizard;
    }
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <parent>
       <groupId>org.unidal.maven.plugins</groupId>
       <artifactId>default</artifactId>
@@ -36,17 +35,23 @@
             <version>2.0.0</version>
             <executions>
                <execution>
-                  <id>default-cli</id>
+                  <id>generate dal model files</id>
                   <phase>generate-sources</phase>
                   <goals>
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/wizard-manifest.xml</manifest>
+                     <manifest><![CDATA[
+                     ${basedir}/src/main/resources/META-INF/dal/model/wizard-manifest.xml,
+                     ]]></manifest>
                   </configuration>
                </execution>
             </executions>
          </plugin>
       </plugins>
    </build>
+   <properties>
+      <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+   </properties>
 </project>
+

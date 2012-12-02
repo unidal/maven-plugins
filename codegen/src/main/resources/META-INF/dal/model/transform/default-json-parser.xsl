@@ -583,6 +583,7 @@
                parser.onObjectEnd();
                flag = false;
                break;
+            case '\'':
             case '"':
                while (true) {
                   char ch2 = next();
@@ -610,6 +611,11 @@
 
                break;
             case ':':
+               if (sb.length() != 0) {
+                  parser.onName(sb.toString());
+                  sb.setLength(0);
+               }
+
                flag = true;
                break;
             case ',':

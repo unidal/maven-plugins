@@ -24,4 +24,7 @@
    <entity name="table">
       <attribute name="name" value-type="String" key="true"/>
    </entity>
+   <entity name="model">
+      <attribute name="name" value-type="String" key="true"/>
+   </entity>
 </model>

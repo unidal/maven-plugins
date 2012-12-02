@@ -1,5 +1,5 @@
 <wizard package="com.dianping.cat">
-   <webapp package="com.dianping.cat" name="cat" webres="true" cat="true" plugin-management="true">
+   <webapp package="com.dianping.cat" name="cat" webres="true" cat="true" plugin-management="true" jstl="true">
       <module name="dashboard" path="d" default="true">
          <page name="home" title="Home" default="true" package="com.dianping.cat.page.home">
             <description>Home Page of Garden</description>
@@ -38,4 +38,10 @@
    </jdbc>
    <jdbc package="com.dianping.dog.dal" name="dog">
    </jdbc>
+   <model package="com.dianping.phoenix.configure" name="config">
+      <sample-model>src/test/resources/com/dianping/phoenix/configure/config.xml</sample-model>
+   </model>
+   <model package="com.dianping.phoenix.deploy" name="deploy">
+      <sample-model>src/test/resources/com/dianping/phoenix/deploy/deploy.xml</sample-model>
+   </model>
 </wizard>

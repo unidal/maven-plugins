@@ -1,0 +1,5 @@
+<wizard package="org.unidal.maven.plugin">
+   <model package="org.unidal.maven.plugin.wizard.model" name="wizard">
+      <sample-model>src/test/resources/org/unidal/maven/plugin/wizard/wizard.xml</sample-model>
+   </model>
+</wizard>

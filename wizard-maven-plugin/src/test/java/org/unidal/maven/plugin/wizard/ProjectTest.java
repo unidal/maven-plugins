@@ -8,15 +8,16 @@ import org.junit.Test;
 
 public class ProjectTest {
    @Test
-   public void test() throws MojoExecutionException, MojoFailureException {
-         ProjectMojo mojo = new ProjectMojo();
-         
-         mojo.groupId="org.unidal.test";
-         mojo.artifactId="test";
-         mojo.version="1.0";
-         mojo.name="Test";
-         mojo.m_pomFile = new File("target/pom.xml");
-         
-         mojo.execute();
+   public void testProject() throws MojoExecutionException, MojoFailureException {
+      ProjectMojo mojo = new ProjectMojo();
+
+      mojo.groupId = "org.unidal.test";
+      mojo.artifactId = "test";
+      mojo.version = "1.0";
+      mojo.packaging = "pom";
+      mojo.name = "Test";
+      mojo.m_pomFile = new File("target/pom.xml");
+
+      mojo.execute();
    }
 }

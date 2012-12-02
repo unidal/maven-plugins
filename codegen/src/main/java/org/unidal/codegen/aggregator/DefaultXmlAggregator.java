@@ -226,7 +226,7 @@ public class DefaultXmlAggregator implements XmlAggregator {
                }
 
                sb.append(' ').append(name).append("=\"");
-               sb.append(m_attrValues.get(i)).append("\"");
+               sb.append(escape(m_attrValues.get(i))).append("\"");
             }
 
             int len = m_children.size();
@@ -259,6 +259,40 @@ public class DefaultXmlAggregator implements XmlAggregator {
                }
             }
          }
+      }
+
+      private String escape(Object value) {
+         if (value == null) {
+            return null;
+         }
+
+         String str = value.toString();
+         int len = str.length();
+         StringBuilder sb = new StringBuilder(len + 16);
+
+         for (int i = 0; i < len; i++) {
+            final char ch = str.charAt(i);
+
+            switch (ch) {
+            case '<':
+               sb.append("&lt;");
+               break;
+            case '>':
+               sb.append("&gt;");
+               break;
+            case '&':
+               sb.append("&amp;");
+               break;
+            case '"':
+               sb.append("&quot;");
+               break;
+            default:
+               sb.append(ch);
+               break;
+            }
+         }
+
+         return sb.toString();
       }
 
       public Node findChildByKeyValue(String nodeName, String keyValue) {
