@@ -15,6 +15,7 @@
     <element name="deploy-status-url-pattern" value-type="String" />
     <element name="deploy-log-url-pattern" value-type="String" />
     <element name="test-service-url-prefix" value-type="String" />
+    <element name="test-service-timeout" value-type="int" />
   </entity>
 </model>
 

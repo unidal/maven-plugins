@@ -309,6 +309,9 @@
             <xsl:when test="contains($normalized-value-type, '.')">
                <xsl:value-of select="$normalized-value-type"/>
             </xsl:when>
+            <xsl:when test="@primitive='true'">
+               <xsl:call-template name="convert-type"/>
+            </xsl:when>
             <xsl:otherwise>
                <xsl:call-template name="capital-name">
                   <xsl:with-param name="name" select="$normalized-value-type" />

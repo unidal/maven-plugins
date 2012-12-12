@@ -8,11 +8,12 @@
     <element name="local-dir" value-type="String" default-value="target/git" />
   </entity>
   <entity name="agent" class-name="AgentConfig">
-  	<element name="deploy-retry-interval" value-type="int" default-value="30" />
-    <element name="deploy-url-pattern" value-type="String" default-value="http://%s:3473/phoenix/agent/deploy?op=deploy&amp;deployId=%s&amp;domain=%s&amp;version=%s" />
+  	<element name="deploy-retry-interval" value-type="int" default-value="30" primitive="true"/>
+    <element name="deploy-url-pattern" value-type="String" default-value="http://%s:3473/phoenix/agent/deploy?op=deploy&amp;deployId=%s&amp;domain=%s&amp;version=%s&amp;qaServiceUrlPrefix=%s&amp;qaServiceTimeout=%s" />
     <element name="deploy-status-url-pattern" value-type="String" default-value="http://%s:3473/phoenix/agent/deploy?op=status&amp;deployId=%s" />
     <element name="deploy-log-url-pattern" value-type="String" default-value="http://%s:3473/phoenix/agent/deploy?op=log&amp;deployId=%s" />
-    <element name="test-service-url-prefix" value-type="String" default-value="http://localhost:8378/test/test/service"/>
+    <element name="test-service-url-prefix" value-type="String" default-value="http://192.168.26.23:8080/qa/service/task"/>
+    <element name="test-service-timeout" value-type="long" default-value="300" primitive="true"/>
   </entity>
 </model>
 
