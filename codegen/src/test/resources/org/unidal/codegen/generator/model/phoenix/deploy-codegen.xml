@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="deploy" root="true">
+    <attribute name="id" value-type="int" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="version" value-type="String" />
+    <attribute name="abortOnError" value-type="boolean" />
+    <attribute name="status" value-type="String" />
+    <entity-ref name="host" type="list" names="hosts" />
+  </entity>
+  <entity name="host">
+    <attribute name="ip" value-type="String" />
+    <attribute name="status" value-type="String" />
+    <entity-ref name="segment" type="list" names="segments" />
+  </entity>
+  <entity name="segment">
+    <attribute name="step" value-type="String" />
+    <attribute name="current-ticks" value-type="int" />
+    <attribute name="total-ticks" value-type="int" />
+    <attribute name="status" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+</model>
+

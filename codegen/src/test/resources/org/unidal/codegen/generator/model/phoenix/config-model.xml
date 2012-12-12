@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.phoenix.configure" enable-sax-parser="true">
+  <entity name="config" root="true">
+    <element name="war-url-pattern" value-type="String"  default-value="http://192.168.8.45:8080/artifactory/dianping-snapshots/com/dianping/platform/phoenix-kernel/%s/phoenix-kernel-%1$s.war"/>
+  </entity>
+  <entity name="git" class-name="GitConfig">
+    <element name="origin-url" value-type="String" default-value="ssh://git@10.1.4.81:58422/phoenix-kernel.git" />
+    <element name="local-dir" value-type="String" default-value="target/git" />
+  </entity>
+  <entity name="agent" class-name="AgentConfig">
+  	<element name="deploy-retry-interval" value-type="int" default-value="30" />
+    <element name="deploy-url-pattern" value-type="String" default-value="http://%s:3473/phoenix/agent/deploy?op=deploy&amp;deployId=%s&amp;domain=%s&amp;version=%s" />
+    <element name="deploy-status-url-pattern" value-type="String" default-value="http://%s:3473/phoenix/agent/deploy?op=status&amp;deployId=%s" />
+    <element name="deploy-log-url-pattern" value-type="String" default-value="http://%s:3473/phoenix/agent/deploy?op=log&amp;deployId=%s" />
+    <element name="test-service-url-prefix" value-type="String" default-value="http://localhost:8378/test/test/service"/>
+  </entity>
+</model>
+

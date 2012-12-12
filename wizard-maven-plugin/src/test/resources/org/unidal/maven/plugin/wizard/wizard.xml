@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat">
    <webapp package="com.dianping.cat" name="cat" webres="true" cat="true" plugin-management="true" jstl="true">
       <module name="dashboard" path="d" default="true">

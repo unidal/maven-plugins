@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="root" root="true">
+    <entity-ref name="project" type="list" names="projects" />
+  </entity>
+  <entity name="project">
+    <attribute name="name" value-type="String" />
+    <attribute name="owner" value-type="String" />
+    <element name="description" value-type="String" />
+    <entity-ref name="host" type="list" names="hosts" xml-indent="true" />
+  </entity>
+  <entity name="host">
+    <attribute name="ip" value-type="String" />
+    <attribute name="status" value-type="String" />
+    <entity-ref name="war" type="list" names="wars" />
+  </entity>
+  <entity name="war">
+    <attribute name="name" value-type="String" />
+    <attribute name="version" value-type="String" />
+    <entity-ref name="dependency" type="list" names="dependencies" />
+  </entity>
+  <entity name="dependency">
+    <attribute name="groupId" value-type="String" />
+    <attribute name="artifactId" value-type="String" />
+    <attribute name="version" value-type="String" />
+  </entity>
+</model>
+

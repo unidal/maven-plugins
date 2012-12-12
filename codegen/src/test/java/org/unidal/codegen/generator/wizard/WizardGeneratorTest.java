@@ -10,7 +10,7 @@ import org.unidal.codegen.generator.Generator;
 import org.unidal.lookup.ComponentTestCase;
 
 public class WizardGeneratorTest extends ComponentTestCase {
-   private boolean verbose = true;
+   private boolean verbose = false;
 
    private boolean debug = false;
 

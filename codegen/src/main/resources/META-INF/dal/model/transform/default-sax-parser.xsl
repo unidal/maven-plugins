@@ -201,7 +201,7 @@
                <xsl:when test="//entity[element[not(@render='false')]]">
                   <xsl:value-of select="$empty"/>         Object currentObj = m_objs.pop();<xsl:value-of select="$empty-line"/>
                   <xsl:choose>
-                     <xsl:when test="//entity/element[not(@text='true')]">
+                     <xsl:when test="//entity/element[not(@text='true') and not(@render='false')]">
                         <xsl:value-of select="$empty"/>         String currentTag = m_tags.pop();<xsl:value-of select="$empty-line"/>
                      </xsl:when>
                      <xsl:otherwise>
