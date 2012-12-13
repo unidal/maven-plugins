@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
   <entity name="config" root="true">
+    <attribute name="env" value-type="String" />
     <element name="war-url-pattern" value-type="String" />
     <entity-ref name="git" />
     <entity-ref name="agent" />
+    <entity-ref name="console" />
   </entity>
   <entity name="git">
     <element name="origin-url" value-type="String" />
     <element name="local-dir" value-type="String" />
   </entity>
   <entity name="agent">
+    <element name="container-install-path" value-type="String" />
+    <element name="container-port" value-type="int" />
+    <element name="kernel-doc-base-pattern" value-type="String" />
+    <element name="domain-doc-base-keyword-pattern" value-type="String" />
+    <element name="test-service-poll-interval" value-type="int" />
+  </entity>
+  <entity name="console">
     <element name="deploy-retry-interval" value-type="int" />
     <element name="deploy-url-pattern" value-type="String" />
     <element name="deploy-status-url-pattern" value-type="String" />
     <element name="deploy-log-url-pattern" value-type="String" />
+    <element name="deploy-connect-timeout" value-type="int" />
+    <element name="deploy-read-timeout" value-type="int" />
     <element name="test-service-url-prefix" value-type="String" />
     <element name="test-service-timeout" value-type="int" />
   </entity>

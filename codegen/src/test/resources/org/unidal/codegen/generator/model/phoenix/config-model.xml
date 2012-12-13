@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.dianping.phoenix.configure" enable-sax-parser="true">
   <entity name="config" root="true">
-    <element name="war-url-pattern" value-type="String"  default-value="http://192.168.8.45:8080/artifactory/dianping-snapshots/com/dianping/platform/phoenix-kernel/%s/phoenix-kernel-%1$s.war"/>
+    <attribute name="env" value-type="String" default-value="dev" />
+    <element name="war-url-pattern" value-type="String" default-value="http://192.168.8.45:8080/artifactory/dianping-snapshots/com/dianping/platform/phoenix-kernel/%s/phoenix-kernel-%1$s.war"/>
   </entity>
   <entity name="git" class-name="GitConfig">
     <element name="origin-url" value-type="String" default-value="ssh://git@10.1.4.81:58422/phoenix-kernel.git" />
     <element name="local-dir" value-type="String" default-value="target/git" />
   </entity>
   <entity name="agent" class-name="AgentConfig">
-  	<element name="deploy-retry-interval" value-type="int" default-value="30" primitive="true"/>
+    <element name="container-install-path" value-type="String" default-value="~/Downloads/apache-tomcat-6.0.35"/>
+    <element name="container-port" value-type="int" default-value="8080" primitive="true"/>
+    <element name="kernel-doc-base-pattern" value-type="String" default-value="/data/webapps/phoenix-kernel/%s"/>
+    <element name="domain-doc-base-keyword-pattern" value-type="String" default-value="/%s/current"/>
+    <element name="test-service-poll-interval" value-type="int" default-value="1000" primitive="true"/>
+  </entity>
+  <entity name="console" class-name="ConsoleConfig">
+  	<element name="deploy-retry-interval" value-type="int" default-value="30000" primitive="true"/>
     <element name="deploy-url-pattern" value-type="String" default-value="http://%s:3473/phoenix/agent/deploy?op=deploy&amp;deployId=%s&amp;domain=%s&amp;version=%s&amp;qaServiceUrlPrefix=%s&amp;qaServiceTimeout=%s" />
     <element name="deploy-status-url-pattern" value-type="String" default-value="http://%s:3473/phoenix/agent/deploy?op=status&amp;deployId=%s" />
     <element name="deploy-log-url-pattern" value-type="String" default-value="http://%s:3473/phoenix/agent/deploy?op=log&amp;deployId=%s" />
+    <element name="deploy-connect-timeout" value-type="int" default-value="1000" primitive="true"/>
+    <element name="deploy-read-timeout" value-type="int" default-value="360000" primitive="true"/>
     <element name="test-service-url-prefix" value-type="String" default-value="http://192.168.26.23:8080/qa/service/task"/>
-    <element name="test-service-timeout" value-type="long" default-value="300" primitive="true"/>
+    <element name="test-service-timeout" value-type="long" default-value="300000" primitive="true"/>
   </entity>
 </model>
 

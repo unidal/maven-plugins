@@ -13,7 +13,7 @@ public class PhoenixGeneratorTest extends ModelGenerateTestSupport {
 
    @Override
    protected boolean isDebug() {
-      return true;
+      return false;
    }
 
    @Override
