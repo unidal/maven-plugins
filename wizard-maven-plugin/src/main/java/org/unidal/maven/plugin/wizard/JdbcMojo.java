@@ -562,7 +562,7 @@ public class JdbcMojo extends AbstractMojo {
             ds.setPassword(PropertyProviders.fromConsole().forString("password", "Password:(use '<none>' if no password)", null,
                   null));
             ds.setProperties(PropertyProviders.fromConsole().forString("connectionProperties", "Connection properties:",
-                  "useUnicode=true&autoReconnect=true", null));
+                  "useUnicode=true&characterEncoding=UTF-8&autoReconnect=true", null));
 
             if (ds.getPassword().equals("<none>")) {
                ds.setPassword("");

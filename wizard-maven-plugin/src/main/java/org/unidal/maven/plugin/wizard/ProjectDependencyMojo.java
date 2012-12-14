@@ -23,7 +23,7 @@ import org.unidal.helper.Splitters;
 /**
  * Add dependency to the project POM.
  * 
- * @goal project.dependency
+ * @goal project-dependency
  */
 public class ProjectDependencyMojo extends AbstractMojo {
    /**

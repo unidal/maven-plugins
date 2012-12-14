@@ -14,7 +14,7 @@ import org.unidal.tuple.Pair;
 /**
  * Create a test configurator class
  * 
- * @goal test.configurator
+ * @goal test-configurator
  */
 public class TestConfiguratorMojo extends AbstractMojo {
    /**
