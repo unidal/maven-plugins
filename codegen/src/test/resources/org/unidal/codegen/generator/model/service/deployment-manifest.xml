@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="deployment-codegen.xml" />
+  <file path="deployment-model.xml" />
+</manifest>
+

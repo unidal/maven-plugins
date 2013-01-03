@@ -14,6 +14,7 @@ import org.unidal.codegen.generator.model.mvc.MvcGeneratorTest;
 import org.unidal.codegen.generator.model.phoenix.PhoenixGeneratorTest;
 import org.unidal.codegen.generator.model.pom.PomGeneratorTest;
 import org.unidal.codegen.generator.model.rule.RuleGeneratorTest;
+import org.unidal.codegen.generator.model.service.ServiceModelGeneratorTest;
 import org.unidal.codegen.generator.model.test.MetaGeneratorTest;
 import org.unidal.codegen.generator.model.test.TestGeneratorTest;
 import org.unidal.codegen.generator.model.webres.WebresGeneratorTest;
@@ -51,6 +52,8 @@ MetaGeneratorTest.class,
 TestGeneratorTest.class,
 
 WebresGeneratorTest.class,
+
+ServiceModelGeneratorTest.class,
 
 WizardModelGeneratorTest.class,
 

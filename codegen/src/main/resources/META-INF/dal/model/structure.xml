@@ -3,8 +3,8 @@
 <root>
    <node name="model" no-namespace="true">
       <node name="entity" key="name">
-         <node name="attribute" key="alias,name"/>
-         <node name="element" key="alias,name"/>
+         <node name="attribute" key="name"/>
+         <node name="element" key="name"/>
          <node name="entity-ref" key="alias,name"/>
       </node>
    </node>

@@ -185,12 +185,16 @@ public class StartTestServerMojo extends AbstractMojo {
 
       try {
          CommandLineUtils.executeCommandLine(cli, new StreamConsumer() {
-            private String m_prefix = "[INFO] ";
+            private String m_info = "[INFO] ";
+
+            private String m_warn = "[WARN] ";
 
             @Override
             public void consumeLine(String line) {
-               if (line.startsWith(m_prefix)) {
-                  getLog().info(line.substring(m_prefix.length()));
+               if (line.startsWith(m_info)) {
+                  getLog().info(line.substring(m_info.length()));
+               } else if (line.startsWith(m_warn)) {
+                  getLog().warn(line.substring(m_warn.length()));
                } else {
                   getLog().info(line);
                }

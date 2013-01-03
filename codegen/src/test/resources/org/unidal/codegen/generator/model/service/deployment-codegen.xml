@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="deployment" root="true">
+    <entity-ref name="service" type="list" names="active-services" xml-indent="true" />
+  </entity>
+  <entity name="service">
+    <attribute name="type" value-type="String" />
+    <attribute name="alias" value-type="String" />
+    <attribute name="load-on-startup" value-type="boolean" />
+    <element name="configuration" value-type="String" />
+    <entity-ref name="property" type="list" names="properties" xml-indent="true" />
+    <entity-ref name="requirement" type="list" names="requirements" xml-indent="true" />
+  </entity>
+  <entity name="property">
+    <attribute name="name" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+  <entity name="requirement">
+    <attribute name="type" value-type="String" />
+    <attribute name="alias" value-type="String" />
+  </entity>
+</model>
+

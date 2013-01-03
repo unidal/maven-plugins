@@ -575,7 +575,7 @@
 </xsl:template>
 
 <xsl:template name="method-to-class">
-<xsl:if test="//entity/attribute[@value-type='Class&lt;?&gt;']">
+<xsl:if test="//entity/element[@value-type='Class&lt;?&gt;'][not(@render='false')]">
    private Class<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'?'"/></xsl:call-template> toClass(String className) {
       try {
          return Class.forName(className);

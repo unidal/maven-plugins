@@ -31,7 +31,7 @@ public class TestServer extends JettyServer {
       TestServer server = new TestServer();
 
       server.startServer();
-      server.showReport();
+      server.startWebapp();
       server.stopServer();
    }
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.service.deployment" enable-sax-parser="true" enable-base-visitor="true">
+	<entity name="deployment" root="true" class-name="DeploymentModel">
+	</entity>
+	<entity name="service" class-name="ServiceModel">
+		<attribute name="alias" value-type="String" default-value="default" />
+	</entity>
+	<entity name="property" class-name="PropertyModel">
+		<attribute name="name" value-type="String" />
+		<element name="text" alias="value" value-type="String" text="true" />
+	</entity>
+	<entity name="requirement" class-name="RequirementModel">
+		<attribute name="type" value-type="Class" />
+		<attribute name="alias" value-type="String" default-value="default" />
+	</entity>
+</model>
+
