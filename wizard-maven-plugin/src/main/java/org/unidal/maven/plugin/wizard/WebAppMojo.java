@@ -382,6 +382,7 @@ public class WebAppMojo extends AbstractMojo {
             boolean webres = PropertyProviders.fromConsole().forBoolean("webres", "Support WebRes framework?", false);
             boolean cat = PropertyProviders.fromConsole().forBoolean("cat", "Support CAT?", true);
             boolean jstl = PropertyProviders.fromConsole().forBoolean("cat", "Support JSTL?", true);
+            boolean layout = PropertyProviders.fromConsole().forBoolean("layout", "Support page layout?", true);
             boolean pluginManagement = PropertyProviders.fromConsole().forBoolean("pluginManagement",
                   "Support POM plugin management for Java Compiler and Eclipse?", true);
 
@@ -391,6 +392,7 @@ public class WebAppMojo extends AbstractMojo {
             webapp.setWebres(webres);
             webapp.setCat(cat);
             webapp.setJstl(jstl);
+            webapp.setLayout(layout);
             webapp.setPluginManagement(pluginManagement);
          }
 

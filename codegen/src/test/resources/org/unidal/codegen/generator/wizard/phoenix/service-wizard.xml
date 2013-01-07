@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.service">
+   <webapp package="com.dianping.service" name="editor" webres="false" cat="false" plugin-management="false" jstl="true">
+      <module name="editor" path="editor" default="true">
+         <page name="home" title="Home" default="true" path="home">
+            <description>Home</description>
+         </page>
+      </module>
+   </webapp>
+</wizard>

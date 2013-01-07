@@ -19,7 +19,8 @@ import org.unidal.codegen.generator.model.test.MetaGeneratorTest;
 import org.unidal.codegen.generator.model.test.TestGeneratorTest;
 import org.unidal.codegen.generator.model.webres.WebresGeneratorTest;
 import org.unidal.codegen.generator.model.wizard.WizardModelGeneratorTest;
-import org.unidal.codegen.generator.wizard.WizardGeneratorTest;
+import org.unidal.codegen.generator.wizard.garden.GardenWizardGeneratorTest;
+import org.unidal.codegen.generator.wizard.phoenix.PhoenixWizardGeneratorTest;
 import org.unidal.codegen.generator.xml.XmlGeneratorTest;
 
 @RunWith(Suite.class)
@@ -57,7 +58,9 @@ ServiceModelGeneratorTest.class,
 
 WizardModelGeneratorTest.class,
 
-WizardGeneratorTest.class,
+GardenWizardGeneratorTest.class,
+
+PhoenixWizardGeneratorTest.class,
 
 XmlGeneratorTest.class
 
