@@ -10,10 +10,9 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.unidal.codegen.generator.AbstractGenerateContext;
 import org.unidal.codegen.generator.GenerateContext;
+import org.unidal.codegen.generator.GenerateContextSupport;
 import org.unidal.codegen.generator.Generator;
-
 import org.unidal.helper.Splitters;
 
 /**
@@ -116,7 +115,7 @@ public class DalJdbcMojo extends AbstractMojo {
       }
 
       final URL manifestXml = manifestFile.toURI().toURL();
-      final GenerateContext ctx = new AbstractGenerateContext(m_project.getBasedir(), resouceBase, sourceDir) {
+      final GenerateContext ctx = new GenerateContextSupport(resouceBase, new File(sourceDir)) {
          public URL getManifestXml() {
             return manifestXml;
          }

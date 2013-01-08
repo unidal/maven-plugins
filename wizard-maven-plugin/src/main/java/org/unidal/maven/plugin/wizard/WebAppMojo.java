@@ -17,10 +17,11 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.unidal.codegen.generator.AbstractGenerateContext;
 import org.unidal.codegen.generator.GenerateContext;
+import org.unidal.codegen.generator.GenerateContextSupport;
 import org.unidal.codegen.generator.Generator;
 import org.unidal.codegen.meta.WizardMeta;
+import org.unidal.helper.Files;
 import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
@@ -30,8 +31,6 @@ import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;
 import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
 import org.xml.sax.SAXException;
-
-import org.unidal.helper.Files;
 
 /**
  * Create web application project, modules and pages.
@@ -149,7 +148,7 @@ public class WebAppMojo extends AbstractMojo {
          }
 
          final URL manifestXml = manifestFile.toURI().toURL();
-         final GenerateContext ctx = new AbstractGenerateContext(m_project.getBasedir(), resouceBase, sourceDir) {
+         final GenerateContext ctx = new GenerateContextSupport(resouceBase, new File(sourceDir)) {
             public URL getManifestXml() {
                return manifestXml;
             }

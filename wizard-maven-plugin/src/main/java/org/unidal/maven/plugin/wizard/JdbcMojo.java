@@ -30,8 +30,8 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.unidal.codegen.generator.AbstractGenerateContext;
 import org.unidal.codegen.generator.GenerateContext;
+import org.unidal.codegen.generator.GenerateContextSupport;
 import org.unidal.codegen.generator.Generator;
 import org.unidal.codegen.meta.TableMeta;
 import org.unidal.codegen.meta.WizardMeta;
@@ -192,7 +192,7 @@ public class JdbcMojo extends AbstractMojo {
          }
 
          final URL manifestXml = manifestFile.toURI().toURL();
-         final GenerateContext ctx = new AbstractGenerateContext(m_project.getBasedir(), resouceBase, sourceDir) {
+         final GenerateContext ctx = new GenerateContextSupport(resouceBase, new File(sourceDir)) {
             public URL getManifestXml() {
                return manifestXml;
             }
