@@ -7,8 +7,8 @@ import org.unidal.codegen.aggregator.XmlAggregator;
 import org.unidal.codegen.generator.GenerateContext.LogLevel;
 import org.unidal.codegen.manifest.Manifest;
 import org.unidal.codegen.manifest.ManifestParser;
+import org.unidal.codegen.manifest.OperationMode;
 import org.unidal.codegen.transformer.XslTransformer;
-
 import org.unidal.lookup.annotation.Inject;
 
 public class XslGenerator implements Generator {
@@ -45,10 +45,19 @@ public class XslGenerator implements Generator {
             ctx.openStorage();
 
             for (Manifest manifest : manifests) {
-               URL templateXsl = ctx.getTemplateXsl(manifest.getTemplate());
-               String content = m_xslTransformer.transform(templateXsl, decoratedXml, manifest.getProperties());
+               OperationMode op = manifest.getOp();
 
-               ctx.addFileToStorage(manifest, content);
+               switch (op) {
+               case APPLY_TEMPLATE:
+                  URL templateXsl = ctx.getTemplateXsl(manifest.getTemplate());
+                  String content = m_xslTransformer.transform(templateXsl, decoratedXml, manifest.getProperties());
+
+                  ctx.addFileToStorage(manifest, content);
+                  break;
+               case COPY_RESOURCES:
+                  ctx.copyFileToStorage(manifest);
+                  break;
+               }
             }
 
             ctx.closeStorage();

@@ -86,8 +86,7 @@ public class DefaultManifestParser implements ManifestParser {
       }
 
       @Override
-      public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs)
-            throws SAXException {
+      public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs) throws SAXException {
          String tag = localName;
 
          m_propertyName = null;
@@ -98,6 +97,7 @@ public class DefaultManifestParser implements ManifestParser {
             file.setPath(attrs.getValue("path"));
             file.setTemplate(attrs.getValue("template"));
             file.setMode(FileMode.getByName(attrs.getValue("mode")));
+            file.setOp(OperationMode.getByName(attrs.getValue("op"), OperationMode.APPLY_TEMPLATE));
 
             m_manifests.add(file);
          } else if (tag.equals("property")) {

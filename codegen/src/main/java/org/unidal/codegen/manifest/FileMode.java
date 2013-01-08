@@ -1,7 +1,6 @@
 package org.unidal.codegen.manifest;
 
 public enum FileMode {
-
    CREATE_OR_OVERWRITE("create_or_overwrite"),
 
    CREATE_IF_NOT_EXISTS("create_if_not_exists"),

@@ -71,6 +71,13 @@
         <xsl:with-param name="template" select="'cat/client-xml.xsl'"/>
       </xsl:call-template>
    </xsl:if>
+   
+   <xsl:if test="@layout='bootstrap'">
+      <xsl:call-template name="copy-resources">
+        <xsl:with-param name="template" select="'bootstrap'"/>
+        <xsl:with-param name="path" select="$src-main-webapp" />
+      </xsl:call-template>
+   </xsl:if>
 </xsl:template>
 
 <xsl:template match="module">
@@ -345,6 +352,25 @@
           </xsl:element>
        </xsl:if>
        
+       <xsl:value-of select="$empty-line"/>
+    </xsl:element>
+</xsl:template>
+
+<xsl:template name="copy-resources">
+   <xsl:param name="template"/>
+   <xsl:param name="path"/>
+   <xsl:param name="mode" select="'create_if_not_exists'"/>
+
+    <xsl:value-of select="$empty-line"/>
+    <xsl:element name="file">
+       <xsl:attribute name="op">copy_resources</xsl:attribute>
+       
+       <xsl:attribute name="path"><xsl:value-of select="$path"/></xsl:attribute>
+       
+       <xsl:attribute name="template"><xsl:value-of select="$template"/></xsl:attribute>
+       
+       <xsl:attribute name="mode"><xsl:value-of select="$mode"/></xsl:attribute>
+
        <xsl:value-of select="$empty-line"/>
     </xsl:element>
 </xsl:template>
