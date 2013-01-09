@@ -26,16 +26,14 @@
 
 <xsl:template match="webapp">
    <!-- AllTests class -->
-   <xsl:call-template name="generate-java">
-     <xsl:with-param name="src-dir" select="$src-test-java" />
+   <xsl:call-template name="generate-test-java">
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="class" select="'AllTests'"/>
      <xsl:with-param name="template" select="'test/all-tests.xsl'"/>
    </xsl:call-template>
 
    <!-- TestServer class -->
-   <xsl:call-template name="generate-java">
-     <xsl:with-param name="src-dir" select="$src-test-java" />
+   <xsl:call-template name="generate-test-java">
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="class" select="'TestServer'"/>
      <xsl:with-param name="template" select="'test/test-server.xsl'"/>
@@ -57,8 +55,7 @@
    </xsl:call-template>
 
    <!-- WEB-INF/web.xml file -->
-   <xsl:call-template name="generate-resource">
-     <xsl:with-param name="src-dir" select="$src-main-webapp" />
+   <xsl:call-template name="generate-web-resource">
      <xsl:with-param name="file" select="'WEB-INF/web.xml'"/>
      <xsl:with-param name="template" select="'web-inf/web-xml.xsl'"/>
    </xsl:call-template>
@@ -66,13 +63,25 @@
    <xsl:if test="@cat='true'">
       <!-- META-INF/cat/client.xml file -->
       <xsl:call-template name="generate-resource">
-        <xsl:with-param name="src-dir" select="$src-main-resources" />
         <xsl:with-param name="file" select="'META-INF/cat/client.xml'"/>
         <xsl:with-param name="template" select="'cat/client-xml.xsl'"/>
       </xsl:call-template>
    </xsl:if>
    
    <xsl:if test="@layout='bootstrap'">
+      <!-- NavigationBar class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="package" select="concat(@package, '.view')"/>
+        <xsl:with-param name="class" select="'NavigationBar'"/>
+        <xsl:with-param name="template" select="'pres/navigation-bar.xsl'"/>
+      </xsl:call-template>
+
+      <!-- layout.tag class -->
+      <xsl:call-template name="generate-web-resource">
+        <xsl:with-param name="file" select="'WEB-INF/tags/layout.tag'"/>
+        <xsl:with-param name="template" select="'web-inf/tags/layout-tag.xsl'"/>
+      </xsl:call-template>
+
       <xsl:call-template name="copy-resources">
         <xsl:with-param name="template" select="'bootstrap'"/>
         <xsl:with-param name="path" select="$src-main-webapp" />

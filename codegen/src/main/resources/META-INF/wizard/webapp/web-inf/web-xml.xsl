@@ -7,7 +7,7 @@
 <xsl:variable name="empty-line" select="'&#x0A;'" />
 
 <xsl:template match="/">
-<xsl:apply-templates select="/wizard" />
+   <xsl:apply-templates select="/wizard" />
 </xsl:template>
 
 <xsl:template match="wizard">
