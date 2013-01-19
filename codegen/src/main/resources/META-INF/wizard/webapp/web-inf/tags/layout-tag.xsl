@@ -22,8 +22,7 @@
 	<title>Phoenix - ${model.page.description}</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Phoenix Console">
-	<link rel="shortcut icon" href="${model.webapp}/img/favicon.png">
+	<meta name="description" content="Phoenix">
 	<link href="${model.webapp}/css/bootstrap.css" type="text/css" rel="stylesheet">
 	<link href="${model.webapp}/css/bootstrap-responsive.css" type="text/css" rel="stylesheet">
 	<script src="${model.webapp}/js/jquery-1.8.3.min.js" type="text/javascript"></script>
@@ -44,8 +43,7 @@
 					<ul class="nav">
 						<c:forEach var="page" items="${navBar.visiblePages}">
 							<c:if test="${page.standalone}">
-								<li ${model.page.name == page.name ? 'class="selected"' : ''}><a
-									href="${model.webapp}/${page.moduleName}/${page.path}?domain=${model.domain}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">${page.title}</a></li>
+								<li ${model.page.name == page.name ? 'class="selected"' : ''}><a href="${model.webapp}/${page.moduleName}/${page.path}">${page.title}</a></li>
 							</c:if>
 							<c:if
 								test="${not page.standalone and model.page.name == page.name}">
@@ -62,13 +60,14 @@
 	<div class="container-fluid" style="min-height:524px;">
 		<div class="row-fluid">
 			<div class="span12">
+				<br><br>
 				<jsp:doBody />
 			</div>
 		</div>
 	
 		<br />
 		<div class="container">
-			<footer><center>@2013 Dianping Phoenix Team, Email: <a href="mailto:www@dianping.com">www@dianping.com</a></center></footer>
+			<footer><center>&copy;2013 Dianping Phoenix Team <a href="mailto:www@dianping.com">www@dianping.com</a></center></footer>
 		</div>
 	</div>
 	<!--/.fluid-container-->

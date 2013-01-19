@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.tool.dobby.model" enable-sax-parser="true">
+  <entity name="model" root="true">
+    <entity-ref name="ticket" type="map" names="tickets" />
+  </entity>
+  <entity name="ticket">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="state" value-type="org.unidal.codegen.generator.model.dobby.TicketState" enum="true" />
+    <entity-ref name="action" type="list" names="actions" xml-indent="true" />
+  </entity>
+  <entity name="action">
+    <attribute name="state" value-type="org.unidal.codegen.generator.model.dobby.TicketState" enum="true" />
+  </entity>
+</model>
+

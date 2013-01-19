@@ -145,11 +145,11 @@
 
 <xsl:template name="convert-type">
    <xsl:param name="value-type" select="@value-type"/>
-   <xsl:param name="enum-value-type" select="@enum-value-type"/>
+   <xsl:param name="enum" select="@enum"/>
    <xsl:param name="value" select="@param-name"/>
    
    <xsl:choose>
-      <xsl:when test="$enum-value-type='true'"><xsl:value-of select="$value-type"/>.valueOf(<xsl:value-of select="$value"/>)</xsl:when>
+      <xsl:when test="$enum='true'"><xsl:value-of select="$value-type"/>.valueOf(<xsl:value-of select="$value"/>)</xsl:when>
       <xsl:when test="$value-type='String'"><xsl:value-of select="$value"/></xsl:when>
       <xsl:when test="$value-type='java.util.Date'">toDate(<xsl:value-of select="$value"/>, "<xsl:value-of select="@format"/>", null)</xsl:when>
       <xsl:when test="@format">

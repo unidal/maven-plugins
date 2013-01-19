@@ -48,7 +48,7 @@ public class DalModelMojo extends AbstractMojo {
     * Current project base directory
     * 
     * @parameter expression="${sourceDir}"
-    *            default-value="target/generated-sources/dal-model"
+    *            default-value="${basedir}/target/generated-sources/dal-model"
     * @required
     */
    protected String sourceDir;

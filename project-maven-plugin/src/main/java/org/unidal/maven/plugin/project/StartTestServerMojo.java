@@ -73,10 +73,15 @@ public class StartTestServerMojo extends AbstractMojo {
 
       runMavenApplication(properties, "test-compile dependency:copy-dependencies dependency:build-classpath");
 
-      classpath.append("target/classes").append(File.pathSeparator);
-      classpath.append("target/test-classes").append(File.pathSeparator);
-
       try {
+         // hack: copy generated components.xml to target/classes
+         // reason: codegen:plexus depends on compiled classes, but
+         // process-resources phase happens before compile phase
+         copyComponentDescriptor();
+
+         classpath.append("target/classes").append(File.pathSeparator);
+         classpath.append("target/test-classes").append(File.pathSeparator);
+
          String dependencyClasspath = Files.forIO().readFrom(new File(dependencyClasspathFile), "utf-8");
 
          classpath.append(dependencyClasspath);
@@ -87,6 +92,18 @@ public class StartTestServerMojo extends AbstractMojo {
       String testServerName = detectTestServerName();
 
       runJavaApplication(classpath.toString(), testServerName, null);
+   }
+
+   private void copyComponentDescriptor() throws IOException {
+      File from = new File(m_project.getBasedir(), "src/main/resources/META-INF/plexus/components.xml");
+      File to = new File(m_project.getBasedir(), "target/classes/META-INF/plexus/components.xml");
+      File dir = to.getParentFile();
+
+      if (!dir.exists()) {
+         dir.mkdirs();
+      }
+
+      Files.forDir().copyFile(from, to);
    }
 
    protected void runJavaApplication(String classpath, String application, Map<String, String> properties)

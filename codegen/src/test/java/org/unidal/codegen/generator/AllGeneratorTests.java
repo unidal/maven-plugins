@@ -4,11 +4,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.unidal.codegen.generator.ibatis.IbatisGeneratorTest;
-import org.unidal.codegen.generator.jdbc.JdbcGeneratorTest;
+import org.unidal.codegen.generator.jdbc.garden.GardenJdbcGeneratorTest;
 import org.unidal.codegen.generator.jdbc.phoenix.PhoenixJdbcGeneratorTest;
+import org.unidal.codegen.generator.jdbc.user.UserJdbcGeneratorTest;
 import org.unidal.codegen.generator.model.all.AllGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatConsumerGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatCoreGeneratorTest;
+import org.unidal.codegen.generator.model.dobby.DobbyGeneratorTest;
 import org.unidal.codegen.generator.model.egret.EgretGeneratorTest;
 import org.unidal.codegen.generator.model.mvc.MvcGeneratorTest;
 import org.unidal.codegen.generator.model.phoenix.PhoenixGeneratorTest;
@@ -28,7 +30,9 @@ import org.unidal.codegen.generator.xml.XmlGeneratorTest;
 
 IbatisGeneratorTest.class,
 
-JdbcGeneratorTest.class,
+UserJdbcGeneratorTest.class,
+
+GardenJdbcGeneratorTest.class,
 
 PhoenixJdbcGeneratorTest.class,
 
@@ -37,6 +41,8 @@ AllGeneratorTest.class,
 CatConsumerGeneratorTest.class,
 
 CatCoreGeneratorTest.class,
+
+DobbyGeneratorTest.class,
 
 EgretGeneratorTest.class,
 

@@ -326,6 +326,9 @@
                <xsl:when test="@value-type-element='String'">
                   <xsl:value-of select="$empty"/>            tagWithText(<xsl:value-of select="@upper-name-element"/>, <xsl:value-of select="@local-name-element"/>);<xsl:value-of select="$empty-line"/>
                </xsl:when>
+               <xsl:when test="@format">
+                  <xsl:value-of select="$empty"/>            tagWithText(<xsl:value-of select="@upper-name-element"/>, toString(<xsl:value-of select="@local-name-element"/>, "<xsl:value-of select="@format"/>"));<xsl:value-of select="$empty-line"/>
+               </xsl:when>
                <xsl:when test="@primitive='true'">
                   <xsl:value-of select="$empty"/>            tagWithText(<xsl:value-of select="@upper-name-element"/>, String.valueOf(<xsl:value-of select="@local-name-element"/>));<xsl:value-of select="$empty-line"/>
                </xsl:when>
@@ -344,6 +347,9 @@
             <xsl:choose>
                <xsl:when test="@value-type-element='String'">
                   <xsl:value-of select="$empty"/>      tagWithText(<xsl:value-of select="@upper-name-element"/>, <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
+               </xsl:when>
+               <xsl:when test="@format">
+                  <xsl:value-of select="$empty"/>      tagWithText(<xsl:value-of select="@upper-name-element"/>, toString(<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>(), "<xsl:value-of select="@format"/>"));<xsl:value-of select="$empty-line"/>
                </xsl:when>
                <xsl:when test="@primitive='true'">
                   <xsl:value-of select="$empty"/>      tagWithText(<xsl:value-of select="@upper-name-element"/>, String.valueOf(<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()));<xsl:value-of select="$empty-line"/>

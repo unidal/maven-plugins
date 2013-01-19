@@ -1,14 +1,14 @@
-package org.unidal.codegen.generator.model.egret;
+package org.unidal.codegen.generator.model.dobby;
 
 import java.io.File;
 
 import org.junit.Test;
 import org.unidal.codegen.generator.model.ModelGenerateTestSupport;
 
-public class EgretGeneratorTest extends ModelGenerateTestSupport {
+public class DobbyGeneratorTest extends ModelGenerateTestSupport {
    @Override
    protected File getProjectBaseDir() {
-      return new File("target/generated-model-egret");
+      return new File("target/generated-model-dobby");
    }
 
    @Override
@@ -23,6 +23,6 @@ public class EgretGeneratorTest extends ModelGenerateTestSupport {
 
    @Test
    public void testGenerate() throws Exception {
-      generate("projects-manifest.xml");
+      generate("model-manifest.xml");
    }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <manifest>
-	<file path="jdbc_codegen.xml"/>
-	<file path="jdbc.xml"/>
+	<file path="user-codegen.xml"/>
+	<file path="user-dal.xml"/>
 </manifest>

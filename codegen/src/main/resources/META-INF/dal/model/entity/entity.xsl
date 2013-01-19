@@ -132,7 +132,16 @@
    </xsl:for-each>
    <xsl:value-of select="$empty"/>) {<xsl:value-of select="$empty-line"/>
    <xsl:for-each select="attribute[@key='true'] | element[@key='true']">
-      <xsl:value-of select="'      '"/><xsl:value-of select='@field-name'/> = <xsl:value-of select='@param-name'/>;<xsl:value-of select="$empty-line"/>
+      <xsl:choose>
+         <xsl:when test="@primitive='true' or not(@default-value)">
+            <xsl:value-of select="'      '"/><xsl:value-of select='@field-name'/> = <xsl:value-of select='@param-name'/>;<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="'      '"/>if (<xsl:value-of select='@param-name'/> != null) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="'         '"/><xsl:value-of select='@field-name'/> = <xsl:value-of select='@param-name'/>;<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="'      '"/>}<xsl:value-of select="$empty-line"/>
+         </xsl:otherwise>
+      </xsl:choose>
    </xsl:for-each>
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>

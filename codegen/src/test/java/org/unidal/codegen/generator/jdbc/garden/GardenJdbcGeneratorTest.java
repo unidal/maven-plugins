@@ -1,14 +1,14 @@
-package org.unidal.codegen.generator.jdbc.phoenix;
+package org.unidal.codegen.generator.jdbc.garden;
 
 import java.io.File;
 
 import org.junit.Test;
 import org.unidal.codegen.generator.jdbc.JdbcGenerateTestSupport;
 
-public class PhoenixJdbcGeneratorTest extends JdbcGenerateTestSupport {
+public class GardenJdbcGeneratorTest extends JdbcGenerateTestSupport {
    @Override
    protected File getProjectBaseDir() {
-      return new File("target/generated-jdbc-phoenix");
+      return new File("target/generated-jdbc-garden");
    }
 
    @Override
@@ -18,11 +18,11 @@ public class PhoenixJdbcGeneratorTest extends JdbcGenerateTestSupport {
 
    @Override
    protected boolean isVerbose() {
-      return true;
+      return false;
    }
 
    @Test
    public void testGenerateDeploy() throws Exception {
-      generate("deploy-manifest.xml");
+      generate("garden-manifest.xml");
    }
 }

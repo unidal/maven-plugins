@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -107,8 +108,8 @@ public class DalJdbcMojo extends AbstractMojo {
       }
    }
 
-   private void generateJdbc(String part) throws MojoExecutionException, IOException, MalformedURLException, Exception {
-      File manifestFile = new File(part);
+   private void generateJdbc(String manifest) throws MojoExecutionException, IOException, MalformedURLException, Exception {
+      File manifestFile = new File(manifest);
 
       if (!manifestFile.exists()) {
          throw new MojoExecutionException(String.format("Manifest(%s) not found!", manifestFile.getCanonicalPath()));
@@ -116,6 +117,11 @@ public class DalJdbcMojo extends AbstractMojo {
 
       final URL manifestXml = manifestFile.toURI().toURL();
       final GenerateContext ctx = new GenerateContextSupport(resouceBase, new File(sourceDir)) {
+         @Override
+         protected void configure(Map<String, String> properties) {
+            properties.put("src-main-java", sourceDir);
+         }
+
          public URL getManifestXml() {
             return manifestXml;
          }
@@ -124,7 +130,7 @@ public class DalJdbcMojo extends AbstractMojo {
             switch (logLevel) {
             case DEBUG:
                if (debug) {
-                  getLog().debug(message);
+                  getLog().info(message);
                }
                break;
             case INFO:

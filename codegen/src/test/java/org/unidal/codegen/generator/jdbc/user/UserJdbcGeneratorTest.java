@@ -1,13 +1,14 @@
-package org.unidal.codegen.generator.jdbc;
+package org.unidal.codegen.generator.jdbc.user;
 
 import java.io.File;
 
 import org.junit.Test;
+import org.unidal.codegen.generator.jdbc.JdbcGenerateTestSupport;
 
-public class JdbcGeneratorTest extends JdbcGenerateTestSupport {
+public class UserJdbcGeneratorTest extends JdbcGenerateTestSupport {
    @Override
    protected File getProjectBaseDir() {
-      return new File("target/generated-jdbc");
+      return new File("target/generated-jdbc-user");
    }
 
    @Override
@@ -22,11 +23,6 @@ public class JdbcGeneratorTest extends JdbcGenerateTestSupport {
 
    @Test
    public void testGenerateJdbc() throws Exception {
-      generate("jdbc_manifest.xml");
-   }
-
-   @Test
-   public void testGenerateGarden() throws Exception {
-      generate("garden-manifest.xml");
+      generate("user-manifest.xml");
    }
 }
