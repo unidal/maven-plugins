@@ -492,7 +492,7 @@
 
          m_text.setLength(0);
         } else {
-         throw new SAXException(String.format("Namespace(%s) is not supported by " + this.getClass().getName(), uri));
+         throw new SAXException(String.format("Namespace(%s) is not supported by %s.", uri, this.getClass().getName()));
       }
    }
 </xsl:template>

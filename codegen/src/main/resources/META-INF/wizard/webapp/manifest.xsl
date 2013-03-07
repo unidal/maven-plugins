@@ -105,7 +105,6 @@
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="name" select="@name"/>
      <xsl:with-param name="template" select="'module/context.xsl'"/>
-     <xsl:with-param name="mode" select="'create_or_overwrite'"/>
    </xsl:call-template>
 
    <!-- Page class -->
