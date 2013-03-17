@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="org.unidal.expense.book" enable-sax-parser="true" entity-prefix="">
+  <entity name="book" root="true">
+    <entity-ref name="trip" type="list" names="trips" />
+  </entity>
+  <entity name="trip">
+    <attribute name="name" value-type="String" key="true" />
+    <entity-ref name="member" type="list" names="members" />
+    <entity-ref name="expense" type="list" names="expenses" />
+  </entity>
+  <entity name="member">
+    <attribute name="id" value-type="int" key="true" primitive='true' />
+    <attribute name="name" value-type="String" />
+    <attribute name="rate-type" value-type="int" primitive='true' />
+  </entity>
+  <entity name="expense">
+    <attribute name="id" value-type="int" key="true" primitive='true' />
+    <attribute name="date" value-type="Date" format="yyyy-MM-dd" />
+    <attribute name="name" value-type="String" />
+    <attribute name="amount" value-type="double" />
+    <attribute name="currency" value-type="String" />
+    <entity-ref name="item" type="map" names="items" />
+  </entity>
+  <entity name="item">
+    <attribute name="member-id" value-type="int" key="true" primitive='true' />
+    <attribute name="weight" value-type="int" />
+  </entity>
+</model>
+

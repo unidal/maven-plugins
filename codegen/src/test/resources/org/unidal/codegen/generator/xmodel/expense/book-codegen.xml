@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="book" root="true">
+    <entity-ref name="trip" type="list" names="trips" />
+  </entity>
+  <entity name="trip">
+    <attribute name="name" value-type="String" />
+    <entity-ref name="member" type="list" names="members" />
+    <entity-ref name="expense" type="list" names="expenses" />
+  </entity>
+  <entity name="member">
+    <attribute name="id" value-type="int" />
+    <attribute name="name" value-type="String" />
+    <attribute name="rate-type" value-type="int" />
+  </entity>
+  <entity name="expense">
+    <attribute name="id" value-type="int" />
+    <attribute name="date" value-type="Date" format="yyyy-MM-dd"/>
+    <attribute name="name" value-type="String" />
+    <attribute name="amount" value-type="double" />
+    <attribute name="currency" value-type="String" />
+    <entity-ref name="item" type="list" names="items" />
+  </entity>
+  <entity name="item">
+    <attribute name="member-id" value-type="int" />
+    <attribute name="weight" value-type="int" />
+  </entity>
+</model>
+

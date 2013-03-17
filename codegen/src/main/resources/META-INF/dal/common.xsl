@@ -112,6 +112,14 @@
    </xsl:choose>
 </xsl:template>  
 
+<xsl:template name="lt">
+   <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>
+</xsl:template>
+
+<xsl:template name="gt">
+   <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>
+</xsl:template>
+
 <xsl:template name="generic-type">
    <xsl:param name="type"/>
    

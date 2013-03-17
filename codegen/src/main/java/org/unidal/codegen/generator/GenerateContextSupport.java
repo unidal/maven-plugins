@@ -32,7 +32,7 @@ public abstract class GenerateContextSupport implements GenerateContext {
       m_resourceBasePath = resourceBasePath;
       m_properties = new HashMap<String, String>();
 
-      m_properties.put("generated-java", m_projectBaseDir.getPath());
+      m_properties.put("base-dir", m_projectBaseDir.getPath());
       m_properties.put("src-main-java", "src/main/java");
       m_properties.put("src-main-resources", "src/main/resources");
       m_properties.put("src-main-webapp", "src/main/webapp");
@@ -113,7 +113,21 @@ public abstract class GenerateContextSupport implements GenerateContext {
          Scanners.forJar().scan(jarFile, new FileMatcher() {
             @Override
             public Direction matches(File base, String path) {
-               if (path.startsWith(prefix)) {
+               if (path.equals(prefix)) {
+                  int pos = path.lastIndexOf('/');
+                  String relativePath = path.substring(pos + 1);
+                  File target = new File(to, relativePath);
+
+                  switch (mode) {
+                  case CREATE_IF_NOT_EXISTS:
+                     if (target.exists()) {
+                        break;
+                     }
+                  case CREATE_OR_OVERWRITE:
+                     list.add(new Pair<File, String>(target, path));
+                     break;
+                  }
+               } else if (path.startsWith(prefix)) {
                   String relativePath = path.substring(prefix.length() + 1);
                   File target = new File(to, relativePath);
 
@@ -142,21 +156,40 @@ public abstract class GenerateContextSupport implements GenerateContext {
          }
       } else {
          final List<String> list = new ArrayList<String>();
+         File base = new File(from);
 
-         Scanners.forDir().scan(new File(from), new FileMatcher() {
-            @Override
-            public Direction matches(File base, String path) {
-               if (new File(base, path).isFile()) {
-                  list.add(path);
+         if (base.isDirectory()) {
+            Scanners.forDir().scan(base, new FileMatcher() {
+               @Override
+               public Direction matches(File base, String path) {
+                  if (new File(base, path).isFile()) {
+                     list.add(path);
+                  }
+
+                  return Direction.DOWN;
                }
+            });
 
-               return Direction.DOWN;
+            for (String item : list) {
+               File target = new File(to, item);
+               File source = new File(from, item);
+
+               switch (mode) {
+               case CREATE_IF_NOT_EXISTS:
+                  if (target.exists()) {
+                     break;
+                  }
+               case CREATE_OR_OVERWRITE:
+                  byte[] data = Files.forIO().readFrom(source);
+                  Files.forIO().writeTo(target, data);
+                  log(LogLevel.INFO, target + " generated");
+                  m_generatedFiles++;
+                  break;
+               }
             }
-         });
-
-         for (String item : list) {
-            File target = new File(to, item);
-            File source = new File(from, item);
+         } else if (base.isFile()) {
+            File target = new File(to, base.getName());
+            File source = base;
 
             switch (mode) {
             case CREATE_IF_NOT_EXISTS:
@@ -181,7 +214,7 @@ public abstract class GenerateContextSupport implements GenerateContext {
       String to = manifest.getPath();
 
       if (from == null || to == null) {
-         throw new IllegalArgumentException(String.format("Property from(%s) and to(%s) must be both specified!", from, to));
+         throw new IllegalArgumentException(String.format("Property template(%s) and path(%s) must be both specified!", from, to));
       }
 
       File toFile = getPath(to).getCanonicalFile();

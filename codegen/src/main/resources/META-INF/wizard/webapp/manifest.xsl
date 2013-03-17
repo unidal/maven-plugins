@@ -83,8 +83,8 @@
       </xsl:call-template>
 
       <xsl:call-template name="copy-resources">
-        <xsl:with-param name="template" select="'bootstrap'"/>
-        <xsl:with-param name="path" select="$src-main-webapp" />
+        <xsl:with-param name="file" select="'bootstrap'"/>
+        <xsl:with-param name="target" select="$src-main-webapp" />
       </xsl:call-template>
    </xsl:if>
 </xsl:template>
@@ -365,17 +365,17 @@
 </xsl:template>
 
 <xsl:template name="copy-resources">
-   <xsl:param name="template"/>
-   <xsl:param name="path"/>
+   <xsl:param name="file"/>
+   <xsl:param name="target"/>
    <xsl:param name="mode" select="'create_if_not_exists'"/>
 
     <xsl:value-of select="$empty-line"/>
     <xsl:element name="file">
        <xsl:attribute name="op">copy_resources</xsl:attribute>
        
-       <xsl:attribute name="path"><xsl:value-of select="$path"/></xsl:attribute>
+       <xsl:attribute name="path"><xsl:value-of select="$target"/></xsl:attribute>
        
-       <xsl:attribute name="template"><xsl:value-of select="$template"/></xsl:attribute>
+       <xsl:attribute name="template"><xsl:value-of select="$file"/></xsl:attribute>
        
        <xsl:attribute name="mode"><xsl:value-of select="$mode"/></xsl:attribute>
 

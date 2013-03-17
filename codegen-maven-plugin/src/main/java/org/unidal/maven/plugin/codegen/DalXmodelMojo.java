@@ -18,18 +18,18 @@ import org.unidal.codegen.generator.Generator;
 import org.unidal.helper.Splitters;
 
 /**
- * DAL code generator for modeling in Java language
+ * DAL code generator for modeling in Objective-C language
  * 
- * @goal dal-model
+ * @goal dal-xmodel
  * @phase generate-sources
  * @author Frankie Wu
  */
-public class DalModelMojo extends AbstractMojo {
+public class DalXmodelMojo extends AbstractMojo {
    /**
     * XSL code generator implementation
     * 
     * @component role="org.unidal.codegen.generator.Generator"
-    *            role-hint="dal-model"
+    *            role-hint="dal-xmodel"
     * @required
     * @readonly
     */
@@ -48,7 +48,7 @@ public class DalModelMojo extends AbstractMojo {
     * Current project base directory
     * 
     * @parameter expression="${sourceDir}"
-    *            default-value="${basedir}/target/generated-sources/dal-model"
+    *            default-value="${basedir}/target/generated-sources/dal-xmodel"
     * @required
     */
    protected String sourceDir;
@@ -57,7 +57,7 @@ public class DalModelMojo extends AbstractMojo {
     * Location of manifest.xml file
     * 
     * @parameter expression="${manifest}" default-value=
-    *            "${basedir}/src/main/resources/META-INF/dal/model/manifest.xml"
+    *            "${basedir}/src/main/resources/META-INF/dal/xmodel/manifest.xml"
     * @required
     */
    protected String manifest;
@@ -66,7 +66,7 @@ public class DalModelMojo extends AbstractMojo {
     * Location of XSL template base.
     * 
     * @parameter expression="${resource.base}"
-    *            default-value="/META-INF/dal/model"
+    *            default-value="/META-INF/dal/xmodel"
     * @required
     */
    protected String resouceBase;
