@@ -36,10 +36,8 @@
     
     [self accept:builder];
     
-    NSString *xml = [[writer toString] retain];
+    NSString *xml = [writer toString];
     
-    [builder release];
-    [writer release];
     return xml;
 }
 
@@ -51,7 +49,6 @@
     
     NSString *str = [formatter stringFromDate:date];
     
-    [formatter release];
     return str;
 }
 
@@ -62,7 +59,6 @@
     
     NSDate *date = [formatter dateFromString:str];
     
-    [formatter release];
     return date;
 }
 
@@ -73,7 +69,6 @@
     
     NSNumber *num = [formatter numberFromString:str];
     
-    [formatter release];
     return num;
 }
 

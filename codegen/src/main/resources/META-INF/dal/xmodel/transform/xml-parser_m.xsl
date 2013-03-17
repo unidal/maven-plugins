@@ -39,9 +39,6 @@
         NSLog(@"XML parsing error(%d): %@!", [err code], [err localizedDescription]);
     }
 
-    [err release];
-    [parser release];
-
     return delegate._<xsl:value-of select="/model/entity[@root='true']/@param-name"/>;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>}<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
@@ -239,15 +236,6 @@
     }
     
     return self;
-}
-
-- (void)dealloc {
-    [m_objs release];
-    [m_tags release];
-    [m_text release];
-    [_book release];
-    
-    [super dealloc];
 }
 </xsl:template>
 

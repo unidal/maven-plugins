@@ -20,17 +20,12 @@
 
 - (id) initWithXmlWriter:(XMLWriter *)writer {
     if (self = [super init]) {
-        self-<xsl:call-template name="gt"/>m_writer = [writer retain];
+        self-<xsl:call-template name="gt"/>m_writer = writer;
     }
 
     return self;
 }
-
-- (void) dealloc {
-    [m_writer release];
-    
-    [super dealloc];
-}<xsl:value-of select="$empty-line"/>
+<xsl:value-of select="$empty-line"/>
 <xsl:call-template name="visit-method"/>
 <xsl:value-of select="$empty-line"/>
 @end
