@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="rows" root="true">
+    <entity-ref name="row" type="list" names="rows" />
+  </entity>
+  <entity name="row">
+    <attribute name="id" value-type="int" />
+    <attribute name="email" value-type="String" />
+    <attribute name="format" value-type="String" />
+    <attribute name="from" value-type="String" />
+    <attribute name="agree" value-type="boolean" />
+    <element name="receive" value-type="int" type="list" names="receives" />
+  </entity>
+</model>
+

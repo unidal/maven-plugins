@@ -18,7 +18,7 @@ public class PhoenixWizardGeneratorTest extends WizardGenerateTestSupport {
 
    @Override
    protected boolean isVerbose() {
-      return true;
+      return false;
    }
 
    @Test

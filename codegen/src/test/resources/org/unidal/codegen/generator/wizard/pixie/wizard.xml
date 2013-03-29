@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.pixie">
+   <webapp package="com.dianping.pixie" name="pixie" webres="false" cat="true" plugin-management="true" jstl="true" layout="bootstrap">
+      <module name="ui" path="ui" default="true">
+         <page name="home" title="Home" default="true" path="home">
+            <description>Home</description>
+         </page>
+      </module>
+   </webapp>
+</wizard>

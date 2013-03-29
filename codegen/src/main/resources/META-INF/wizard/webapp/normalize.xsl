@@ -51,7 +51,7 @@
       <xsl:attribute name="server-port">
          <xsl:choose>
             <xsl:when test="@name">
-               <xsl:value-of select="translate(substring(concat(@name,'000'),1,4),'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789','22233344455566677778889999222333444555666777788899990000000000')"/>
+               <xsl:value-of select="translate(substring(concat(@name,'000'),1,4),'-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789','1122233344455566677778889999222333444555666777788899990000000000')"/>
             </xsl:when>
             <xsl:otherwise>8080</xsl:otherwise>
          </xsl:choose>

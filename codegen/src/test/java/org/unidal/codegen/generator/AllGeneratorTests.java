@@ -15,6 +15,7 @@ import org.unidal.codegen.generator.model.egret.EgretGeneratorTest;
 import org.unidal.codegen.generator.model.expense.ExpenseGeneratorTest;
 import org.unidal.codegen.generator.model.mvc.MvcGeneratorTest;
 import org.unidal.codegen.generator.model.phoenix.PhoenixGeneratorTest;
+import org.unidal.codegen.generator.model.pixie.PixieGeneratorTest;
 import org.unidal.codegen.generator.model.pom.PomGeneratorTest;
 import org.unidal.codegen.generator.model.rule.RuleGeneratorTest;
 import org.unidal.codegen.generator.model.service.ServiceModelGeneratorTest;
@@ -52,6 +53,8 @@ ExpenseGeneratorTest.class,
 MvcGeneratorTest.class,
 
 PhoenixGeneratorTest.class,
+
+PixieGeneratorTest.class,
 
 PomGeneratorTest.class,
 

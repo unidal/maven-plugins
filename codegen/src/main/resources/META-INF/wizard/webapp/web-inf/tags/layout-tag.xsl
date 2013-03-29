@@ -19,10 +19,14 @@
 <html lang="en">
 
 <head>
-	<title>Phoenix - ${model.page.description}</title>
+	<title>]]></xsl:text>
+<xsl:value-of select="/wizard/webapp/@capital-name"/>
+<xsl:text disable-output-escaping="yes"><![CDATA[ - ${model.page.description}</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="Phoenix">
+	<meta name="description" content="]]></xsl:text>
+<xsl:value-of select="/wizard/webapp/@capital-name"/>
+<xsl:text disable-output-escaping="yes"><![CDATA[">
 	<link href="${model.webapp}/css/bootstrap.css" type="text/css" rel="stylesheet">
 	<link href="${model.webapp}/css/bootstrap-responsive.css" type="text/css" rel="stylesheet">
 	<script src="${model.webapp}/js/jquery-1.8.3.min.js" type="text/javascript"></script>
@@ -67,7 +71,9 @@
 	
 		<br />
 		<div class="container">
-			<footer><center>&copy;2013 Dianping Phoenix Team <a href="mailto:www@dianping.com">www@dianping.com</a></center></footer>
+			<footer><center>&copy;2013 Dianping ]]></xsl:text>
+<xsl:value-of select="/wizard/webapp/@capital-name"/>
+<xsl:text disable-output-escaping="yes"><![CDATA[ Team</center></footer>
 		</div>
 	</div>
 	<!--/.fluid-container-->

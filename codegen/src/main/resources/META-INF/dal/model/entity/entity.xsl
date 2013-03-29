@@ -437,20 +437,8 @@
 	      <xsl:value-of select="$empty"/><xsl:value-of select="'         '"/><xsl:value-of select='@field-name'/> = other.<xsl:value-of select='@get-method'/>();<xsl:value-of select="$empty-line"/>
 	      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
       	</xsl:when>
-        <xsl:when test="@value-type='boolean'">
-	      <xsl:value-of select="$empty"/>      if (other.<xsl:value-of select='@get-method'/>()) {<xsl:value-of select="$empty-line"/>
-	      <xsl:value-of select="$empty"/><xsl:value-of select="'         '"/><xsl:value-of select='@field-name'/> = other.<xsl:value-of select='@get-method'/>();<xsl:value-of select="$empty-line"/>
-	      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
-        </xsl:when>
-        <xsl:when test="@value-type='float' or @value-type='double'">
-	      <xsl:value-of select="$empty"/>      if (other.<xsl:value-of select='@get-method'/>() - 1e6 <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> 0) {<xsl:value-of select="$empty-line"/>
-	      <xsl:value-of select="$empty"/><xsl:value-of select="'         '"/><xsl:value-of select='@field-name'/> = other.<xsl:value-of select='@get-method'/>();<xsl:value-of select="$empty-line"/>
-	      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
-        </xsl:when>
       	<xsl:otherwise>
-	      <xsl:value-of select="$empty"/>      if (other.<xsl:value-of select='@get-method'/>() != 0) {<xsl:value-of select="$empty-line"/>
-	      <xsl:value-of select="$empty"/><xsl:value-of select="'         '"/><xsl:value-of select='@field-name'/> = other.<xsl:value-of select='@get-method'/>();<xsl:value-of select="$empty-line"/>
-	      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+	      <xsl:value-of select="$empty"/><xsl:value-of select="'      '"/><xsl:value-of select='@field-name'/> = other.<xsl:value-of select='@get-method'/>();<xsl:value-of select="$empty-line"/>
       	</xsl:otherwise>
       </xsl:choose>
       <xsl:if test="position()!=last()">
@@ -553,6 +541,12 @@
       
       <xsl:value-of select="$empty"/>   public <xsl:value-of select='$entity/@entity-class'/><xsl:value-of select='$space'/><xsl:value-of select='@inc-method'/>() {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      <xsl:value-of select="'      '"/><xsl:value-of select="@field-name"/>++;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return this;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      
+      <xsl:value-of select="$empty"/>   public <xsl:value-of select='$entity/@entity-class'/><xsl:value-of select='$space'/><xsl:value-of select='@inc-method'/>(<xsl:value-of select="@value-type"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      <xsl:value-of select="'      '"/><xsl:value-of select="@field-name"/> += <xsl:value-of select="@param-name"/>;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      return this;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>

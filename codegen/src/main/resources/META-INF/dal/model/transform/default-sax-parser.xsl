@@ -250,6 +250,7 @@
                                  <xsl:when test="@list='true' or @set='true'">
                                     <xsl:value-of select="$entity/@local-name"/>.<xsl:value-of select="@add-method"/>(<xsl:value-of select="$empty"/>
                                     <xsl:call-template name="convert-type">
+                                       <xsl:with-param name="value-type" select="@value-type-element"/>
                                        <xsl:with-param name="value" select="'getText()'"/>
                                     </xsl:call-template>
                                     <xsl:value-of select="$empty"/>);<xsl:value-of select="$empty"/>
@@ -267,6 +268,7 @@
                               <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name-element"/>.equals(currentTag)) {<xsl:value-of select="$empty-line"/>
                               <xsl:value-of select="$indent"/>   <xsl:value-of select="'   '"/><xsl:value-of select="$entity/@local-name"/>.<xsl:value-of select="@add-method"/>(<xsl:value-of select="$empty"/>
                               <xsl:call-template name="convert-type">
+                                 <xsl:with-param name="value-type" select="@value-type-element"/>
                                  <xsl:with-param name="value" select="'getText()'"/>
                               </xsl:call-template>
                               <xsl:value-of select="$empty"/>);<xsl:value-of select="$empty-line"/>
@@ -541,7 +543,7 @@
       <xsl:when test="$value-type='char'">convert(Character.class, <xsl:value-of select="$value"/>, (char) 0)</xsl:when>
       <xsl:when test="$value-type='Character'">convert(Character.class, <xsl:value-of select="$value"/>, null)</xsl:when>
       <xsl:when test="$value-type='Class&lt;?&gt;'">toClass(<xsl:value-of select="$value"/>)</xsl:when>
-      <xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
+      <xsl:otherwise><xsl:value-of select="$value"/>/* <xsl:value-of select="$value-type"/> */</xsl:otherwise>
    </xsl:choose>
 </xsl:template>
 
