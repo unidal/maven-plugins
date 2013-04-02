@@ -4,7 +4,7 @@
    <node name="wizard" no-namespace="true">
       <node name="webapp">
          <node name="module" key="name">
-            <node name="page" key="name" />
+            <node name="page" key="name"/>
          </node>
       </node>
       <node name="datasources">

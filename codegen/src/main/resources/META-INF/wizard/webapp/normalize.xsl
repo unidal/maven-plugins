@@ -161,7 +161,7 @@
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
-      <xsl:variable name="class-prefix"></xsl:variable>
+      <xsl:variable name="class-prefix" select="@class-prefix"/>
 
       <!-- attribute definition -->
       <xsl:attribute name="upper-name">
@@ -213,6 +213,9 @@
       <xsl:attribute name="context-class">
          <xsl:value-of select="$class-prefix"/><xsl:value-of select="'Context'"/>
       </xsl:attribute>
+      <xsl:attribute name="delegate-class">
+         <xsl:value-of select="$class-prefix"/><xsl:value-of select="'Delegate'"/>
+      </xsl:attribute>
       <xsl:attribute name="handler-class">
          <xsl:value-of select="$class-prefix"/><xsl:value-of select="'Handler'"/>
       </xsl:attribute>
@@ -236,9 +239,255 @@
             <xsl:otherwise>/jsp/<xsl:value-of select="../@name"/>/<xsl:value-of select="@name"/>.jsp</xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
+      <xsl:attribute name="detail-view">
+         <xsl:choose>
+            <xsl:when test="starts-with(@detail-view, '/')"><xsl:value-of select="@detail-view"/></xsl:when>
+            <xsl:when test="@view">/jsp/<xsl:value-of select="../@name"/>/<xsl:value-of select="@detail-view"/></xsl:when>
+            <xsl:otherwise>/jsp/<xsl:value-of select="../@name"/>/<xsl:value-of select="@name"/>-detail.jsp</xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
       
       <xsl:apply-templates/>
    </xsl:copy>
+</xsl:template>
+
+<xsl:template match="model">
+   <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      
+      <!-- variable definition -->
+      <xsl:variable name="name">
+         <xsl:choose>
+            <xsl:when test="@alias"><xsl:value-of select="@alias"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="@name"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="normalized-name">
+         <xsl:call-template name="normalize">
+            <xsl:with-param name="source" select="$name"/>
+         </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="capital-name">
+         <xsl:call-template name="capital-name">
+            <xsl:with-param name="name" select="$normalized-name"/>
+         </xsl:call-template>
+      </xsl:variable>
+
+      <!-- attribute definition -->
+      <xsl:attribute name="page-size">
+         <xsl:choose>
+            <xsl:when test="@page-size"><xsl:value-of select="@page-size"/></xsl:when>
+            <xsl:otherwise>9</xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
+      <xsl:attribute name="class-name">
+         <xsl:value-of select="$capital-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="field-name">
+         <xsl:value-of select="'m_'"/>
+         <xsl:value-of select="$normalized-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="field-names">
+         <xsl:value-of select="'m_'"/>
+         <xsl:value-of select="$normalized-name"/>
+         <xsl:value-of select="'s'"/>
+      </xsl:attribute>
+      <xsl:attribute name="param-name">
+         <xsl:value-of select="$normalized-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="param-names">
+         <xsl:value-of select="$normalized-name"/>
+         <xsl:value-of select="'s'"/>
+      </xsl:attribute>
+      <xsl:attribute name="value-type">
+         <xsl:value-of select="$capital-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="value-types">
+         <xsl:value-of select="'List&lt;'" disable-output-escaping="yes"/>
+         <xsl:value-of select="$capital-name"/>
+         <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>
+      </xsl:attribute>
+      <xsl:attribute name="get-method">
+         <xsl:value-of select="'get'"/>
+         <xsl:value-of select="$capital-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="get-methods">
+         <xsl:value-of select="'get'"/>
+         <xsl:value-of select="$capital-name"/>
+         <xsl:value-of select="'s'"/>
+      </xsl:attribute>
+      <xsl:attribute name="set-method">
+         <xsl:value-of select="'set'"/>
+         <xsl:value-of select="$capital-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="set-methods">
+         <xsl:value-of select="'set'"/>
+         <xsl:value-of select="$capital-name"/>
+         <xsl:value-of select="'s'"/>
+      </xsl:attribute>
+      
+      <xsl:apply-templates/>
+   </xsl:copy>
+</xsl:template>
+
+<xsl:template match="field">
+   <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      
+      <!-- variable definition -->
+      <xsl:variable name="name">
+         <xsl:choose>
+            <xsl:when test="@alias"><xsl:value-of select="@alias"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="@name"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="normalized-name">
+         <xsl:call-template name="normalize">
+            <xsl:with-param name="source" select="$name"/>
+         </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="capital-name">
+         <xsl:call-template name="capital-name">
+            <xsl:with-param name="name" select="$normalized-name"/>
+         </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="normalized-value-type">
+          <xsl:call-template name="normalize-key-type">
+             <xsl:with-param name="value-type">
+                <xsl:call-template name="convert-type"/>
+             </xsl:with-param>
+          </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="value-type-element">
+         <xsl:choose>
+            <xsl:when test="contains($normalized-value-type, '.')">
+               <xsl:value-of select="$normalized-value-type"/>
+            </xsl:when>
+            <xsl:when test="@primitive='true'">
+               <xsl:call-template name="convert-type"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:call-template name="capital-name">
+                  <xsl:with-param name="name" select="$normalized-value-type" />
+               </xsl:call-template>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="value-type-generic">
+          <xsl:choose>
+             <xsl:when test="@multiple='true'">
+                <xsl:call-template name="generic-type">
+                   <xsl:with-param name="type" select="$value-type-element"/>
+                </xsl:call-template>
+             </xsl:when>
+             <xsl:otherwise>
+               <xsl:value-of select="$value-type-element" />
+             </xsl:otherwise>
+          </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="value-type">
+          <xsl:choose>
+             <xsl:when test="@multiple='true'">
+                <xsl:value-of select="'List'"/>
+                <xsl:value-of select="$value-type-generic" disable-output-escaping="yes"/>
+             </xsl:when>
+             <xsl:otherwise>
+                <xsl:value-of select="$value-type-element"/>
+             </xsl:otherwise>
+          </xsl:choose>
+      </xsl:variable>
+
+      <!-- attribute definition -->
+      <xsl:attribute name="name">
+         <xsl:value-of select="$name"/>
+      </xsl:attribute>
+      <xsl:attribute name="capital-name">
+         <xsl:value-of select="$capital-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="field-name">
+         <xsl:value-of select="'m_'"/>
+         <xsl:value-of select="$normalized-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="param-name">
+         <xsl:value-of select="$normalized-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="property">
+         <xsl:value-of select="$normalized-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="value-type-element">
+         <xsl:value-of select="$value-type-element"/>
+      </xsl:attribute>
+      <xsl:attribute name="value-type-generic">
+         <xsl:value-of select="$value-type-generic"/>
+      </xsl:attribute>
+      <xsl:attribute name="value-type">
+         <xsl:value-of select="$value-type"/>
+      </xsl:attribute>
+      <xsl:attribute name="get-method">
+         <xsl:value-of select="'get'"/>
+         <xsl:value-of select="$capital-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="set-method">
+         <xsl:value-of select="'set'"/>
+         <xsl:value-of select="$capital-name"/>
+      </xsl:attribute>
+      <xsl:if test="@value-type='boolean' or @value-type='Boolean'">
+         <xsl:attribute name="is-method">
+            <xsl:value-of select="'is'"/>
+            <xsl:value-of select="$capital-name"/>
+         </xsl:attribute>
+      </xsl:if>
+      
+      <xsl:apply-templates />
+   </xsl:copy>
+</xsl:template>
+
+<xsl:template match="@*|node()">
+   <xsl:copy>
+      <xsl:copy-of select="@*" />
+      
+      <xsl:if test="node()">
+         <xsl:apply-templates />
+      </xsl:if>
+   </xsl:copy>
+</xsl:template>
+
+<xsl:template name="convert-type">
+   <xsl:param name="value-type" select="@value-type"/>
+   
+   <xsl:choose>
+      <xsl:when test="$value-type = 'Class'">
+          <xsl:value-of select="$value-type"/>
+          <xsl:call-template name="generic-type">
+             <xsl:with-param name="type">?</xsl:with-param>
+          </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="$value-type = 'String'">String</xsl:when>
+      <xsl:when test="$value-type = 'Date'">java.util.Date</xsl:when>
+      <xsl:when test="$value-type = 'Time'">Long</xsl:when>
+      <xsl:when test="@primitive='true'">
+         <xsl:choose>
+         <xsl:when test="$value-type = 'boolean'">boolean</xsl:when>
+         <xsl:when test="$value-type = 'byte'">byte</xsl:when>
+         <xsl:when test="$value-type = 'char'">char</xsl:when>
+         <xsl:when test="$value-type = 'short'">short</xsl:when>
+         <xsl:when test="$value-type = 'int'">int</xsl:when>
+         <xsl:when test="$value-type = 'long'">long</xsl:when>
+         <xsl:when test="$value-type = 'float'">float</xsl:when>
+         <xsl:when test="$value-type = 'double'">double</xsl:when>
+         <xsl:otherwise><xsl:value-of select="$value-type"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:when>
+      <xsl:when test="$value-type = 'boolean'">Boolean</xsl:when>
+      <xsl:when test="$value-type = 'byte'">Byte</xsl:when>
+      <xsl:when test="$value-type = 'char'">Character</xsl:when>
+      <xsl:when test="$value-type = 'short'">Short</xsl:when>
+      <xsl:when test="$value-type = 'int'">Integer</xsl:when>
+      <xsl:when test="$value-type = 'long'">Long</xsl:when>
+      <xsl:when test="$value-type = 'float'">Float</xsl:when>
+      <xsl:when test="$value-type = 'double'">Double</xsl:when>
+      <xsl:otherwise><xsl:value-of select="$value-type"/></xsl:otherwise>
+   </xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>
