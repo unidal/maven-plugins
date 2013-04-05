@@ -427,6 +427,13 @@
          <xsl:value-of select="'get'"/>
          <xsl:value-of select="$capital-name"/>
       </xsl:attribute>
+      <xsl:if test="@multiple='true'">
+         <xsl:attribute name="get-methods">
+            <xsl:value-of select="'get'"/>
+            <xsl:value-of select="$capital-name"/>
+            <xsl:value-of select="'s'"/>
+         </xsl:attribute>
+      </xsl:if>
       <xsl:attribute name="set-method">
          <xsl:value-of select="'set'"/>
          <xsl:value-of select="$capital-name"/>

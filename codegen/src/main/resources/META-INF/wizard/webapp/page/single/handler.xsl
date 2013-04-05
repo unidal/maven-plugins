@@ -90,7 +90,7 @@ public class <xsl:value-of select="@handler-class"/> implements PageHandler<xsl:
                <xsl:for-each select="$model/field[not(@key='true')]">
                   <xsl:choose>
                      <xsl:when test="@multiple='true'">
-                        <xsl:value-of select="'               '"/><xsl:value-of select="$model/@param-name"/>.<xsl:value-of select="@get-method"/>().addAll(payload.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
+                        <xsl:value-of select="'               '"/><xsl:value-of select="$model/@param-name"/>.<xsl:value-of select="@get-methods"/>().addAll(payload.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
                      </xsl:when>
                      <xsl:otherwise>
                         <xsl:value-of select="'               '"/><xsl:value-of select="$model/@param-name"/>.<xsl:value-of select="@set-method"/>(payload.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
@@ -117,7 +117,7 @@ public class <xsl:value-of select="@handler-class"/> implements PageHandler<xsl:
                <xsl:for-each select="$model/field">
                   <xsl:choose>
                      <xsl:when test="@multiple='true'">
-                        <xsl:value-of select="'               '"/><xsl:value-of select="$model/@param-name"/>.<xsl:value-of select="@get-method"/>().addAll(payload.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
+                        <xsl:value-of select="'               '"/><xsl:value-of select="$model/@param-name"/>.<xsl:value-of select="@get-methods"/>().addAll(payload.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
                      </xsl:when>
                      <xsl:otherwise>
                         <xsl:value-of select="'               '"/><xsl:value-of select="$model/@param-name"/>.<xsl:value-of select="@set-method"/>(payload.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
@@ -176,8 +176,10 @@ public class <xsl:value-of select="@handler-class"/> implements PageHandler<xsl:
          break;
       }
 
-      model.setAction(Action.VIEW);
+      model.setAllOptions(m_delegate.getAllOptions());
+      model.setAction(action);
       model.setPage(<xsl:value-of select="../@page-class"/>.<xsl:value-of select="@upper-name"/>);
+
       m_jspViewer.view(ctx, model);
    }
 }

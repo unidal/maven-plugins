@@ -23,4 +23,12 @@
    </xsl:choose>
 </xsl:template>
 
+<xsl:template name="lt">
+   <xsl:text disable-output-escaping="yes">&lt;</xsl:text>
+</xsl:template>
+
+<xsl:template name="gt">
+   <xsl:text disable-output-escaping="yes">&gt;</xsl:text>
+</xsl:template>
+
 </xsl:stylesheet>

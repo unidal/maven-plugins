@@ -43,6 +43,12 @@
 <xsl:variable name="model" select="single/model"/>
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;
 
+import java.util.HashMap;<xsl:value-of select="$empty"/>
+<xsl:if test="$model/field[option]">
+import java.util.LinkedHashMap;<xsl:value-of select="$empty"/>
+</xsl:if>
+import java.util.Map;
+
 import <xsl:value-of select="$model/@package"></xsl:value-of>.<xsl:value-of select="$model/@class-name"/>;
 
 public class <xsl:value-of select="@delegate-class"/> {
@@ -51,6 +57,18 @@ public class <xsl:value-of select="@delegate-class"/> {
       // TODO to be implemented
    }
 </xsl:if>
+   public Map<xsl:call-template name="lt"/>String, Map<xsl:call-template name="lt"/>String, String<xsl:call-template name="gt"/><xsl:call-template name="gt"/> getAllOptions() {
+      Map<xsl:call-template name="lt"/>String, Map<xsl:call-template name="lt"/>String, String<xsl:call-template name="gt"/><xsl:call-template name="gt"/> allOptions = new HashMap<xsl:call-template name="lt"/>String, Map<xsl:call-template name="lt"/>String, String<xsl:call-template name="gt"/><xsl:call-template name="gt"/>();
+<xsl:for-each select="$model/field[option]">
+      Map<xsl:call-template name="lt"/>String, String<xsl:call-template name="gt"/><xsl:value-of select="$space"/><xsl:value-of select="@property"/> = new LinkedHashMap<xsl:call-template name="lt"/>String, String<xsl:call-template name="gt"/>();
+
+<xsl:for-each select="option">
+      <xsl:value-of select="'      '"/><xsl:value-of select="../@property"/>.put("<xsl:value-of select="@value"/>", "<xsl:value-of select="normalize-space(text())"/>");
+</xsl:for-each>
+      allOptions.put("<xsl:value-of select="@property"/>", <xsl:value-of select="@property"/>);
+</xsl:for-each>
+      return allOptions;
+   }
 <xsl:choose>
    <xsl:when test="$policy-search='true' and $policy-pagination='true'">
    public void list(<xsl:value-of select="@model-class"/> model, String keyword, int pageNo, int pageSize) {

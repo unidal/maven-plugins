@@ -24,17 +24,18 @@
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;
 
 import java.util.List;
+import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
 
 import <xsl:value-of select="../@package"></xsl:value-of>.<xsl:value-of select="../@page-class"/>;
 import <xsl:value-of select="$model/@package"></xsl:value-of>.<xsl:value-of select="$model/@class-name"/>;
 <xsl:variable name="type">
-	<xsl:value-of select="../@page-class"/>
-	<xsl:value-of select="', '"/>
-	<xsl:value-of select="@action-class"/>
-	<xsl:value-of select="', '"/>
-	<xsl:value-of select="@context-class"/>
+   <xsl:value-of select="../@page-class"/>
+   <xsl:value-of select="', '"/>
+   <xsl:value-of select="@action-class"/>
+   <xsl:value-of select="', '"/>
+   <xsl:value-of select="@context-class"/>
 </xsl:variable>
 public class <xsl:value-of select="@model-class"/> extends ViewModel<xsl:call-template name="generic-type"><xsl:with-param name="type" select="$type"/></xsl:call-template> {
 <xsl:if test="$policy-pagination='true'">
@@ -50,14 +51,21 @@ public class <xsl:value-of select="@model-class"/> extends ViewModel<xsl:call-te
 
    private int m_endPage;
 </xsl:if>
-	public <xsl:value-of select="@model-class"/>(Context ctx) {
-		super(ctx);
-	}
 
-	@Override
-	public <xsl:value-of select="@action-class"/> getDefaultAction() {
-		return <xsl:value-of select="@action-class"/>.VIEW;
-	}
+   private Map<xsl:call-template name="lt"/>String, Map<xsl:call-template name="lt"/>String, String<xsl:call-template name="gt"/><xsl:call-template name="gt"/> m_allOptions;
+
+   public <xsl:value-of select="@model-class"/>(Context ctx) {
+      super(ctx);
+   }
+
+   @Override
+   public <xsl:value-of select="@action-class"/> getDefaultAction() {
+      return <xsl:value-of select="@action-class"/>.VIEW;
+   }
+
+   public Map<xsl:call-template name="lt"/>String, Map<xsl:call-template name="lt"/>String, String<xsl:call-template name="gt"/><xsl:call-template name="gt"/> getAllOptions() {
+      return m_allOptions;
+   }
 
    public <xsl:value-of select="$model/@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="$model/@get-method"/>() {
       return <xsl:value-of select="$model/@field-name"/>;
@@ -83,6 +91,11 @@ public class <xsl:value-of select="@model-class"/> extends ViewModel<xsl:call-te
       return m_startPage;
    }
 </xsl:if>
+
+   public void setAllOptions(Map<xsl:call-template name="lt"/>String, Map<xsl:call-template name="lt"/>String, String<xsl:call-template name="gt"/><xsl:call-template name="gt"/> allOptions) {
+      m_allOptions = allOptions;
+   }
+
    public void <xsl:value-of select="$model/@set-method"/>(<xsl:value-of select="$model/@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="$model/@param-name"/>) {
       <xsl:value-of select="$model/@field-name"/> = <xsl:value-of select="$model/@param-name"/>;
    }
