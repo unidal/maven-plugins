@@ -5,7 +5,7 @@ import java.util.List;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-public class WebFileBuilder extends DocumentBuilder {
+public class WebFileBuilder extends JDomBuilder {
    private Namespace m_activeNamespace = Namespace.getNamespace("http://java.sun.com/xml/ns/javaee");
 
    @SuppressWarnings("unchecked")

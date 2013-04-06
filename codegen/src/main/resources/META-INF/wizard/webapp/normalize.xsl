@@ -4,6 +4,8 @@
 <xsl:import href="../naming.xsl"/>
 <xsl:output method="xml" indent="yes" media-type="text/xml" encoding="utf-8"/>
 
+<xsl:param name="template-file"/>
+
 <xsl:template match="/">
    <xsl:apply-templates select="/wizard"/>
 </xsl:template>
@@ -247,7 +249,12 @@
          </xsl:choose>
       </xsl:attribute>
       
-      <xsl:apply-templates/>
+      <xsl:if test="$template-file">
+         <xsl:variable name="doc" select="document($template-file)"/>
+         <xsl:variable name="page-name" select="@name"/>
+         <xsl:variable name="module-name" select="../@name"/>
+         <xsl:apply-templates select="$doc/template/page[@name=$page-name and @module=$module-name]/single"/>
+      </xsl:if>
    </xsl:copy>
 </xsl:template>
 

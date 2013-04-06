@@ -28,11 +28,11 @@ public class XslGenerator implements Generator {
          ctx.log(LogLevel.DEBUG, aggregatedXml);
 
          ctx.log(LogLevel.INFO, "Normalizing ...");
-         String normalizedXml = m_xslTransformer.transform(ctx.getNormalizeXsl(), aggregatedXml);
+         String normalizedXml = m_xslTransformer.transform(ctx.getNormalizeXsl(), aggregatedXml, ctx.getProperties());
          ctx.log(LogLevel.DEBUG, normalizedXml);
 
          ctx.log(LogLevel.INFO, "Decorating ...");
-         String decoratedXml = m_xslTransformer.transform(ctx.getDecorateXsl(), normalizedXml);
+         String decoratedXml = m_xslTransformer.transform(ctx.getDecorateXsl(), normalizedXml, ctx.getProperties());
          ctx.log(LogLevel.DEBUG, decoratedXml);
 
          ctx.log(LogLevel.INFO, "Manifesting ...");

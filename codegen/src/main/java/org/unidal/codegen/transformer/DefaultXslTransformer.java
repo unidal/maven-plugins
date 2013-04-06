@@ -11,8 +11,10 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.unidal.codegen.template.XslTemplateManager;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultXslTransformer implements XslTransformer {
+   @Inject
    private XslTemplateManager m_templateManager;
 
    private void setParameters(Transformer transformer, Map<String, String> parameters) {

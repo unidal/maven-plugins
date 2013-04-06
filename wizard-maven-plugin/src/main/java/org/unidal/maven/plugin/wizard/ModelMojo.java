@@ -100,7 +100,7 @@ public class ModelMojo extends AbstractMojo {
     *            default-value="/META-INF/wizard/model"
     * @required
     */
-   protected String resouceBase;
+   protected String resourceBase;
 
    /**
     * @parameter expression="${outputDir}"

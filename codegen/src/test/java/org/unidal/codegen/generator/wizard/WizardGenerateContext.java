@@ -17,6 +17,12 @@ public class WizardGenerateContext extends GenerateContextSupport {
       super("/META-INF/wizard/" + type, projectBaseDir);
 
       m_manifestXml = manifestXml.toURI().toURL();
+
+      File templateFile = new File(manifestXml.getParentFile(), "template.xml");
+
+      if (templateFile.isFile()) {
+         getProperties().put("template-file", templateFile.getPath());
+      }
    }
 
    public WizardGenerateContext(File projectBaseDir, String type, File manifestXml, boolean verbose, boolean debug)

@@ -143,14 +143,16 @@
      <xsl:with-param name="template" select="concat('page/', $template, '/context.xsl')"/>
    </xsl:call-template>
 
-   <!-- Delegate class -->
-   <xsl:call-template name="generate-java">
-     <xsl:with-param name="class" select="@delegate-class"/>
-     <xsl:with-param name="package" select="@package"/>
-     <xsl:with-param name="module" select="../@name"/>
-     <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="template" select="concat('page/', $template, '/delegate.xsl')"/>
-   </xsl:call-template>
+   <xsl:if test="$template='single'">
+      <!-- Delegate class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="@delegate-class"/>
+        <xsl:with-param name="package" select="@package"/>
+        <xsl:with-param name="module" select="../@name"/>
+        <xsl:with-param name="name" select="@name"/>
+        <xsl:with-param name="template" select="concat('page/', $template, '/delegate.xsl')"/>
+      </xsl:call-template>
+   </xsl:if>
 
    <!-- Handler class -->
    <xsl:call-template name="generate-java">
@@ -197,15 +199,17 @@
      <xsl:with-param name="template" select="concat('page/', $template, '/payload.xsl')"/>
    </xsl:call-template>
    
-   <!-- list.jsp -->
-   <xsl:call-template name="generate-resource">
-     <xsl:with-param name="src-dir" select="$src-main-webapp" />
-     <xsl:with-param name="package" select="@package"/>
-     <xsl:with-param name="module" select="../@name"/>
-     <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="file" select="substring(@view,1)"/>
-     <xsl:with-param name="template" select="concat('pres/', $template, '/list-jsp.xsl')"/>
-   </xsl:call-template>
+   <xsl:if test="$template='single'">
+      <!-- list.jsp -->
+      <xsl:call-template name="generate-resource">
+        <xsl:with-param name="src-dir" select="$src-main-webapp" />
+        <xsl:with-param name="package" select="@package"/>
+        <xsl:with-param name="module" select="../@name"/>
+        <xsl:with-param name="name" select="@name"/>
+        <xsl:with-param name="file" select="substring(@view,1)"/>
+        <xsl:with-param name="template" select="concat('pres/', $template, '/list-jsp.xsl')"/>
+      </xsl:call-template>
+   </xsl:if>
    
    <!-- view.jsp -->
    <xsl:call-template name="generate-resource">

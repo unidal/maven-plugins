@@ -128,7 +128,7 @@ public class JdbcMojo extends AbstractMojo {
     *            default-value="/META-INF/wizard/jdbc"
     * @required
     */
-   protected String resouceBase;
+   protected String resourceBase;
 
    /**
     * @parameter expression="${outputDir}"
@@ -192,7 +192,7 @@ public class JdbcMojo extends AbstractMojo {
          }
 
          final URL manifestXml = manifestFile.toURI().toURL();
-         final GenerateContext ctx = new GenerateContextSupport(resouceBase, new File(sourceDir)) {
+         final GenerateContext ctx = new GenerateContextSupport(resourceBase, new File(sourceDir)) {
             public URL getManifestXml() {
                return manifestXml;
             }

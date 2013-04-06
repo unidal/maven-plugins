@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat">
-   <webapp package="com.dianping.cat" name="cat" webres="true" cat="true" plugin-management="true" jstl="true">
+   <webapp package="com.dianping.cat" name="cat" webres="true" cat="true" plugin-management="true" jstl="true" layout="bootstrap">
       <module name="dashboard" path="d" default="true">
          <page name="home" title="Home" default="true" package="com.dianping.cat.page.home">
             <description>Home Page of Garden</description>
@@ -12,6 +12,11 @@
       <module name="toolkit" path="t">
          <page name="query" title="DB Query" default="true">
             <description>Database Query Toolkit</description>
+         </page>
+      </module>
+      <module name="ui" path="ui" default="true">
+         <page name="home" title="Home" default="true" path="home" standalone="true" template="single">
+            <description>Home</description>
          </page>
       </module>
    </webapp>
