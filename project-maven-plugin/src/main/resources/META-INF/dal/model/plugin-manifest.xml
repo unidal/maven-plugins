@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="plugin-codegen.xml" />
+  <file path="plugin-model.xml" />
+</manifest>
+

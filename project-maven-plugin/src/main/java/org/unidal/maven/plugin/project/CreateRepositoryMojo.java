@@ -1,10 +1,14 @@
 package org.unidal.maven.plugin.project;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.maven.RepositoryUtils;
@@ -28,10 +32,18 @@ import org.apache.maven.project.ProjectDependenciesResolver;
 import org.sonatype.aether.RepositorySystemSession;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
+import org.unidal.maven.plugin.common.SharedContext;
+import org.unidal.maven.plugin.project.group.entity.GroupMetadata;
+import org.unidal.maven.plugin.project.plugin.entity.PluginMetadata;
+import org.unidal.maven.plugin.project.plugin.entity.Versioning;
+import org.unidal.maven.plugin.project.plugin.entity.Versions;
+import org.xml.sax.SAXException;
+
+import com.ibm.icu.text.SimpleDateFormat;
 
 /**
  * Create a Maven repository to hold some jars (build & plugin) referenced by
- * current project
+ * current project.
  * 
  * @goal create-repository
  */
@@ -75,6 +87,13 @@ public class CreateRepositoryMojo extends AbstractMojo {
    private ProjectBuilder m_projectBuilder;
 
    /**
+    * @component
+    * @required
+    * @readonly
+    */
+   private SharedContext m_sharedContext;
+
+   /**
     * @parameter expression="${targetDir}"
     *            default-value="${user.dir}/target/repository"
     */
@@ -93,8 +112,8 @@ public class CreateRepositoryMojo extends AbstractMojo {
     */
    private boolean verbose;
 
-   private void collectDependencies(Set<Artifact> all, List<String> prefixes, MavenProject project, boolean withPlugin, int level)
-         throws ProjectBuildingException {
+   private void collectDependencies(Set<Artifact> all, List<String> pluginGroups, List<String> prefixes, MavenProject project,
+         boolean withPlugin, int level) throws ProjectBuildingException {
       DependencyResolutionResult resolutionResult;
 
       try {
@@ -112,8 +131,7 @@ public class CreateRepositoryMojo extends AbstractMojo {
             org.sonatype.aether.artifact.Artifact artifact = d.getArtifact();
             Artifact a = RepositoryUtils.toArtifact(artifact);
 
-            // logLine(a.getId(), level + 1);
-            resolveDependency(all, prefixes, a, level + 1);
+            resolveDependency(all, pluginGroups, prefixes, a, level + 1);
          }
       }
 
@@ -122,13 +140,13 @@ public class CreateRepositoryMojo extends AbstractMojo {
             Artifact pluginArtifact = new DefaultArtifact(plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion(),
                   "compile", "jar", null, new DefaultArtifactHandler("jar"));
 
-            resolveDependency(all, prefixes, pluginArtifact, 0);
+            resolveDependency(all, pluginGroups, prefixes, pluginArtifact, 0);
 
             for (Dependency dependency : plugin.getDependencies()) {
                Artifact dependencyArtifact = new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(),
                      dependency.getVersion(), "compile", dependency.getType(), null, new DefaultArtifactHandler("jar"));
 
-               resolveDependency(all, prefixes, dependencyArtifact, 1);
+               resolveDependency(all, pluginGroups, prefixes, dependencyArtifact, 1);
             }
          }
       }
@@ -153,31 +171,122 @@ public class CreateRepositoryMojo extends AbstractMojo {
    public void execute() throws MojoExecutionException, MojoFailureException {
       List<String> prefixes = Splitters.by(',').trim().noEmptyItem().split(include);
       Set<Artifact> all = new HashSet<Artifact>();
+      List<String> pluginGroups = new ArrayList<String>();
+      List<String> files = new ArrayList<String>();
+
+      m_sharedContext.setAttribute(getClass(), m_project.getArtifact().getId(), m_project);
 
       try {
          if (verbose) {
             logLine(m_project.getId(), 0);
          }
 
-         collectDependencies(all, prefixes, m_project, true, 0);
-
-         List<String> result = new ArrayList<String>();
+         collectDependencies(all, pluginGroups, prefixes, m_project, true, 0);
 
          for (Artifact artifact : all) {
-            result.add(m_localRepository.pathOf(artifact));
+            files.add(m_localRepository.pathOf(artifact));
 
-            resolveParentPom(result, artifact);
+            resolveParentPom(files, artifact);
          }
 
-         save(result, m_targetDir);
+         if (files.size() > 0) {
+            saveArtifacts(files, m_targetDir);
+            rebuildPluginMeta(pluginGroups, m_targetDir);
+         }
       } catch (Exception e) {
          throw new MojoFailureException("Error when creating repository! " + e, e);
       }
    }
 
-   private void resolveDependency(Set<Artifact> all, List<String> prefixes, Artifact artifact, int level)
+   private void rebuildPluginMeta(List<String> pluginGroups, File targetDir) throws IOException, SAXException, IOException {
+      Set<File> groupFiles = new LinkedHashSet<File>();
+      Set<File> pluginFiles = new LinkedHashSet<File>();
+
+      for (String pluginGroup : pluginGroups) {
+         List<String> parts = Splitters.by(':').split(pluginGroup);
+         int index = 0;
+         String groupId = parts.get(index++);
+         String artifactId = parts.get(index++);
+         String version = parts.get(index++);
+         String name = parts.get(index++);
+         String prefix = artifactId.substring(0, artifactId.indexOf('-'));
+
+         // update group maven-meta.xml
+         File groupFile = new File(targetDir, groupId.replace('.', '/') + "/maven-meta.xml");
+         GroupMetadata groupMeta;
+
+         if (groupFile.isFile()) {
+            groupMeta = org.unidal.maven.plugin.project.group.transform.DefaultSaxParser.parse(new FileInputStream(groupFile));
+         } else {
+            groupMeta = new GroupMetadata();
+         }
+
+         org.unidal.maven.plugin.project.group.entity.Plugin plugin = groupMeta.findPlugin(artifactId);
+
+         if (plugin == null) {
+            plugin = new org.unidal.maven.plugin.project.group.entity.Plugin(artifactId);
+            plugin.setPrefix(prefix);
+            plugin.setName(name);
+            groupMeta.addPlugin(plugin);
+
+            Files.forIO().writeTo(groupFile, groupMeta.toString());
+            groupFiles.add(groupFile);
+         }
+
+         // update plugin maven-meta.xml
+         File pluginFile = new File(targetDir, groupId.replace('.', '/') + "/" + artifactId + "/maven-meta.xml");
+         PluginMetadata pluginMeta;
+
+         if (pluginFile.isFile()) {
+            pluginMeta = org.unidal.maven.plugin.project.plugin.transform.DefaultSaxParser.parse(new FileInputStream(pluginFile));
+         } else {
+            pluginMeta = new PluginMetadata();
+            pluginMeta.setGroupId(groupId);
+            pluginMeta.setArtifactId(artifactId);
+            pluginMeta.setVersioning(new Versioning());
+         }
+
+         Versioning versioning = pluginMeta.getVersioning();
+
+         versioning.setLastUpdated(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+         versioning.setLatest(version);
+
+         if (!version.endsWith("-SNAPSHOT")) {
+            versioning.setRelease(version);
+         }
+
+         Versions versions = versioning.getVersions();
+
+         if (versions == null) {
+            versions = new Versions();
+            versioning.setVersions(versions);
+         }
+
+         if (!versions.getVersions().contains(version)) {
+            versions.addVersion(version);
+
+            Files.forIO().writeTo(pluginFile, pluginMeta.toString());
+            pluginFiles.add(pluginFile);
+         }
+      }
+
+      for (File groupFile : groupFiles) {
+         getLog().info(String.format("Generate file %s", groupFile));
+      }
+
+      for (File pluginFile : pluginFiles) {
+         getLog().info(String.format("Generate file %s", pluginFile));
+      }
+   }
+
+   private void resolveDependency(Set<Artifact> all, List<String> pluginGroups, List<String> prefixes, Artifact artifact, int level)
          throws ProjectBuildingException {
       boolean eligible = false;
+      Map<String, Object> buildingArtifacts = m_sharedContext.getAttributes(getClass());
+
+      if (buildingArtifacts.containsKey(artifact.getId())) {
+         return;
+      }
 
       for (String prefix : prefixes) {
          if (artifact.getGroupId().startsWith(prefix)) {
@@ -201,7 +310,15 @@ public class CreateRepositoryMojo extends AbstractMojo {
       File pomFile = new File(m_localRepository.getBasedir(), path.substring(0, path.length() - 4) + ".pom");
       MavenProject project = m_projectBuilder.build(pomFile, request).getProject();
 
-      collectDependencies(all, prefixes, project, false, level);
+      if ("maven-plugin".equals(project.getPackaging())) {
+         String id = project.getGroupId() + ":" + project.getArtifactId() + ":" + project.getVersion() + ":" + project.getName();
+
+         if (!pluginGroups.contains(id)) {
+            pluginGroups.add(id);
+         }
+      }
+
+      collectDependencies(all, pluginGroups, prefixes, project, false, level);
    }
 
    private void resolveParentPom(List<String> result, Artifact artifact) {
@@ -236,7 +353,7 @@ public class CreateRepositoryMojo extends AbstractMojo {
       }
    }
 
-   private void save(List<String> files, File targetBase) throws IOException {
+   private void saveArtifacts(List<String> files, File targetBase) throws IOException {
       File sourceBase = new File(m_localRepository.getBasedir());
 
       for (String file : files) {
@@ -247,14 +364,14 @@ public class CreateRepositoryMojo extends AbstractMojo {
             target.getParentFile().mkdirs();
 
             Files.forDir().copyFile(source, target);
-            getLog().info(String.format("File %s created.", target));
+            getLog().info(String.format("Create file %s", target));
 
             File sourceSign = new File(sourceBase, file + ".sha1");
             File targetSign = new File(targetBase, file + ".sha1");
 
             if (sourceSign.isFile()) {
                Files.forDir().copyFile(sourceSign, targetSign);
-               getLog().info(String.format("File %s created.", targetSign));
+               getLog().info(String.format("Create file %s", targetSign));
             }
          }
       }

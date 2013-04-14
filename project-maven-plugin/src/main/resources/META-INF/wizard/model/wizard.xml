@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="org.unidal.maven.plugin.project">
+   <model package="org.unidal.maven.plugin.project.group" name="group">
+      <sample-model>src/test/resources/org/unidal/maven/plugin/project/group-maven-metadata.xml</sample-model>
+   </model>
+   <model package="org.unidal.maven.plugin.project.plugin" name="plugin">
+      <sample-model>src/test/resources/org/unidal/maven/plugin/project/plugin-maven-metadata.xml</sample-model>
+   </model>
+</wizard>
