@@ -41,7 +41,7 @@
          <xsl:variable name="upper-name-element" select="@upper-name-element"/>
          <xsl:variable name="upper-name" select="@upper-name"/>
          <xsl:if test="generate-id(//entity/element[not(@text='true') and not(@render='false')][@upper-name-element=$upper-name-element][1])=generate-id()">
-            <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name-element"/>;//<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name-element"/>;<xsl:value-of select="$empty-line"/>
          </xsl:if>
          <xsl:if test="@list='true' or @set='true'">
             <xsl:if test="generate-id(//entity/element[(@list='true' or @set='true') and @upper-name=$upper-name][1])=generate-id()">

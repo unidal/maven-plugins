@@ -78,7 +78,7 @@ public class DefaultModelMeta implements ModelMeta {
             element.setAttribute("format", e.getFormat());
          }
 
-         if (e.isList(parentName)) {
+         if (e.isList() || e.isList(parentName)) {
             element.setAttribute("type", "list");
 
             if (e.getListName() == null) {
@@ -89,6 +89,7 @@ public class DefaultModelMeta implements ModelMeta {
                }
             } else {
                element.setAttribute("names", e.getListName());
+               element.setAttribute("xml-indent", "true");
             }
          }
 
@@ -365,7 +366,7 @@ public class DefaultModelMeta implements ModelMeta {
       }
 
       public boolean isSimpleElement() {
-         return m_attributes.isEmpty() && m_elements.isEmpty() && !m_list;
+         return m_attributes.isEmpty() && m_elements.isEmpty();
       }
 
       public boolean isValue() {
@@ -412,8 +413,7 @@ public class DefaultModelMeta implements ModelMeta {
 
       @Override
       public String toString() {
-         return String.format("ElementEntry[%s, %s, %s, %s]", m_name, m_attributes, m_list ? "" : m_listName,
-               m_elements);
+         return String.format("ElementEntry[%s, %s, %s, %s]", m_name, m_attributes, m_list ? "" : m_listName, m_elements);
       }
    }
 
@@ -588,14 +588,30 @@ public class DefaultModelMeta implements ModelMeta {
             ElementEntry e = m_elementMap.get(name);
 
             if (done.size() != 1) { // skip root
-               if (e.getAttributes().isEmpty() && e.getElements().isEmpty() && e.getElementRefs().size() == 1) {
-                  ElementEntry first = e.getElementRefs().iterator().next();
+               if (e.getAttributes().isEmpty()) {
+                  Collection<ElementEntry> elements = e.getElements();
+                  Collection<ElementEntry> elementRefs = e.getElementRefs();
 
-                  if (first.isList(name)) {
-                     ref.setList(true);
-                     ref.setName(first.getName());
-                     ref.setListName(name);
-                     trash.add(name);
+                  if (elements.isEmpty() && elementRefs.size() == 1) {
+                     ElementEntry first = elementRefs.iterator().next();
+
+                     if (first.isList(name)) {
+                        ref.setList(true);
+                        ref.setName(first.getName());
+                        ref.setListName(name);
+                        trash.add(name);
+                     }
+                  } else if (elements.size() == 1 && elementRefs.isEmpty()) {
+                     ElementEntry first = elements.iterator().next();
+
+                     if (first.isList(name)) {
+                        ref.setList(true);
+                        ref.setName(first.getName());
+                        ref.setListName(name);
+                        ref.removeElement(first);
+                        e.removeElement(first);
+                        trash.add(name);
+                     }
                   }
                }
             }

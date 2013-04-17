@@ -427,7 +427,7 @@ public class DefaultTableMeta implements TableMeta {
       return entity;
    }
 
-   String normalize(String src) {
+   public String normalize(String src) {
       int len = src.length();
       StringBuilder sb = new StringBuilder(len + 4);
       boolean flag = true;

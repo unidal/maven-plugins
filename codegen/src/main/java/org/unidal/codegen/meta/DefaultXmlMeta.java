@@ -381,7 +381,7 @@ public class DefaultXmlMeta implements XmlMeta {
       }
    }
 
-   static final class Utils {
+   public static final class Utils {
       private static SimpleDateFormat[] s_dateFormats = new SimpleDateFormat[] {
             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
             new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH),

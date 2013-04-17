@@ -1,4 +1,4 @@
-package org.unidal.codegen.meta;
+package org.unidal.codegen.meta.xml;
 
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -9,6 +9,8 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.junit.Assert;
 import org.junit.Test;
+import org.unidal.codegen.meta.DefaultXmlMeta;
+import org.unidal.codegen.meta.XmlMeta;
 import org.unidal.lookup.ComponentTestCase;
 
 public class XmlMetaTest extends ComponentTestCase {

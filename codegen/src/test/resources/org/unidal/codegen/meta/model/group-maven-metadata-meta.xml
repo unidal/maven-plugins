@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="metadata" root="true">
+    <entity-ref name="plugin" type="list" names="plugins" xml-indent="true" />
+  </entity>
+  <entity name="plugin">
+    <element name="name" value-type="String" />
+    <element name="prefix" value-type="String" />
+    <element name="artifactId" value-type="String" />
+  </entity>
+</model>
+

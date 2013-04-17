@@ -1,8 +1,9 @@
-package org.unidal.codegen.meta;
+package org.unidal.codegen.meta.table;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.unidal.codegen.meta.DefaultTableMeta;
 
 public class TableMetaTest {
    @Test

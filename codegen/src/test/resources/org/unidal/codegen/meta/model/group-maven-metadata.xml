@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <plugins>
+    <plugin>
+      <name>Code Generation Maven Plugin</name>
+      <prefix>codegen</prefix>
+      <artifactId>codegen-maven-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>Miscellaneous Maven Plugin</name>
+      <prefix>misc</prefix>
+      <artifactId>misc-maven-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>Flex Maven Plugin</name>
+      <prefix>flex</prefix>
+      <artifactId>flex-maven-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>Maven Project Plugin</name>
+      <prefix>project</prefix>
+      <artifactId>project-maven-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>Web Resource Maven Plugin</name>
+      <prefix>webres</prefix>
+      <artifactId>webres-maven-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>Maven Wizard Plugin</name>
+      <prefix>wizard</prefix>
+      <artifactId>wizard-maven-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>Maven Date Plugin</name>
+      <prefix>date</prefix>
+      <artifactId>date-maven-plugin</artifactId>
+    </plugin>
+    <plugin>
+      <name>Maven Time Plugin</name>
+      <prefix>time</prefix>
+      <artifactId>time-maven-plugin</artifactId>
+    </plugin>
+  </plugins>
+</metadata>

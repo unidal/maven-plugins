@@ -1,4 +1,4 @@
-package org.unidal.codegen.meta;
+package org.unidal.codegen.meta.xml;
 
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
@@ -8,6 +8,7 @@ import java.net.URL;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.unidal.codegen.meta.XmlMetaHelper;
 import org.unidal.lookup.ComponentTestCase;
 
 public class XmlMetaHelperTest extends ComponentTestCase {
