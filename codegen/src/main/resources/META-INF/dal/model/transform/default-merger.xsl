@@ -88,7 +88,7 @@
       <xsl:value-of select="$empty"/>   public void <xsl:value-of select="@visit-method"/>(<xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>) {<xsl:value-of select="$empty-line"/>
       <xsl:choose>
          <xsl:when test="@root='true'">
-            <xsl:value-of select="'      '"/><xsl:value-of select="@field-name"/>.mergeAttributes(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="'      '"/><xsl:value-of select="@merge-method"/>(<xsl:value-of select="@field-name"/>, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="'      '"/><xsl:value-of select="@visit-children-method"/>(<xsl:value-of select="@field-name"/>, <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="//entity/entity-ref[@name=$name and not(@render='false')]">

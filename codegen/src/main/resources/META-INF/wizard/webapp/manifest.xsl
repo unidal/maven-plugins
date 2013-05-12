@@ -199,27 +199,40 @@
      <xsl:with-param name="template" select="concat('page/', $template, '/payload.xsl')"/>
    </xsl:call-template>
    
-   <xsl:if test="$template='single'">
-      <!-- list.jsp -->
-      <xsl:call-template name="generate-resource">
-        <xsl:with-param name="src-dir" select="$src-main-webapp" />
-        <xsl:with-param name="package" select="@package"/>
-        <xsl:with-param name="module" select="../@name"/>
-        <xsl:with-param name="name" select="@name"/>
-        <xsl:with-param name="file" select="substring(@view,1)"/>
-        <xsl:with-param name="template" select="concat('pres/', $template, '/list-jsp.xsl')"/>
-      </xsl:call-template>
-   </xsl:if>
-   
-   <!-- view.jsp -->
-   <xsl:call-template name="generate-resource">
-     <xsl:with-param name="src-dir" select="$src-main-webapp" />
-     <xsl:with-param name="package" select="@package"/>
-     <xsl:with-param name="module" select="../@name"/>
-     <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="file" select="substring(@detail-view,1)"/>
-     <xsl:with-param name="template" select="concat('pres/', $template, '/view-jsp.xsl')"/>
-   </xsl:call-template>
+   <xsl:choose>
+      <xsl:when test="$template='single'">
+         <!-- list.jsp -->
+         <xsl:call-template name="generate-resource">
+           <xsl:with-param name="src-dir" select="$src-main-webapp" />
+           <xsl:with-param name="package" select="@package"/>
+           <xsl:with-param name="module" select="../@name"/>
+           <xsl:with-param name="name" select="@name"/>
+           <xsl:with-param name="file" select="substring(@view,1)"/>
+           <xsl:with-param name="template" select="concat('pres/', $template, '/list-jsp.xsl')"/>
+         </xsl:call-template>
+         
+         <!-- view.jsp -->
+         <xsl:call-template name="generate-resource">
+           <xsl:with-param name="src-dir" select="$src-main-webapp" />
+           <xsl:with-param name="package" select="@package"/>
+           <xsl:with-param name="module" select="../@name"/>
+           <xsl:with-param name="name" select="@name"/>
+           <xsl:with-param name="file" select="substring(@detail-view,1)"/>
+           <xsl:with-param name="template" select="concat('pres/', $template, '/view-jsp.xsl')"/>
+         </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+         <!-- view.jsp -->
+         <xsl:call-template name="generate-resource">
+           <xsl:with-param name="src-dir" select="$src-main-webapp" />
+           <xsl:with-param name="package" select="@package"/>
+           <xsl:with-param name="module" select="../@name"/>
+           <xsl:with-param name="name" select="@name"/>
+           <xsl:with-param name="file" select="substring(@view,1)"/>
+           <xsl:with-param name="template" select="concat('pres/', $template, '/view-jsp.xsl')"/>
+         </xsl:call-template>
+      </xsl:otherwise>
+   </xsl:choose>
 </xsl:template>
 
 <xsl:template name="wizard-policy">

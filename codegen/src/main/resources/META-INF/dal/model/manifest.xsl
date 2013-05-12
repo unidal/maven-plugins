@@ -80,6 +80,28 @@
      <xsl:with-param name="package" select="$package"/>
      <xsl:with-param name="template" select="'base_entity.xsl'"/>
    </xsl:call-template>
+
+   <xsl:variable name="policy-filter">
+      <xsl:call-template name="model-policy">
+         <xsl:with-param name="name" select="'filter'"/>
+      </xsl:call-template>
+   </xsl:variable>
+   
+   <xsl:if test="$policy-filter='true'">
+      <!-- IFilter class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'IFilter'"/>
+        <xsl:with-param name="package" select="$package"/>
+        <xsl:with-param name="template" select="'ifilter.xsl'"/>
+      </xsl:call-template>
+
+      <!-- IVisitorEnabled class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'IVisitorEnabled'"/>
+        <xsl:with-param name="package" select="$package"/>
+        <xsl:with-param name="template" select="'ivisitor_enabled.xsl'"/>
+      </xsl:call-template>
+   </xsl:if>
    
    <!-- transform folder -->
    <xsl:variable name="transform-package">
@@ -87,7 +109,6 @@
        <xsl:value-of select="'.transform'"/>
    </xsl:variable>
 
-   <!-- DefaultValidator class -->
    <xsl:variable name="policy-validator">
       <xsl:call-template name="model-policy">
          <xsl:with-param name="name" select="'validator'"/>
@@ -95,13 +116,30 @@
    </xsl:variable>
    
    <xsl:if test="$policy-validator='true'">
+      <!-- DefaultValidator class -->
 	   <xsl:call-template name="generate-java">
 	     <xsl:with-param name="class" select="'DefaultValidator'"/>
 	     <xsl:with-param name="package" select="$transform-package"/>
 	     <xsl:with-param name="template" select="'transform/default-validator.xsl'"/>
 	   </xsl:call-template>
    </xsl:if>
-   
+
+   <xsl:if test="$policy-filter='true'">
+      <!-- BaseFilter class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'BaseFilter'"/>
+        <xsl:with-param name="package" select="$transform-package"/>
+        <xsl:with-param name="template" select="'transform/base-filter.xsl'"/>
+      </xsl:call-template>
+
+      <!-- VisitorChain class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'VisitorChain'"/>
+        <xsl:with-param name="package" select="$transform-package"/>
+        <xsl:with-param name="template" select="'transform/visitor-chain.xsl'"/>
+      </xsl:call-template>
+   </xsl:if>
+
    <!-- DefaultXmlBuilder class -->
    <xsl:call-template name="generate-java">
      <xsl:with-param name="class" select="'DefaultXmlBuilder'"/>
@@ -264,19 +302,28 @@
          </xsl:call-template>
       </xsl:if>
 
-      <xsl:if test="$policy-xml-parser-dom='true' or $policy-native-parser='true'">
+      <xsl:if test="$policy-xml-parser-dom='true'">
          <!-- DefaultMaker class -->
          <xsl:call-template name="generate-java">
            <xsl:with-param name="class" select="'DefaultDomMaker'"/>
            <xsl:with-param name="package" select="$transform-package"/>
            <xsl:with-param name="template" select="'transform/default-dom-maker.xsl'"/>
          </xsl:call-template>
-
+   
          <!-- DefaultDomParser class -->
          <xsl:call-template name="generate-java">
            <xsl:with-param name="class" select="'DefaultDomParser'"/>
            <xsl:with-param name="package" select="$transform-package"/>
            <xsl:with-param name="template" select="'transform/default-dom-parser.xsl'"/>
+         </xsl:call-template>
+      </xsl:if>
+   
+      <xsl:if test="$policy-native-parser='true'">
+         <!-- DefaultNativeParser class -->
+         <xsl:call-template name="generate-java">
+           <xsl:with-param name="class" select="'DefaultNativeParser'"/>
+           <xsl:with-param name="package" select="$transform-package"/>
+           <xsl:with-param name="template" select="'transform/default-native-parser.xsl'"/>
          </xsl:call-template>
       </xsl:if>
 
@@ -294,15 +341,6 @@
            <xsl:with-param name="package" select="$transform-package"/>
            <xsl:with-param name="template" select="'transform/default-sax-parser.xsl'"/>
          </xsl:call-template>
-      </xsl:if>
-   
-      <xsl:if test="$policy-native-parser='true'">
-            <!-- DefaultNativeParser class -->
-            <xsl:call-template name="generate-java">
-              <xsl:with-param name="class" select="'DefaultNativeParser'"/>
-              <xsl:with-param name="package" select="$transform-package"/>
-              <xsl:with-param name="template" select="'transform/default-native-parser.xsl'"/>
-            </xsl:call-template>
       </xsl:if>
    </xsl:if>
    

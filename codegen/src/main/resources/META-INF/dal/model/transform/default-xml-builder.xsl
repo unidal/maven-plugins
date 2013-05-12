@@ -7,6 +7,11 @@
 <xsl:variable name="space" select="' '"/>
 <xsl:variable name="empty" select="''"/>
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
+<xsl:variable name="policy-filter">
+   <xsl:call-template name="model-policy">
+      <xsl:with-param name="name" select="'filter'"/>
+   </xsl:call-template>
+</xsl:variable>
 
 <xsl:template match="/">
    <xsl:apply-templates select="/model"/>
@@ -16,7 +21,7 @@
    <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:call-template name='import-list'/>
-   <xsl:value-of select="$empty"/>public class DefaultXmlBuilder implements IVisitor {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>public class DefaultXmlBuilder implements IVisitor<xsl:if test="$policy-filter='true'">, IVisitorEnabled</xsl:if> {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name='method-commons'/>
    <xsl:call-template name='method-date-to-string'/>
    <xsl:call-template name='method-visit'/>
@@ -61,6 +66,9 @@
    </xsl:if>
    <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IEntity;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IVisitor;<xsl:value-of select="$empty-line"/>
+   <xsl:if test="$policy-filter='true'">
+      <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IVisitorEnabled;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
    <xsl:for-each select="entity">
       <xsl:sort select="@entity-class"/>
 
@@ -70,9 +78,11 @@
 </xsl:template>
 
 <xsl:template name="method-commons">
+   private IVisitor m_visitor = this;
+
    private int m_level;
 
-   private StringBuilder m_sb = new StringBuilder(4096);
+   private StringBuilder m_sb;
 
    private boolean m_compact;
 
@@ -81,16 +91,25 @@
    }
 
    public DefaultXmlBuilder(boolean compact) {
+      this(compact, new StringBuilder(4096));
+   }
+
+   public DefaultXmlBuilder(boolean compact, StringBuilder sb) {
       m_compact = compact;
+      m_sb = sb;
+      m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>?xml version=\"1.0\" encoding=\"utf-8\"?<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
    }
 
    public String buildXml(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
-      m_sb.setLength(0);
-      m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>?xml version=\"1.0\" encoding=\"utf-8\"?<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
       entity.accept(this);
       return m_sb.toString();
    }
-
+<xsl:if test="$policy-filter='true'">
+   @Override
+   public void enableVisitor(IVisitor visitor) {
+      m_visitor = visitor;
+   }
+</xsl:if>
    protected void endTag(String name) {
       m_level--;
 
@@ -137,7 +156,7 @@
 
       return sb.toString();
    }
-
+   
    protected void indent() {
       if (!m_compact) {
          for (int i = m_level - 1; i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>= 0; i--) {
@@ -379,7 +398,7 @@
                <xsl:value-of select="$empty-line"/>
             </xsl:if>
             <xsl:value-of select="$empty"/>         for (<xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$suffix"/>.toArray(new <xsl:value-of select="$entity/@entity-class"/>[0])) {<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="$entity/@visit-method"/>(<xsl:value-of select="@local-name-element"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="@local-name-element"/>.accept(m_visitor);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
             <xsl:if test="@xml-indent='true'">
                <xsl:value-of select="$empty-line"/>
@@ -389,7 +408,7 @@
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="$empty"/>      if (<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>() != null) {<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="$entity/@visit-method"/>(<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>().accept(m_visitor);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
          </xsl:otherwise>
       </xsl:choose>
@@ -431,6 +450,26 @@
          <xsl:value-of select="$entity/@param-name"/>.getDynamicAttributes()<xsl:value-of select="$empty"/>
       </xsl:when>
       <xsl:otherwise>null</xsl:otherwise>
+   </xsl:choose>
+</xsl:template>
+
+<xsl:template name="model-policy">
+   <xsl:param name="name"/>
+   <xsl:param name="default" select="'false'"/>
+   
+   <xsl:variable name="model" select="/model"/>
+   <xsl:variable name="enable-policy" select="$model/attribute::*[name()=concat('enable-', $name)]"/>
+   <xsl:variable name="disable-policy" select="$model/attribute::*[name()=concat('disable-', $name)]"/>
+   <xsl:choose>
+      <xsl:when test="$disable-policy">
+         <xsl:value-of select="not($disable-policy='true')"/>
+      </xsl:when>
+      <xsl:when test="$enable-policy">
+         <xsl:value-of select="$enable-policy='true'"/>
+      </xsl:when>
+      <xsl:otherwise>
+         <xsl:value-of select="$default"/>
+      </xsl:otherwise>
    </xsl:choose>
 </xsl:template>
 

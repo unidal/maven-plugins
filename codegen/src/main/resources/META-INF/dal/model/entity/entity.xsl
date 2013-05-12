@@ -21,6 +21,9 @@
    <xsl:call-template name="generic-type">
       <xsl:with-param name="type" select="@entity-class"/>
    </xsl:call-template>
+   <xsl:if test="@implements">
+      <xsl:value-of select="$empty"/> implements <xsl:value-of select="@implements"/><xsl:value-of select="$empty"/>
+   </xsl:if>
    <xsl:value-of select="$empty"/> {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name="declare-field-variables"/>
    <xsl:call-template name="constructor"/>

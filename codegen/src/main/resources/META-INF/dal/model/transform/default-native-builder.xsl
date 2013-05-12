@@ -7,6 +7,11 @@
 <xsl:variable name="space" select="' '"/>
 <xsl:variable name="empty" select="''"/>
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
+<xsl:variable name="policy-filter">
+   <xsl:call-template name="model-policy">
+      <xsl:with-param name="name" select="'filter'"/>
+   </xsl:call-template>
+</xsl:variable>
 
 <xsl:template match="/">
    <xsl:apply-templates select="/model"/>
@@ -16,7 +21,7 @@
    <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:call-template name='import-list'/>
-   <xsl:value-of select="$empty"/>public class DefaultNativeBuilder implements IVisitor {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>public class DefaultNativeBuilder implements IVisitor<xsl:if test="$policy-filter='true'">, IVisitorEnabled</xsl:if> {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name='method-commons'/>
    <xsl:call-template name='method-visit'/>
    <xsl:call-template name='method-write-methods'/>
@@ -34,6 +39,9 @@
    </xsl:if>
    <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IVisitor;<xsl:value-of select="$empty-line"/>
+   <xsl:if test="$policy-filter='true'">
+      <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IVisitorEnabled;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
    <xsl:if test="entity/any">
       <xsl:value-of select="$empty"/>import <xsl:value-of select="entity/any/@entity-package"/>.Any;<xsl:value-of select="$empty-line"/>
    </xsl:if>
@@ -47,10 +55,13 @@
 
 <xsl:template name="method-commons">
    <xsl:variable name="root" select="entity[@root='true']"/>
+   private IVisitor m_visitor;
+
    private DataOutputStream m_out;
 
    public DefaultNativeBuilder(OutputStream out) {
       m_out = new DataOutputStream(out);
+      m_visitor = this;
    }
 
    public static byte[] build(<xsl:value-of select="$root/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$root/@param-name"/>) {
@@ -63,6 +74,12 @@
    public static void build(<xsl:value-of select="$root/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$root/@param-name"/>, OutputStream out) {
       <xsl:value-of select="$root/@param-name"/>.accept(new DefaultNativeBuilder(out));
    }
+<xsl:if test="$policy-filter='true'">
+   @Override
+   public void enableVisitor(IVisitor visitor) {
+      m_visitor = visitor;
+   }
+</xsl:if>
 </xsl:template>
 
 <xsl:template name="method-visit">
@@ -150,7 +167,7 @@
                <xsl:value-of select="$empty"/>         writeInt(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().size());<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="$current/@visit-method"/>(<xsl:value-of select="@local-name"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="@local-name"/>.accept(m_visitor);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:when>
@@ -160,14 +177,14 @@
                <xsl:value-of select="$empty"/>         writeInt(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().size());<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().values()) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="$current/@visit-method"/>(<xsl:value-of select="@local-name"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="@local-name"/>.accept(m_visitor);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
                <xsl:value-of select="$empty"/>      if (<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>() != null) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         writeTag(<xsl:value-of select="$index"/>, 1);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="$current/@visit-method"/>(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().accept(m_visitor);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:otherwise>
          </xsl:choose>
@@ -334,6 +351,26 @@
       <xsl:when test="$value-type='java.util.Date'">Date</xsl:when>
       <xsl:when test="$value-type='Class&lt;?&gt;'">Class</xsl:when>
       <xsl:otherwise><xsl:value-of select="$value-type"/></xsl:otherwise>
+   </xsl:choose>
+</xsl:template>
+
+<xsl:template name="model-policy">
+   <xsl:param name="name"/>
+   <xsl:param name="default" select="'false'"/>
+   
+   <xsl:variable name="model" select="/model"/>
+   <xsl:variable name="enable-policy" select="$model/attribute::*[name()=concat('enable-', $name)]"/>
+   <xsl:variable name="disable-policy" select="$model/attribute::*[name()=concat('disable-', $name)]"/>
+   <xsl:choose>
+      <xsl:when test="$disable-policy">
+         <xsl:value-of select="not($disable-policy='true')"/>
+      </xsl:when>
+      <xsl:when test="$enable-policy">
+         <xsl:value-of select="$enable-policy='true'"/>
+      </xsl:when>
+      <xsl:otherwise>
+         <xsl:value-of select="$default"/>
+      </xsl:otherwise>
    </xsl:choose>
 </xsl:template>
 
