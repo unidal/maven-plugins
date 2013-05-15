@@ -75,7 +75,7 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public void <xsl:value-of select="@visit-method"/>(<xsl:value-of select="@entity-class"/> from) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      <xsl:value-of select="'      '"/><xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="@entity-class"/>(from.<xsl:value-of select="(attribute|element)[@key='true']/@get-method"/>());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      <xsl:value-of select="'      '"/><xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = new <xsl:value-of select="@entity-class"/>(<xsl:call-template name="get-key"/>);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      <xsl:value-of select="'      '"/><xsl:value-of select="@param-name"/>.mergeAttributes(from);<xsl:value-of select="$empty-line"/>
       <xsl:for-each select="element">
@@ -143,6 +143,13 @@
          </xsl:otherwise>
       </xsl:choose>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+   </xsl:for-each>
+</xsl:template>
+
+<xsl:template name="get-key">
+   <xsl:for-each select="(attribute|element)[@key='true']">
+      <xsl:value-of select="$empty"/>from.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$empty"/>
+      <xsl:if test="position()!=last()">, </xsl:if>
    </xsl:for-each>
 </xsl:template>
 
