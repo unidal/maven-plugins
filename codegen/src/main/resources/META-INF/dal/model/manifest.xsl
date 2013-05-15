@@ -80,7 +80,7 @@
      <xsl:with-param name="package" select="$package"/>
      <xsl:with-param name="template" select="'base_entity.xsl'"/>
    </xsl:call-template>
-
+   
    <xsl:variable name="policy-filter">
       <xsl:call-template name="model-policy">
          <xsl:with-param name="name" select="'filter'"/>
@@ -122,6 +122,21 @@
 	     <xsl:with-param name="package" select="$transform-package"/>
 	     <xsl:with-param name="template" select="'transform/default-validator.xsl'"/>
 	   </xsl:call-template>
+   </xsl:if>
+
+   <xsl:variable name="policy-maker">
+      <xsl:call-template name="model-policy">
+         <xsl:with-param name="name" select="'maker'"/>
+      </xsl:call-template>
+   </xsl:variable>
+   
+   <xsl:if test="$policy-maker='true'">
+      <!-- DefaultMaker class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'DefaultMaker'"/>
+        <xsl:with-param name="package" select="$transform-package"/>
+        <xsl:with-param name="template" select="'transform/default-maker.xsl'"/>
+      </xsl:call-template>
    </xsl:if>
 
    <xsl:if test="$policy-filter='true'">
