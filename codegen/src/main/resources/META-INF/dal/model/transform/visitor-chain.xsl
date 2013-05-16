@@ -54,9 +54,13 @@
 
    private Stack<xsl:call-template name="lt"/>AtomicInteger<xsl:call-template name="gt"/> m_filterIndexes = new Stack<xsl:call-template name="lt"/>AtomicInteger<xsl:call-template name="gt"/>();
 
-   public VisitorChain(IVisitor visitor, IFilter... filters) {
-      m_visitor = visitor;
-      m_filters = Arrays.asList(filters);
+	public VisitorChain(IVisitor visitor, IFilter... filters) {
+		this(visitor, Arrays.asList(filters));
+	}
+
+	public VisitorChain(IVisitor visitor, List<xsl:call-template name="lt"/>IFilter<xsl:call-template name="gt"/> filters) {
+		m_visitor = visitor;
+		m_filters = filters;
 
       if (m_visitor instanceof IVisitorEnabled) {
          ((IVisitorEnabled) m_visitor).enableVisitor(this);
