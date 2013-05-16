@@ -110,32 +110,32 @@
          <xsl:variable name="entity" select="//entity[@name=$name]"/>
          <xsl:choose>
             <xsl:when test="@list='true' or @map='true'">
-               <xsl:value-of select="$empty"/>         for (<xsl:value-of select="$entity/@entity-class"/> source : from.<xsl:value-of select="@get-method"/>()<xsl:if test="@map='true'">.values()</xsl:if>) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      for (<xsl:value-of select="$entity/@entity-class"/> source : from.<xsl:value-of select="@get-method"/>()<xsl:if test="@map='true'">.values()</xsl:if>) {<xsl:value-of select="$empty-line"/>
                <xsl:choose>
                   <xsl:when test="($entity/attribute|$entity/element)[@key='true']">
-                     <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="$entity/@entity-class"/> target = to.<xsl:value-of select="@find-method"/>(<xsl:call-template name="get-key"/>);<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="'         '"/><xsl:value-of select="$entity/@entity-class"/> target = to.<xsl:value-of select="@find-method"/>(<xsl:call-template name="get-key"/>);<xsl:value-of select="$empty-line"/>
                   </xsl:when>
                   <xsl:otherwise>
-                     <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="$entity/@entity-class"/> target = null;<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="'         '"/><xsl:value-of select="$entity/@entity-class"/> target = null;<xsl:value-of select="$empty-line"/>
                   </xsl:otherwise>
                </xsl:choose>
                <xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            if (target == null) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>               target = new <xsl:value-of select="$entity/@entity-class"/>(<xsl:call-template name="get-key"/>);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>               to.<xsl:value-of select="@add-method"/>(target);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            m_objs.push(target);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            source.accept(this);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            m_objs.pop();<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         if (target == null) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            target = new <xsl:value-of select="$entity/@entity-class"/>(<xsl:call-template name="get-key"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            to.<xsl:value-of select="@add-method"/>(target);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         m_objs.push(target);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         source.accept(this);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         m_objs.pop();<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:value-of select="$empty"/>         if (<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>() != null) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      if (<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>() != null) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>            m_objs.push(target);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>().accept(this);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            m_objs.pop();<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>().accept(this);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         m_objs.pop();<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:otherwise>
          </xsl:choose>
          <xsl:if test="position()!=last()">

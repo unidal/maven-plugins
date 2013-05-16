@@ -144,7 +144,7 @@
             <xsl:value-of select="$empty"/>         child.accept(this);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
          </xsl:when>
-         <xsl:when test="entity-ref">
+         <xsl:otherwise>
             <xsl:value-of select="$empty"/>      IFilter next = getNextFilter(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      if (next != null) {<xsl:value-of select="$empty-line"/>
@@ -152,7 +152,7 @@
             <xsl:value-of select="$empty"/>      } else {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>         m_visitor.<xsl:value-of select="@visit-method"/>(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
-         </xsl:when>
+         </xsl:otherwise>
       </xsl:choose>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:if test="position()!=last()">
