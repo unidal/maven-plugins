@@ -81,7 +81,7 @@
       <xsl:variable name="member" select="$entity/member[@key='true'][@name=$name]"/>
       <xsl:value-of select="'      '"/><xsl:value-of select='@field-name'/> = <xsl:value-of select='$member/@field-name'/>;<xsl:value-of select="$empty-line"/>
    </xsl:for-each>
-   <xsl:value-of select="$empty"/>      super.clearUsage();
+   <xsl:value-of select="$empty"/>      super.clearUsage();<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
 </xsl:template>
@@ -102,9 +102,16 @@
    <xsl:for-each select="relation[not(@multiple='true')] | member | var">
       <xsl:sort select="@name"/>
       
-      <xsl:value-of select="$empty"/>   public void <xsl:value-of select='@set-method'/>(<xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@param-name'/>) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public <xsl:value-of select="$entity/@do-class"/><xsl:value-of select="$space"/><xsl:value-of select='@set-method'/>(<xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@param-name'/>) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      setFieldUsed(<xsl:value-of select='@upper-name'/>, true);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/><xsl:text>      </xsl:text><xsl:value-of select='@field-name'/> = <xsl:value-of select='@param-name'/>;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="'      '"/><xsl:value-of select='@field-name'/> = <xsl:value-of select='@param-name'/>;<xsl:value-of select="$empty-line"/>
+      <xsl:if test="name()='member' and @key='true'">
+         <xsl:variable name="key-var" select="$entity/var[@key-member]"/>
+         <xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>      setFieldUsed(<xsl:value-of select='$key-var/@upper-name'/>, true);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="'      '"/><xsl:value-of select="$key-var/@field-name"/> = <xsl:value-of select='@param-name'/>;<xsl:value-of select="$empty-line"/>
+      </xsl:if>
+      <xsl:value-of select="$empty"/>      return this;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:for-each>

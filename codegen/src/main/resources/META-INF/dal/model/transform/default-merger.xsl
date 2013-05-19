@@ -40,16 +40,31 @@
 </xsl:template>
 
 <xsl:template name="method-commons">
+<xsl:variable name="model" select="//entity[@root='true']"/>
    private Stack<xsl:call-template name="lt"/>Object<xsl:call-template name="gt"/> m_objs = new Stack<xsl:call-template name="lt"/>Object<xsl:call-template name="gt"/>();
+
+   private <xsl:value-of select="$model/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$model/@field-name"/>;
+
+   public DefaultMerger() {
+   }
+
+   public DefaultMerger(<xsl:value-of select="$model/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$model/@param-name"/>) {
+      <xsl:value-of select="$model/@field-name"/> = <xsl:value-of select="$model/@param-name"/>;
+      m_objs.push(<xsl:value-of select="$model/@param-name"/>);
+   }
+
+   public <xsl:value-of select="$model/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$model/@get-method"/>() {
+      return <xsl:value-of select="$model/@field-name"/>;
+   }
+
+   protected Stack<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'Object'"/></xsl:call-template> getObjects() {
+      return m_objs;
+   }
 
    public <xsl:call-template name="lt"/>T<xsl:call-template name="gt"/> void merge(IEntity<xsl:call-template name="lt"/>T<xsl:call-template name="gt"/> to, IEntity<xsl:call-template name="lt"/>T<xsl:call-template name="gt"/> from) {
       m_objs.push(to);
       from.accept(this);
       m_objs.pop();
-   }
-
-   protected Stack<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'Object'"/></xsl:call-template> getObjects() {
-      return m_objs;
    }
 </xsl:template>
 

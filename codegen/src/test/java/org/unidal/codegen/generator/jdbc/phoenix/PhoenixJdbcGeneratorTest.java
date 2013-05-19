@@ -18,7 +18,7 @@ public class PhoenixJdbcGeneratorTest extends JdbcGenerateTestSupport {
 
    @Override
    protected boolean isVerbose() {
-      return true;
+      return false;
    }
 
    @Test
