@@ -146,9 +146,9 @@
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:value-of select="$empty"/>      if (<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>() != null) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            m_objs.push(target);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>().accept(this);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      if (from.<xsl:value-of select="@get-method"/>() != null) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         m_objs.push(to);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         from.<xsl:value-of select="@get-method"/>().accept(this);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         m_objs.pop();<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:otherwise>
@@ -159,7 +159,7 @@
       </xsl:for-each>
    </xsl:if>
    <xsl:if test="any">
-      <xsl:value-of select="$empty"/>      old.<xsl:value-of select="any/@get-method"/>().addAll(<xsl:value-of select="@param-name"/>.<xsl:value-of select="any/@get-method"/>());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      to.<xsl:value-of select="any/@get-method"/>().addAll(from.<xsl:value-of select="any/@get-method"/>());<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
 </xsl:template>

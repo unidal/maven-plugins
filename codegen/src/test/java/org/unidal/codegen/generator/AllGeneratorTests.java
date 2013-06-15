@@ -10,6 +10,7 @@ import org.unidal.codegen.generator.jdbc.user.UserJdbcGeneratorTest;
 import org.unidal.codegen.generator.model.all.AllGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatConsumerGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatCoreGeneratorTest;
+import org.unidal.codegen.generator.model.cat.CatHomeGeneratorTest;
 import org.unidal.codegen.generator.model.dobby.DobbyGeneratorTest;
 import org.unidal.codegen.generator.model.egret.EgretGeneratorTest;
 import org.unidal.codegen.generator.model.expense.ExpenseGeneratorTest;
@@ -43,6 +44,8 @@ AllGeneratorTest.class,
 CatConsumerGeneratorTest.class,
 
 CatCoreGeneratorTest.class,
+
+CatHomeGeneratorTest.class,
 
 DobbyGeneratorTest.class,
 

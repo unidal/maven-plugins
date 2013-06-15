@@ -62,7 +62,7 @@
       <member name="address" field="address" value-type="String" nullable="false"/>
       <member name="creation-date" field="creation_date" value-type="Date"/>
       <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false"/>
-      <var name="key-user-id" value-type="String" key-member="user-id"/>
+      <var name="key-user-id" value-type="int" key-member="user-id"/>
       <var name="key-type" value-type="String" key-member="type"/>
       <primary-key name="PRIMARY" members="user_id, type"/>
       <readsets>

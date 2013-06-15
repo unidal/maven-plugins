@@ -318,7 +318,7 @@
       </xsl:if>
 
       <xsl:if test="$policy-xml-parser-dom='true'">
-         <!-- DefaultMaker class -->
+         <!-- DefaultDomMaker class -->
          <xsl:call-template name="generate-java">
            <xsl:with-param name="class" select="'DefaultDomMaker'"/>
            <xsl:with-param name="package" select="$transform-package"/>

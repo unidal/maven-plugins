@@ -106,7 +106,8 @@
       <xsl:value-of select="$empty"/>      setFieldUsed(<xsl:value-of select='@upper-name'/>, true);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="'      '"/><xsl:value-of select='@field-name'/> = <xsl:value-of select='@param-name'/>;<xsl:value-of select="$empty-line"/>
       <xsl:if test="name()='member' and @key='true'">
-         <xsl:variable name="key-var" select="$entity/var[@key-member]"/>
+         <xsl:variable name="name" select="@name"/>
+         <xsl:variable name="key-var" select="$entity/var[@key-member=$name]"/>
          <xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$empty"/>      setFieldUsed(<xsl:value-of select='$key-var/@upper-name'/>, true);<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="'      '"/><xsl:value-of select="$key-var/@field-name"/> = <xsl:value-of select='@param-name'/>;<xsl:value-of select="$empty-line"/>

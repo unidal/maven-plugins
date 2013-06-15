@@ -12,6 +12,13 @@
    <xsl:copy>
       <xsl:copy-of select="@*"/>
 
+      <xsl:attribute name="do-package">
+         <xsl:choose>
+            <xsl:when test="@do-package"><xsl:value-of select="@do-package"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="entity/@do-package"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
+      
       <xsl:apply-templates/>
    </xsl:copy>
 </xsl:template>
@@ -49,6 +56,13 @@
             <xsl:otherwise><xsl:value-of select="../@do-package"/></xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
+      <xsl:variable name="bo-package">
+         <xsl:choose>
+            <xsl:when test="@bo-package"><xsl:value-of select="@bo-package"/></xsl:when>
+            <xsl:when test="@do-package"><xsl:value-of select="@do-package"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="../@do-package"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
 
       <!-- attribute definition -->
       <xsl:attribute name="name">
@@ -77,10 +91,7 @@
          <xsl:value-of select="$do-package"/>
       </xsl:attribute>
       <xsl:attribute name="bo-package">
-         <xsl:choose>
-            <xsl:when test="@bo-package"><xsl:value-of select="@bo-package"/></xsl:when>
-            <xsl:when test="../@bo-package"><xsl:value-of select="../@bo-package"/></xsl:when>
-         </xsl:choose>
+         <xsl:value-of select="$bo-package"/>
       </xsl:attribute>
 
       <xsl:attribute name="param-name">

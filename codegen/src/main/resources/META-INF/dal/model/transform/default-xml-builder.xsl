@@ -101,7 +101,7 @@
    }
 
    public String buildXml(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
-      entity.accept(this);
+      entity.accept(m_visitor);
       return m_sb.toString();
    }
 <xsl:if test="$policy-filter='true'">
@@ -277,7 +277,7 @@
       <xsl:value-of select="$empty"/>         startTag(any.getName(), false, any.getAttributes());<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         for (Any child : any.getChildren()) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>            visitAny(child);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            child.accept(m_visitor);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         endTag(any.getName());<xsl:value-of select="$empty-line"/>
@@ -295,7 +295,7 @@
             <xsl:value-of select="$empty"/>      startTag(<xsl:value-of select="@upper-name"/>, <xsl:call-template name="get-dynamic-attributes"/><xsl:call-template name="tag-fields"/>);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      for (BaseEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> child : <xsl:value-of select="@param-name"/>.<xsl:value-of select="@method-get-all-children-in-sequence"/>()) {<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$empty"/>         child.accept(this);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         child.accept(m_visitor);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      endTag(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
@@ -416,7 +416,7 @@
    <xsl:if test="any">
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      for (Any any : <xsl:value-of select="@param-name"/>.<xsl:value-of select="any/@get-method"/>()) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         visitAny(any);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         any.accept(m_visitor);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
    </xsl:if>
 </xsl:template>

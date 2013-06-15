@@ -10,8 +10,6 @@
 <xsl:variable name="space" select="' '"/>
 <xsl:variable name="empty" select="''"/>
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
-<xsl:variable name="package" select="//entity/@do-package"/>
-<xsl:variable name="do-package" select="//entity/@do-package"/>
 
 <xsl:template match="/">
    <xsl:call-template name="manifest"/>
@@ -22,7 +20,7 @@
       <!-- Index class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'_INDEX'"/>
-        <xsl:with-param name="package" select="$package"/>
+        <xsl:with-param name="package" select="entities/@do-package"/>
         <xsl:with-param name="template" select="'index.xsl'"/>
       </xsl:call-template>
       
@@ -35,7 +33,7 @@
       <!-- Do class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="@do-class"/>
-        <xsl:with-param name="package" select="$package"/>
+        <xsl:with-param name="package" select="@do-package"/>
         <xsl:with-param name="name" select="@name"/>
         <xsl:with-param name="template" select="'do.xsl'"/>
       </xsl:call-template>
@@ -43,7 +41,7 @@
       <!-- Entity class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="@entity-class"/>
-        <xsl:with-param name="package" select="$package"/>
+        <xsl:with-param name="package" select="@do-package"/>
         <xsl:with-param name="name" select="@name"/>
         <xsl:with-param name="template" select="'entity.xsl'"/>
       </xsl:call-template>
@@ -51,7 +49,7 @@
 	  <!-- Dao class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="@dao-class"/>
-        <xsl:with-param name="package" select="$package"/>
+        <xsl:with-param name="package" select="@do-package"/>
         <xsl:with-param name="name" select="@name"/>
         <xsl:with-param name="template" select="'dao.xsl'"/>
       </xsl:call-template>
@@ -61,7 +59,7 @@
       <!-- Bo class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="@bo-class"/>
-        <xsl:with-param name="package" select="$package"/>
+        <xsl:with-param name="package" select="@bo-package"/>
         <xsl:with-param name="name" select="@name"/>
         <xsl:with-param name="template" select="'bo.xsl'"/>
         <xsl:with-param name="mode" select="'create_if_not_exists'"/>
@@ -70,7 +68,7 @@
       <!-- BOF class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="@bof-class"/>
-        <xsl:with-param name="package" select="$package"/>
+        <xsl:with-param name="package" select="@bo-package"/>
         <xsl:with-param name="name" select="@name"/>
         <xsl:with-param name="template" select="'bof.xsl'"/>
         <xsl:with-param name="mode" select="'create_if_not_exists'"/>
