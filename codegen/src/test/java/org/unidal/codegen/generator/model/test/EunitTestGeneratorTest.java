@@ -5,7 +5,7 @@ import java.io.File;
 import org.junit.Test;
 import org.unidal.codegen.generator.model.ModelGenerateTestSupport;
 
-public class TestGeneratorTest extends ModelGenerateTestSupport {
+public class EunitTestGeneratorTest extends ModelGenerateTestSupport {
    @Override
    protected File getProjectBaseDir() {
       return new File("target/generated-model-test");

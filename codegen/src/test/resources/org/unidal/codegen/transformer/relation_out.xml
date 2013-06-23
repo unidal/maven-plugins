@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<entities>
+<entities do-package="">
 	<entity name="user" table="user" alias="u" class-name="User" entity-class="UserEntity" do-class="User" dao-class="UserDao" bo-class="UserBo" bof-class="UserBof" do-package="" bo-package="" param-name="user" variable-name="m_user" get-method="getUser" set-method="setUser">
 		<relation name="home-address" entity-name="user-address" entity-alias="hua" join="u.user_id=hua.user_id and hua.type='H'" field-name="m_homeAddress" param-name="homeAddress" upper-name="HOME_ADDRESS" value-type="UserAddress" get-method="getHomeAddress" set-method="setHomeAddress"/>
 		<relation name="office-address" entity-name="user-address" entity-alias="oua" join="u.user_id=oua.user_id and oua.type='O'" field-name="m_officeAddress" param-name="officeAddress" upper-name="OFFICE_ADDRESS" value-type="UserAddress" get-method="getOfficeAddress" set-method="setOfficeAddress"/>

@@ -4,80 +4,26 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.unidal.codegen.generator.ibatis.IbatisGeneratorTest;
-import org.unidal.codegen.generator.jdbc.garden.GardenJdbcGeneratorTest;
-import org.unidal.codegen.generator.jdbc.phoenix.PhoenixJdbcGeneratorTest;
-import org.unidal.codegen.generator.jdbc.user.UserJdbcGeneratorTest;
-import org.unidal.codegen.generator.model.all.AllGeneratorTest;
-import org.unidal.codegen.generator.model.cat.CatConsumerGeneratorTest;
-import org.unidal.codegen.generator.model.cat.CatCoreGeneratorTest;
-import org.unidal.codegen.generator.model.cat.CatHomeGeneratorTest;
-import org.unidal.codegen.generator.model.dobby.DobbyGeneratorTest;
-import org.unidal.codegen.generator.model.egret.EgretGeneratorTest;
-import org.unidal.codegen.generator.model.expense.ExpenseGeneratorTest;
-import org.unidal.codegen.generator.model.mvc.MvcGeneratorTest;
-import org.unidal.codegen.generator.model.phoenix.PhoenixGeneratorTest;
-import org.unidal.codegen.generator.model.pixie.PixieGeneratorTest;
-import org.unidal.codegen.generator.model.pom.PomGeneratorTest;
-import org.unidal.codegen.generator.model.rule.RuleGeneratorTest;
-import org.unidal.codegen.generator.model.service.ServiceModelGeneratorTest;
-import org.unidal.codegen.generator.model.test.MetaGeneratorTest;
-import org.unidal.codegen.generator.model.test.TestGeneratorTest;
-import org.unidal.codegen.generator.model.webres.WebresGeneratorTest;
-import org.unidal.codegen.generator.model.wizard.WizardModelGeneratorTest;
-import org.unidal.codegen.generator.wizard.garden.GardenWizardGeneratorTest;
-import org.unidal.codegen.generator.wizard.phoenix.PhoenixWizardGeneratorTest;
+import org.unidal.codegen.generator.jdbc.AllJdbcGeneratorTests;
+import org.unidal.codegen.generator.model.AllModelGeneratorTests;
+import org.unidal.codegen.generator.wizard.AllWizardGeneratorTests;
 import org.unidal.codegen.generator.xml.XmlGeneratorTest;
+import org.unidal.codegen.generator.xmodel.expense.ExpenseGeneratorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
 IbatisGeneratorTest.class,
 
-UserJdbcGeneratorTest.class,
+AllJdbcGeneratorTests.class,
 
-GardenJdbcGeneratorTest.class,
+AllModelGeneratorTests.class,
 
-PhoenixJdbcGeneratorTest.class,
+AllWizardGeneratorTests.class,
 
-AllGeneratorTest.class,
+XmlGeneratorTest.class,
 
-CatConsumerGeneratorTest.class,
-
-CatCoreGeneratorTest.class,
-
-CatHomeGeneratorTest.class,
-
-DobbyGeneratorTest.class,
-
-EgretGeneratorTest.class,
-
-ExpenseGeneratorTest.class,
-
-MvcGeneratorTest.class,
-
-PhoenixGeneratorTest.class,
-
-PixieGeneratorTest.class,
-
-PomGeneratorTest.class,
-
-RuleGeneratorTest.class,
-
-MetaGeneratorTest.class,
-
-TestGeneratorTest.class,
-
-WebresGeneratorTest.class,
-
-ServiceModelGeneratorTest.class,
-
-WizardModelGeneratorTest.class,
-
-GardenWizardGeneratorTest.class,
-
-PhoenixWizardGeneratorTest.class,
-
-XmlGeneratorTest.class
+ExpenseGeneratorTest.class
 
 })
 public class AllGeneratorTests {

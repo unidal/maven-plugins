@@ -12,8 +12,8 @@ import org.unidal.codegen.meta.ModelMeta;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-public class MetaGeneratorTest extends ComponentTestCase {
-	private boolean m_verbose = true;
+public class EunitMetaGeneratorTest extends ComponentTestCase {
+	private boolean m_verbose = false;
 
 	@Test
 	public void testGenerateReportExcelMetaModel() throws Exception {
