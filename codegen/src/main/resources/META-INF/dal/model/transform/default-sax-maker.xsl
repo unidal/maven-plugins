@@ -113,13 +113,13 @@
    <xsl:if test="@dynamic-attributes='true'">
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      Map<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> dynamicAttributes = <xsl:value-of select="@param-name"/>.getDynamicAttributes();<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      int length = attributes == null ? 0 : attributes.getLength();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      int _length = attributes == null ? 0 : attributes.getLength();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      for (int i = 0; i <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> length; i++) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         String name = attributes.getQName(i);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         String value = attributes.getValue(i);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      for (int i = 0; i <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> _length; i++) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         String _name = attributes.getQName(i);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         String _value = attributes.getValue(i);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         dynamicAttributes.put(name, value);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         dynamicAttributes.put(_name, _value);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:if test="attribute[not(@text='true' or @render='false')]">

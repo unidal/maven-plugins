@@ -41,11 +41,11 @@ public class WebAppMojoTest extends ComponentTestCase {
       File baseDir = new File(".").getCanonicalFile();
 
       File pomFile = new File(getClass().getResource("pom-before.xml").getFile());
-      File tmpFile = new File("target/pom.xml");
+      File tmpFile = new File("target/pom-single.xml");
 
       Files.forDir().copyFile(pomFile, tmpFile);
 
-      project.setFile(pomFile);
+      project.setFile(tmpFile);
       mojo.m_project = project;
       mojo.m_generator = lookup(Generator.class, "wizard-webapp");
       mojo.m_wizardMeta = lookup(WizardMeta.class);

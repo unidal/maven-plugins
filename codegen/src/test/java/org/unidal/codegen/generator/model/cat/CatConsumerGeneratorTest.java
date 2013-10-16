@@ -27,7 +27,7 @@ public class CatConsumerGeneratorTest extends ModelGenerateTestSupport {
 
    @Override
    protected boolean isDebug() {
-      return true;
+      return false;
    }
 
    @Override

@@ -151,7 +151,7 @@
    </xsl:copy>
 </xsl:template>
 
-<xsl:template match="attribute">
+<xsl:template match="attribute[not(@enabled='false')]">
    <xsl:copy>
       <xsl:copy-of select="@*"/>
       

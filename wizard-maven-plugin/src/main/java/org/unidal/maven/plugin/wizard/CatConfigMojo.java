@@ -176,7 +176,7 @@ public class CatConfigMojo extends AbstractMojo {
       Element root = doc.getRootElement();
       PomFileBuilder b = new PomFileBuilder().setLog(getLog());
       Element dependencies = b.findOrCreateChild(root, "dependencies");
-      String version = "0.3.4";
+      String version = "0.6.2";
 
       if (!b.checkDependency(dependencies, "com.dianping.cat", "cat-core", version, null)) {
          b.checkDependency(dependencies, "com.dianping.zebra", "zebra-ds-monitor-client", "0.0.6.cat", null);

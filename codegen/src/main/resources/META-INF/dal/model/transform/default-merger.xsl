@@ -107,6 +107,7 @@
       <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public void <xsl:value-of select="@visit-method"/>(<xsl:value-of select="@entity-class"/> from) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="'      '"/><xsl:value-of select="@entity-class"/> to = (<xsl:value-of select="@entity-class"/>) m_objs.peek();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="'      '"/><xsl:value-of select="@merge-method"/>(to, from);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="'      '"/><xsl:value-of select="@visit-children-method"/>(to, from);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>

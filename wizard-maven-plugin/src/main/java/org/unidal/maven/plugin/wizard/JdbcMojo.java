@@ -309,28 +309,31 @@ public class JdbcMojo extends AbstractMojo {
       PomFileBuilder b = new PomFileBuilder();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
-      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "2.0.0", null)) {
+      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "2.0.4", null)) {
          b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.20", "runtime");
       }
 
       if (jdbc != null) {
          Element build = b.findOrCreateChild(root, "build", null, "dependencies");
          Element plugins = b.findOrCreateChild(build, "plugins");
-         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.0");
+         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.8");
          Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc model");
          Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
-         StringBuilder manifest = new StringBuilder();
-
-         manifest.append("\r\n");
-
-         for (Group group : jdbc.getGroups()) {
-            manifest.append(String.format("${basedir}/src/main/resources/META-INF/dal/jdbc/%s-manifest.xml,\r\n", group.getName()));
-         }
-
          Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");
 
          if (manifestElement.getChildren().isEmpty()) {
-            manifestElement.addContent(new CDATA(manifest.toString()));
+            StringBuilder sb = new StringBuilder();
+            String indent = "                        ";
+
+            sb.append(",\r\n");
+
+            for (Group group : jdbc.getGroups()) {
+               sb.append(indent);
+               sb.append(String.format("${basedir}/src/main/resources/META-INF/dal/jdbc/%s-manifest.xml,\r\n", group.getName()));
+            }
+
+            sb.append(indent.substring(3)).append(",");
+            manifestElement.addContent(new CDATA(sb.toString()));
          }
 
          Element codegenPlexus = b.checkPluginExecution(codegenPlugin, "plexus", "process-classes",

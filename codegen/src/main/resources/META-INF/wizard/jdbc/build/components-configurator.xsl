@@ -19,7 +19,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
@@ -29,7 +29,7 @@ public class <xsl:value-of select="$class"/> extends AbstractResourceConfigurato
       List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/>();
 
       // move following line to top-level project if necessary
-      all.add(C(JdbcDataSourceConfigurationManager.class));
+      all.add(C(JdbcDataSourceDescriptorManager.class));
 <xsl:for-each select="jdbc">
       all.addAll(new <xsl:value-of select="@configurator-class"/>().defineComponents());
 </xsl:for-each>

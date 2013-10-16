@@ -128,10 +128,12 @@ public class CreateRepositoryMojo extends AbstractMojo {
 
       if (!dependencies.isEmpty()) {
          for (org.sonatype.aether.graph.Dependency d : dependencies) {
-            org.sonatype.aether.artifact.Artifact artifact = d.getArtifact();
-            Artifact a = RepositoryUtils.toArtifact(artifact);
+            if (!d.isOptional() && !("test".equals(d.getScope()) && level > 0)) {
+               org.sonatype.aether.artifact.Artifact artifact = d.getArtifact();
+               Artifact a = RepositoryUtils.toArtifact(artifact);
 
-            resolveDependency(all, pluginGroups, prefixes, a, level + 1);
+               resolveDependency(all, pluginGroups, prefixes, a, level + 1);
+            }
          }
       }
 

@@ -229,21 +229,24 @@ public class ModelMojo extends AbstractMojo {
 
       Element build = b.findOrCreateChild(root, "build", null, "dependencies");
       Element plugins = b.findOrCreateChild(build, "plugins");
-      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.0");
+      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.8");
       Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-model", "generate-sources", "generate dal model files");
       Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
-      StringBuilder manifest = new StringBuilder();
-
-      manifest.append("\r\n");
-
-      for (Model model : wizard.getModels()) {
-         manifest.append(String.format("${basedir}/src/main/resources/META-INF/dal/model/%s-manifest.xml,\r\n", model.getName()));
-      }
-
       Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");
 
       if (manifestElement.getChildren().isEmpty()) {
-         manifestElement.addContent(new CDATA(manifest.toString()));
+         StringBuilder sb = new StringBuilder();
+         String indent = "                        ";
+
+         sb.append(",\r\n");
+
+         for (Model model : wizard.getModels()) {
+            sb.append(indent);
+            sb.append(String.format("${basedir}/src/main/resources/META-INF/dal/model/%s-manifest.xml,\r\n", model.getName()));
+         }
+
+         sb.append(indent.substring(3)).append(",");
+         manifestElement.addContent(new CDATA(sb.toString()));
       }
 
       if (b.isModified()) {

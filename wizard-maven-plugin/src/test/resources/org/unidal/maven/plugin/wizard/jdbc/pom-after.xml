@@ -33,7 +33,7 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>dal-jdbc</artifactId>
-         <version>2.0.0</version>
+         <version>2.0.4</version>
       </dependency>
    </dependencies>
    <build>
@@ -41,7 +41,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>2.0.0</version>
+            <version>2.0.8</version>
             <executions>
                <execution>
                   <id>generate dal jdbc model</id>
@@ -50,9 +50,11 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/first-manifest.xml,
-${basedir}/src/main/resources/META-INF/dal/jdbc/second-manifest.xml,
-${basedir}/src/main/resources/META-INF/dal/jdbc/third-manifest.xml,]]></manifest>
+                     <manifest><![CDATA[,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/first-manifest.xml,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/second-manifest.xml,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/third-manifest.xml,
+                     ,]]></manifest>
                   </configuration>
                </execution>
                <execution>

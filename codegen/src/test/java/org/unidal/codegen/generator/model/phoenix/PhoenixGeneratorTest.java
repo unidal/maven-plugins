@@ -20,6 +20,11 @@ public class PhoenixGeneratorTest extends ModelGenerateTestSupport {
    protected boolean isVerbose() {
       return false;
    }
+   
+   @Test
+   public void testRoutingConfigure() throws Exception {
+      generate("configure-manifest.xml");
+   }
 
    @Test
    public void testConfig() throws Exception {
