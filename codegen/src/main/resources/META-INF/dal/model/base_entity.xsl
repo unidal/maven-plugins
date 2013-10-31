@@ -49,7 +49,7 @@ public abstract class BaseEntity<xsl:call-template name="generic-type"><xsl:with
       if (useJson) {
          DefaultJsonBuilder builder = new DefaultJsonBuilder(compact);
 
-         formatter.format(builder.buildJson(this));
+         formatter.format(builder.build(this));
       } else {
          DefaultXmlBuilder builder = new DefaultXmlBuilder(compact);
 

@@ -42,7 +42,14 @@
       <xsl:variable name="upper-name-element" select="@upper-name-element"/>
       <xsl:if test="generate-id(//entity/element[not(@render='false')][@upper-name=$upper-name or @upper-name-element=$upper-name-element][1])=generate-id()">
          <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>   public static final String <xsl:value-of select="@upper-name-element"/> = "<xsl:value-of select="@name"/>";<xsl:value-of select="$empty-line"/>
+         <xsl:choose>
+            <xsl:when test="@text='true' and @alias">
+               <xsl:value-of select="$empty"/>   public static final String <xsl:value-of select="@upper-name-element"/> = "<xsl:value-of select="@alias"/>";<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="$empty"/>   public static final String <xsl:value-of select="@upper-name-element"/> = "<xsl:value-of select="@name"/>";<xsl:value-of select="$empty-line"/>
+            </xsl:otherwise>
+         </xsl:choose>
       </xsl:if>
       <xsl:if test="generate-id(//entity/element[(@list='true' or @set='true') and not(@render='false')][@upper-name-element=$upper-name-element][1])=generate-id()">
          <xsl:value-of select="$empty-line"/>

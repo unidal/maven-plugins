@@ -215,6 +215,9 @@
                </xsl:otherwise>
             </xsl:choose>
          </xsl:for-each>
+         <xsl:if test="@dynamic-attributes='true'">
+            <xsl:value-of select="$empty"/>         result <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/>= m_dynamicAttributes.equals(_o.getDynamicAttributes());<xsl:value-of select="$empty-line"/>
+         </xsl:if>
          <xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$empty"/>         return result;<xsl:value-of select="$empty-line"/>
       </xsl:when>
@@ -444,6 +447,9 @@
          <xsl:for-each select="(attribute|element|entity-ref)[not(@render='false')]">
              <xsl:call-template name="hash-line"/>
          </xsl:for-each>
+         <xsl:if test="@dynamic-attributes='true'">
+            <xsl:value-of select="$empty"/>      hash = hash * 31 + m_dynamicAttributes.hashCode();<xsl:value-of select="$empty-line"/>
+         </xsl:if>
       </xsl:when>
       <xsl:otherwise>
           <xsl:call-template name="hash-line">

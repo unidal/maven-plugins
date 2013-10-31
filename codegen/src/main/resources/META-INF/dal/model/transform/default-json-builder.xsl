@@ -57,8 +57,13 @@
    <xsl:for-each select="entity/entity-ref[not(@render='false')]">
       <xsl:sort select="@upper-name"/>
 
-      <xsl:variable name="upper-name" select="@upper-name"/>
-      <xsl:if test="generate-id((//entity/entity-ref[not(@render='false')])[@upper-name=$upper-name][1])=generate-id()">
+      <xsl:variable name="upper-name">
+         <xsl:choose>
+            <xsl:when test="@list='true' or @map='true'"><xsl:value-of select="@upper-names"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="@upper-name"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+      <xsl:if test="generate-id((//entity/entity-ref[not(@render='false')])[(@list='true' or @map='true') and @upper-names=$upper-name or not (@list='true' or @map='true') and @upper-name=$upper-name][1])=generate-id()">
          <xsl:choose>
             <xsl:when test="@list='true' or @map='true'">
                <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-names"/>;<xsl:value-of select="$empty-line"/>
@@ -70,6 +75,7 @@
       </xsl:if>
    </xsl:for-each>
    <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import java.util.Collection;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.util.List;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.util.Map;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
@@ -182,8 +188,30 @@
       }
    }
 
-   public String buildJson(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
+   public String build(Collection<xsl:value-of select="'&lt;?'" disable-output-escaping="yes"/> extends IEntity<xsl:value-of select="'&lt;?&gt;&gt;'" disable-output-escaping="yes"/> entities) {
+      m_sb.append('[');
+
+      if (entities != null) {
+         for (IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity : entities) {
+            objectBegin(null);
+            entity.accept(this);
+            objectEnd(null);
+         }
+
+         trimComma();
+      }
+
+      m_sb.append(']');
+
+      return m_sb.toString();
+   }
+
+   public String build(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
+      objectBegin(null);
       entity.accept(this);
+      objectBegin(null);
+      trimComma();
+
       return m_sb.toString();
    }
 <xsl:if test="$policy-filter='true'">
@@ -238,12 +266,36 @@
    }
 </xsl:if>
    protected void toString(StringBuilder sb, Object value) {
-      if (value instanceof String) {
-         sb.append('"').append(value).append('"');
+      if (value == null) {
+         sb.append("null");
       } else if (value instanceof Boolean || value instanceof Number) {
          sb.append(value);
       } else {
-         sb.append('"').append(value).append('"');
+         String val = value.toString();
+         int len = val.length();
+
+         sb.append('"');
+
+         for (int i = 0; i <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> len; i++) {
+            char ch = val.charAt(i);
+
+            switch (ch) {
+            case '\t':
+               sb.append("\\t");
+               break;
+            case '\r':
+               sb.append("\\r");
+               break;
+            case '\n':
+               sb.append("\\n");
+               break;
+            default:
+               sb.append(ch);
+               break;
+            }
+         }
+
+         sb.append('"');
       }
    }
 

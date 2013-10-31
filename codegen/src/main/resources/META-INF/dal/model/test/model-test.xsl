@@ -41,7 +41,7 @@ public class <xsl:value-of select="$class"/> {
    public void testJson() throws Exception {
       String source = Files.forIO().readFrom(getClass().getResourceAsStream("<xsl:value-of select="$entity/@name"/>.xml"), "utf-8");
       <xsl:value-of select="$entity/@entity-class"/> root = new DefaultDomParser().parse(source);
-      String json = new DefaultJsonBuilder().buildJson(root);
+      String json = new DefaultJsonBuilder().build(root);
       String expected = Files.forIO().readFrom(getClass().getResourceAsStream("<xsl:value-of select="$entity/@name"/>.json"), "utf-8");
 
       Assert.assertEquals("XML is not well parsed or JSON is not well built!", expected.replace("\r", ""), json.replace("\r", ""));
