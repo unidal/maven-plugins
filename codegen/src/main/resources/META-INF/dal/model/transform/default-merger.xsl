@@ -148,7 +148,13 @@
             </xsl:when>
             <xsl:otherwise>
                <xsl:value-of select="$empty"/>      if (from.<xsl:value-of select="@get-method"/>() != null) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>         m_objs.push(to);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="'         '"/><xsl:value-of select="$entity/@entity-class"/> target = to.<xsl:value-of select="@get-method"/>();<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         if (target == null) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            target = new <xsl:value-of select="$entity/@entity-class"/>(<xsl:call-template name="get-key"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            to.<xsl:value-of select="@set-method"/>(target);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         m_objs.push(target);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         from.<xsl:value-of select="@get-method"/>().accept(this);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         m_objs.pop();<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
