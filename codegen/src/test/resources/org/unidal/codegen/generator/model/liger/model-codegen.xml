@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="liger" root="true">
+    <entity-ref name="role" type="list" names="roles" />
+  </entity>
+  <entity name="role">
+    <attribute name="id" value-type="String" />
+    <attribute name="layer" value-type="String" />
+    <attribute name="for" value-type="String" />
+    <entity-ref name="service" type="list" names="services" />
+  </entity>
+  <entity name="service">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="template" type="list" names="templates" />
+    <entity-ref name="instance" type="list" names="instances" />
+    <entity-ref name="archetype" />
+    <entity-ref name="property" type="list" names="properties" xml-indent="true" />
+  </entity>
+  <entity name="template">
+    <attribute name="id" value-type="String" />
+    <attribute name="base" value-type="String" />
+    <attribute name="database" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="lane" value-type="String" />
+    <attribute name="idc" value-type="String" />
+    <attribute name="start" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="end" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="property" type="list" names="properties" />
+  </entity>
+  <entity name="property">
+    <attribute name="key" value-type="String" />
+    <attribute name="required" value-type="boolean" />
+    <attribute name="type" value-type="String" />
+    <attribute name="optional-values" value-type="String" />
+    <attribute name="fixed" value-type="boolean" />
+    <attribute name="pattern" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+  <entity name="instance">
+    <attribute name="name" value-type="String" />
+    <attribute name="template" value-type="String" />
+    <attribute name="lane" value-type="String" />
+    <entity-ref name="property" />
+  </entity>
+  <entity name="archetype">
+    <attribute name="version" value-type="double" />
+    <entity-ref name="property" type="list" names="properties" />
+  </entity>
+</model>
+

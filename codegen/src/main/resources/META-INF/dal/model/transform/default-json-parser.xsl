@@ -35,18 +35,44 @@
 </xsl:template>
 
 <xsl:template name="import-list">
-   <xsl:for-each select="(entity/attribute | entity/element | entity/entity-ref)[not(@render='false')]">
+   <xsl:for-each select="entity/attribute[not(@render='false')]">
       <xsl:sort select="@upper-name"/>
 
       <xsl:variable name="upper-name" select="@upper-name"/>
-      <xsl:if test="generate-id(//entity/entity-ref[not(@map='true' or @list='true' or @render='false')][@upper-name=$upper-name][1])=generate-id()">
-         <xsl:if test="@upper-name != @upper-names">
-            <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name"/>;<xsl:value-of select="$empty-line"/>
-         </xsl:if>
+      <xsl:if test="generate-id(//entity/attribute[@upper-name=$upper-name][1])=generate-id()">
+         <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name"/>;<xsl:value-of select="$empty-line"/>
       </xsl:if>
-      <xsl:if test="generate-id((//entity/attribute | //entity/element | //entity/entity-ref)[not(@render='false')][@upper-name=$upper-name][1])=generate-id()">
+   </xsl:for-each>
+   <xsl:for-each select="entity/element[not(@render='false')]">
+      <xsl:sort select="@upper-name"/>
+
+      <xsl:variable name="upper-name" select="@upper-name"/>
+      <xsl:if test="generate-id(//entity/element[@upper-name=$upper-name][1])=generate-id()">
          <xsl:choose>
-            <xsl:when test="name()='entity-ref' and (@map='true' or @list='true')">
+            <xsl:when test="@list='true' or @set='true'">
+               <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name"/>;<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name-element"/>;<xsl:value-of select="$empty-line"/>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:if>
+   </xsl:for-each>
+   <xsl:if test="entity/any">
+      <xsl:value-of select="$empty"/>import <xsl:value-of select="entity/any/@entity-package"/>.<xsl:value-of select='entity/any/@entity-class'/>;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
+   <xsl:for-each select="entity/entity-ref[not(@render='false')]">
+      <xsl:sort select="@upper-name"/>
+
+      <xsl:variable name="upper-name">
+         <xsl:choose>
+            <xsl:when test="@list='true' or @map='true'"><xsl:value-of select="@upper-names"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="@upper-name"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+      <xsl:if test="generate-id((//entity/entity-ref[not(@render='false')])[(@list='true' or @map='true') and @upper-names=$upper-name or not (@list='true' or @map='true') and @upper-name=$upper-name][1])=generate-id()">
+         <xsl:choose>
+            <xsl:when test="@list='true' or @map='true'">
                <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-names"/>;<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
@@ -378,10 +404,9 @@
                <xsl:when test="entity-ref[@list='true' and not(@xml-indent='true') and not(@render='false')]">
                   <xsl:call-template name="on-object-begin">
                      <xsl:with-param name="current" select="$current"/>
-                     <xsl:with-param name="indent" select="'         '"/>
+                     <xsl:with-param name="indent" select="'      '"/>
                   </xsl:call-template>
-                  <xsl:value-of select="$empty-line"/>
-                  <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty"/>
+                  <xsl:value-of select="$empty"/>
                </xsl:when>
                <xsl:when test="entity-ref[@map='true' and not(@render='false')]">
                   <xsl:call-template name="on-object-begin">
