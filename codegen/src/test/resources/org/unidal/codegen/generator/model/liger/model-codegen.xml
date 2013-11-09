@@ -8,23 +8,21 @@
     <attribute name="layer" value-type="String" />
     <attribute name="for" value-type="String" />
     <entity-ref name="service" type="list" names="services" />
+    <entity-ref name="change-set" type="list" names="change-sets" xml-indent="true" />
   </entity>
   <entity name="service">
     <attribute name="id" value-type="String" />
-    <entity-ref name="template" type="list" names="templates" />
     <entity-ref name="instance" type="list" names="instances" />
+    <entity-ref name="template" type="list" names="templates" />
     <entity-ref name="archetype" />
     <entity-ref name="property" type="list" names="properties" xml-indent="true" />
   </entity>
-  <entity name="template">
-    <attribute name="id" value-type="String" />
-    <attribute name="base" value-type="String" />
-    <attribute name="database" value-type="String" />
-    <attribute name="type" value-type="String" />
+  <entity name="instance">
+    <attribute name="name" value-type="String" />
+    <attribute name="language" value-type="String" />
+    <attribute name="country" value-type="String" />
+    <attribute name="template" value-type="String" />
     <attribute name="lane" value-type="String" />
-    <attribute name="idc" value-type="String" />
-    <attribute name="start" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <attribute name="end" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <entity-ref name="property" type="list" names="properties" />
   </entity>
   <entity name="property">
@@ -36,11 +34,40 @@
     <attribute name="pattern" value-type="String" />
     <element name="text" value-type="String" text="true" />
   </entity>
-  <entity name="instance">
-    <attribute name="name" value-type="String" />
-    <attribute name="template" value-type="String" />
+  <entity name="template">
+    <attribute name="id" value-type="String" />
+    <attribute name="database" value-type="String" />
+    <attribute name="type" value-type="String" />
     <attribute name="lane" value-type="String" />
-    <entity-ref name="property" />
+    <attribute name="idc" value-type="String" />
+    <attribute name="start" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="end" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="property" type="list" names="properties" />
+  </entity>
+  <entity name="change-set">
+    <attribute name="id" value-type="String" />
+    <attribute name="user" value-type="String" />
+    <attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="change" type="list" names="changes" />
+  </entity>
+  <entity name="change">
+    <attribute name="type" value-type="String" />
+    <attribute name="object" value-type="String" />
+    <attribute name="role-id" value-type="String" />
+    <attribute name="id" value-type="String" />
+    <attribute name="service-id" value-type="String" />
+    <entity-ref name="attribute-change" type="list" names="attribute-changes" />
+    <entity-ref name="property-change" type="list" names="property-changes" />
+  </entity>
+  <entity name="attribute-change">
+    <attribute name="name" value-type="String" />
+    <attribute name="new-value" value-type="String" />
+    <attribute name="old-value" value-type="String" />
+  </entity>
+  <entity name="property-change">
+    <attribute name="name" value-type="String" />
+    <attribute name="old-value" value-type="String" />
+    <attribute name="new-value" value-type="String" />
   </entity>
   <entity name="archetype">
     <attribute name="version" value-type="double" />

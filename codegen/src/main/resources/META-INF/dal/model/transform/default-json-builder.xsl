@@ -42,7 +42,7 @@
       <xsl:variable name="upper-name" select="@upper-name"/>
       <xsl:if test="generate-id(//entity/element[@upper-name=$upper-name][1])=generate-id()">
          <xsl:choose>
-            <xsl:when test="@list='true' or @set='true'">
+            <xsl:when test="@json-list='true' or @set='true'">
                <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name"/>;<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
@@ -59,13 +59,13 @@
 
       <xsl:variable name="upper-name">
          <xsl:choose>
-            <xsl:when test="@list='true' or @map='true'"><xsl:value-of select="@upper-names"/></xsl:when>
+            <xsl:when test="@json-list='true' or @json-map='true'"><xsl:value-of select="@upper-names"/></xsl:when>
             <xsl:otherwise><xsl:value-of select="@upper-name"/></xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
-      <xsl:if test="generate-id((//entity/entity-ref[not(@render='false')])[(@list='true' or @map='true') and @upper-names=$upper-name or not (@list='true' or @map='true') and @upper-name=$upper-name][1])=generate-id()">
+      <xsl:if test="generate-id((//entity/entity-ref[not(@render='false')])[(@json-list='true' or @json-map='true') and @upper-names=$upper-name or not (@json-list='true' or @json-map='true') and @upper-name=$upper-name][1])=generate-id()">
          <xsl:choose>
-            <xsl:when test="@list='true' or @map='true'">
+            <xsl:when test="@json-list='true' or @json-map='true'">
                <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-names"/>;<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
@@ -352,12 +352,12 @@
             <xsl:value-of select="$empty"/>      objectEnd(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:if test="(attribute | element)[not(@render='false' or @list='true' or @set='true')]">
+            <xsl:if test="(attribute | element)[not(@render='false' or @json-list='true' or @set='true')]">
                <xsl:value-of select="$empty"/>      attributes(<xsl:call-template name="get-dynamic-attributes"/><xsl:call-template name="tag-fields"/>);<xsl:value-of select="$empty-line"/>
             </xsl:if>
-            <xsl:if test="element[not(@render='false') and (@list='true' or @set='true')]">
+            <xsl:if test="element[not(@render='false') and (@json-list='true' or @set='true')]">
                <xsl:variable name="entity" select="."/>
-               <xsl:for-each select="element[not(@render='false') and (@list='true' or @set='true')]">
+               <xsl:for-each select="element[not(@render='false') and (@json-list='true' or @set='true')]">
                   <xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty"/>         arrayBegin(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
@@ -390,7 +390,7 @@
       <xsl:variable name="entity" select="//entity[@name=$name]"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:choose>
-         <xsl:when test="@map='true'">
+         <xsl:when test="@json-map='true'">
             <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>         objectBegin(<xsl:value-of select="@upper-names"/>);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty-line"/>
@@ -405,11 +405,11 @@
             <xsl:value-of select="$empty"/>         objectEnd(<xsl:value-of select="@upper-names"/>);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
          </xsl:when>
-         <xsl:when test="@list='true'">
+         <xsl:when test="@json-list='true'">
             <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>         arrayBegin(<xsl:value-of select="@upper-names"/>);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()<xsl:if test="@map='true'">.values()</xsl:if>) {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>            objectBegin(null);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="@local-name-element"/>.accept(m_visitor);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>            objectEnd(null);<xsl:value-of select="$empty-line"/>
@@ -432,7 +432,7 @@
 <xsl:template name="tag-fields">
    <xsl:param name="entity" select="."/>
    
-   <xsl:for-each select="(attribute | element)[not(@render='false' or @list='true' or @set='true')]">
+   <xsl:for-each select="(attribute | element)[not(@render='false' or @json-list='true' or @set='true')]">
       <xsl:choose>
          <xsl:when test="@value-type='Class&lt;?&gt;'">
             <xsl:value-of select="$empty"/>, <xsl:value-of select="@upper-name"/>, <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>() == null ? null : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().getName()<xsl:value-of select="$empty"/>

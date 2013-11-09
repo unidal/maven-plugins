@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <entities do-package="">
-	<entity name="user" table="user" alias="u" class-name="User" entity-class="UserEntity" do-class="User" dao-class="UserDao" bo-class="UserBo" bof-class="UserBof" do-package="" bo-package="" param-name="user" variable-name="m_user" get-method="getUser" set-method="setUser">
+	<entity name="user" table="user" alias="u" class-name="User" do-package="" entity-class="UserEntity" do-class="User" dao-class="UserDao" param-name="user" variable-name="m_user" get-method="getUser" set-method="setUser">
 		<member name="field-name" value-type="boolean" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="isFieldName" set-method="setFieldName" all="true"/>
 		<member name="field-name" value-type="byte" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>
 		<member name="field-name" value-type="char" field-name="m_fieldName" param-name="fieldName" upper-name="FIELD_NAME" get-method="getFieldName" set-method="setFieldName" all="true"/>

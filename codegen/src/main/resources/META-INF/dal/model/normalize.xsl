@@ -61,7 +61,9 @@
                </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
+               <xsl:value-of select="../@class-prefix"/>
                <xsl:value-of select="$capital-name"/>
+               <xsl:value-of select="../@class-suffix"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
@@ -558,12 +560,20 @@
       </xsl:choose>
       
       <xsl:choose>
-      	<xsl:when test="@type='list'">
+      	 <xsl:when test="@type='list'">
       		<xsl:attribute name="list">true</xsl:attribute>
-      	</xsl:when>
-      	<xsl:when test="@type='map'">
+      	 </xsl:when>
+      	 <xsl:when test="@type='map'">
       		<xsl:attribute name="map">true</xsl:attribute>
-      	</xsl:when>
+      	 </xsl:when>
+      </xsl:choose>
+      <xsl:choose>
+      	 <xsl:when test="@type='list' or @json-type='list'">
+      		<xsl:attribute name="json-list">true</xsl:attribute>
+      	 </xsl:when>
+      	 <xsl:when test="@type='map'">
+      		<xsl:attribute name="json-map">true</xsl:attribute>
+      	 </xsl:when>
       </xsl:choose>
 
       <xsl:apply-templates/>
@@ -659,6 +669,7 @@
             </xsl:call-template>
          </xsl:when>
          <xsl:otherwise>
+            <xsl:value-of select="/model/@class-prefix"/>
             <xsl:call-template name="capital-name">
                <xsl:with-param name="name">
                   <xsl:call-template name="normalize">
@@ -675,6 +686,7 @@
                   </xsl:call-template>
                </xsl:with-param>
             </xsl:call-template>
+            <xsl:value-of select="/model/@class-suffix"/>
          </xsl:otherwise>
       </xsl:choose>
    </xsl:variable>

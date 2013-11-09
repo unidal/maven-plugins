@@ -1,48 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model model-package="com.dianping.liger.config.model" enable-sax-parser="true" enable-base-visitor="true" enable-json-builder="true" enable-json-parser="true" enable-native-builder="true" enable-native-parser="true">
-	<entity name="liger" root="true" class-name="LigerModel">
+<model model-package="com.dianping.liger.config.model" class-suffix="Model" 
+	enable-sax-parser="true" enable-base-visitor="true"
+	enable-json-builder="true">
+	<entity name="liger" root="true">
 		<entity-ref name="role" type="map" names="roles" method-find-or-create="true" />
 	</entity>
-	<entity name="role" class-name="RoleModel">
+	<entity name="role">
 		<attribute name="id" value-type="String" key="true" />
 		<entity-ref name="service" type="map" names="services" method-find-or-create="true" />
 	</entity>
-	<entity name="service" class-name="ServiceModel">
+	<entity name="service">
 		<attribute name="id" value-type="String" key="true" />
 		<entity-ref name="instance" type="list" names="instances" />
 		<entity-ref name="template" type="map" names="templates" method-find-or-create="true" />
 		<entity-ref name="property" type="map" names="properties" xml-indent="true" method-find-or-create="true" />
 		<snippet>
 			public InstanceModel findOrCreateInstanceBy(String name) {
-				InstanceModel found = null;
-		
-				for (InstanceModel instance : getInstances()) {
-					if (instance.getName().equals(name)) {
-						found = instance;
-						break;
-					}
-				}
-		
-				if (found == null) {
-					found = new InstanceModel().setName(name);
-					addInstance(found);
-				}
-		
-				return found;
+			InstanceModel found = null;
+
+			for (InstanceModel instance : getInstances()) {
+			if (instance.getName().equals(name)) {
+			found = instance;
+			break;
+			}
+			}
+
+			if (found == null) {
+			found = new InstanceModel().setName(name);
+			addInstance(found);
+			}
+
+			return found;
 			}
 		</snippet>
 	</entity>
-	<entity name="archetype" class-name="ArchetypeModel" dynamic-attributes="true">
+	<entity name="archetype" dynamic-attributes="true">
 		<attribute name="version" enabled="false" />
-		<entity-ref name="property" type="map" names="properties" method-find-or-create="true" />
+		<entity-ref name="property" type="map" names="properties" method-find-or-create="true" json-type="list" />
 	</entity>
-	<entity name="instance" class-name="InstanceModel" dynamic-attributes="true">
+	<entity name="instance" dynamic-attributes="true">
 		<attribute name="id" value-type="String" key="true" />
 		<attribute name="name" value-type="String" />
 		<attribute name="lane" enabled="false" />
-		<entity-ref name="property" type="map" names="properties" method-find-or-create="true" />
+		<entity-ref name="property" type="map" names="properties" method-find-or-create="true" json-type="list" />
 	</entity>
-	<entity name="template" class-name="TemplateModel" dynamic-attributes="true">
+	<entity name="template" dynamic-attributes="true">
 		<attribute name="id" value-type="String" key="true" />
 		<attribute name="database" enabled="false" />
 		<attribute name="type" enabled="false" />
@@ -50,11 +52,26 @@
 		<attribute name="idc" enabled="false" />
 		<attribute name="start" enabled="false" />
 		<attribute name="end" enabled="false" />
-		<entity-ref name="property" type="map" names="properties" method-find-or-create="true" />
+		<entity-ref name="property" type="map" names="properties" method-find-or-create="true" json-type="list" />
 	</entity>
-	<entity name="property" class-name="PropertyModel">
+	<entity name="property">
 		<attribute name="key" value-type="String" key="true" />
 		<element name="text" alias="value" value-type="String" text="true" />
 	</entity>
+	<entity name="change-set">
+		<attribute name="id" value-type="String" key="true" />
+	</entity>
+	<entity name="change">
+		<attribute name="id" value-type="String" key="true" />
+	</entity>
+	<entity name="attribute-change">
+		<attribute name="name" value-type="String" key="true" />
+		<attribute name="new-value" value-type="String" />
+		<attribute name="old-value" value-type="String" />
+	</entity>
+	<entity name="property-change">
+		<attribute name="name" value-type="String" key="true" />
+		<attribute name="old-value" value-type="String" />
+		<attribute name="new-value" value-type="String" />
+	</entity>
 </model>
-

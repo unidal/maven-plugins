@@ -24,9 +24,10 @@
    <xsl:call-template name='method-characters'/>
    <xsl:call-template name='method-end-document'/>
    <xsl:call-template name='method-end-element'/>
-   <xsl:call-template name='method-get-root'/>
+   <xsl:call-template name='method-get-entity'/>
    <xsl:call-template name='method-get-text'/>
-   <xsl:call-template name='method-parse-children'/>
+   <xsl:call-template name='method-parse-for'/>
+   <xsl:call-template name='method-parse-root'/>
    <xsl:call-template name='method-start-element'/>
    <xsl:call-template name='method-to-class'/>
    <xsl:call-template name='method-to-date'/>
@@ -96,6 +97,8 @@
    <xsl:value-of select="$empty"/>import org.xml.sax.InputSource;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import org.xml.sax.SAXException;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import org.xml.sax.helpers.DefaultHandler;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IEntity;<xsl:value-of select="$empty-line"/>
    <xsl:if test="entity/any">
       <xsl:value-of select="$empty"/>import <xsl:value-of select="entity/any/@entity-package"/>.<xsl:value-of select='entity/any/@entity-class'/>;<xsl:value-of select="$empty-line"/>
    </xsl:if>
@@ -118,7 +121,7 @@
 <xsl:if test="entity/any">
    private Stack<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/> m_anys = new Stack<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/>();
 </xsl:if>
-   private <xsl:value-of select="entity[@root='true']/@entity-class"/> m_root;
+   private IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> m_entity;
 
    private StringBuilder m_text = new StringBuilder();
 </xsl:template>
@@ -128,15 +131,7 @@
    <xsl:value-of select="$empty-line"/>
    <xsl:for-each select="entity[@root='true']">
       <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(InputSource is) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         DefaultSaxParser handler = new DefaultSaxParser();<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         parser.parse(is, handler);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         return handler.getRoot();<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      } catch (ParserConfigurationException e) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         throw new IllegalStateException("Unable to get SAX parser instance!", e);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return parseEntity(<xsl:value-of select="@entity-class"/>.class, is);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(InputStream in) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
@@ -149,6 +144,23 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(String xml) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      return parse(new InputSource(new StringReader(xml)));<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, String xml) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return parseEntity(type, new InputSource(new StringReader(xml)));<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, InputSource is) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         DefaultSaxParser handler = new DefaultSaxParser();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         parser.parse(is, handler);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         return (T) handler.getEntity();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      } catch (ParserConfigurationException e) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         throw new IllegalStateException("Unable to get SAX parser instance!", e);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:for-each>
@@ -300,9 +312,9 @@
    }
 </xsl:template>
 
-<xsl:template name="method-get-root">
-   public <xsl:value-of select="entity[@root='true']/@entity-class"/> getRoot() {
-      return m_root;
+<xsl:template name="method-get-entity">
+   private IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> getEntity() {
+      return m_entity;
    }
 </xsl:template>
 
@@ -312,26 +324,35 @@
    }
 </xsl:template>
 
-<xsl:template name="method-parse-children">
-   <xsl:for-each select="entity[@root='true']">
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   public void parse(String qName, Attributes attributes) throws SAXException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      if (<xsl:value-of select="@upper-name"/>.equals(qName)) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = m_maker.<xsl:value-of select="@build-method"/>(attributes);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         m_root = <xsl:value-of select="@param-name"/>;<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         m_tags.push(qName);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      } else {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         throw new SAXException("Root element(<xsl:value-of select="@param-name"/>) expected");<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+<xsl:template name="method-parse-root">
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   private void parseRoot(String qName, Attributes attributes) throws SAXException {<xsl:value-of select="$empty-line"/>
+   <xsl:for-each select="entity[not(@render='false')]">
+      <xsl:variable name="name" select="@name"/>
+      
+      <xsl:if test="position()=1"><xsl:value-of select="'      '"/></xsl:if>
+      <xsl:if test="@root='true' or //entity/entity-ref[@name=$name and not(@render='false')]">
+         <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(qName)) {<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = m_maker.<xsl:value-of select="@build-method"/>(attributes);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         m_entity = <xsl:value-of select="@param-name"/>;<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         m_objs.push(<xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         m_tags.push(qName);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>      } else <xsl:value-of select="$empty"/>
+      </xsl:if>
    </xsl:for-each>
+   <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>         throw new SAXException("Unknown root element(" + qName + ") found!");<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+</xsl:template>
+
+<xsl:template name="method-parse-for">
    <xsl:for-each select="entity">
       <xsl:sort select="@build-method"/>
 
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   public void <xsl:value-of select="@parse-for-method"/>(<xsl:value-of select="@entity-class"/> parentObj, String parentTag, String qName, Attributes attributes) throws SAXException {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   private void <xsl:value-of select="@parse-for-method"/>(<xsl:value-of select="@entity-class"/> parentObj, String parentTag, String qName, Attributes attributes) throws SAXException {<xsl:value-of select="$empty-line"/>
       <xsl:call-template name="parse-children">
          <xsl:with-param name="indent" select="'      '"/>
       </xsl:call-template>
@@ -463,7 +484,7 @@
    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
       if (uri == null || uri.length() == 0) {
          if (m_objs.isEmpty()) { // root
-            parse(qName, attributes);
+            parseRoot(qName, attributes);
          } else {
             Object parent = m_objs.peek();
             String tag = m_tags.peek();<xsl:value-of select="$empty-line"/>

@@ -72,6 +72,9 @@
          <xsl:value-of select="$class-name"/>
       </xsl:attribute>
 
+      <xsl:attribute name="do-package">
+         <xsl:value-of select="$do-package"/>
+      </xsl:attribute>
       <xsl:attribute name="entity-class">
          <xsl:value-of select="$class-name"/><xsl:value-of select="'Entity'"/>
       </xsl:attribute>
@@ -81,18 +84,18 @@
       <xsl:attribute name="dao-class">
          <xsl:value-of select="$class-name"/><xsl:value-of select="'Dao'"/>
       </xsl:attribute>
-      <xsl:attribute name="bo-class">
-         <xsl:value-of select="$class-name"/><xsl:value-of select="'Bo'"/>
-      </xsl:attribute>
-      <xsl:attribute name="bof-class">
-         <xsl:value-of select="$class-name"/><xsl:value-of select="'Bof'"/>
-      </xsl:attribute>
-      <xsl:attribute name="do-package">
-         <xsl:value-of select="$do-package"/>
-      </xsl:attribute>
-      <xsl:attribute name="bo-package">
-         <xsl:value-of select="$bo-package"/>
-      </xsl:attribute>
+      
+      <xsl:if test="@gen-bo='true' or ../@gen-bo='true'">
+         <xsl:attribute name="bo-package">
+            <xsl:value-of select="$bo-package"/>
+         </xsl:attribute>
+         <xsl:attribute name="bo-class">
+            <xsl:value-of select="$class-name"/><xsl:value-of select="'Bo'"/>
+         </xsl:attribute>
+         <xsl:attribute name="bof-class">
+            <xsl:value-of select="$class-name"/><xsl:value-of select="'Bof'"/>
+         </xsl:attribute>
+      </xsl:if>
 
       <xsl:attribute name="param-name">
          <xsl:value-of select="$nonrmalized-name"/>

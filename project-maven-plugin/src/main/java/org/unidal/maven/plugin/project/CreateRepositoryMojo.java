@@ -101,7 +101,7 @@ public class CreateRepositoryMojo extends AbstractMojo {
 
    /**
     * @parameter expression="${include}"
-    *            default-value="org.unidal,com.site,com.dianping"
+    *            default-value="org.unidal"
     */
    private String include;
 
