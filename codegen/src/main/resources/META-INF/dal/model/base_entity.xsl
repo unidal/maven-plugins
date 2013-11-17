@@ -17,6 +17,7 @@
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;
 
 import java.util.Formattable;
+import java.util.FormattableFlags;
 import java.util.Formatter;
 
 import <xsl:value-of select="@transform-package"/>.DefaultXmlBuilder;
@@ -25,13 +26,13 @@ import <xsl:value-of select="@transform-package"/>.DefaultXmlBuilder;
 </xsl:if>
 public abstract class BaseEntity<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'T'"/></xsl:call-template> implements IEntity<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'T'"/></xsl:call-template>, Formattable {
 <xsl:if test="$enable-json">
-   public static final String JSON = "%2s";
+   public static final String JSON = "%#.3s";
 
-   public static final String JSON_COMPACT = "%2.0s";
+   public static final String JSON_COMPACT = "%#s";
 </xsl:if>
-   public static final String XML = "%1s";
+   public static final String XML = "%.3s";
    
-   public static final String XML_COMPACT = "%1.0s";
+   public static final String XML_COMPACT = "%s";
    
    protected void assertAttributeEquals(Object instance, String entityName, String name, Object expectedValue, Object actualValue) {
       if (expectedValue == null <xsl:value-of select="'&amp;&amp;'" disable-output-escaping="yes"/> actualValue != null || expectedValue != null <xsl:value-of select="'&amp;&amp;'" disable-output-escaping="yes"/> !expectedValue.equals(actualValue)) {
@@ -43,8 +44,8 @@ public abstract class BaseEntity<xsl:call-template name="generic-type"><xsl:with
    public void formatTo(Formatter formatter, int flags, int width, int precision) {<xsl:value-of select="$empty"/>
 <xsl:choose>
 <xsl:when test="$enable-json">
-      boolean useJson = (width == 2);
-      boolean compact = (precision == 0);
+      boolean useJson = (flags <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> FormattableFlags.ALTERNATE) == FormattableFlags.ALTERNATE;
+      boolean compact = (precision <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>= 0);
       
       if (useJson) {
          DefaultJsonBuilder builder = new DefaultJsonBuilder(compact);

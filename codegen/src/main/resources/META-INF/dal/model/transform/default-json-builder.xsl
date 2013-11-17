@@ -209,7 +209,7 @@
    public String build(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
       objectBegin(null);
       entity.accept(this);
-      objectBegin(null);
+      objectEnd(null);
       trimComma();
 
       return m_sb.toString();
