@@ -46,7 +46,10 @@ public class <xsl:value-of select="@handler-class"/> implements PageHandler<xsl:
 
 		model.setAction(Action.VIEW);
 		model.setPage(<xsl:value-of select="../@page-class"/>.<xsl:value-of select="@upper-name"/>);
-		m_jspViewer.view(ctx, model);
+
+		if (!ctx.isProcessStopped()) {
+		   m_jspViewer.view(ctx, model);
+		}
 	}
 }
 </xsl:template>

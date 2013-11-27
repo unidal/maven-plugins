@@ -49,7 +49,7 @@
       <xsl:variable name="upper-name" select="@upper-name"/>
       <xsl:if test="generate-id(//entity/element[@upper-name=$upper-name][1])=generate-id()">
          <xsl:choose>
-            <xsl:when test="@json-list='true' or @set='true'">
+            <xsl:when test="@json-list='true' or @list='true' or @set='true'">
                <xsl:value-of select="$empty"/>import static <xsl:value-of select="/model/@model-package"/>.Constants.<xsl:value-of select="@upper-name"/>;<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
@@ -106,7 +106,7 @@
    private Stack<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> m_objs = new Stack<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/>();
 
    private <xsl:value-of select="entity[@root='true']/@entity-class"/> m_root;
-<xsl:if test="//entity/element[@json-list='true' or @set='true'][not(@render='false')]">
+<xsl:if test="//entity/element[@json-list='true' or list='true' or @set='true'][not(@render='false')]">
    private boolean m_inElements = false;
 </xsl:if>
 </xsl:template>
@@ -184,7 +184,7 @@
          <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="$empty"/>
          <xsl:choose>
-            <xsl:when test="@json-list='true' or @set='true'">
+            <xsl:when test="@json-list='true' or @list='true' or @set='true'">
                <xsl:value-of select="@add-method"/>
             </xsl:when>
             <xsl:otherwise>
@@ -262,7 +262,7 @@
 <xsl:template name="method-on-array-begin">
    <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   protected void onArrayBegin() {<xsl:value-of select="$empty-line"/>
-   <xsl:variable name="entities" select="entity[element[@json-list='true' or @set='true'] or entity-ref[@json-list='true']][ not(@render='false')]"/>
+   <xsl:variable name="entities" select="entity[element[@json-list='true' or list='true' or @set='true'] or entity-ref[@json-list='true']][ not(@render='false')]"/>
    <xsl:if test="$entities">
       <xsl:variable name="indent" select="'      '"/>
       <xsl:value-of select="$empty"/>      Object parent = m_objs.peek();<xsl:value-of select="$empty-line"/>
@@ -272,7 +272,7 @@
       <xsl:for-each select="$entities">
          <xsl:value-of select="$empty"/>if (parent instanceof <xsl:value-of select="@entity-class"/>) {<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/>
-         <xsl:for-each select="element[(@json-list='true' or @set='true')][not(@render='false')]">
+         <xsl:for-each select="element[(@json-list='true' or list='true' or @set='true')][not(@render='false')]">
             <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$indent"/>      m_objs.push(parent);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$indent"/>      m_inElements = true;<xsl:value-of select="$empty-line"/>
@@ -299,7 +299,7 @@
    protected void onArrayEnd() {
       m_objs.pop();
       m_tags.pop();
-<xsl:if test="//entity/element[@json-list='true' or @set='true'][not(@render='false')]">
+<xsl:if test="//entity/element[@json-list='true' or list='true' or @set='true'][not(@render='false')]">
       m_inElements = false;
 </xsl:if>
    }
@@ -307,7 +307,7 @@
 
 <xsl:template name="method-on-name">
    <xsl:value-of select="$empty"/>   protected void onName(String name) {<xsl:value-of select="$empty-line"/>
-      <xsl:variable name="elements" select="//entity/element[@json-list='true' or @set='true'][not(@render='false')]"/>
+      <xsl:variable name="elements" select="//entity/element[@json-list='true' or list='true' or @set='true'][not(@render='false')]"/>
       <xsl:choose>
          <xsl:when test="$elements">
             <xsl:variable name="indent" select="'      '"/>
@@ -316,11 +316,11 @@
             <xsl:value-of select="$indent"/>   String tag = m_tags.peek();<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/>
-            <xsl:for-each select="//entity[element[@json-list='true' or @set='true'][not(@render='false')]]">
+            <xsl:for-each select="//entity[element[@json-list='true' or list='true' or @set='true'][not(@render='false')]]">
                <xsl:variable name="entity" select="."/>
                <xsl:value-of select="$empty"/>if (parent instanceof <xsl:value-of select="$entity/@entity-class"/>) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$indent"/><xsl:value-of select="'      '"/>
-               <xsl:for-each select="element[(@json-list='true' or @set='true')][not(@render='false')]">
+               <xsl:for-each select="element[(@json-list='true' or list='true' or @set='true')][not(@render='false')]">
                   <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$indent"/>         ((<xsl:value-of select="$entity/@entity-class"/>) parent).<xsl:value-of select="@add-method"/>(name);<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$indent"/>      } else <xsl:value-of select="$empty"/>

@@ -15,11 +15,12 @@
 
 <xsl:template match="model">
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;
-
-import java.util.Formattable;
-import java.util.FormattableFlags;
-import java.util.Formatter;
-
+<xsl:value-of select="$empty-line"/>
+<xsl:value-of select="$empty"/>import java.util.Formattable;<xsl:value-of select="$empty-line"/>
+<xsl:if test="$enable-json">
+   <xsl:value-of select="$empty"/>import java.util.FormattableFlags;<xsl:value-of select="$empty-line"/>
+</xsl:if>
+<xsl:value-of select="$empty"/>import java.util.Formatter;<xsl:value-of select="$empty-line"/>
 import <xsl:value-of select="@transform-package"/>.DefaultXmlBuilder;
 <xsl:if test="$enable-json">
 <xsl:value-of select="$empty"/>import <xsl:value-of select="@transform-package"/>.DefaultJsonBuilder;

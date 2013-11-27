@@ -25,4 +25,9 @@ public class CatHomeGeneratorTest extends ModelGenerateTestSupport {
 	public void testGenerateThresholdTemplate() throws Exception {
 		generate("home/threshold-template-manifest.xml");
 	}
+	
+	@Test
+	public void testBug() throws Exception {
+	   generate("home/bug-manifest.xml");
+	}
 }
