@@ -309,7 +309,7 @@ public class JdbcMojo extends AbstractMojo {
       PomFileBuilder b = new PomFileBuilder();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
-      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "2.0.4", null)) {
+      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "2.0.5", null)) {
          b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.20", "runtime");
       }
 
