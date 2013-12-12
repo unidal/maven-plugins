@@ -289,7 +289,7 @@ public class WebAppMojo extends AbstractMojo {
       }
 
       // dependencies
-      if (!b.checkDependency(dependencies, "org.unidal.framework", "web-framework", "2.0.5", null)) {
+      if (!b.checkDependency(dependencies, "org.unidal.framework", "web-framework", "2.0.6", null)) {
          if (webapp.isJstl()) {
             b.checkDependency(dependencies, "javax.servlet", "jstl", "1.2", null);
          }
@@ -300,8 +300,8 @@ public class WebAppMojo extends AbstractMojo {
 
          b.checkDependency(dependencies, "javax.servlet", "servlet-api", "2.5", "provided");
          b.checkDependency(dependencies, "junit", "junit", "4.8.1", "test");
-         b.checkDependency(dependencies, "org.unidal.framework", "foundation-service", "2.0.5", null);
-         b.checkDependency(dependencies, "org.unidal.framework", "test-framework", "2.0.5", "test");
+         b.checkDependency(dependencies, "org.unidal.framework", "foundation-service", "2.0.6", null);
+         b.checkDependency(dependencies, "org.unidal.framework", "test-framework", "2.0.6", "test");
          b.checkDependency(dependencies, "org.mortbay.jetty", "jetty", "6.1.14", "test");
          b.checkDependency(dependencies, "org.mortbay.jetty", "jsp-2.1", "6.1.14", "test");
       }
@@ -341,7 +341,7 @@ public class WebAppMojo extends AbstractMojo {
 
       // plugins
       Element plugins = b.findOrCreateChild(build, "plugins");
-      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.8");
+      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.9");
       Element codegenPlexus = b.checkPluginExecution(codegenPlugin, "plexus", "process-classes",
             "generate plexus component descriptor");
       Element codegenPlexusConfiguration = b.findOrCreateChild(codegenPlexus, "configuration");
