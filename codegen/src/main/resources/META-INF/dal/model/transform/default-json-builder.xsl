@@ -338,9 +338,6 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public void <xsl:value-of select="@visit-method"/>(<xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>) {<xsl:value-of select="$empty-line"/>
-      <xsl:if test="@root='true'">
-         <xsl:value-of select="$empty"/>      objectBegin(null);<xsl:value-of select="$empty-line"/>
-      </xsl:if>
       <xsl:choose>
          <xsl:when test="@all-children-in-sequence='true'">
             <xsl:value-of select="$empty"/>      objectBegin(<xsl:value-of select="@upper-name"/><xsl:call-template name="tag-fields"/>);<xsl:value-of select="$empty-line"/>
@@ -374,11 +371,6 @@
             <xsl:call-template name="visit-children"/>
          </xsl:otherwise>
       </xsl:choose>
-      <xsl:if test="@root='true'">
-         <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>      objectEnd(null);<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>      trimComma();<xsl:value-of select="$empty-line"/>
-      </xsl:if>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    </xsl:for-each>
 </xsl:template>

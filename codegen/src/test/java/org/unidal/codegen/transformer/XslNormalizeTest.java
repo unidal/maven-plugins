@@ -15,8 +15,8 @@ public class XslNormalizeTest extends ComponentTestCase {
 	private static final String XML_NORMALIZE_XSL = "/META-INF/dal/xml/normalize.xsl";
 
 	private void assertEquals2(String message, String expected, String actual) {
-		String e = expected.replace("\r\n", "\n");
-		String a = actual.replace("\r\n", "\n");
+		String e = expected.replace("\r", "");
+		String a = actual.replace("\r", "");
 
 		Assert.assertEquals(message, e, a);
 	}

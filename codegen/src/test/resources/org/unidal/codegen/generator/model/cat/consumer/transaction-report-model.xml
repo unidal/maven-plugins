@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.dianping.cat.consumer.transaction.model" enable-merger="true" enable-sax-parser="true"  
-	enable-base-visitor="true" enable-filter="true" enable-maker="true" 
+	enable-base-visitor="true" enable-filter="true" enable-maker="true"
+    enable-json-builder="true" enable-json-parser="true" 
     enable-native-parser="true" enable-native-builder="true"
     enable-native-parser2="true" enable-native-builder2="true"
     enable-xml-parser="true">
