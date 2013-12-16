@@ -1,0 +1,9 @@
+@startuml
+
+CLI -> Controller : war.cli.remove
+Controller -> Agent: war.remove
+Controller -> Router: war.remove
+Agent -> Controller: war.removed
+Controller -> CLI: war.cli.removed
+
+@enduml

@@ -20,6 +20,7 @@ import org.unidal.helper.Splitters;
  * DAL code generator for JDBC
  * 
  * @goal dal-jdbc
+ * @phase generate-sources
  * @author Frankie Wu
  */
 public class DalJdbcMojo extends AbstractMojo {

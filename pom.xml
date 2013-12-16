@@ -4,7 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.unidal.maven.plugins</groupId>
    <artifactId>default</artifactId>
-   <version>2.0.3</version>
+   <version>2.0.4</version>
    <name>Maven Plugins</name>
    <packaging>pom</packaging>
    <modules>
@@ -14,6 +14,7 @@
       <module>misc-maven-plugin</module>
       <module>flex-maven-plugin</module>
       <module>project-maven-plugin</module>
+      <module>uml-maven-plugin</module>
       <module>webres-maven-plugin</module>
       <module>wizard-maven-plugin</module>
    </modules>
@@ -39,7 +40,7 @@
             </plugin>
             <plugin>
                <artifactId>maven-surefire-plugin</artifactId>
-               <version>2.9</version>
+               <version>2.12.4</version>
                <configuration>
                   <includes>
                      <include>**/AllTests.java</include>
@@ -52,21 +53,21 @@
                   <dependency>
                      <groupId>org.apache.maven.surefire</groupId>
                      <artifactId>surefire-junit47</artifactId>
-                     <version>2.9</version>
+                     <version>2.12.4</version>
                   </dependency>
                </dependencies>
             </plugin>
            <plugin>
                <artifactId>maven-jar-plugin</artifactId>
-               <version>2.3.1</version>
+               <version>2.4</version>
             </plugin>
             <plugin>
                <artifactId>maven-dependency-plugin</artifactId>
-               <version>2.3</version>
+               <version>2.5.1</version>
             </plugin>
             <plugin>
                <artifactId>maven-eclipse-plugin</artifactId>
-               <version>2.8</version>
+               <version>2.9</version>
                <configuration>
                   <downloadSources>true</downloadSources>
                   <ajdtVersion>none</ajdtVersion>
@@ -85,18 +86,18 @@ org.eclipse.jdt.core.compiler.compliance=1.6
             </plugin>
             <plugin>
                <artifactId>maven-release-plugin</artifactId>
-               <version>2.0</version>
+               <version>2.3.2</version>
             </plugin>
             <plugin>
                <artifactId>maven-source-plugin</artifactId>
-               <version>2.1.2</version>
+               <version>2.2.1</version>
             </plugin>
          </plugins>
       </pluginManagement>
       <plugins>
          <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>2.3.2</version>
+            <version>2.5.1</version>
             <configuration>
                <source>1.6</source>
                <target>1.6</target>
