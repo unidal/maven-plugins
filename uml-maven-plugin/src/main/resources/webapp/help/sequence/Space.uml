@@ -1,0 +1,9 @@
+@startuml
+
+Alice -> Bob: Authentication Request
+...
+Bob --> Alice: Authentication Response
+...5 minutes latter...
+Bob --> Alice: Bye !
+
+@enduml

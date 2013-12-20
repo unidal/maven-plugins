@@ -1,0 +1,6 @@
+@startuml
+title Simple example\nof title 
+
+(*) --> "First activity"
+--> (*)
+@enduml

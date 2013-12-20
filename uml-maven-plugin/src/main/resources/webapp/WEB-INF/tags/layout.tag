@@ -27,7 +27,8 @@
 				
 				<div class="nav-collapse collapse">
 					<ul class="nav">
-						<li class="selected"><a href="${model.webapp}/uml">Editor</a></li>
+						<li class="selected"><a href="${model.webapp}/uml">Edit</a></li>
+						<li class="selected"><a href="${model.webapp}/uml/help">Help</a></li>
 					</ul>
 				</div>
 				<!--/.nav-collapse -->

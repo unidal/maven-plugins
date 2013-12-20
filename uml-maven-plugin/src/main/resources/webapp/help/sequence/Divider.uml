@@ -1,0 +1,18 @@
+@startuml
+participant Alice
+participant "The <b>Famous</b> Bob" as Bob
+
+Alice -> Bob : A <i>well formated</i> message
+note right of Alice 
+ This is <back:cadetblue><size:18>displayed</size></back> 
+ <u>left of</u> Alice. 
+end note
+note left of Bob 
+ <u:red>This</u> is <color #118888>displayed</color> 
+ <b><color purple>left of</color> <s:red>Alice</strike> Bob</b>. 
+end note
+note over Alice, Bob
+ <w:#FF33FF>This is hosted</w> by <img sourceforge.jpg>
+end note
+ 
+@enduml

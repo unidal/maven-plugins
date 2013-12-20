@@ -1,0 +1,6 @@
+@startuml
+
+state foo
+note "This is a floating note" as N1
+
+@enduml

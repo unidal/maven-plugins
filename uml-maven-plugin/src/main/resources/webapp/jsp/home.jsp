@@ -33,7 +33,7 @@
 		$.ajax({
 			  url: '${model.webapp}/uml',
 			  type: 'POST',
-			  data: 'op=text&uml=' + escape(uml),
+			  data: 'type=text&uml=' + escape(uml),
 			  async: false,
 			  success: function(data) {
 				// called when successful

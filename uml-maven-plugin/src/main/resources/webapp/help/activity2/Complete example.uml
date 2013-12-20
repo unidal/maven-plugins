@@ -1,0 +1,9 @@
+@startuml
+
+start
+:starting progress;
+:#red:reading configuration files
+These files must do be edited at this point!;
+:#AAAAAA:ending of the process;
+
+@enduml

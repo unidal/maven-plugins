@@ -1,0 +1,16 @@
+@startuml
+
+skinparam backgroundcolor AntiqueWhite/Gold
+skinparam classBackgroundColor Wheat|CornflowerBlue
+
+class Foo #red-green
+note left of Foo #blue\9932CC {
+  this is my
+  note on this class
+}
+
+package example #GreenYellow/LightGoldenRodYellow {
+  class Dummy
+}
+
+@enduml

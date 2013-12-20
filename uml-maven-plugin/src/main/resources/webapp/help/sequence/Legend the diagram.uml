@@ -1,0 +1,8 @@
+@startuml
+
+title Simple communication example
+
+Alice -> Bob: Authentication Request
+Bob --> Alice: Authentication Response
+
+@enduml
