@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-app xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee">
+   <servlet>
+		<servlet-name>uml-servlet</servlet-name>
+		<servlet-class>org.unidal.maven.plugin.uml.UmlServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>uml-servlet</servlet-name>
+		<url-pattern>/uml/*</url-pattern>
+	</servlet-mapping>
+</web-app>
