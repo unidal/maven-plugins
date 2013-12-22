@@ -1,19 +1,22 @@
 package org.unidal.maven.plugin.uml;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.plantuml.BlockUml;
 import net.sourceforge.plantuml.FileFormat;
-import net.sourceforge.plantuml.ISourceFileReader;
-import net.sourceforge.plantuml.Option;
-import net.sourceforge.plantuml.SourceFileReader2;
+import net.sourceforge.plantuml.FileFormatOption;
+import net.sourceforge.plantuml.PSystemError;
+import net.sourceforge.plantuml.SourceStringReader;
 
 import org.unidal.helper.Files;
 import org.unidal.web.jsp.function.CodecFunction;
@@ -21,16 +24,7 @@ import org.unidal.web.jsp.function.CodecFunction;
 public class UmlServlet extends HttpServlet {
    private static final long serialVersionUID = 1L;
 
-   private String generateSvg(String uml) throws IOException, InterruptedException {
-      long timestamp = System.currentTimeMillis();
-      String charset = "utf-8";
-      File source = new File("target/tmp/" + timestamp + ".uml");
-      File target = new File("target/tmp/" + timestamp + ".svg");
-      Option option = new Option();
-
-      option.setFileFormat(FileFormat.SVG);
-      option.setCharset(charset);
-
+   private String generateImage(String uml, String type) throws IOException {
       if (!uml.trim().startsWith("@startuml")) {
          uml = "@startuml\n" + uml;
       }
@@ -39,23 +33,45 @@ public class UmlServlet extends HttpServlet {
          uml = uml + "\n@enduml";
       }
 
-      source.getParentFile().mkdirs();
-      Files.forIO().writeTo(source, uml.getBytes(charset));
+      SourceStringReader reader = new SourceStringReader(uml);
+      ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
+      FileFormat format = FileFormat.valueOf(type.toUpperCase());
 
-      ISourceFileReader reader = new SourceFileReader2(option.getDefaultDefines(), source, target, option.getConfig(),
-            option.getCharset(), option.getFileFormatOption());
+      reader.generateImage(baos, new FileFormatOption(format));
 
-      try {
-         if (!reader.hasError() && !reader.getGeneratedImages().isEmpty()) {
-            String result = Files.forIO().readFrom(target, charset);
+      if (!hasError(reader.getBlocks())) {
+         return baos.toString("utf-8");
+      } else {
+         return null;
+      }
+   }
 
-            return result;
-         } else {
-            return null;
+   private boolean hasError(List<BlockUml> blocks) throws IOException {
+      for (BlockUml b : blocks) {
+         if (b.getDiagram() instanceof PSystemError) {
+            return true;
          }
-      } finally {
-         Files.forDir().delete(source);
-         Files.forDir().delete(target);
+      }
+
+      return false;
+   }
+
+   @Override
+   public void init(ServletConfig config) throws ServletException {
+      try {
+         String result = generateImage("testdot", "atxt");
+
+         System.out.println(result);
+
+         if (result != null && result.contains("Error")) {
+            System.err.println("WARNNING: Failed to testdot, the system will be run in downgraded mode, "
+                  + "only sequence diagrams will be generated!\r\n"
+                  + "Please make sure graphviz is installed, and mare sure file /usr/bin/dot exist!");
+         }
+      } catch (IOException e) {
+         // ignore it
+         e.printStackTrace();
+         log("Error when initializing " + getClass().getName() + "!", e);
       }
    }
 
@@ -77,11 +93,7 @@ public class UmlServlet extends HttpServlet {
       model.setUml(uml);
 
       if (uml != null) {
-         try {
-            model.setSvg(generateSvg(uml));
-         } catch (InterruptedException e) {
-            // ignore it
-         }
+         model.setSvg(generateImage(uml, "svg"));
       }
 
       if (uml != null && ("text".equals(type) || "svg".equals(type))) {

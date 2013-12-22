@@ -19,16 +19,16 @@
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container-fluid">
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a> 
-				
 				<div class="nav-collapse collapse">
 					<ul class="nav">
 						<li class="selected"><a href="${model.webapp}/uml">Edit</a></li>
-						<li class="selected"><a href="${model.webapp}/uml/help">Help</a></li>
+						<li class="selected"><a href="${model.webapp}/jsp/help/usecase.jsp">Use Case</a></li>
+						<li class="selected"><a href="${model.webapp}/jsp/help/sequence.jsp">Sequence</a></li>
+						<li class="selected"><a href="${model.webapp}/jsp/help/classes.jsp">Class</a></li>
+						<li class="selected"><a href="${model.webapp}/jsp/help/activity.jsp">Activity</a></li>
+						<li class="selected"><a href="${model.webapp}/jsp/help/activity2.jsp">Advanced Activity</a></li>
+						<li class="selected"><a href="${model.webapp}/jsp/help/component.jsp">Component</a></li>
+						<li class="selected"><a href="${model.webapp}/jsp/help/state.jsp">State</a></li>
 					</ul>
 				</div>
 				<!--/.nav-collapse -->

@@ -6,16 +6,19 @@
 <br>
 
 <div>
-<h2>Arrow direction</h2>
+<h2>Simple State</h2>
 <pre>@startuml
 
-[*] -up-&gt; First
-First -right-&gt; Second
-Second --&gt; Third
-Third -left-&gt; Last
+[*] --&gt; State1
+State1 --&gt; [*]
+State1 : this is a string
+State1 : this is another string
+
+State1 -&gt; State2
+State2 --&gt; [*]
 
 @enduml</pre>
-<img src='/uml/help/state/Arrow+direction.uml'>
+<img src='/uml/help/state/01-Simple+State.uml'>
 </div>
 
 <div>
@@ -42,32 +45,7 @@ state Configuring {
   
 }
 @enduml</pre>
-<img src='/uml/help/state/Composite+state.uml'>
-</div>
-
-<div>
-<h2>Concurrent state</h2>
-<pre>@startuml
-scale 800 width
-
-[*] --&gt; Active
-
-state Active {
-  [*] -&gt; NumLockOff
-  NumLockOff --&gt; NumLockOn : EvNumLockPressed
-  NumLockOn --&gt; NumLockOff : EvNumLockPressed
-  --
-  [*] -&gt; CapsLockOff
-  CapsLockOff --&gt; CapsLockOn : EvCapsLockPressed
-  CapsLockOn --&gt; CapsLockOff : EvCapsLockPressed
-  --
-  [*] -&gt; ScrollLockOff
-  ScrollLockOff --&gt; ScrollLockOn : EvCapsLockPressed
-  ScrollLockOn --&gt; ScrollLockOff : EvCapsLockPressed
-} 
-
-@enduml</pre>
-<img src='/uml/help/state/Concurrent+state.uml'>
+<img src='/uml/help/state/02-Composite+state.uml'>
 </div>
 
 <div>
@@ -92,18 +70,45 @@ State3 --&gt; [*] : Succeeded / Save Result
 State3 --&gt; [*] : Aborted
  
 @enduml</pre>
-<img src='/uml/help/state/Long+name.uml'>
+<img src='/uml/help/state/03-Long+name.uml'>
 </div>
 
 <div>
-<h2>More in notes</h2>
+<h2>Concurrent state</h2>
 <pre>@startuml
+scale 800 width
 
-state foo
-note &quot;This is a floating note&quot; as N1
+[*] --&gt; Active
+
+state Active {
+  [*] -&gt; NumLockOff
+  NumLockOff --&gt; NumLockOn : EvNumLockPressed
+  NumLockOn --&gt; NumLockOff : EvNumLockPressed
+  --
+  [*] -&gt; CapsLockOff
+  CapsLockOff --&gt; CapsLockOn : EvCapsLockPressed
+  CapsLockOn --&gt; CapsLockOff : EvCapsLockPressed
+  --
+  [*] -&gt; ScrollLockOff
+  ScrollLockOff --&gt; ScrollLockOn : EvCapsLockPressed
+  ScrollLockOn --&gt; ScrollLockOff : EvCapsLockPressed
+} 
 
 @enduml</pre>
-<img src='/uml/help/state/More+in+notes.uml'>
+<img src='/uml/help/state/04-Concurrent+state.uml'>
+</div>
+
+<div>
+<h2>Arrow direction</h2>
+<pre>@startuml
+
+[*] -up-&gt; First
+First -right-&gt; Second
+Second --&gt; Third
+Third -left-&gt; Last
+
+@enduml</pre>
+<img src='/uml/help/state/05-Arrow+direction.uml'>
 </div>
 
 <div>
@@ -122,23 +127,18 @@ note right of Inactive
 end note
 
 @enduml</pre>
-<img src='/uml/help/state/Note.uml'>
+<img src='/uml/help/state/06-Note.uml'>
 </div>
 
 <div>
-<h2>Simple State</h2>
+<h2>More in notes</h2>
 <pre>@startuml
 
-[*] --&gt; State1
-State1 --&gt; [*]
-State1 : this is a string
-State1 : this is another string
-
-State1 -&gt; State2
-State2 --&gt; [*]
+state foo
+note &quot;This is a floating note&quot; as N1
 
 @enduml</pre>
-<img src='/uml/help/state/Simple+State.uml'>
+<img src='/uml/help/state/07-More+in+notes.uml'>
 </div>
 
 <div>
@@ -158,7 +158,7 @@ state &quot;Not Shooting State&quot; as NotShooting {
 note right of NotShooting : This is a note on a composite state
 
 @enduml</pre>
-<img src='/uml/help/state/Skinparam.uml'>
+<img src='/uml/help/state/08-Skinparam.uml'>
 </div>
 
 

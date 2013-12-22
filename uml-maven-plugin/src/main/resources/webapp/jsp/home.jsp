@@ -25,12 +25,15 @@
 	</form>
 
 	<script lang="javascript">
-	var interval = 1000;
+	var interval = 500;
+	var dirty = false;
 	
 	function refresh() {
 		var uml = $("#uml").val();
 		
-		$.ajax({
+		if (dirty) {
+		   dirty = false;
+		   $.ajax({
 			  url: '${model.webapp}/uml',
 			  type: 'POST',
 			  data: 'type=text&uml=' + escape(uml),
@@ -44,12 +47,16 @@
 				// console.log(e.message);
 			  }
 			});
+		}
 		
 		setTimeout(refresh, interval);
 	}
 	
 	$(document).ready(function () {
-	    //hide a div after 2 seconds
+		$('#uml').bind('input propertychange', function() {
+		   dirty = true;
+		});
+		
 	    $(function(){setTimeout(refresh, interval);});
 	});
 	</script>

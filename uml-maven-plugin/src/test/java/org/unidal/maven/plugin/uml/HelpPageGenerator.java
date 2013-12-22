@@ -2,6 +2,7 @@ package org.unidal.maven.plugin.uml;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -12,13 +13,13 @@ import org.unidal.web.jsp.function.CodecFunction;
 
 public class HelpPageGenerator {
    @Test
-   public void generate() throws Exception {
+   public void generateJsp() throws Exception {
       File base = new File(getClass().getResource("/webapp/help").getPath());
       String[] diagrams = base.list();
 
       if (diagrams != null) {
          for (String diagram : diagrams) {
-            if (diagram.endsWith(".jsp")) {
+            if (diagram.endsWith(".jsp") || diagram.startsWith(".")) {
                continue;
             }
 
@@ -40,8 +41,10 @@ public class HelpPageGenerator {
             StringBuilder sb = new StringBuilder(4096);
             String template = Files.forIO().readFrom(getClass().getResourceAsStream("template.jsp"), "utf-8");
 
+            Collections.sort(paths);
+            
             for (String path : paths) {
-               String id = path.substring(0, path.length() - 4);
+               String id = path.substring(3, path.length() - 4);
                String uml = Files.forIO().readFrom(new File(dir, path), "utf-8");
 
                sb.append("<div>\r\n");
