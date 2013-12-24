@@ -211,7 +211,7 @@
                   <xsl:value-of select="$empty"/>         result <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/>= (<xsl:value-of select="@field-name"/> == <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
                </xsl:when>
                <xsl:otherwise>
-                  <xsl:value-of select="$empty"/>         result <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/>= (<xsl:value-of select="@field-name"/> == null <xsl:value-of select="'&amp;&amp; '" disable-output-escaping="yes"/> <xsl:value-of select="@param-name"/> == null || <xsl:value-of select="@field-name"/>.equals(<xsl:value-of select="@param-name"/>));<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>         result <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/>= (<xsl:value-of select="@field-name"/> == <xsl:value-of select="@param-name"/> || <xsl:value-of select="@field-name"/> != null <xsl:value-of select="'&amp;&amp; '" disable-output-escaping="yes"/><xsl:value-of select="@field-name"/>.equals(<xsl:value-of select="@param-name"/>));<xsl:value-of select="$empty-line"/>
                </xsl:otherwise>
             </xsl:choose>
          </xsl:for-each>
@@ -229,7 +229,7 @@
       <xsl:otherwise>
          <xsl:value-of select="'         '"/><xsl:value-of select="$key/@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="$key/@param-name"/> = _o.<xsl:value-of select="$key/@get-method"/>();<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>         return <xsl:value-of select="$key/@field-name"/> == null <xsl:value-of select="'&amp;&amp; '" disable-output-escaping="yes"/> <xsl:value-of select="$key/@param-name"/> == null || <xsl:value-of select="$key/@field-name"/>.equals(<xsl:value-of select="$key/@param-name"/>);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         return <xsl:value-of select="$key/@field-name"/> == <xsl:value-of select="$key/@param-name"/> || <xsl:value-of select="$key/@field-name"/> != null <xsl:value-of select="'&amp;&amp; '" disable-output-escaping="yes"/><xsl:value-of select="$key/@field-name"/>.equals(<xsl:value-of select="$key/@param-name"/>);<xsl:value-of select="$empty-line"/>
       </xsl:otherwise>
    </xsl:choose>
    <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
