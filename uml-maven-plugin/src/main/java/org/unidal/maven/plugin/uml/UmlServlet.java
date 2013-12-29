@@ -24,7 +24,7 @@ import org.unidal.web.jsp.function.CodecFunction;
 public class UmlServlet extends HttpServlet {
    private static final long serialVersionUID = 1L;
 
-   private String generateImage(String uml, String type) throws IOException {
+   private byte[] generateImage(String uml, String type) throws IOException {
       if (!uml.trim().startsWith("@startuml")) {
          uml = "@startuml\n" + uml;
       }
@@ -35,12 +35,19 @@ public class UmlServlet extends HttpServlet {
 
       SourceStringReader reader = new SourceStringReader(uml);
       ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
-      FileFormat format = FileFormat.valueOf(type.toUpperCase());
+      FileFormat format = FileFormat.PNG;
+
+      for (FileFormat e : FileFormat.values()) {
+         if (e.name().equalsIgnoreCase(type)) {
+            format = e;
+            break;
+         }
+      }
 
       reader.generateImage(baos, new FileFormatOption(format));
 
       if (!hasError(reader.getBlocks())) {
-         return baos.toString("utf-8");
+         return baos.toByteArray();
       } else {
          return null;
       }
@@ -59,7 +66,7 @@ public class UmlServlet extends HttpServlet {
    @Override
    public void init(ServletConfig config) throws ServletException {
       try {
-         String result = generateImage("testdot", "atxt");
+         String result = new String(generateImage("testdot", "atxt"), "utf-8");
 
          System.out.println(result);
 
@@ -77,6 +84,10 @@ public class UmlServlet extends HttpServlet {
 
    @Override
    protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+      if (req.getCharacterEncoding() == null) {
+         req.setCharacterEncoding("utf-8");
+      }
+
       UmlViewModel model = new UmlViewModel(req);
       String pathInfo = req.getPathInfo();
       String uml = req.getParameter("uml");
@@ -92,32 +103,42 @@ public class UmlServlet extends HttpServlet {
 
       model.setUml(uml);
 
-      if (uml != null) {
-         model.setSvg(generateImage(uml, "svg"));
-      }
+      try {
+         if (uml != null && type != null && type.length() > 0) {
+            if (type.equals("text")) {
+               model.setImage(generateImage(uml, "svg"));
+            } else {
+               model.setImage(generateImage(uml, type));
+            }
 
-      if (uml != null && ("text".equals(type) || "svg".equals(type))) {
-         showImage(req, res, model, type);
-      } else {
-         showPage(req, res, model);
+            showImage(req, res, model, type);
+         } else {
+            if (uml != null) {
+               model.setSvg(new String(generateImage(uml, "svg"), "utf-8"));
+            }
+
+            showPage(req, res, model);
+         }
+      } catch (Exception e) {
+         res.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
       }
    }
 
    private void showImage(HttpServletRequest req, HttpServletResponse res, UmlViewModel model, String type)
          throws UnsupportedEncodingException, IOException {
-      String svg = model.getSvg();
+      byte[] image = model.getImage();
 
-      if (svg != null) {
-         byte[] data = svg.getBytes("utf-8");
-
+      if (image != null) {
          if ("text".equals(type)) {
             res.setContentType("text/plain; charset=utf-8");
          } else if ("svg".equals(type)) {
             res.setContentType("image/svg+xml; charset=utf-8");
+         } else if ("png".equals(type)) {
+            res.setContentType("image/png");
          }
 
-         res.setContentLength(data.length);
-         res.getOutputStream().write(data);
+         res.setContentLength(image.length);
+         res.getOutputStream().write(image);
       } else {
          res.sendError(400, "Invalid uml!");
       }

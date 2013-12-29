@@ -7,10 +7,16 @@ public class UmlViewModel {
 
    private String m_uml;
 
+   private byte[] m_image;
+
    private String m_svg;
 
    public UmlViewModel(HttpServletRequest req) {
       m_webapp = req.getContextPath();
+   }
+
+   public byte[] getImage() {
+      return m_image;
    }
 
    public String getSvg() {
@@ -23,6 +29,10 @@ public class UmlViewModel {
 
    public String getWebapp() {
       return m_webapp;
+   }
+
+   public void setImage(byte[] image) {
+      m_image = image;
    }
 
    public void setSvg(String svg) {
