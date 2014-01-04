@@ -188,7 +188,16 @@
       }
    }
 
-   public String build(Collection<xsl:value-of select="'&lt;?'" disable-output-escaping="yes"/> extends IEntity<xsl:value-of select="'&lt;?&gt;&gt;'" disable-output-escaping="yes"/> entities) {
+   public String build(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
+      objectBegin(null);
+      entity.accept(this);
+      objectEnd(null);
+      trimComma();
+
+      return m_sb.toString();
+   }
+
+   public String buildArray(Collection<xsl:value-of select="'&lt;?'" disable-output-escaping="yes"/> extends IEntity<xsl:value-of select="'&lt;?&gt;&gt;'" disable-output-escaping="yes"/> entities) {
       m_sb.append('[');
 
       if (entities != null) {
@@ -202,15 +211,6 @@
       }
 
       m_sb.append(']');
-
-      return m_sb.toString();
-   }
-
-   public String build(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
-      objectBegin(null);
-      entity.accept(this);
-      objectEnd(null);
-      trimComma();
 
       return m_sb.toString();
    }

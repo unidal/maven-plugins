@@ -3,6 +3,7 @@ package org.unidal.maven.plugin.project;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -38,8 +39,6 @@ import org.unidal.maven.plugin.project.plugin.entity.PluginMetadata;
 import org.unidal.maven.plugin.project.plugin.entity.Versioning;
 import org.unidal.maven.plugin.project.plugin.entity.Versions;
 import org.xml.sax.SAXException;
-
-import com.ibm.icu.text.SimpleDateFormat;
 
 /**
  * Create a Maven repository to hold some jars (build & plugin) referenced by
@@ -100,8 +99,7 @@ public class CreateRepositoryMojo extends AbstractMojo {
    private File m_targetDir;
 
    /**
-    * @parameter expression="${include}"
-    *            default-value="org.unidal"
+    * @parameter expression="${include}" default-value="org.unidal"
     */
    private String include;
 

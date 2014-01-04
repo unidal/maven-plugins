@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -91,16 +92,23 @@ public class UmlServlet extends HttpServlet {
    }
 
    private List<File> scanUmlFiles() {
-      return Scanners.forDir().scan(new File("src"), new FileMatcher() {
+      final List<File> files = new ArrayList<File>();
+
+      FileMatcher matcher = new FileMatcher() {
          @Override
          public Direction matches(File base, String path) {
             if (path.endsWith(".uml")) {
-               return Direction.MATCHED;
+               files.add(new File(base, path));
             }
 
             return Direction.DOWN;
          }
-      });
+      };
+
+      Scanners.forDir().scan(new File("src"), matcher);
+      Scanners.forDir().scan(new File("doc"), matcher);
+
+      return files;
    }
 
    @Override

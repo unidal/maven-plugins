@@ -18,8 +18,11 @@
    <xsl:call-template name='import-list'/>
    <xsl:value-of select="$empty"/>public class DefaultJsonParser {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name="declare-field-variables"/>
+   <xsl:call-template name='constructor'/>
    <xsl:call-template name='method-static-parse'/>
    <xsl:call-template name='method-convert-value'/>
+   <xsl:call-template name='method-create-root-entity'/>
+   <xsl:call-template name='method-is-top-level'/>
    <xsl:call-template name='method-on-array-begin'/>
    <xsl:call-template name='method-on-array-end'/>
    <xsl:call-template name='method-on-name'/>
@@ -88,8 +91,11 @@
    <xsl:value-of select="$empty"/>import java.io.InputStreamReader;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.Reader;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.StringReader;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import java.util.ArrayList;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import java.util.List;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.util.Stack;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IEntity;<xsl:value-of select="$empty-line"/>
    <xsl:for-each select="entity">
       <xsl:sort select="@entity-class"/>
 
@@ -105,168 +111,124 @@
 
    private Stack<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> m_objs = new Stack<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/>();
 
-   private <xsl:value-of select="entity[@root='true']/@entity-class"/> m_root;
+   private List<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> m_entities = new ArrayList<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/>();
+
+   private Class<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> m_entityClass;
 <xsl:if test="//entity/element[@json-list='true' or list='true' or @set='true'][not(@render='false')]">
    private boolean m_inElements = false;
 </xsl:if>
 </xsl:template>
 
+<xsl:template name="constructor">
+   private DefaultJsonParser(Class<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entityClass) {
+      m_entityClass = entityClass;
+   }
+</xsl:template>
+
 <xsl:template name="method-static-parse">
-   <xsl:variable name="current" select="."/>
+   <xsl:variable name="t1" select="'&lt;T extends IEntity&lt;T&gt;&gt;'"/>
+   <xsl:variable name="t2" select="'&lt;T&gt;'"/>
    <xsl:value-of select="$empty-line"/>
-   <xsl:for-each select="entity[@root='true']">
-      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(InputStream in) throws IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return parse(new InputStreamReader(in, "utf-8"));<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(Reader reader) throws IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return new DefaultJsonParser().parse(new JsonReader(reader));<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(String json) throws IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return parse(new StringReader(json));<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
-   </xsl:for-each>
-</xsl:template>
-
-<xsl:template name="method-parse">
-   <xsl:variable name="current" select="."/>
+   <xsl:value-of select="$empty"/>   public static <xsl:value-of select="$t1" disable-output-escaping="yes"/> T parse(Class<xsl:value-of select="$t2" disable-output-escaping="yes"/> entityClass, InputStream in) throws IOException {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      return parse(entityClass, new InputStreamReader(in, "utf-8"));<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
-   <xsl:for-each select="entity[@root='true']">
-      <xsl:value-of select="$empty"/>   private <xsl:value-of select="@entity-class"/> parse(JsonReader reader) throws IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         reader.parse(this);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      } catch (EOFException e) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         if (!m_objs.isEmpty()) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>            throw new EOFException(String.format("Unexpected end while parsing %s", m_tags));<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      m_linker.finish();<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return m_root;<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-   </xsl:for-each>
+   <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")
+   <xsl:value-of select="$empty"/>   public static <xsl:value-of select="$t1" disable-output-escaping="yes"/> T parse(Class<xsl:value-of select="$t2" disable-output-escaping="yes"/> entityClass, Reader reader) throws IOException {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      DefaultJsonParser parser = new DefaultJsonParser(entityClass);<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      parser.onArrayBegin();<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      parser.parse(new JsonReader(reader));<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      parser.onArrayEnd();<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      if (parser.m_entities.isEmpty()) {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>         return null;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      } else {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>         return (T) parser.m_entities.get(0);<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   public static <xsl:value-of select="$t1" disable-output-escaping="yes"/> T parse(Class<xsl:value-of select="$t2" disable-output-escaping="yes"/> entityClass, String json) throws IOException {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      return parse(entityClass, new StringReader(json));<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   public static <xsl:value-of select="$t1" disable-output-escaping="yes"/> List<xsl:value-of select="$t2" disable-output-escaping="yes"/> parseArray(Class<xsl:value-of select="$t2" disable-output-escaping="yes"/> entityClass, InputStream in) throws Exception {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      return parseArray(entityClass, new InputStreamReader(in, "utf-8"));<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   public static <xsl:value-of select="$t1" disable-output-escaping="yes"/> List<xsl:value-of select="$t2" disable-output-escaping="yes"/> parseArray(Class<xsl:value-of select="$t2" disable-output-escaping="yes"/> entityClass, Reader reader) throws Exception {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      DefaultJsonParser parser = new DefaultJsonParser(entityClass);<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      parser.parse(new JsonReader(reader));<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      return (List<xsl:value-of select="$t2" disable-output-escaping="yes"/>) parser.m_entities;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   public static <xsl:value-of select="$t1" disable-output-escaping="yes"/> List<xsl:value-of select="$t2" disable-output-escaping="yes"/> parseArray(Class<xsl:value-of select="$t2" disable-output-escaping="yes"/> entityClass, String json) throws Exception {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      return parseArray(entityClass, new StringReader(json));<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
 </xsl:template>
 
-<xsl:template name="method-parse-children">
-   <xsl:for-each select="entity">
-      <xsl:sort select="@build-method"/>
+<xsl:template name="method-convert-value">
+   @SuppressWarnings("unchecked")
+   protected <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T convert(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, String value, T defaultValue) {
+      if (value == null || value.length() == 0) {
+         return defaultValue;
+      }
 
-      <xsl:value-of select="$empty"/>   public void <xsl:value-of select="@parse-for-method"/>(<xsl:value-of select="@entity-class"/><xsl:value-of select="' '"/><xsl:value-of select="@param-name"/>, String tag, String value) {<xsl:value-of select="$empty-line"/>
-      <xsl:call-template name="parse-children">
-         <xsl:with-param name="indent" select="'      '"/>
-      </xsl:call-template>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-   </xsl:for-each>
+      if (type == Boolean.class) {
+         return (T) Boolean.valueOf(value);
+      } else if (type == Integer.class) {
+         return (T) Integer.valueOf(value);
+      } else if (type == Long.class) {
+         return (T) Long.valueOf(value);
+      } else if (type == Short.class) {
+         return (T) Short.valueOf(value);
+      } else if (type == Float.class) {
+         return (T) Float.valueOf(value);
+      } else if (type == Double.class) {
+         return (T) Double.valueOf(value);
+      } else if (type == Byte.class) {
+         return (T) Byte.valueOf(value);
+      } else if (type == Character.class) {
+         return (T) (Character) value.charAt(0);
+      } else {
+         return (T) value;
+      }
+   }
 </xsl:template>
 
-<xsl:template name="parse-children">
-   <xsl:param name="indent"/>
-   
-   <xsl:variable name="current" select="."/>
-   <xsl:variable name="children" select="(attribute | element | entity-ref)[not(@render='false')]"/>
-   <xsl:if test="$children">
-      <xsl:value-of select="$indent"/>
-      <xsl:variable name="entity-refs" select="entity-ref[not(@render='false')]"/>
-      <xsl:if test="$entity-refs">
-         <xsl:value-of select="$empty"/>if (<xsl:value-of select="$empty"/>
-         <xsl:for-each select="$entity-refs">
-            <xsl:if test="position()!=1"> || </xsl:if>
-            <xsl:value-of select="$empty"/><xsl:value-of select="@upper-names"/>.equals(tag)<xsl:value-of select="$empty"/>
-         </xsl:for-each>
-         <xsl:value-of select="$empty"/>) {<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>   // do nothing here<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
-      </xsl:if>
-      <xsl:for-each select="(attribute | element)[not(@render='false')]">
-         <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="$empty"/>
-         <xsl:choose>
-            <xsl:when test="@json-list='true' or @list='true' or @set='true'">
-               <xsl:value-of select="@add-method"/>
-            </xsl:when>
-            <xsl:otherwise>
-               <xsl:value-of select="@set-method"/>
-            </xsl:otherwise>
-         </xsl:choose>
-         <xsl:value-of select="$empty"/>(<xsl:value-of select="$empty"/>
-         <xsl:call-template name="convert-type">
-            <xsl:with-param name="value" select="'value'"/>
-         </xsl:call-template>
-         <xsl:value-of select="$empty"/>);<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
-      </xsl:for-each>
-      <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
-      <xsl:choose>
-         <xsl:when test="$current/@dynamic-attributes='true'">
-            <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.setDynamicAttribute(tag, value);<xsl:value-of select="$empty-line"/>
-         </xsl:when>
-         <xsl:otherwise>
-            <xsl:value-of select="$indent"/>   throw new RuntimeException(String.format("Unknown tag(%s) of %s under %s!", tag, <xsl:value-of select="$current/@param-name"/>, m_tags));<xsl:value-of select="$empty-line"/>
-         </xsl:otherwise>
-      </xsl:choose>
-      <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
-   </xsl:if>
+<xsl:template name="method-create-root-entity">
+   private Object createRootEntity() {
+      try {
+         Object entity = m_entityClass.newInstance();
+
+         return entity;
+      } catch (Exception e) {
+         throw new RuntimeException(String.format("Unable to create entity(%s) instance!", m_entityClass.getName()), e);
+      }
+   }
 </xsl:template>
 
-<xsl:template name="convert-type">
-   <xsl:param name="value-type" select="@value-type"/>
-   <xsl:param name="enum" select="@enum"/>
-   <xsl:param name="value" select="@param-name"/>
-   
-   <xsl:choose>
-      <xsl:when test="$enum='true'"><xsl:value-of select="$value-type"/>.valueOf(<xsl:value-of select="$value"/>)</xsl:when>
-      <xsl:when test="$value-type='String'"><xsl:value-of select="$value"/></xsl:when>
-      <xsl:when test="$value-type='java.util.Date'">toDate(<xsl:value-of select="$value"/>, "<xsl:value-of select="@format"/>")</xsl:when>
-      <xsl:when test="@format">
-         <xsl:value-of select="$empty"/>toNumber(<xsl:value-of select="$value"/>, "<xsl:value-of select="@format"/>").<xsl:value-of select="$empty"/>
-         <xsl:choose>
-            <xsl:when test="$value-type='int'">intValue()</xsl:when>
-            <xsl:when test="$value-type='Integer'">intValue()</xsl:when>
-            <xsl:when test="$value-type='long'">longValue()</xsl:when>
-            <xsl:when test="$value-type='Long'">longValue()</xsl:when>
-            <xsl:when test="$value-type='short'">shortValue()</xsl:when>
-            <xsl:when test="$value-type='Short'">shortValue()</xsl:when>
-            <xsl:when test="$value-type='float'">floatValue()</xsl:when>
-            <xsl:when test="$value-type='Float'">floatValue()</xsl:when>
-            <xsl:when test="$value-type='double'">doubleValue()</xsl:when>
-            <xsl:when test="$value-type='Double'">doubleValue()</xsl:when>
-            <xsl:when test="$value-type='byte'">byteValue()</xsl:when>
-            <xsl:when test="$value-type='Byte'">byteValue()</xsl:when>
-            <xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
-         </xsl:choose>
-      </xsl:when>
-      <xsl:when test="$value-type='boolean'">convert(Boolean.class, <xsl:value-of select="$value"/>, false)</xsl:when>
-      <xsl:when test="$value-type='Boolean'">convert(Boolean.class, <xsl:value-of select="$value"/>, null)</xsl:when>
-      <xsl:when test="$value-type='int'">convert(Integer.class, <xsl:value-of select="$value"/>, 0)</xsl:when>
-      <xsl:when test="$value-type='Integer'">convert(Integer.class, <xsl:value-of select="$value"/>, null)</xsl:when>
-      <xsl:when test="$value-type='long'">convert(Long.class, <xsl:value-of select="$value"/>, 0L)</xsl:when>
-      <xsl:when test="$value-type='Long'">convert(Long.class, <xsl:value-of select="$value"/>, null)</xsl:when>
-      <xsl:when test="$value-type='short'">convert(Short.class, <xsl:value-of select="$value"/>, (short) 0)</xsl:when>
-      <xsl:when test="$value-type='Short'">convert(Short.class, <xsl:value-of select="$value"/>, null)</xsl:when>
-      <xsl:when test="$value-type='float'">convert(Float.class, <xsl:value-of select="$value"/>, 0.0f)</xsl:when>
-      <xsl:when test="$value-type='Float'">convert(Float.class, <xsl:value-of select="$value"/>, null)</xsl:when>
-      <xsl:when test="$value-type='double'">convert(Double.class, <xsl:value-of select="$value"/>, 0.0)</xsl:when>
-      <xsl:when test="$value-type='Double'">convert(Double.class, <xsl:value-of select="$value"/>, null)</xsl:when>
-      <xsl:when test="$value-type='byte'">convert(Byte.class, <xsl:value-of select="$value"/>, (byte) 0)</xsl:when>
-      <xsl:when test="$value-type='Byte'">convert(Byte.class, <xsl:value-of select="$value"/>, null)</xsl:when>
-      <xsl:when test="$value-type='char'">convert(Character.class, <xsl:value-of select="$value"/>, (char) 0)</xsl:when>
-      <xsl:when test="$value-type='Character'">convert(Character.class, <xsl:value-of select="$value"/>, null)</xsl:when>
-      <xsl:when test="$value-type='Class&lt;?&gt;'">toClass(<xsl:value-of select="$value"/>)</xsl:when>
-      <xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
-   </xsl:choose>
+<xsl:template name="method-is-top-level">
+   private boolean isTopLevel() {
+      return m_objs.size() == 1;
+   }
 </xsl:template>
 
 <xsl:template name="method-on-array-begin">
    <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   protected void onArrayBegin() {<xsl:value-of select="$empty-line"/>
    <xsl:variable name="entities" select="entity[element[@json-list='true' or list='true' or @set='true'] or entity-ref[@json-list='true']][ not(@render='false')]"/>
+   <xsl:value-of select="$empty"/>      if (m_objs.isEmpty()) {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>         m_objs.push(m_entities);<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>         m_tags.push("");<xsl:value-of select="$empty-line"/>
    <xsl:if test="$entities">
-      <xsl:variable name="indent" select="'      '"/>
-      <xsl:value-of select="$empty"/>      Object parent = m_objs.peek();<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      String tag = m_tags.peek();<xsl:value-of select="$empty-line"/>
+      <xsl:variable name="indent" select="'         '"/>
+      <xsl:value-of select="$empty"/>      } else {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         Object parent = m_objs.peek();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         String tag = m_tags.peek();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$indent"/>
       <xsl:for-each select="$entities">
@@ -292,6 +254,7 @@
       <xsl:value-of select="$indent"/>   throw new RuntimeException(String.format("Unknown tag(%s) found at %s!", tag, m_tags));<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
    </xsl:if>
+   <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty"/>
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
 </xsl:template>
 
@@ -300,7 +263,7 @@
       m_objs.pop();
       m_tags.pop();
 <xsl:if test="//entity/element[@json-list='true' or list='true' or @set='true'][not(@render='false')]">
-      m_inElements = false;
+      m_inElements = false;<xsl:value-of select="$empty"/>
 </xsl:if>
    }
 </xsl:template>
@@ -348,9 +311,8 @@
    <xsl:variable name="root" select="entity[@root='true']"/>
    <xsl:variable name="indent" select="'         '"/>
    protected void onObjectBegin() {
-      if (m_objs.isEmpty()) { // root
-         m_root = new <xsl:value-of select="$root/@entity-class"/>();
-         m_objs.push(m_root);
+      if (isTopLevel()) {
+         m_objs.push(createRootEntity());
          m_tags.push("");
       } else {
          Object parent = m_objs.peek();
@@ -475,8 +437,13 @@
 
 <xsl:template name="method-on-object-end">
    protected void onObjectEnd() {
-      m_objs.pop();
       m_tags.pop();
+
+      Object entity = m_objs.pop();
+
+      if (isTopLevel()) {
+         m_entities.add(entity);
+      }
    }
 </xsl:template>
 
@@ -510,35 +477,6 @@
 </xsl:if>
 </xsl:template>
 
-<xsl:template name="method-convert-value">
-   @SuppressWarnings("unchecked")
-   protected <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T convert(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, String value, T defaultValue) {
-      if (value == null || value.length() == 0) {
-         return defaultValue;
-      }
-
-      if (type == Boolean.class) {
-         return (T) Boolean.valueOf(value);
-      } else if (type == Integer.class) {
-         return (T) Integer.valueOf(value);
-      } else if (type == Long.class) {
-         return (T) Long.valueOf(value);
-      } else if (type == Short.class) {
-         return (T) Short.valueOf(value);
-      } else if (type == Float.class) {
-         return (T) Float.valueOf(value);
-      } else if (type == Double.class) {
-         return (T) Double.valueOf(value);
-      } else if (type == Byte.class) {
-         return (T) Byte.valueOf(value);
-      } else if (type == Character.class) {
-         return (T) (Character) value.charAt(0);
-      } else {
-         return (T) value;
-      }
-   }
-</xsl:template>
-
 <xsl:template name="method-to-date">
 <xsl:if test="(//entity/attribute | //entity/element)[@value-type='java.util.Date'][not(@render='false')]">
    protected java.util.Date toDate(String str, String format) {
@@ -558,6 +496,132 @@
       }
    }
 </xsl:if>
+</xsl:template>
+
+<xsl:template name="method-parse">
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   private void parse(JsonReader reader) throws IOException {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>         reader.parse(this);<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      } catch (EOFException e) {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>         if (m_objs.size() <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 1) {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>            throw new EOFException(String.format("Unexpected end while parsing json! tags: %s.", m_tags));<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      m_linker.finish();<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
+</xsl:template>
+
+<xsl:template name="method-parse-children">
+   <xsl:for-each select="entity">
+      <xsl:sort select="@build-method"/>
+
+      <xsl:value-of select="$empty"/>   public void <xsl:value-of select="@parse-for-method"/>(<xsl:value-of select="@entity-class"/><xsl:value-of select="' '"/><xsl:value-of select="@param-name"/>, String tag, String value) {<xsl:value-of select="$empty-line"/>
+      <xsl:call-template name="parse-children">
+         <xsl:with-param name="indent" select="'      '"/>
+      </xsl:call-template>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+   </xsl:for-each>
+</xsl:template>
+
+<xsl:template name="parse-children">
+   <xsl:param name="indent"/>
+   
+   <xsl:variable name="current" select="."/>
+   <xsl:variable name="children" select="(attribute | element | entity-ref)[not(@render='false')]"/>
+   <xsl:if test="$children">
+      <xsl:value-of select="$indent"/>
+      <xsl:variable name="entity-refs" select="entity-ref[not(@render='false')]"/>
+      <xsl:if test="$entity-refs">
+         <xsl:value-of select="$empty"/>if (<xsl:value-of select="$empty"/>
+         <xsl:for-each select="$entity-refs">
+            <xsl:if test="position()!=1"> || </xsl:if>
+            <xsl:value-of select="$empty"/><xsl:value-of select="@upper-names"/>.equals(tag)<xsl:value-of select="$empty"/>
+         </xsl:for-each>
+         <xsl:value-of select="$empty"/>) {<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>   // do nothing here<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
+      </xsl:if>
+      <xsl:for-each select="(attribute | element)[not(@render='false')]">
+         <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="$empty"/>
+         <xsl:choose>
+            <xsl:when test="@json-list='true' or @list='true' or @set='true'">
+               <xsl:value-of select="@add-method"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="@set-method"/>
+            </xsl:otherwise>
+         </xsl:choose>
+         <xsl:value-of select="$empty"/>(<xsl:value-of select="$empty"/>
+         <xsl:call-template name="convert-type">
+            <xsl:with-param name="value" select="'value'"/>
+         </xsl:call-template>
+         <xsl:value-of select="$empty"/>);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
+      </xsl:for-each>
+      <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
+      <xsl:choose>
+         <xsl:when test="$current/@dynamic-attributes='true'">
+            <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.setDynamicAttribute(tag, value);<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="$indent"/>   throw new RuntimeException(String.format("Unknown tag(%s) of %s under %s!", tag, <xsl:value-of select="$current/@param-name"/>, m_tags));<xsl:value-of select="$empty-line"/>
+         </xsl:otherwise>
+      </xsl:choose>
+      <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
+   </xsl:if>
+</xsl:template>
+
+<xsl:template name="convert-type">
+   <xsl:param name="value-type" select="@value-type"/>
+   <xsl:param name="enum" select="@enum"/>
+   <xsl:param name="value" select="@param-name"/>
+   
+   <xsl:choose>
+      <xsl:when test="$enum='true'"><xsl:value-of select="$value-type"/>.valueOf(<xsl:value-of select="$value"/>)</xsl:when>
+      <xsl:when test="$value-type='String'"><xsl:value-of select="$value"/></xsl:when>
+      <xsl:when test="$value-type='java.util.Date'">toDate(<xsl:value-of select="$value"/>, "<xsl:value-of select="@format"/>")</xsl:when>
+      <xsl:when test="@format">
+         <xsl:value-of select="$empty"/>toNumber(<xsl:value-of select="$value"/>, "<xsl:value-of select="@format"/>").<xsl:value-of select="$empty"/>
+         <xsl:choose>
+            <xsl:when test="$value-type='int'">intValue()</xsl:when>
+            <xsl:when test="$value-type='Integer'">intValue()</xsl:when>
+            <xsl:when test="$value-type='long'">longValue()</xsl:when>
+            <xsl:when test="$value-type='Long'">longValue()</xsl:when>
+            <xsl:when test="$value-type='short'">shortValue()</xsl:when>
+            <xsl:when test="$value-type='Short'">shortValue()</xsl:when>
+            <xsl:when test="$value-type='float'">floatValue()</xsl:when>
+            <xsl:when test="$value-type='Float'">floatValue()</xsl:when>
+            <xsl:when test="$value-type='double'">doubleValue()</xsl:when>
+            <xsl:when test="$value-type='Double'">doubleValue()</xsl:when>
+            <xsl:when test="$value-type='byte'">byteValue()</xsl:when>
+            <xsl:when test="$value-type='Byte'">byteValue()</xsl:when>
+            <xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:when>
+      <xsl:when test="$value-type='boolean'">convert(Boolean.class, <xsl:value-of select="$value"/>, false)</xsl:when>
+      <xsl:when test="$value-type='Boolean'">convert(Boolean.class, <xsl:value-of select="$value"/>, null)</xsl:when>
+      <xsl:when test="$value-type='int'">convert(Integer.class, <xsl:value-of select="$value"/>, 0)</xsl:when>
+      <xsl:when test="$value-type='Integer'">convert(Integer.class, <xsl:value-of select="$value"/>, null)</xsl:when>
+      <xsl:when test="$value-type='long'">convert(Long.class, <xsl:value-of select="$value"/>, 0L)</xsl:when>
+      <xsl:when test="$value-type='Long'">convert(Long.class, <xsl:value-of select="$value"/>, null)</xsl:when>
+      <xsl:when test="$value-type='short'">convert(Short.class, <xsl:value-of select="$value"/>, (short) 0)</xsl:when>
+      <xsl:when test="$value-type='Short'">convert(Short.class, <xsl:value-of select="$value"/>, null)</xsl:when>
+      <xsl:when test="$value-type='float'">convert(Float.class, <xsl:value-of select="$value"/>, 0.0f)</xsl:when>
+      <xsl:when test="$value-type='Float'">convert(Float.class, <xsl:value-of select="$value"/>, null)</xsl:when>
+      <xsl:when test="$value-type='double'">convert(Double.class, <xsl:value-of select="$value"/>, 0.0)</xsl:when>
+      <xsl:when test="$value-type='Double'">convert(Double.class, <xsl:value-of select="$value"/>, null)</xsl:when>
+      <xsl:when test="$value-type='byte'">convert(Byte.class, <xsl:value-of select="$value"/>, (byte) 0)</xsl:when>
+      <xsl:when test="$value-type='Byte'">convert(Byte.class, <xsl:value-of select="$value"/>, null)</xsl:when>
+      <xsl:when test="$value-type='char'">convert(Character.class, <xsl:value-of select="$value"/>, (char) 0)</xsl:when>
+      <xsl:when test="$value-type='Character'">convert(Character.class, <xsl:value-of select="$value"/>, null)</xsl:when>
+      <xsl:when test="$value-type='Class&lt;?&gt;'">toClass(<xsl:value-of select="$value"/>)</xsl:when>
+      <xsl:otherwise><xsl:value-of select="$value"/></xsl:otherwise>
+   </xsl:choose>
 </xsl:template>
 
 <xsl:template name="class-json-reader">
