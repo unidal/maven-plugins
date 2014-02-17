@@ -458,7 +458,7 @@
             <xsl:when test="any">
                <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$indent"/>   m_objs.push(parentObj);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$indent"/>   parentObj.getDynamicElements().add(buildAny(qName, attributes));<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$indent"/>   parentObj.<xsl:value-of select="any/@get-method"/>().add(buildAny(qName, attributes));<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$indent"/>m_tags.push(qName);<xsl:value-of select="$empty-line"/>

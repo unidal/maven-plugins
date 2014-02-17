@@ -22,7 +22,12 @@ public class LigerGeneratorTest extends ModelGenerateTestSupport {
    }
 
    @Test
-   public void testGenerate() throws Exception {
+   public void testModel() throws Exception {
       generate("model-manifest.xml");
+   }
+   
+   @Test
+   public void testDatasource() throws Exception {
+      generate("datasource-manifest.xml");
    }
 }

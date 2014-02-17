@@ -5,7 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -17,10 +19,12 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
+import org.jdom.output.Format.TextMode;
 import org.jdom.output.XMLOutputter;
 import org.unidal.codegen.meta.ModelMeta;
 import org.unidal.codegen.meta.WizardMeta;
 import org.unidal.helper.Files;
+import org.unidal.helper.Splitters;
 import org.unidal.helper.Transformers;
 import org.unidal.helper.Transformers.IBuilder;
 import org.unidal.maven.plugin.common.PropertyProviders;
@@ -122,6 +126,38 @@ public class ModelMojo extends AbstractMojo {
     * @parameter expression="${debug}" default-value="false"
     */
    protected boolean debug;
+
+   protected void buildManifest(Wizard wizard, Element manifestElement) {
+      Set<String> all = new LinkedHashSet<String>();
+      String text = manifestElement.getText();
+
+      if (text != null) {
+         List<String> lines = Splitters.by(',').noEmptyItem().trim().split(text);
+
+         for (String line : lines) {
+            all.add(line);
+         }
+      }
+
+      StringBuilder sb = new StringBuilder();
+      String indent = "                        ";
+
+      sb.append("\r\n");
+
+      for (Model model : wizard.getModels()) {
+         String line = String.format("${basedir}/src/main/resources/META-INF/dal/model/%s-manifest.xml", model.getName());
+
+         all.add(line);
+      }
+
+      for (String line : all) {
+         sb.append(indent);
+         sb.append(line).append(",\r\n");
+      }
+
+      sb.append(indent.substring(3));
+      manifestElement.addContent(new CDATA(sb.toString()));
+   }
 
    protected Pair<Wizard, Model> buildWizard(File wizardFile) throws IOException, SAXException {
       Wizard wizard;
@@ -229,25 +265,12 @@ public class ModelMojo extends AbstractMojo {
 
       Element build = b.findOrCreateChild(root, "build", null, "dependencies");
       Element plugins = b.findOrCreateChild(build, "plugins");
-      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.8");
+      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.10");
       Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-model", "generate-sources", "generate dal model files");
       Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
       Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");
 
-      if (manifestElement.getChildren().isEmpty()) {
-         StringBuilder sb = new StringBuilder();
-         String indent = "                        ";
-
-         sb.append(",\r\n");
-
-         for (Model model : wizard.getModels()) {
-            sb.append(indent);
-            sb.append(String.format("${basedir}/src/main/resources/META-INF/dal/model/%s-manifest.xml,\r\n", model.getName()));
-         }
-
-         sb.append(indent.substring(3)).append(",");
-         manifestElement.addContent(new CDATA(sb.toString()));
-      }
+      buildManifest(wizard, manifestElement);
 
       if (b.isModified()) {
          saveXml(doc, pomFile);
@@ -276,7 +299,7 @@ public class ModelMojo extends AbstractMojo {
          parent.mkdirs();
       }
 
-      Format format = Format.getPrettyFormat().setIndent("   ");
+      Format format = Format.getPrettyFormat().setIndent("   ").setTextMode(TextMode.TRIM_FULL_WHITE);
       XMLOutputter outputter = new XMLOutputter(format);
       FileWriter writer = new FileWriter(file);
 
