@@ -393,6 +393,21 @@
    </xsl:copy>
 </xsl:template>
 
+<xsl:template match="snippet">
+   <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      
+      <xsl:attribute name="lang">
+         <xsl:choose>
+            <xsl:when test="@lang"><xsl:value-of select="@lang"/></xsl:when>
+            <xsl:otherwise>java</xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
+      
+      <xsl:apply-templates/>
+   </xsl:copy>
+</xsl:template>
+
 <xsl:template match="query">
    <xsl:copy>
       <xsl:copy-of select="@*"/>

@@ -8,7 +8,7 @@
 		<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
 		<element name="domain" value-type="String" type="set" names="domain-names" />
 		<element name="ip" value-type="String" type="set" names="ips" />
-		<entity-ref name="machine" type="map" names="machines" method-find-or-create="true" />
+		<entity-ref name="machine" type="map" names="machines" method-find-or-create="true" thread-safe="true"/>
 	</entity>
 	<entity name="machine">
 		<attribute name="ip" value-type="String" key="true"/>

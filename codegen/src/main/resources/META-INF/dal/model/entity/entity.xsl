@@ -68,7 +68,7 @@
       <xsl:if test="element[@list='true'] or entity-ref[@list='true'] or any">
          <xsl:value-of select="$empty"/>import java.util.ArrayList;<xsl:value-of select="$empty-line"/>
       </xsl:if>
-      <xsl:if test="entity-ref[@map='true'] or @dynamic-attributes='true'">
+      <xsl:if test="entity-ref[@map='true' and not(@thread-safe='true')] or @dynamic-attributes='true'">
          <xsl:value-of select="$empty"/>import java.util.LinkedHashMap;<xsl:value-of select="$empty-line"/>
       </xsl:if>
       <xsl:if test="element[@set='true']">
@@ -82,6 +82,9 @@
       </xsl:if>
       <xsl:if test="element[@set='true']">
          <xsl:value-of select="$empty"/>import java.util.Set;<xsl:value-of select="$empty-line"/>
+      </xsl:if>
+      <xsl:if test="entity-ref[@map='true' and @thread-safe='true']">
+         <xsl:value-of select="$empty"/>import java.util.concurrent.ConcurrentHashMap;<xsl:value-of select="$empty-line"/>
       </xsl:if>
       <xsl:value-of select="$empty-line"/>
    </xsl:if>
@@ -97,6 +100,9 @@
    </xsl:if>
    <xsl:for-each select="attribute | element | entity-ref">
       <xsl:choose>
+         <xsl:when test="@map='true' and @thread-safe='true'">
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new ConcurrentHashMap<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>();<xsl:value-of select="$empty-line"/>
+         </xsl:when>
          <xsl:when test="@map='true'">
             <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new LinkedHashMap<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>();<xsl:value-of select="$empty-line"/>
          </xsl:when>

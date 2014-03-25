@@ -25,6 +25,7 @@
    <xsl:call-template name="method-get-fields"/>
    <xsl:call-template name="method-set-fields"/>
    <xsl:call-template name="method-toString"/>
+   <xsl:call-template name="snippets"/>
    <xsl:value-of select="$empty"/>}<xsl:value-of select="$empty-line"/>
 </xsl:template>
 
@@ -116,6 +117,17 @@
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:for-each>
+</xsl:template>
+
+<xsl:template name="snippets" xmlns:str="xalan://org.unidal.codegen.xsl.StringFunction">
+   <xsl:if test="snippet[@lang='java']">
+      <xsl:value-of select="$empty"/>   /********* Code Snippet Start *********/<xsl:value-of select="$empty-line"/>
+      <xsl:for-each select="snippet[@lang='java']">
+         <xsl:value-of select="str:trimMethod(text(), 3)" disable-output-escaping="yes" />
+         <xsl:value-of select="$empty-line"/>
+      </xsl:for-each>
+      <xsl:value-of select="$empty"/>   /********* Code Snippet End *********/<xsl:value-of select="$empty-line"/>
+   </xsl:if>
 </xsl:template>
 
 <xsl:template name="method-toString">

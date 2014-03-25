@@ -20,6 +20,8 @@
 				<node name="statement"/>
 			</node>
          </node>
+         <node name="snippet">
+         </node>
       </node>
    </node>
 </root>

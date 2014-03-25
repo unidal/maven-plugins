@@ -39,6 +39,9 @@
          <query name="insert" enabled="false"/>
          <query name="delete-by-PK" enabled="false"/>
       </query-defs>
+      <snippet lang="java">
+      // comment
+      </snippet>
    </entity>
    <entity name="user-address" do-package="org.unidal.app.useraddress.dal" bo-package="org.unidal.app.useraddress.dal">
       <member name="creation-date" insert-expr="NOW()"/>
