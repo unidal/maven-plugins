@@ -117,15 +117,15 @@ public class ProjectMojo extends AbstractMojo {
       }
 
       if (artifactId == null) {
-         artifactId = PropertyProviders.fromConsole().forString("groupId", "Project artifact id:", null, null);
+         artifactId = PropertyProviders.fromConsole().forString("artifactId", "Project artifact id:", null, null);
       }
 
       if (version == null) {
-         version = PropertyProviders.fromConsole().forString("groupId", "Project version:", null, null);
+         version = PropertyProviders.fromConsole().forString("version", "Project version:", null, null);
       }
 
       if (name == null) {
-         name = PropertyProviders.fromConsole().forString("groupId", "Project name:", getProjectName(artifactId), null);
+         name = PropertyProviders.fromConsole().forString("name", "Project name:", getProjectName(artifactId), null);
       }
    }
 

@@ -8,7 +8,7 @@
 
 	<br>
 
-	<form action="${model.webapp}/uml">
+	<form action="${model.webapp}/uml" method="post">
 		<table>
 			<tr>
 				<td colspan="3" nowrap>
@@ -29,15 +29,13 @@
 					</td>
 				</tr>
 			</c:if>
-			<tr>
-				<td><textarea id="uml" name="uml" style="height: 480px; width: 320px">${w:htmlEncode(model.uml)}</textarea></td>
+			<tr valign="top">
+				<td valign="top">
+					<textarea id="uml" name="uml" style="height: 500px; width: 320px">${w:htmlEncode(model.uml)}</textarea>
+					<br><button type="submit" name="update" value="1" class="btn btn-medium btn-primary">Update</button>
+				</td>
 				<td width="10"></td>
 				<td valign="top"><span id="svg">${model.svg}</span></td>
-			</tr>
-			<tr>
-				<td colspan="3">
-					<button type="submit" name="update" class="btn btn-medium btn-primary">Update</button>
-				</td>
 			</tr>
 		</table>
 	</form>

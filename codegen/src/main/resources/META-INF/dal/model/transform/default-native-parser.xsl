@@ -366,7 +366,7 @@
    <xsl:param name="value-type" select="@value-type"/>
    
    <xsl:choose>
-      <xsl:when test="@primitive">
+      <xsl:when test="@primitive='true'">
          <xsl:choose>
             <xsl:when test="$value-type='boolean'">Boolean</xsl:when>
             <xsl:when test="$value-type='int'">Int</xsl:when>

@@ -218,6 +218,9 @@
             <xsl:otherwise>true</xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
+      <xsl:attribute name="primitive">
+         <xsl:call-template name="is-primitive" />
+      </xsl:attribute>
       <xsl:attribute name="field-name">
          <xsl:value-of select="'m_'"/>
          <xsl:value-of select="$normalized-name"/>
@@ -350,6 +353,9 @@
       </xsl:variable>
    
       <!-- attribute definition -->
+      <xsl:attribute name="primitive">
+         <xsl:call-template name="is-primitive" />
+      </xsl:attribute>
       <xsl:attribute name="value-type-element">
          <xsl:value-of select="$value-type-element"/>
       </xsl:attribute>
@@ -846,6 +852,10 @@
 <xsl:template name="convert-type">
    <xsl:param name="value-type" select="@value-type"/>
    
+   <xsl:variable name="primitive">
+      <xsl:call-template name="is-primitive"/>
+   </xsl:variable>
+   
    <xsl:choose>
       <xsl:when test="$value-type = 'Class'">
           <xsl:value-of select="$value-type"/>
@@ -856,7 +866,7 @@
       <xsl:when test="$value-type = 'String'">String</xsl:when>
       <xsl:when test="$value-type = 'Date'">java.util.Date</xsl:when>
       <xsl:when test="$value-type = 'Time'">Long</xsl:when>
-      <xsl:when test="@primitive='true'">
+      <xsl:when test="$primitive='true'">
       	<xsl:choose>
 	      <xsl:when test="$value-type = 'boolean'">boolean</xsl:when>
 	      <xsl:when test="$value-type = 'byte'">byte</xsl:when>
@@ -878,6 +888,25 @@
       <xsl:when test="$value-type = 'float'">Float</xsl:when>
       <xsl:when test="$value-type = 'double'">Double</xsl:when>
       <xsl:otherwise><xsl:value-of select="$value-type"/></xsl:otherwise>
+   </xsl:choose>
+</xsl:template>
+
+<xsl:template name="is-primitive">
+   <xsl:choose>
+      <xsl:when test="@primitive"><xsl:value-of select="@primitive"/></xsl:when>
+      <xsl:when test="../@primitive">
+         <xsl:choose>
+            <xsl:when test="@value-type='int'">true</xsl:when>
+            <xsl:when test="@value-type='long'">true</xsl:when>
+            <xsl:when test="@value-type='short'">true</xsl:when>
+            <xsl:when test="@value-type='double'">true</xsl:when>
+            <xsl:when test="@value-type='float'">true</xsl:when>
+            <xsl:when test="@value-type='byte'">true</xsl:when>
+            <xsl:when test="@value-type='char'">true</xsl:when>
+            <xsl:otherwise>false</xsl:otherwise>
+         </xsl:choose>
+      </xsl:when>
+      <xsl:otherwise>false</xsl:otherwise>
    </xsl:choose>
 </xsl:template>
 
