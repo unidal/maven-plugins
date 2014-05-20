@@ -60,16 +60,21 @@ public class WizardBuilder extends BaseVisitor {
 
    @Override
    public void visitPage(Page page) {
-      List<String> templates = Arrays.asList("default", "single");
-      String template = PropertyProviders.fromConsole().forString("template", "Page template:", templates, page.getTemplate(), null);
+      boolean flag = false; // DISABLED
 
-      if ("single".equals(template)) {
-         File templateFile = new File(m_wizardFile.getParentFile(), "template.xml");
+      if (flag) {
+         List<String> templates = Arrays.asList("default", "single");
+         String template = PropertyProviders.fromConsole().forString("template", "Page template:", templates, page.getTemplate(),
+               null);
 
-         try {
-            m_webAppMojo.buildTemplate(templateFile, m_module.getName(), page.getName());
-         } catch (Exception e) {
-            throw new RuntimeException(String.format("Error when building template(%s)!", templateFile), e);
+         if ("single".equals(template)) {
+            File templateFile = new File(m_wizardFile.getParentFile(), "template.xml");
+
+            try {
+               m_webAppMojo.buildTemplate(templateFile, m_module.getName(), page.getName());
+            } catch (Exception e) {
+               throw new RuntimeException(String.format("Error when building template(%s)!", templateFile), e);
+            }
          }
       }
    }
@@ -88,7 +93,7 @@ public class WizardBuilder extends BaseVisitor {
       Module module = webapp.findModule(moduleName);
 
       if (module == null) {
-         String path = PropertyProviders.fromConsole().forString("module.path", "Module path:", moduleName.substring(0, 1), null);
+         String path = PropertyProviders.fromConsole().forString("module.path", "Module path:", moduleName, null);
 
          module = new Module(moduleName);
 
@@ -114,7 +119,7 @@ public class WizardBuilder extends BaseVisitor {
          boolean jstl = PropertyProviders.fromConsole().forBoolean("cat", "Support JSTL?", true);
          boolean bootstrap = PropertyProviders.fromConsole().forBoolean("layout", "Support bootstrap layout?", true);
          boolean pluginManagement = PropertyProviders.fromConsole().forBoolean("pluginManagement",
-               "Support POM plugin management for Java Compiler and Eclipse?", true);
+               "Support POM plugin management for Java Compiler and Eclipse?", false);
 
          wizard.setWebapp(webapp);
          webapp.setPackage(packageName);

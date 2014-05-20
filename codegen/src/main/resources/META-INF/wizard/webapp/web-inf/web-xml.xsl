@@ -11,25 +11,29 @@
 </xsl:template>
 
 <xsl:template match="wizard">
-   <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-   	version="2.5">
-   	<servlet>
-   		<servlet-name>mvc-servlet</servlet-name>
-   		<servlet-class>org.unidal.web.MVC</servlet-class>
-   		<init-param>
-   			<param-name>cat-client-xml</param-name>
-   			<param-value>/data/appdatas/cat/client.xml</param-value>
-   		</init-param>
-   		<load-on-startup>1</load-on-startup>
-   	</servlet>
-    <xsl:for-each select="webapp/module"> 
-      	<servlet-mapping>
-      		<servlet-name>mvc-servlet</servlet-name>
-      		<url-pattern>/<xsl:value-of select="@path"/>/*</url-pattern>
-      	</servlet-mapping>
-    </xsl:for-each>
-   </web-app>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+   <filter>
+      <filter-name>mvc-filter</filter-name>
+      <filter-class>org.unidal.web.MVCFilter</filter-class>
+      <init-param>
+         <param-name>cat-client-xml</param-name>
+         <param-value>/data/appdatas/cat/client.xml</param-value>
+      </init-param>
+      <init-param>
+         <param-name>liger-home</param-name>
+         <param-value>/data/appdatas/liger</param-value>
+      </init-param>
+      <init-param>
+         <param-name>excludes</param-name>
+         <param-value>/css/*,/img/*,/js/*</param-value>
+      </init-param>
+   </filter>
+   <filter-mapping>
+      <filter-name>mvc-filter</filter-name>
+      <url-pattern>/*</url-pattern>
+   </filter-mapping>
+</web-app>
 </xsl:template>
 
 </xsl:stylesheet>
