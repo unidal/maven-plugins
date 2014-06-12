@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="system-config" root="true">
+    <element name="health-check-interval" value-type="int" />
+    <element name="max-error-counter" value-type="int" />
+    <element name="cookie-domain" value-type="String" />
+    <element name="cookie-name" value-type="String" />
+    <element name="retry-times" value-type="int" />
+    <element name="encrypt-seed" value-type="String" />
+    <element name="cookie-expired-time" value-type="int" />
+  </entity>
+</model>
+

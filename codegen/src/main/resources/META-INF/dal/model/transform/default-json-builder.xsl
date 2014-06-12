@@ -280,8 +280,10 @@
             char ch = val.charAt(i);
 
             switch (ch) {
+            case '\\':
+            case '/':
             case '"':
-               sb.append("\\\"");
+               sb.append('\\').append(ch);
                break;
             case '\t':
                sb.append("\\t");

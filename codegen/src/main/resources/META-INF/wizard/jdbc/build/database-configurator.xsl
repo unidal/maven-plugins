@@ -29,7 +29,7 @@ final class <xsl:value-of select="$class" /> extends AbstractJdbcResourceConfigu
    public List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> defineComponents() {
       List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/>();
 
-      all.add(defineJdbcDataSourceComponent("<xsl:value-of select="$database"/>", "<xsl:value-of select="normalize-space(datasource/driver)"/>", "<xsl:value-of select="normalize-space(datasource/url)"/>", "<xsl:value-of select="normalize-space(datasource/user)"/>", "<xsl:value-of select="normalize-space(datasource/password)"/>", "<xsl:value-of select="'&lt;![CDATA['" disable-output-escaping="yes"/><xsl:value-of select="normalize-space(datasource/properties)" disable-output-escaping="yes"/><xsl:value-of select="']]&gt;'" disable-output-escaping="yes"/>"));
+      // all.add(defineJdbcDataSourceComponent("<xsl:value-of select="$database"/>", "<xsl:value-of select="normalize-space(datasource/driver)"/>", "<xsl:value-of select="normalize-space(datasource/url)"/>", "<xsl:value-of select="normalize-space(datasource/user)"/>", "***", "<xsl:value-of select="'&lt;![CDATA['" disable-output-escaping="yes"/><xsl:value-of select="normalize-space(datasource/properties)" disable-output-escaping="yes"/><xsl:value-of select="']]&gt;'" disable-output-escaping="yes"/>"));
 <xsl:for-each select="group">
       defineSimpleTableProviderComponents(all, "<xsl:value-of select="$database" />", <xsl:value-of select="@package" />._INDEX.getEntityClasses());
       defineDaoComponents(all, <xsl:value-of select="@package" />._INDEX.getDaoClasses());

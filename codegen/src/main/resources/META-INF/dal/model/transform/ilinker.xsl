@@ -22,7 +22,7 @@
 </xsl:template>
 
 <xsl:template name="import-list">
-   <xsl:for-each select="entity">
+   <xsl:for-each select="entity[not(@root='true' and not(entity-ref))]">
       <xsl:sort select="@entity-class"/>
 
       <xsl:value-of select="$empty"/>import <xsl:value-of select="@entity-package"/>.<xsl:value-of select='@entity-class'/>;<xsl:value-of select="$empty-line"/>

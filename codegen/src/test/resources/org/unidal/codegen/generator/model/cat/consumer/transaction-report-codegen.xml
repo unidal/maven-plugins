@@ -22,7 +22,7 @@
 		<attribute name="sum" value-type="double" />
 		<attribute name="sum2" value-type="double" />
 		<attribute name="std" value-type="double" />
-		<element name="successMessageUrl" value-type="String" />
+		<element name="successMessageUrl" value-type="String"/>
 		<element name="failMessageUrl" value-type="String" />
 		<entity-ref name="name" type="list" names="names" />
 	</entity>

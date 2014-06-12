@@ -214,7 +214,7 @@
       }
    }
 <xsl:if test="//entity/element[not(@render='false' or @text='true')] | //entity/any">
-   private void tagWithText(String name, String text, Object... nameValues) {
+   protected void tagWithText(String name, String text, Object... nameValues) {
       if (text == null) {
          return;
       }
@@ -236,6 +236,24 @@
 
       m_sb.append("<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>");
       m_sb.append(escape(text, true));
+      m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>/").append(name).append("<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
+   }
+
+   protected void element(String name, String text, boolean escape) {
+      if (text == null) {
+         return;
+      }
+      
+      indent();
+      
+      m_sb.append('<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>').append(name).append("<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>");
+      
+      if (escape) {
+         m_sb.append(escape(text, true));
+      } else {
+         m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>!CDATA[").append(text).append("]]<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>");
+      }
+      
       m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>/").append(name).append("<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
    }
 </xsl:if>
@@ -365,7 +383,7 @@
          <xsl:otherwise>
             <xsl:choose>
                <xsl:when test="@value-type-element='String'">
-                  <xsl:value-of select="$empty"/>      tagWithText(<xsl:value-of select="@upper-name-element"/>, <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>      element(<xsl:value-of select="@upper-name-element"/>, <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>(), <xsl:value-of select="@escape"/>);<xsl:value-of select="$empty-line"/>
                </xsl:when>
                <xsl:when test="@format">
                   <xsl:value-of select="$empty"/>      tagWithText(<xsl:value-of select="@upper-name-element"/>, toString(<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>(), "<xsl:value-of select="@format"/>"));<xsl:value-of select="$empty-line"/>

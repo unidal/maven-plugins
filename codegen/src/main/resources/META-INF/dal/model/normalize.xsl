@@ -452,6 +452,8 @@
       	</xsl:when>
       </xsl:choose>
       
+	  <xsl:attribute name="escape"><xsl:value-of select="not(@escape='false')"/></xsl:attribute>
+      
       <xsl:apply-templates/>
    </xsl:copy>
 </xsl:template>

@@ -7,7 +7,7 @@
 	</entity>
 	<entity name="role">
 		<attribute name="id" value-type="String" key="true" />
-		<entity-ref name="service" type="map" names="services" method-find-or-create="true" json-type="list"/>
+		<entity-ref name="service" type="map" names="services" method-find-or-create="true" json-type="list" />
 	</entity>
 	<entity name="service" dynamic-attributes="true">
 		<attribute name="id" value-type="String" key="true" />
@@ -43,6 +43,8 @@
 		<attribute name="lane" enabled="false" />
 		<attribute name="language" enabled="false" />
 		<attribute name="country" enabled="false" />
+		<attribute name="start" enabled="false" />
+		<attribute name="end" enabled="false" />
 		<entity-ref name="property" type="map" names="properties" method-find-or-create="true" json-type="list" />
 	</entity>
 	<entity name="template" dynamic-attributes="true">
@@ -50,13 +52,16 @@
 		<attribute name="database" enabled="false" />
 		<attribute name="type" enabled="false" />
 		<attribute name="lane" enabled="false" />
-		<attribute name="idc" enabled="false" />
-		<attribute name="start" enabled="false" />
-		<attribute name="end" enabled="false" />
 		<entity-ref name="property" type="map" names="properties" method-find-or-create="true" json-type="list" />
 	</entity>
-	<entity name="property">
+	<entity name="property" dynamic-attributes="true">
 		<attribute name="key" value-type="String" key="true" />
+	    <attribute name="required" enabled="false" />
+	    <attribute name="type" enabled="false" />
+	    <attribute name="optional-values" enabled="false" />
+	    <attribute name="fixed" enabled="false" />
+	    <attribute name="pattern" enabled="false" />
+	    <attribute name="password" enabled="false" />
 		<element name="text" alias="value" value-type="String" text="true" />
 	</entity>
 	<entity name="instance-change">

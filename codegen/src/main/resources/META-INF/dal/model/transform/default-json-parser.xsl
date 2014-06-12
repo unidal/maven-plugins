@@ -161,7 +161,7 @@
    <xsl:value-of select="$empty"/>      DefaultJsonParser parser = new DefaultJsonParser(entityClass);<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>      parser.parse(new JsonReader(reader));<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="$empty"/>      return (List<xsl:value-of select="$t2" disable-output-escaping="yes"/>) parser.m_entities;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      return (List<xsl:value-of select="$t2" disable-output-escaping="yes"/>) (List<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/>) parser.m_entities;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   public static <xsl:value-of select="$t1" disable-output-escaping="yes"/> List<xsl:value-of select="$t2" disable-output-escaping="yes"/> parseArray(Class<xsl:value-of select="$t2" disable-output-escaping="yes"/> entityClass, String json) throws Exception {<xsl:value-of select="$empty-line"/>

@@ -7,6 +7,7 @@ import org.unidal.codegen.generator.model.all.AllGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatConsumerGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatCoreGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatHomeGeneratorTest;
+import org.unidal.codegen.generator.model.dal.DalGeneratorTest;
 import org.unidal.codegen.generator.model.dobby.DobbyGeneratorTest;
 import org.unidal.codegen.generator.model.egret.EgretGeneratorTest;
 import org.unidal.codegen.generator.model.expense.ExpenseGeneratorTest;
@@ -32,6 +33,8 @@ CatConsumerGeneratorTest.class,
 CatCoreGeneratorTest.class,
 
 CatHomeGeneratorTest.class,
+
+DalGeneratorTest.class,
 
 DobbyGeneratorTest.class,
 
