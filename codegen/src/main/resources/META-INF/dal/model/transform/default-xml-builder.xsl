@@ -251,7 +251,7 @@
       if (escape) {
          m_sb.append(escape(text, true));
       } else {
-         m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>!CDATA[").append(text).append("]]<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>");
+         m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>![CDATA[").append(text).append("]]<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>");
       }
       
       m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>/").append(name).append("<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
