@@ -1,6 +1,10 @@
 <plexus>
 	<components>
 		<component>
+			<role>org.unidal.codegen.code.Obfuscater</role>
+			<implementation>org.unidal.codegen.code.DefaultObfuscater</implementation>
+		</component>
+		<component>
 			<role>org.unidal.codegen.meta.TableMeta</role>
 			<implementation>org.unidal.codegen.meta.DefaultTableMeta</implementation>
 		</component>

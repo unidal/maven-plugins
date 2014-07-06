@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.unidal.codegen.aggregator.XmlAggregatorTest;
+import org.unidal.codegen.code.ObfuscaterTest;
 import org.unidal.codegen.manifest.ManifestCreatorTest;
 import org.unidal.codegen.manifest.ManifestParserTest;
 import org.unidal.codegen.meta.AllMetaTests;
@@ -13,6 +14,8 @@ import org.unidal.codegen.transformer.XslNormalizeTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+
+ObfuscaterTest.class,
 
 XmlAggregatorTest.class,
 

@@ -30,6 +30,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.unidal.codegen.code.Obfuscater;
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.GenerateContextSupport;
 import org.unidal.codegen.generator.Generator;
@@ -94,6 +95,15 @@ public class JdbcMojo extends AbstractMojo {
     * @readonly
     */
    protected Generator m_generator;
+
+   /**
+    * Obfuscater component
+    * 
+    * @component
+    * @required
+    * @readonly
+    */
+   protected Obfuscater m_obfuscater;
 
    /**
     * Wizard meta component
@@ -173,6 +183,7 @@ public class JdbcMojo extends AbstractMojo {
       m_conn = builder.getConnection();
       Files.forIO().writeTo(wizardFile, wizard.toString());
       getLog().info("File " + wizardFile.getCanonicalPath() + " generated.");
+
       return new Pair<Wizard, Jdbc>(wizard, builder.getJdbc());
    }
 
@@ -309,14 +320,14 @@ public class JdbcMojo extends AbstractMojo {
       PomFileBuilder b = new PomFileBuilder();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
-      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "2.0.5", null)) {
+      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "2.1.0", null)) {
          b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.20", "runtime");
       }
 
       if (jdbc != null) {
          Element build = b.findOrCreateChild(root, "build", null, "dependencies");
          Element plugins = b.findOrCreateChild(build, "plugins");
-         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.9");
+         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.0.14");
          Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc model");
          Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
          Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");
@@ -411,7 +422,7 @@ public class JdbcMojo extends AbstractMojo {
       }
    }
 
-   static class WizardBuilder extends BaseVisitor {
+   class WizardBuilder extends BaseVisitor {
       private Jdbc m_jdbc;
 
       private Connection m_conn;
@@ -562,14 +573,23 @@ public class JdbcMojo extends AbstractMojo {
             ds.setDriver(PropertyProviders.fromConsole().forString("driver", "JDBC driver:", "com.mysql.jdbc.Driver", null));
             ds.setUrl(PropertyProviders.fromConsole().forString("url", "JDBC URL:", "jdbc:mysql://localhost:3306/mysql", null));
             ds.setUser(PropertyProviders.fromConsole().forString("user", "User:", null, null));
-            ds.setPassword(PropertyProviders.fromConsole().forString("password", "Password:(use '<none>' if no password)", null,
-                  null));
+
+            String password = PropertyProviders.fromConsole().forString("password", "Password:(use '<none>' if no password)", null,
+                  null);
+
+            if (password.equals("<none>")) {
+               password = "";
+            }
+
+            try {
+               ds.setPassword("~{" + m_obfuscater.encode(password) + "}");
+            } catch (Exception e) {
+               ds.setPassword(password);
+            }
+
             ds.setProperties(PropertyProviders.fromConsole().forString("connectionProperties", "Connection properties:",
                   "useUnicode=true&characterEncoding=UTF-8&autoReconnect=true", null));
 
-            if (ds.getPassword().equals("<none>")) {
-               ds.setPassword("");
-            }
          }
 
          m_jdbc = jdbc;
