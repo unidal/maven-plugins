@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="AddItem" root="true">
+    <entity-ref name="AddItemRequest" />
+    <entity-ref name="AddItemResponse" />
+  </entity>
+  <entity name="AddItemRequest">
+    <entity-ref name="RequesterCredentials" />
+    <entity-ref name="Item" />
+  </entity>
+  <entity name="RequesterCredentials">
+    <element name="eBayAuthToken" value-type="String" />
+  </entity>
+  <entity name="Item">
+    <element name="StartPrice" value-type="double" />
+    <element name="ConditionID" value-type="int" />
+    <element name="Country" value-type="String" />
+  </entity>
+  <entity name="AddItemResponse">
+    <element name="Ack" value-type="String" />
+    <element name="ItemID" value-type="String" />
+    <entity-ref name="Fee" type="list" names="Fees" xml-indent="true" />
+  </entity>
+  <entity name="Fee">
+    <attribute name="currencyID" value-type="String" />
+    <element name="Name" value-type="String" />
+    <element name="text" value-type="double" text="true" />
+    <entity-ref name="Fee" />
+  </entity>
+</model>
+

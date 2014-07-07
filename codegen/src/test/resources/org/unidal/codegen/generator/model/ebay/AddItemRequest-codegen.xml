@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="AddItemRequest" root="true">
+    <entity-ref name="RequesterCredentials" />
+    <entity-ref name="Item" />
+  </entity>
+  <entity name="RequesterCredentials">
+    <element name="eBayAuthToken" value-type="String" />
+  </entity>
+  <entity name="Item">
+    <element name="StartPrice" value-type="double" />
+    <element name="ConditionID" value-type="int" />
+    <element name="Country" value-type="String" />
+  </entity>
+</model>
+

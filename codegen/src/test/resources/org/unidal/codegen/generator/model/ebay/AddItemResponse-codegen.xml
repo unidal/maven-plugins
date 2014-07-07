@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="AddItemResponse" root="true">
+    <element name="Ack" value-type="String" />
+    <element name="ItemID" value-type="String" />
+    <entity-ref name="Fee" type="list" names="Fees" xml-indent="true" />
+  </entity>
+  <entity name="Fee">
+    <attribute name="currencyID" value-type="String" />
+    <element name="Name" value-type="String" />
+    <element name="text" value-type="double" text="true" />
+    <entity-ref name="Fee" />
+  </entity>
+</model>
+

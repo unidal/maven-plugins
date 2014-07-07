@@ -1,0 +1,10 @@
+<AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">
+   <RequesterCredentials>
+      <eBayAuthToken>ABC...123</eBayAuthToken>
+   </RequesterCredentials>
+   <Item>
+      <StartPrice>500.0</StartPrice>
+      <ConditionID>1000</ConditionID>
+      <Country>US</Country>
+   </Item>
+</AddItemRequest>

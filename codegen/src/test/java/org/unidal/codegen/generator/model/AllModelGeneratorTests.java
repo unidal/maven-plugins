@@ -9,6 +9,7 @@ import org.unidal.codegen.generator.model.cat.CatCoreGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatHomeGeneratorTest;
 import org.unidal.codegen.generator.model.dal.DalGeneratorTest;
 import org.unidal.codegen.generator.model.dobby.DobbyGeneratorTest;
+import org.unidal.codegen.generator.model.ebay.EbayGeneratorTest;
 import org.unidal.codegen.generator.model.egret.EgretGeneratorTest;
 import org.unidal.codegen.generator.model.expense.ExpenseGeneratorTest;
 import org.unidal.codegen.generator.model.liger.LigerGeneratorTest;
@@ -37,6 +38,8 @@ CatHomeGeneratorTest.class,
 DalGeneratorTest.class,
 
 DobbyGeneratorTest.class,
+
+EbayGeneratorTest.class,
 
 EgretGeneratorTest.class,
 

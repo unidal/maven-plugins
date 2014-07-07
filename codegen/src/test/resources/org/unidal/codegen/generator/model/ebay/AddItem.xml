@@ -1,0 +1,23 @@
+<AddItem>
+   <AddItemRequest>
+      <RequesterCredentials>
+         <eBayAuthToken>ABC...123</eBayAuthToken>
+      </RequesterCredentials>
+      <Item>
+         <StartPrice>500.0</StartPrice>
+         <ConditionID>1000</ConditionID>
+         <Country>US</Country>
+      </Item>
+   </AddItemRequest>
+   <AddItemResponse>
+      <Ack>Success</Ack>
+      <ItemID>110071690410</ItemID>
+      <Fees>
+         <Fee>
+            <Name>InsertionFee</Name>
+            <Fee currencyID="USD">0.5</Fee>
+         </Fee>
+         <Fee />
+      </Fees>
+   </AddItemResponse>
+</AddItem>
