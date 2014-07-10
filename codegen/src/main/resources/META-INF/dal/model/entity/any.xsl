@@ -84,7 +84,7 @@ public class Any extends BaseEntity<xsl:value-of select="'&lt;Any&gt;'" disable-
    }
 
    public Map<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> getAttributes() {
-      return attributes(true);
+      return attributes(false);
    }
 
    public List<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/> getChildren() {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.zebra.admin.sqlMap" enable-base-visitor="true" enable-sax-parser="true">
+   <entity name="sqlMap" root="true" dynamic-attributes="true">
+      <any name="dynamic-elements" />
+   </entity>
+   <entity name="insert" dynamic-attributes="true">
+      <any name="children"/>
+   </entity>
+</model>
+

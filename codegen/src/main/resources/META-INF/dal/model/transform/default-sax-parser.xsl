@@ -90,7 +90,6 @@
    <xsl:value-of select="$empty"/>import java.util.Stack;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import javax.xml.parsers.ParserConfigurationException;<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="$empty"/>import javax.xml.parsers.SAXParser;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import javax.xml.parsers.SAXParserFactory;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import org.xml.sax.Attributes;<xsl:value-of select="$empty-line"/>
@@ -118,9 +117,7 @@
    private Stack<xsl:value-of select="'&lt;String&gt;'" disable-output-escaping="yes"/> m_tags = new Stack<xsl:value-of select="'&lt;String&gt;'" disable-output-escaping="yes"/>();
 
    private Stack<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> m_objs = new Stack<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/>();
-<xsl:if test="entity/any">
-   private Stack<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/> m_anys = new Stack<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/>();
-</xsl:if>
+
    private IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> m_entity;
 
    private StringBuilder m_text = new StringBuilder();
@@ -153,10 +150,14 @@
       <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, InputSource is) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         DefaultSaxParser handler = new DefaultSaxParser();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         SAXParserFactory factory = SAXParserFactory.newInstance();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         parser.parse(is, handler);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         factory.setValidating(false);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         factory.setFeature("http://xml.org/sax/features/validation", false);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         factory.newSAXParser().parse(is, handler);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         return (T) handler.getEntity();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      } catch (ParserConfigurationException e) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         throw new IllegalStateException("Unable to get SAX parser instance!", e);<xsl:value-of select="$empty-line"/>
@@ -185,7 +186,6 @@
          }
       }
 
-      m_anys.push(any);
       return any;
    }
 </xsl:if>
@@ -210,7 +210,7 @@
    public void endElement(String uri, String localName, String qName) throws SAXException {
       if (uri == null || uri.length() == 0) {<xsl:value-of select="$empty-line"/>
             <xsl:choose>
-               <xsl:when test="//entity[element[not(@render='false')]]">
+               <xsl:when test="//entity[element[not(@render='false')]] | //entity[any]">
                   <xsl:value-of select="$empty"/>         Object currentObj = m_objs.pop();<xsl:value-of select="$empty-line"/>
                   <xsl:choose>
                      <xsl:when test="//entity/element[not(@text='true') and not(@render='false')]">
@@ -299,6 +299,26 @@
                      </xsl:for-each>
                      <xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty"/>
+                  </xsl:for-each>
+                  <xsl:if test="//entity/any">
+                     <xsl:variable name="indent" select="'         '"/>
+                     <xsl:choose>
+                        <xsl:when test="//entity[element[not(@render='false')]]"> else </xsl:when>
+                        <xsl:otherwise><xsl:value-of select="$indent"/></xsl:otherwise>
+                     </xsl:choose>
+                     <xsl:value-of select="$empty"/>if (currentObj instanceof Any) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   if (m_text.toString().length() != 0) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>      ((Any) currentObj).setValue(m_text.toString());<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty"/>
+                  </xsl:if>
+                  <xsl:for-each select="//entity/any">
+                     <xsl:variable name="indent" select="'         '"/>
+                     <xsl:value-of select="$empty"/> else if (currentObj instanceof <xsl:value-of select="../@entity-class"/>) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   if (m_text.toString().length() != 0) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>      ((<xsl:value-of select="../@entity-class"/>) currentObj).<xsl:value-of select="@get-method"/>().add(new <xsl:value-of select="@entity-class"/>().setValue(m_text.toString()));<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty"/>
                   </xsl:for-each>
                </xsl:when>
                <xsl:otherwise>
@@ -456,12 +476,37 @@
          </xsl:for-each>
          <xsl:choose>
             <xsl:when test="any">
-               <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$indent"/>   m_objs.push(parentObj);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$indent"/>   parentObj.<xsl:value-of select="any/@get-method"/>().add(buildAny(qName, attributes));<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$indent"/>m_tags.push(qName);<xsl:value-of select="$empty-line"/>
+               <xsl:choose>
+                  <xsl:when test="$refs | entity-ref[not(@render='false')]">
+                     <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   if (m_text.toString().length() != 0) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>      Any any = new <xsl:value-of select="any/@entity-class"/>().setValue(m_text.toString());<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>      parentObj.<xsl:value-of select="any/@get-method"/>().add(any);<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   Any any = buildAny(qName, attributes);<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   parentObj.<xsl:value-of select="any/@get-method"/>().add(any);<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   m_objs.push(any);<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>m_tags.push(qName);<xsl:value-of select="$empty-line"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                     <xsl:value-of select="$indent"/>if (m_text.toString().length() != 0) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   Any any = new <xsl:value-of select="any/@entity-class"/>().setValue(m_text.toString());<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   parentObj.<xsl:value-of select="any/@get-method"/>().add(any);<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>Any any = buildAny(qName, attributes);<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>parentObj.<xsl:value-of select="any/@get-method"/>().add(any);<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>m_objs.push(any);<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>m_tags.push(qName);<xsl:value-of select="$empty-line"/>
+                  </xsl:otherwise>
+               </xsl:choose>
             </xsl:when>
             <xsl:when test="entity-ref[not(@render='false')] | element[not(@text='true') and not(@render='false')]">
                <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
@@ -492,12 +537,12 @@
             <xsl:for-each select="entity">
                <xsl:choose>
                   <xsl:when test="position()=1 and //entity/any">
-                     <xsl:value-of select="$empty"/>            if (!m_anys.isEmpty()) {<xsl:value-of select="$empty-line"/>
-                     <xsl:value-of select="$empty"/>               Any any = m_anys.peek();<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty"/>            if (parent instanceof Any) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty"/>               Any any = buildAny(qName, attributes);<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$empty-line"/>
-                     <xsl:value-of select="$empty"/>               m_objs.push(m_anys.peek());<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty"/>               ((Any) parent).addChild(any);<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty"/>               m_objs.push(any);<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$empty"/>               m_tags.push(qName);<xsl:value-of select="$empty-line"/>
-                     <xsl:value-of select="$empty"/>               any.addChild(buildAny(qName, attributes));<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$empty"/>            } else <xsl:value-of select="$empty"/>
                   </xsl:when>
                   <xsl:when test="position()=1">

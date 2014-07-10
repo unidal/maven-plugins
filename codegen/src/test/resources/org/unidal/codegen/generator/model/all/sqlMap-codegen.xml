@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="sqlMap" root="true">
+    <entity-ref name="insert" type="list" names="inserts" />
+  </entity>
+  <entity name="insert">
+  </entity>
+</model>
+

@@ -22,7 +22,12 @@ public class AllGeneratorTest extends ModelGenerateTestSupport {
    }
 
    @Test
-   public void testGenerateAll() throws Exception {
+   public void generateModel() throws Exception {
       generate("manifest.xml");
+   }
+   
+   @Test
+   public void generateSqlMap() throws Exception {
+      generate("sqlMap-manifest.xml");
    }
 }

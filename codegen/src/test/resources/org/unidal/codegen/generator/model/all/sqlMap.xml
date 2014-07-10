@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqlMap namespace="SecondOrder">
+
+    <insert id="insert"  parameterClass="map">
+      INSERT INTO TGE_SecondOrder 
+      (
+         SecondPrizeID,
+         UserID,
+         Status,
+         Quantity,
+         IpAddress,
+         MobileNo,
+         HippoId,
+         AddDate
+      )
+      VALUES
+      (
+         #data.secondPrizeId#,
+         #data.userId#,
+         #data.status#,
+         #data.quantity#,
+         #data.ipAddress#,
+         #data.mobileNo#,
+         #data.hippoId#,
+         NOW()
+      )
+      <selectKey resultClass="int">
+         SELECT LAST_INSERT_ID()
+      </selectKey>
+      some more stuff
+   </insert>
+    
+	<typeAlias alias="secondOrderType" type="com.dianping.tuangou.event.api.entity.SecondOrderData" />
+	
+	<resultMap id="result" class="secondOrderType">
+		<result column="SecondOrderID" property="id" nullValue="0" />
+		<result column="SecondPrizeID" property="secondPrizeId" nullValue="0" />
+		<result column="UserID" property="userId" nullValue="0" />
+		<result column="Status" property="status" nullValue="0" />
+		<result column="Quantity" property="quantity" nullValue="0" />
+		<result column="IpAddress" property="ipAddress" />
+		<result column="MobileNo" property="mobileNo" />
+		<result column="HippoId" property="hippoId" />
+		<result column="AddDate" property="createTime" />
+	</resultMap>
+	
+	<select id="load" parameterClass="map" resultMap="result">
+		SELECT	A.SecondOrderID,
+			A.SecondPrizeID,
+			A.UserID,
+			A.Status,
+			A.Quantity,
+			A.IpAddress,
+			A.MobileNo,
+			A.HippoId,
+			A.AddDate
+		FROM TGE_SecondOrder A
+		WHERE A.SecondOrderID = #id#
+	</select>
+
+    <select id="findByUserId_Range" parameterClass="map" resultMap="result">
+		SELECT	A.SecondOrderID,
+			A.SecondPrizeID,
+			A.UserID,
+			A.Status,
+			A.Quantity,
+			A.IpAddress,
+			A.MobileNo,
+			A.HippoId,
+			A.AddDate
+		FROM TGE_SecondOrder A
+		WHERE A.UserID = #userId#
+		  AND A.Status=1
+		  AND A.AddDate BETWEEN #begin# AND #end#
+	</select>
+
+    <select id="findByMobile_Range" parameterClass="map" resultMap="result">
+		SELECT	A.SecondOrderID,
+			A.SecondPrizeID,
+			A.UserID,
+			A.Status,
+			A.Quantity,
+			A.IpAddress,
+			A.MobileNo,
+			A.HippoId,
+			A.AddDate
+		FROM TGE_SecondOrder A
+		WHERE A.MobileNo = #mobileNo#
+		  AND A.Status=1
+		  AND A.AddDate BETWEEN #begin# AND #end#
+	</select>
+
+	<update id="update" parameterClass="map">
+		UPDATE TGE_SecondOrder SET
+			SecondPrizeID = #data.secondPrizeId#,
+			UserID = #data.userId#,
+			Status = #data.status#,
+			Quantity = #data.quantity#,
+			IpAddress = #data.ipAddress#,
+			MobileNo = #data.mobileNo#,
+			HippoId = #data.hippoId#
+		WHERE SecondOrderID = #data.id#
+	</update>
+	
+	<delete id="delete" parameterClass="map">
+		DELETE FROM TGE_SecondOrder
+		WHERE SecondOrderID = #id#
+	</delete>
+
+</sqlMap>

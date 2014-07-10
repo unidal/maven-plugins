@@ -286,19 +286,33 @@
       <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public void <xsl:value-of select="entity/any/@visit-method"/>(<xsl:value-of select="entity/any/@entity-class"/> any) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      if (any.getChildren().isEmpty()) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         if (any.hasValue()) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>            tagWithText(any.getName(), any.getValue());<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         } else {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>            startTag(any.getName(), true, any.getAttributes());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         if (!any.getAttributes().isEmpty()) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            if (any.hasValue() <xsl:value-of select="'&amp;&amp;'" disable-output-escaping="yes"/> any.getValue().length() != 0) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               startTag(any.getName(), false, any.getAttributes());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               m_sb.setLength(m_sb.length() - 2);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               m_sb.append(any.getValue());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               endTag(any.getName());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               m_sb.setLength(m_sb.length() - 2);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            } else {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               startTag(any.getName(), true, any.getAttributes());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         } else if (any.hasValue()) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            if (any.getName() == null) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               m_sb.append(any.getValue());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            } else {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               tagWithText(any.getName(), any.getValue());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      } else {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         startTag(any.getName(), false, any.getAttributes());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         m_sb.setLength(m_sb.length() - 2);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         for (Any child : any.getChildren()) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>            child.accept(m_visitor);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         endTag(any.getName());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         m_sb.setLength(m_sb.length() - 2);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    </xsl:if>
@@ -434,7 +448,11 @@
    <xsl:if test="any">
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      for (Any any : <xsl:value-of select="@param-name"/>.<xsl:value-of select="any/@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         boolean compact = m_compact;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         m_compact = true;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         any.accept(m_visitor);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         m_compact = compact;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
    </xsl:if>
 </xsl:template>

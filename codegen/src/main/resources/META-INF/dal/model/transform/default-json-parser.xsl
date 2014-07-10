@@ -686,7 +686,20 @@
                      if (ch2 == '\\') {
                         char ch3 = next();
 
-                        sb.append(ch3);
+                        switch (ch3) {
+                        case 't':
+                        	sb.append('\t');
+                        	break;
+                        case 'r':
+                        	sb.append('\r');
+                        	break;
+                        case 'n':
+                        	sb.append('\n');
+                        	break;
+                        default:
+                        	sb.append(ch3);
+                        	break;
+                        }
                      } else {
                         sb.append(ch2);
                      }
