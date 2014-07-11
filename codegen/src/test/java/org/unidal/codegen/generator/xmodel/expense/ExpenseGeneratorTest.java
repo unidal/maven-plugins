@@ -18,7 +18,7 @@ public class ExpenseGeneratorTest extends XmodelGenerateTestSupport {
 
    @Override
    protected boolean isVerbose() {
-      return true;
+      return false;
    }
 
    @Test

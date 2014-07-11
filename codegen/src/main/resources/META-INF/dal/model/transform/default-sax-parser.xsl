@@ -226,13 +226,6 @@
                      <xsl:variable name="entity" select="."/>
                      
                      <xsl:choose>
-                        <xsl:when test="position()=1 and //entity/any">
-                           <xsl:value-of select="$empty"/>         if (!m_anys.isEmpty()) {<xsl:value-of select="$empty-line"/>
-                           <xsl:value-of select="$empty"/>            Any any = m_anys.pop();<xsl:value-of select="$empty-line"/>
-                           <xsl:value-of select="$empty-line"/>
-                           <xsl:value-of select="$empty"/>            any.setValue(getText());<xsl:value-of select="$empty-line"/>
-                           <xsl:value-of select="$empty"/>         } else <xsl:value-of select="$empty"/>
-                        </xsl:when>
                         <xsl:when test="position()=1"><xsl:value-of select="'         '"/></xsl:when>
                         <xsl:otherwise> else </xsl:otherwise>
                      </xsl:choose>
