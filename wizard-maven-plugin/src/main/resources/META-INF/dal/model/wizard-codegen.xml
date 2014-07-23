@@ -9,6 +9,7 @@
   <entity name="webapp">
     <attribute name="package" value-type="String" />
     <attribute name="name" value-type="String" />
+    <attribute name="module" value-type="boolean" />
     <attribute name="webres" value-type="boolean" />
     <attribute name="cat" value-type="boolean" />
     <attribute name="plugin-management" value-type="boolean" />
