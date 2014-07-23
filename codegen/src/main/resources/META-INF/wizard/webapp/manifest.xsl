@@ -12,6 +12,13 @@
 <xsl:variable name="empty" select="''"/>
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
 
+<xsl:variable name="webapp-root">
+   <xsl:choose>
+      <xsl:when test="/wizard/webapp/@module='true'"><xsl:value-of select="concat($src-main-resources, '/WEB-MODULE')"/></xsl:when>
+      <xsl:otherwise><xsl:value-of select="$src-main-webapp"/></xsl:otherwise>
+   </xsl:choose>
+</xsl:variable>
+
 <xsl:template match="/">
    <xsl:call-template name="manifest"/>
 </xsl:template>
@@ -78,13 +85,19 @@
 
       <!-- layout.tag class -->
       <xsl:call-template name="generate-web-resource">
-        <xsl:with-param name="file" select="'WEB-INF/tags/layout.tag'"/>
+        <xsl:with-param name="file" select="concat('WEB-INF/tags/', @name, '.tag')"/>
         <xsl:with-param name="template" select="'web-inf/tags/layout-tag.xsl'"/>
+      </xsl:call-template>
+
+      <!-- app.tld class -->
+      <xsl:call-template name="generate-web-resource">
+        <xsl:with-param name="file" select="concat('WEB-INF/', @name, '.tld')"/>
+        <xsl:with-param name="template" select="'web-inf/app-tld.xsl'"/>
       </xsl:call-template>
 
       <xsl:call-template name="copy-resources">
         <xsl:with-param name="file" select="'bootstrap'"/>
-        <xsl:with-param name="target" select="$src-main-webapp" />
+        <xsl:with-param name="target" select="$webapp-root" />
       </xsl:call-template>
    </xsl:if>
 </xsl:template>
@@ -203,7 +216,7 @@
       <xsl:when test="$template='single'">
          <!-- list.jsp -->
          <xsl:call-template name="generate-resource">
-           <xsl:with-param name="src-dir" select="$src-main-webapp" />
+           <xsl:with-param name="src-dir" select="$webapp-root" />
            <xsl:with-param name="package" select="@package"/>
            <xsl:with-param name="module" select="../@name"/>
            <xsl:with-param name="name" select="@name"/>
@@ -213,7 +226,7 @@
          
          <!-- view.jsp -->
          <xsl:call-template name="generate-resource">
-           <xsl:with-param name="src-dir" select="$src-main-webapp" />
+           <xsl:with-param name="src-dir" select="$webapp-root" />
            <xsl:with-param name="package" select="@package"/>
            <xsl:with-param name="module" select="../@name"/>
            <xsl:with-param name="name" select="@name"/>
@@ -224,7 +237,7 @@
       <xsl:otherwise>
          <!-- view.jsp -->
          <xsl:call-template name="generate-resource">
-           <xsl:with-param name="src-dir" select="$src-main-webapp" />
+           <xsl:with-param name="src-dir" select="$webapp-root" />
            <xsl:with-param name="package" select="@package"/>
            <xsl:with-param name="module" select="../@name"/>
            <xsl:with-param name="name" select="@name"/>
@@ -336,7 +349,7 @@
 </xsl:template>
 
 <xsl:template name="generate-web-resource">
-   <xsl:param name="src-dir" select="$src-main-webapp" />
+   <xsl:param name="src-dir" select="$webapp-root" />
    <xsl:param name="template"/>
    <xsl:param name="file" select="''" />
    <xsl:param name="mode" select="'create_if_not_exists'"/>

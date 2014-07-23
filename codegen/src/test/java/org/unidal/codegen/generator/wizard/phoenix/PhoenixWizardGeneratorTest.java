@@ -27,6 +27,11 @@ public class PhoenixWizardGeneratorTest extends WizardGenerateTestSupport {
    }
    
    @Test
+   public void testEnvironment() throws Exception {
+      generateWebapp("environment-manifest.xml");
+   }
+   
+   @Test
    public void testService() throws Exception {
       generateWebapp("service-manifest.xml");
    }

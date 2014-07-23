@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.phoenix">
+   <webapp package="com.dianping.phoenix" name="inspect" webres="false" cat="false" plugin-management="false" jstl="true" layout="bootstrap" module="true">
+      <module name="inspect" path="inspect" default="true">
+         <page name="status" title="Status" default="true" path="status" template="default">
+            <description>Status</description>
+         </page>
+      </module>
+   </webapp>
+</wizard>
