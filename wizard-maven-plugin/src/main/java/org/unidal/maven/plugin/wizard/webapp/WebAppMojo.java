@@ -200,6 +200,10 @@ public class WebAppMojo extends AbstractMojo {
    }
 
    public void execute() throws MojoExecutionException, MojoFailureException {
+      if (m_project.getPackaging().equals("pom")) {
+         throw new MojoFailureException("This wizard can not be run against a POM project!");
+      }
+
       try {
          final File manifestFile = getFile(manifest);
          File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
@@ -281,11 +285,19 @@ public class WebAppMojo extends AbstractMojo {
       Element root = doc.getRootElement();
       PomFileBuilder b = new PomFileBuilder();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
-      Element packaging = b.findOrCreateChild(root, "packaging", "dependencies", null);
+      Element packaging = b.findChild(root, "packaging");
+      String projectType = packaging == null ? "jar" : packaging.getText();
 
-      if (!"war".equals(packaging.getText())) {
-         getLog().info(String.format("Change project packaging type from %s to war.", packaging.getText()));
-         packaging.setText("war");
+      if (!webapp.isModule() && "jar".equals(projectType)) {
+         boolean war = PropertyProviders.fromConsole().forBoolean("war", "Is it a web project?", true);
+
+         if (war) {
+            getLog().info(String.format("Change project packaging type from %s to war.", projectType));
+
+            b.findOrCreateChild(root, "packaging", "dependencies", null).setText("war");
+         } else {
+            wizard.getWebapp().setModule(true);
+         }
       }
 
       // dependencies

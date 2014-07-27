@@ -114,19 +114,22 @@ public class WizardBuilder extends BaseVisitor {
          String packageName = wizard.getPackage();
          String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
          String name = PropertyProviders.fromConsole().forString("name", "Webapp name:", defaultName, null);
-         boolean module = PropertyProviders.fromConsole().forBoolean("module", "Support Web Module?", false);
-         boolean webres = PropertyProviders.fromConsole().forBoolean("webres", "Support WebRes framework?", false);
          boolean cat = PropertyProviders.fromConsole().forBoolean("cat", "Support CAT?", true);
          boolean jstl = PropertyProviders.fromConsole().forBoolean("cat", "Support JSTL?", true);
          boolean bootstrap = PropertyProviders.fromConsole().forBoolean("layout", "Support bootstrap layout?", true);
          boolean pluginManagement = PropertyProviders.fromConsole().forBoolean("pluginManagement",
                "Support POM plugin management for Java Compiler and Eclipse?", false);
+         /*
+          * boolean webres =
+          * PropertyProviders.fromConsole().forBoolean("webres",
+          * "Support WebRes framework?", false);
+          */
 
          wizard.setWebapp(webapp);
          webapp.setPackage(packageName);
          webapp.setName(name);
-         webapp.setModule(module);
-         webapp.setWebres(webres);
+         webapp.setModule(false);
+         webapp.setWebres(false);
          webapp.setCat(cat);
          webapp.setJstl(jstl);
          webapp.setLayout(bootstrap ? "bootstrap" : null);

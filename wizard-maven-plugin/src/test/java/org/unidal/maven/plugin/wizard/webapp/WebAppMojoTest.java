@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.apache.maven.project.MavenProject;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.unidal.codegen.aggregator.XmlAggregator;
 import org.unidal.codegen.generator.Generator;
@@ -14,6 +15,11 @@ import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 
 public class WebAppMojoTest extends ComponentTestCase {
+   @Before
+   public void before() {
+      System.setProperty("war", "true");
+   }
+
    @Test
    public void testPom() throws Exception {
       WebAppMojo mojo = new WebAppMojo();

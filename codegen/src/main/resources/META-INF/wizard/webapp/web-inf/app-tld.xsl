@@ -18,7 +18,7 @@
       <short-name>a</short-name>
       <tag-file>
          <name>layout</name>
-         <path>/WEB-INF/tags/<xsl:value-of select="webapp/@name"/>.tag</path>
+         <path><xsl:value-of select="webapp/@layout-tag"/></path>
       </tag-file>
    </taglib>
 </xsl:template>

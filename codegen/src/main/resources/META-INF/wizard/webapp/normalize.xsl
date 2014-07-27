@@ -58,6 +58,19 @@
             <xsl:otherwise>8080</xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
+      
+      <xsl:attribute name="app-tld">
+         <xsl:choose>
+            <xsl:when test="@module='true'">/WEB-INF/<xsl:value-of select="@name"/>.tld</xsl:when>
+            <xsl:otherwise>/WEB-INF/app.tld</xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
+      <xsl:attribute name="layout-tag">
+         <xsl:choose>
+            <xsl:when test="@module='true'">/WEB-INF/tags/<xsl:value-of select="@name"/>.tag</xsl:when>
+            <xsl:otherwise>/WEB-INF/tags/layout.tag</xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
 
       <xsl:apply-templates/>
    </xsl:copy>
@@ -174,8 +187,11 @@
       <xsl:attribute name="package">
          <xsl:choose>
             <xsl:when test="@package"><xsl:value-of select="@package"/></xsl:when>
+            <!-- @module is used for version back-compactible -->
+            <xsl:when test="../../@module and ../@package"><xsl:value-of select="../@package"/>.<xsl:value-of select="$normalized-name"/></xsl:when>
             <xsl:when test="../@package"><xsl:value-of select="../@package"/>.page.<xsl:value-of select="$normalized-name"/></xsl:when>
-            <xsl:otherwise><xsl:value-of select="../../@package"/>.<xsl:value-of select="$normalized-module-name"/>.<xsl:value-of select="$normalized-name"/></xsl:otherwise>
+            <xsl:when test="../../@module"><xsl:value-of select="../../@package"/>.<xsl:value-of select="$normalized-module-name"/>.<xsl:value-of select="$normalized-name"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="../../@package"/>.<xsl:value-of select="$normalized-module-name"/>.page.<xsl:value-of select="$normalized-name"/></xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
       <xsl:attribute name="path">

@@ -31,6 +31,10 @@ public class JDomBuilder {
       return child;
    }
 
+   public Element findChild(Element parent, String name) {
+      return parent.getChild(name, getNamespace());
+   }
+
    @SuppressWarnings("unchecked")
    public Element findElement(Element parent, String name, String value) {
       List<Object> children = parent.getContent();
@@ -199,6 +203,10 @@ public class JDomBuilder {
       return result;
    }
 
+   protected void setModified(boolean modified) {
+      m_modifed = modified;
+   }
+
    private void setVariables(XPath path, Object... variables) {
       int len = variables.length;
 
@@ -209,10 +217,6 @@ public class JDomBuilder {
       for (int i = 0; i < len; i += 2) {
          path.setVariable(String.valueOf(variables[i]), variables[i + 1]);
       }
-   }
-
-   protected void setModified(boolean modified) {
-      m_modifed = modified;
    }
 
    public static interface Function<S, T> {

@@ -85,13 +85,13 @@
 
       <!-- layout.tag class -->
       <xsl:call-template name="generate-web-resource">
-        <xsl:with-param name="file" select="concat('WEB-INF/tags/', @name, '.tag')"/>
+        <xsl:with-param name="file" select="@layout-tag"/>
         <xsl:with-param name="template" select="'web-inf/tags/layout-tag.xsl'"/>
       </xsl:call-template>
 
       <!-- app.tld class -->
       <xsl:call-template name="generate-web-resource">
-        <xsl:with-param name="file" select="concat('WEB-INF/', @name, '.tld')"/>
+        <xsl:with-param name="file" select="@app-tld"/>
         <xsl:with-param name="template" select="'web-inf/app-tld.xsl'"/>
       </xsl:call-template>
 
