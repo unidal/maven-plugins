@@ -1,8 +1,10 @@
 package org.unidal.maven.plugin.codegen;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.ConnectException;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -21,13 +23,25 @@ import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class MojoTest extends ComponentTestCase {
+   private void checkSource(List<String> sources, String actual) throws IOException {
+      File file = new File(actual).getCanonicalFile();
+
+      for (String source : sources) {
+         if (new File(source).getCanonicalFile().equals(file)) {
+            return;
+         }
+      }
+
+      Assert.fail("Compile sources is not added");
+   }
+
    @Test
    public void testGenerateDalJdbc() throws Exception {
       DalJdbcMojo mojo = new DalJdbcMojo();
       MavenProject project = new MavenProject();
       File baseDir = new File(".");
 
-      project.setFile(new File(baseDir, ""));
+      project.setFile(new File(baseDir, "mock"));
       mojo.m_project = project;
       mojo.m_generator = lookup(Generator.class, "dal-jdbc");
       mojo.manifest = getClass().getResource("jdbc_manifest.xml").getFile();
@@ -36,42 +50,8 @@ public class MojoTest extends ComponentTestCase {
       mojo.verbose = false;
       mojo.execute();
 
-      Assert.assertTrue("Compile sources is not added", project.getCompileSourceRoots().contains(mojo.sourceDir));
+      checkSource(project.getCompileSourceRoots(), mojo.sourceDir);
       Assert.assertTrue("Files are not generated", new File(mojo.sourceDir).exists());
-   }
-
-   @Test
-   public void testGenerateDalModel() throws Exception {
-      DalModelMojo mojo = new DalModelMojo();
-      MavenProject project = new MavenProject();
-      File baseDir = new File(".");
-
-      project.setFile(new File(baseDir, ""));
-      mojo.m_project = project;
-      mojo.m_generator = lookup(Generator.class, "dal-model");
-      mojo.manifest = getClass().getResource("model_manifest.xml").getFile();
-      mojo.resouceBase = "/META-INF/dal/model";
-      mojo.sourceDir = baseDir + "/target/generated-sources/dal-model";
-      mojo.verbose = false;
-      mojo.execute();
-
-      Assert.assertTrue("Compile sources is not added", project.getCompileSourceRoots().contains(mojo.sourceDir));
-      Assert.assertTrue("Files are not generated", new File(mojo.sourceDir).exists());
-   }
-
-   @Test
-   public void testGenerateDalModelMeta() throws Exception {
-      DalModelMetaMojo mojo = new DalModelMetaMojo();
-
-      mojo.m_meta = new DefaultModelMeta();
-      mojo.baseDir = new File(".");
-      mojo.inputFile = getClass().getResource("sanguo.xml").getPath();
-      mojo.outputDir = "target/generated-resources";
-      mojo.packageName = "org.unidal.sango.xml";
-      mojo.prefix = "sango";
-      mojo.execute();
-
-      Assert.assertTrue("File is not generated", mojo.baseDir.exists());
    }
 
    @Test
@@ -110,6 +90,40 @@ public class MojoTest extends ComponentTestCase {
    }
 
    @Test
+   public void testGenerateDalModel() throws Exception {
+      DalModelMojo mojo = new DalModelMojo();
+      MavenProject project = new MavenProject();
+      File baseDir = new File(".");
+
+      project.setFile(new File(baseDir, "mock"));
+      mojo.m_project = project;
+      mojo.m_generator = lookup(Generator.class, "dal-model");
+      mojo.manifest = getClass().getResource("model_manifest.xml").getFile();
+      mojo.resouceBase = "/META-INF/dal/model";
+      mojo.sourceDir = baseDir + "/target/generated-sources/dal-model";
+      mojo.verbose = false;
+      mojo.execute();
+
+      checkSource(project.getCompileSourceRoots(), mojo.sourceDir);
+      Assert.assertTrue("Files are not generated", new File(mojo.sourceDir).exists());
+   }
+
+   @Test
+   public void testGenerateDalModelMeta() throws Exception {
+      DalModelMetaMojo mojo = new DalModelMetaMojo();
+
+      mojo.m_meta = new DefaultModelMeta();
+      mojo.baseDir = new File(".");
+      mojo.inputFile = getClass().getResource("sanguo.xml").getPath();
+      mojo.outputDir = "target/generated-resources";
+      mojo.packageName = "org.unidal.sango.xml";
+      mojo.prefix = "sango";
+      mojo.execute();
+
+      Assert.assertTrue("File is not generated", mojo.baseDir.exists());
+   }
+
+   @Test
    public void testGenerateDalXml() throws Exception {
       DalXmlMojo mojo = new DalXmlMojo();
       MavenProject project = new MavenProject();
@@ -119,7 +133,7 @@ public class MojoTest extends ComponentTestCase {
       String debugBaseDir = "D:/dev/workshop/mvc-framework";
       boolean debug = false;
 
-      project.setFile(new File(baseDir, ""));
+      project.setFile(new File(baseDir, "mock"));
       mojo.m_project = project;
       mojo.m_generator = lookup(Generator.class, "dal-xml");
 
@@ -140,7 +154,7 @@ public class MojoTest extends ComponentTestCase {
       mojo.verbose = false;
       mojo.execute();
 
-      Assert.assertTrue("Compile sources is not added", project.getCompileSourceRoots().contains(mojo.sourceDir));
+      checkSource(project.getCompileSourceRoots(), mojo.sourceDir);
       Assert.assertTrue("Files are not generated", new File(mojo.sourceDir).exists());
    }
 
@@ -163,7 +177,7 @@ public class MojoTest extends ComponentTestCase {
       mojo.verbose = false;
       mojo.execute();
 
-      Assert.assertTrue("Compile sources is not added", project.getCompileSourceRoots().contains(mojo.sourceDir));
+      checkSource(project.getCompileSourceRoots(), mojo.sourceDir);
       Assert.assertTrue("Files are not generated", new File(mojo.sourceDir).exists());
    }
 

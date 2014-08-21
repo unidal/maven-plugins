@@ -14,7 +14,7 @@
 
 <xsl:variable name="webapp-root">
    <xsl:choose>
-      <xsl:when test="/wizard/webapp/@module='true'"><xsl:value-of select="concat($src-main-resources, '/WEB-MODULE')"/></xsl:when>
+      <xsl:when test="/wizard/webapp/@module='true'"><xsl:value-of select="concat($src-main-resources, '/WEB-MODULE', /wizard/webapp/@path)"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="$src-main-webapp"/></xsl:otherwise>
    </xsl:choose>
 </xsl:variable>

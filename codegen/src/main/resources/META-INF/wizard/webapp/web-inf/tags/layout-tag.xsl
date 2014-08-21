@@ -9,7 +9,7 @@
 </xsl:template>
 
 <xsl:template match="wizard">
-<xsl:text disable-output-escaping="yes"><![CDATA[<%@ tag trimDirectiveWhitespaces="true" %>
+<xsl:text disable-output-escaping="yes"><![CDATA[<%@ tag isELIgnored="false" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 ]]></xsl:text>
 <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>jsp:useBean id="navBar" class="<xsl:value-of select="webapp/@package"/>.view.NavigationBar" scope="page" /<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>

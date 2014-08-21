@@ -15,7 +15,7 @@
 </xsl:template>
 
 <xsl:template match="page">
-<xsl:call-template name="directive"><xsl:with-param name="body">page contentType="text/html; charset=utf-8"</xsl:with-param></xsl:call-template>
+<xsl:call-template name="directive"><xsl:with-param name="body">page contentType="text/html; charset=utf-8" isELIgnored="false" trimDirectiveWhitespaces="true"</xsl:with-param></xsl:call-template>
 <xsl:if test="/wizard/webapp/@layout='bootstrap'">
 <xsl:call-template name="directive"><xsl:with-param name="body">taglib prefix="a" uri="<xsl:value-of select="/wizard/webapp/@app-tld"/>"</xsl:with-param></xsl:call-template>
 </xsl:if>

@@ -32,8 +32,9 @@ public class WebAppMojoTest extends ComponentTestCase {
       Files.forDir().copyFile(pomFile, tmpFile);
 
       mojo.modifyPomFile(tmpFile, wizard, new Webapp().setPackage("com.dianping.test"));
+
+      // second time, nothing changed
       mojo.modifyPomFile(tmpFile, wizard, new Webapp().setPackage("com.dianping.test"));
-      // next time, change nothing
 
       String actual = Files.forIO().readFrom(tmpFile, "utf-8");
 
