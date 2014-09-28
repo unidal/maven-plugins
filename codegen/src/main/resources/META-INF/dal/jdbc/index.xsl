@@ -14,15 +14,15 @@
    <xsl:value-of select="$empty"/>public class _INDEX {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name="get-classes">
       <xsl:with-param name="method" select="'getEntityClasses'"/>
-      <xsl:with-param name="suffix" select="'Entity'"/>
+      <xsl:with-param name="type" select="'Entity'"/>
    </xsl:call-template>
    <xsl:call-template name="get-classes">
       <xsl:with-param name="method" select="'getDaoClasses'"/>
-      <xsl:with-param name="suffix" select="'Dao'"/>
+      <xsl:with-param name="type" select="'Dao'"/>
    </xsl:call-template>
    <xsl:call-template name="get-classes">
       <xsl:with-param name="method" select="'getDoClasses'"/>
-      <xsl:with-param name="suffix" select="''"/>
+      <xsl:with-param name="type" select="'Do'"/>
    </xsl:call-template>
    <xsl:value-of select="$empty"/>}<xsl:value-of select="$empty-line"/>
 </xsl:template>
@@ -43,7 +43,7 @@
 
 <xsl:template name="get-classes">
    <xsl:param name="method" />
-   <xsl:param name="suffix" />
+   <xsl:param name="type" />
 
    <xsl:value-of select="$empty"/>   public static Class<xsl:value-of select="$empty"/>
    <xsl:call-template name="generic-type">
@@ -56,7 +56,13 @@
    </xsl:call-template>
    <xsl:value-of select="$empty"/>[] { <xsl:value-of select="$empty"/>
    <xsl:for-each select="/entities/entity[not(@gen='false')]">
-      <xsl:if test="position() != 1">, </xsl:if><xsl:value-of select="@class-name"/><xsl:value-of select="$suffix"/>.class<xsl:value-of select="$empty"/>
+      <xsl:if test="position() != 1">, </xsl:if>
+      <xsl:choose>
+         <xsl:when test="$type='Entity'"><xsl:value-of select="@entity-class"/></xsl:when>
+         <xsl:when test="$type='Dao'"><xsl:value-of select="@dao-class"/></xsl:when>
+         <xsl:when test="$type='Do'"><xsl:value-of select="@do-class"/></xsl:when>
+      </xsl:choose>
+      <xsl:value-of select="'.class'"/>
    </xsl:for-each>
    <xsl:value-of select="$empty"/> };<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>

@@ -36,6 +36,7 @@ import org.unidal.codegen.generator.GenerateContextSupport;
 import org.unidal.codegen.generator.Generator;
 import org.unidal.codegen.meta.TableMeta;
 import org.unidal.codegen.meta.WizardMeta;
+import org.unidal.helper.Codes;
 import org.unidal.helper.Files;
 import org.unidal.helper.Transformers;
 import org.unidal.helper.Transformers.IBuilder;
@@ -466,9 +467,14 @@ public class JdbcMojo extends AbstractMojo {
 
       private Connection setupConnection(Datasource ds) {
          Properties info = new Properties();
+         String password = ds.getPassword();
+
+         if (password.startsWith("~{") && password.endsWith("}")) {
+            password = Codes.forDecode().decode(password.substring(2, password.length() - 1));
+         }
 
          info.put("user", ds.getUser());
-         info.put("password", ds.getPassword());
+         info.put("password", password);
 
          if (ds.getProperties() != null) {
             String[] pairs = ds.getProperties().split(Pattern.quote("&"));
@@ -571,7 +577,7 @@ public class JdbcMojo extends AbstractMojo {
             jdbc.setDatasource(ds);
 
             ds.setDriver(PropertyProviders.fromConsole().forString("driver", "JDBC driver:", "com.mysql.jdbc.Driver", null));
-            ds.setUrl(PropertyProviders.fromConsole().forString("url", "JDBC URL:", "jdbc:mysql://localhost:3306/mysql", null));
+            ds.setUrl(PropertyProviders.fromConsole().forString("url", "JDBC URL:", "jdbc:mysql://localhost:3306/" + name, null));
             ds.setUser(PropertyProviders.fromConsole().forString("user", "User:", null, null));
 
             String password = PropertyProviders.fromConsole().forString("password", "Password:(use '<none>' if no password)", null,
