@@ -93,14 +93,23 @@ public class GenerateMojo extends AbstractMojo {
                for (String file : files) {
                   File sourceFile = new File(sourceDir, file);
                   File targetFile = new File(targetDir, file.substring(0, file.length() - 4) + format.getFileSuffix());
-                  String uml = Files.forIO().readFrom(sourceFile, "utf-8");
-                  byte[] content = generateImage(uml, type);
 
-                  Files.forIO().writeTo(targetFile, content);
-                  count++;
+                  try {
+                     String uml = Files.forIO().readFrom(sourceFile, "utf-8");
+                     byte[] content = generateImage(uml, type);
 
-                  if (verbose) {
-                     getLog().info(String.format("File generated: %s", targetFile));
+                     if (content != null) {
+                        Files.forIO().writeTo(targetFile, content);
+                        count++;
+
+                        if (verbose) {
+                           getLog().info(String.format("File generated: %s", targetFile));
+                        }
+                     } else {
+                        getLog().warn(String.format("Error when generating : %s", sourceFile));
+                     }
+                  } catch (Exception e) {
+                     getLog().warn(String.format("Error when generating : %s", sourceFile), e);
                   }
                }
             }
