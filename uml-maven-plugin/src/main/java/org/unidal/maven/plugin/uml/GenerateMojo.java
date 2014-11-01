@@ -1,18 +1,21 @@
 package org.unidal.maven.plugin.uml;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sourceforge.plantuml.BlockUml;
 import net.sourceforge.plantuml.FileFormat;
-import net.sourceforge.plantuml.GeneratedImage;
-import net.sourceforge.plantuml.ISourceFileReader;
-import net.sourceforge.plantuml.Option;
-import net.sourceforge.plantuml.SourceFileReader2;
+import net.sourceforge.plantuml.FileFormatOption;
+import net.sourceforge.plantuml.PSystemError;
+import net.sourceforge.plantuml.SourceStringReader;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Splitters;
@@ -76,6 +79,10 @@ public class GenerateMojo extends AbstractMojo {
             }
          });
 
+         if (verbose) {
+            getLog().info(String.format("Generating UML to %s ...", targetDir));
+         }
+
          List<String> types = Splitters.by(',').noEmptyItem().trim().split(imageType);
          int count = 0;
 
@@ -84,7 +91,17 @@ public class GenerateMojo extends AbstractMojo {
 
             if (format != null) {
                for (String file : files) {
-                  count += generateUml(sourceDir, targetDir, file, format);
+                  File sourceFile = new File(sourceDir, file);
+                  File targetFile = new File(targetDir, file.substring(0, file.length() - 4) + format.getFileSuffix());
+                  String uml = Files.forIO().readFrom(sourceFile, "utf-8");
+                  byte[] content = generateImage(uml, type);
+
+                  Files.forIO().writeTo(targetFile, content);
+                  count++;
+
+                  if (verbose) {
+                     getLog().info(String.format("File generated: %s", targetFile));
+                  }
                }
             }
          }
@@ -95,31 +112,50 @@ public class GenerateMojo extends AbstractMojo {
       }
    }
 
-   private int generateUml(File from, File to, String path, FileFormat format) throws Exception {
-      File source = new File(from, path);
-      File target = new File(to, path.substring(0, path.length() - 4) + format.getFileSuffix());
-      Option option = new Option();
+   private byte[] generateImage(String uml, String type) throws IOException {
+      if (!uml.trim().startsWith("@startuml")) {
+         uml = "@startuml\n" + uml;
+      }
 
-      option.setFileFormat(format);
-      target.getParentFile().mkdirs();
+      if (!uml.trim().endsWith("@enduml")) {
+         uml = uml + "\n@enduml";
+      }
 
-      ISourceFileReader reader = new SourceFileReader2(option.getDefaultDefines(), source, target, option.getConfig(),
-            option.getCharset(), option.getFileFormatOption());
-      List<GeneratedImage> images = reader.getGeneratedImages();
+      SourceStringReader reader = new SourceStringReader(uml);
+      ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
+      FileFormat format = FileFormat.PNG;
 
-      if (verbose) {
-         for (GeneratedImage image : images) {
-            getLog().info(String.format("File generated: %s", image.getPngFile()));
+      for (FileFormat e : FileFormat.values()) {
+         if (e.name().equalsIgnoreCase(type)) {
+            format = e;
+            break;
          }
       }
 
-      return 1;
+      reader.generateImage(baos, new FileFormatOption(format));
+
+      if (!hasError(reader.getBlocks())) {
+         return baos.toByteArray();
+      } else {
+         return null;
+      }
+   }
+
+   private boolean hasError(List<BlockUml> blocks) throws IOException {
+      for (BlockUml b : blocks) {
+         if (b.getDiagram() instanceof PSystemError) {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    private FileFormat getFileFormat(String type) {
       try {
          return FileFormat.valueOf(type.toUpperCase());
       } catch (Exception e) {
+         getLog().warn("Invalid type: " + type);
          return null;
       }
    }

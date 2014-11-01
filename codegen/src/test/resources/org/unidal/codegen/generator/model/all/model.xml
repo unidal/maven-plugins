@@ -176,7 +176,7 @@
       <element name="e2" value-type="String" />
    </entity>
    <entity name="text-only">
-      <element name="s1" value-type="String" text="true" />
+      <element name="s1" value-type="String" text="true" escape="true" />
    </entity>
    <entity name="list-item">
       <attribute name="a1" value-type="String" key="true" />
