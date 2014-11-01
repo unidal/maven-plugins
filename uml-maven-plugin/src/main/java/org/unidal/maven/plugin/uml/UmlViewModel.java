@@ -20,8 +20,14 @@ public class UmlViewModel {
 
    private String m_message;
 
+   private String m_editStyle;
+
    public UmlViewModel(HttpServletRequest req) {
       m_webapp = req.getContextPath();
+   }
+
+   public String getEditStyle() {
+      return m_editStyle;
    }
 
    public String getMessage() {
@@ -50,6 +56,10 @@ public class UmlViewModel {
 
    public boolean isError() {
       return m_error;
+   }
+
+   public void setEditStyle(String editStyle) {
+      m_editStyle = editStyle;
    }
 
    public void setError(boolean error) {

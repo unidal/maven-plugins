@@ -195,9 +195,16 @@ public class UmlServlet extends HttpServlet {
    private void showPage(HttpServletRequest req, HttpServletResponse res, UmlViewModel model) throws ServletException, IOException {
       String uml = req.getParameter("uml");
       String umlFile = req.getParameter("file");
+      String editStyle = req.getParameter("es");
 
       model.setUmlFiles(scanUmlFiles());
       model.setUmlFile(umlFile);
+
+      if (editStyle == null) {
+         model.setEditStyle("height: 500px; width: 320px");
+      } else {
+         model.setEditStyle(editStyle);
+      }
 
       if (!isEmpty(uml)) {
          model.setUml(uml);

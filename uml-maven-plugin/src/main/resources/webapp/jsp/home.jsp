@@ -9,6 +9,7 @@
 	<br>
 
 	<form action="${model.webapp}/uml" method="post">
+		<input type="hidden" name="es" id="es" value="${model.editStyle}">
 		<table>
 			<tr>
 				<td colspan="3" nowrap>
@@ -31,7 +32,7 @@
 			</c:if>
 			<tr valign="top">
 				<td valign="top">
-					<textarea id="uml" name="uml" style="height: 500px; width: 320px">${w:htmlEncode(model.uml)}</textarea>
+					<textarea id="uml" name="uml" style="${model.editStyle}">${w:htmlEncode(model.uml)}</textarea>
 					<br><button type="submit" name="update" value="1" class="btn btn-medium btn-primary">Update</button>
 				</td>
 				<td width="10"></td>
@@ -41,7 +42,7 @@
 	</form>
 
 	<script lang="javascript">
-	var interval = 500;
+	var interval = 500; // 500 ms
 	var dirty = false;
 	var changed = false;
 	
@@ -73,6 +74,10 @@
 		$('#uml').bind('input propertychange', function() {
 			changed = true;
 			dirty = true;
+		});
+		
+		$('#uml').bind('mouseup mousemove', function() {
+            $('#es').val('height: '+this.style.height+'; width: '+this.style.width);
 		});
 		
 		$('#file').change(function() {
