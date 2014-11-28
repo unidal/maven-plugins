@@ -27,227 +27,251 @@ import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.web.jsp.function.CodecFunction;
 
 public class UmlServlet extends HttpServlet {
-   private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-   private byte[] generateImage(String uml, String type) throws IOException {
-      if (!uml.trim().startsWith("@startuml")) {
-         uml = "@startuml\n" + uml;
-      }
+	private byte[] generateImage(String uml, String type) throws IOException {
+		if (!uml.trim().startsWith("@startuml")) {
+			uml = "@startuml\n" + uml;
+		}
 
-      if (!uml.trim().endsWith("@enduml")) {
-         uml = uml + "\n@enduml";
-      }
+		if (!uml.trim().endsWith("@enduml")) {
+			uml = uml + "\n@enduml";
+		}
 
-      SourceStringReader reader = new SourceStringReader(uml);
-      ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
-      FileFormat format = FileFormat.PNG;
+		SourceStringReader reader = new SourceStringReader(uml);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
+		FileFormat format = FileFormat.PNG;
 
-      for (FileFormat e : FileFormat.values()) {
-         if (e.name().equalsIgnoreCase(type)) {
-            format = e;
-            break;
-         }
-      }
+		for (FileFormat e : FileFormat.values()) {
+			if (e.name().equalsIgnoreCase(type)) {
+				format = e;
+				break;
+			}
+		}
 
-      reader.generateImage(baos, new FileFormatOption(format));
+		reader.generateImage(baos, new FileFormatOption(format));
 
-      if (!hasError(reader.getBlocks())) {
-         return baos.toByteArray();
-      } else {
-         return null;
-      }
-   }
+		if (!hasError(reader.getBlocks())) {
+			return baos.toByteArray();
+		} else {
+			return null;
+		}
+	}
 
-   private boolean hasError(List<BlockUml> blocks) throws IOException {
-      for (BlockUml b : blocks) {
-         if (b.getDiagram() instanceof PSystemError) {
-            return true;
-         }
-      }
+	private boolean hasError(List<BlockUml> blocks) throws IOException {
+		for (BlockUml b : blocks) {
+			if (b.getDiagram() instanceof PSystemError) {
+				return true;
+			}
+		}
 
-      return false;
-   }
+		return false;
+	}
 
-   @Override
-   public void init(ServletConfig config) throws ServletException {
-      try {
-         String result = new String(generateImage("testdot", "atxt"), "utf-8");
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		try {
+			String result = new String(generateImage("testdot", "atxt"),
+					"utf-8");
 
-         System.out.println(result);
+			System.out.println(result);
 
-         if (result != null && result.contains("Error")) {
-            System.err.println("WARNNING: Failed to testdot, the system will be run in downgraded mode, "
-                  + "only sequence diagrams will be generated!\r\n"
-                  + "Please make sure graphviz is installed, and mare sure file /usr/bin/dot exist!");
-         }
-      } catch (IOException e) {
-         // ignore it
-         e.printStackTrace();
-         log("Error when initializing " + getClass().getName() + "!", e);
-      }
-   }
+			if (result != null && result.contains("Error")) {
+				System.err
+						.println("WARNNING: Failed to testdot, the system will be run in downgraded mode, "
+								+ "only sequence diagrams will be generated!\r\n"
+								+ "Please make sure graphviz is installed, and mare sure file /usr/bin/dot exist!");
+			}
+		} catch (IOException e) {
+			// ignore it
+			e.printStackTrace();
+			log("Error when initializing " + getClass().getName() + "!", e);
+		}
+	}
 
-   private boolean isEmpty(String str) {
-      return str == null || str.length() == 0;
-   }
+	private boolean isEmpty(String str) {
+		return str == null || str.length() == 0;
+	}
 
-   private List<File> scanUmlFiles() {
-      final List<File> files = new ArrayList<File>();
+	private List<File> scanUmlFiles() {
+		final List<File> files = new ArrayList<File>();
 
-      FileMatcher matcher = new FileMatcher() {
-         @Override
-         public Direction matches(File base, String path) {
-            if (path.endsWith(".uml")) {
-               files.add(new File(base, path));
-            }
+		FileMatcher matcher = new FileMatcher() {
+			@Override
+			public Direction matches(File base, String path) {
+				if (path.endsWith(".uml")) {
+					files.add(new File(base, path));
+				}
 
-            return Direction.DOWN;
-         }
-      };
+				return Direction.DOWN;
+			}
+		};
 
-      Scanners.forDir().scan(new File("src"), matcher);
-      Scanners.forDir().scan(new File("doc"), matcher);
+		Scanners.forDir().scan(new File("src"), matcher);
+		Scanners.forDir().scan(new File("doc"), matcher);
 
-      return files;
-   }
+		return files;
+	}
 
-   @Override
-   protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-      if (req.getCharacterEncoding() == null) {
-         req.setCharacterEncoding("utf-8");
-      }
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse res)
+			throws ServletException, IOException {
+		if (req.getCharacterEncoding() == null) {
+			req.setCharacterEncoding("utf-8");
+		}
 
-      UmlViewModel model = new UmlViewModel(req);
-      String pathInfo = req.getPathInfo();
-      String type = req.getParameter("type");
-      String update = req.getParameter("update");
+		UmlViewModel model = new UmlViewModel(req);
+		String pathInfo = req.getPathInfo();
+		String type = req.getParameter("type");
+		String update = req.getParameter("update");
+		String saveAs = req.getParameter("saveAs");
 
-      try {
-         if (update != null) {
-            updateUml(req, res, model);
-         }
+		try {
+			if (saveAs != null) {
+				String umlFile = req.getParameter("newfile");
 
-         if (pathInfo != null && pathInfo.endsWith(".uml")) {
-            String path = CodecFunction.urlDecode(pathInfo);
+				model.setUmlFile(umlFile);
+				updateUml(req, res, model);
+			}
 
-            showImage(req, res, model, type, path);
-         } else if (!isEmpty(type)) {
-            showImage(req, res, model, type, null);
-         } else {
-            showPage(req, res, model);
-         }
-      } catch (Exception e) {
-         e.printStackTrace();
+			if (update != null) {
+				String umlFile = req.getParameter("file");
 
-         res.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-      }
-   }
+				model.setUmlFile(umlFile);
+				updateUml(req, res, model);
+			}
 
-   private void showImage(HttpServletRequest req, HttpServletResponse res, UmlViewModel model, String type, String path)
-         throws UnsupportedEncodingException, IOException {
-      String uml = req.getParameter("uml");
+			if (pathInfo != null && pathInfo.endsWith(".uml")) {
+				String path = CodecFunction.urlDecode(pathInfo);
 
-      if (!isEmpty(path)) {
-         InputStream in = req.getSession().getServletContext().getResourceAsStream(path);
+				showImage(req, res, model, type, path);
+			} else if (!isEmpty(type)) {
+				showImage(req, res, model, type, null);
+			} else {
+				showPage(req, res, model);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 
-         if (in == null) {
-            File file = new File(path.substring(1));
+			res.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
+		}
+	}
 
-            if (file.exists()) {
-               in = new FileInputStream(file);
-            }
-         }
+	private void showImage(HttpServletRequest req, HttpServletResponse res,
+			UmlViewModel model, String type, String path)
+			throws UnsupportedEncodingException, IOException {
+		String uml = req.getParameter("uml");
 
-         if (in == null) {
-            res.sendError(404, "File Not Found(" + path + ")!");
-            return;
-         }
+		if (!isEmpty(path)) {
+			InputStream in = req.getSession().getServletContext()
+					.getResourceAsStream(path);
 
-         uml = Files.forIO().readFrom(in, "utf-8");
-      }
+			if (in == null) {
+				File file = new File(path.substring(1));
 
-      if (uml != null) {
-         if (type == null || "png".equals(type)) {
-            type = "png";
+				if (file.exists()) {
+					in = new FileInputStream(file);
+				}
+			}
 
-            res.setContentType("image/png");
-         } else if ("text".equals(type)) {
-            type = "svg";
+			if (in == null) {
+				res.sendError(404, "File Not Found(" + path + ")!");
+				return;
+			}
 
-            res.setContentType("text/plain; charset=utf-8");
-         } else if ("svg".equals(type)) {
-            res.setContentType("image/svg+xml; charset=utf-8");
-         }
+			uml = Files.forIO().readFrom(in, "utf-8");
+		}
 
-         byte[] image = generateImage(uml, type);
+		if (uml != null) {
+			if (type == null || "png".equals(type)) {
+				type = "png";
 
-         if (image != null) {
-            res.setContentLength(image.length);
-            res.getOutputStream().write(image);
-         } else {
-            res.sendError(400, "UML Incompleted!");
-         }
-      } else {
-         res.sendError(400, "Invalid Argument!");
-      }
-   }
+				res.setContentType("image/png");
+			} else if ("text".equals(type)) {
+				type = "svg";
 
-   private void showPage(HttpServletRequest req, HttpServletResponse res, UmlViewModel model) throws ServletException, IOException {
-      String uml = req.getParameter("uml");
-      String umlFile = req.getParameter("file");
-      String editStyle = req.getParameter("es");
+				res.setContentType("text/plain; charset=utf-8");
+			} else if ("svg".equals(type)) {
+				res.setContentType("image/svg+xml; charset=utf-8");
+			}
 
-      model.setUmlFiles(scanUmlFiles());
-      model.setUmlFile(umlFile);
+			byte[] image = generateImage(uml, type);
 
-      if (editStyle == null) {
-         model.setEditStyle("height: 500px; width: 320px");
-      } else {
-         model.setEditStyle(editStyle);
-      }
+			if (image != null) {
+				res.setContentLength(image.length);
+				res.getOutputStream().write(image);
+			} else {
+				res.sendError(400, "UML Incompleted!");
+			}
+		} else {
+			res.sendError(400, "Invalid Argument!");
+		}
+	}
 
-      if (!isEmpty(uml)) {
-         model.setUml(uml);
-      } else if (umlFile != null) {
-         uml = Files.forIO().readFrom(new File(umlFile), "utf-8");
+	private void showPage(HttpServletRequest req, HttpServletResponse res,
+			UmlViewModel model) throws ServletException, IOException {
+		String uml = req.getParameter("uml");
+		String editStyle = req.getParameter("es");
+		String umlFile = req.getParameter("file");
 
-         model.setUml(uml);
-      }
+		if (model.getUmlFile() == null) {
+			model.setUmlFile(umlFile);
+		}
 
-      if (uml != null) {
-         byte[] image = generateImage(uml, "svg");
+		model.setUmlFiles(scanUmlFiles());
 
-         if (image != null) {
-            model.setSvg(new String(image, "utf-8"));
-         }
-      }
+		if (editStyle == null) {
+			model.setEditStyle("height: 500px; width: 320px");
+		} else {
+			model.setEditStyle(editStyle);
+		}
 
-      req.setAttribute("model", model);
-      req.getRequestDispatcher("/jsp/home.jsp").forward(req, res);
-   }
+		if (!isEmpty(uml)) {
+			model.setUml(uml);
+		} else if (umlFile != null && umlFile.length() > 0) {
+			uml = Files.forIO().readFrom(new File(umlFile), "utf-8");
 
-   private void updateUml(HttpServletRequest req, HttpServletResponse res, UmlViewModel model) throws IOException {
-      String uml = req.getParameter("uml");
-      String umlFile = req.getParameter("file");
+			model.setUml(uml);
+		}
 
-      if (!isEmpty(umlFile) && !isEmpty(uml)) {
-         File file = new File(umlFile);
+		if (uml != null) {
+			byte[] image = generateImage(uml, "svg");
 
-         if (file.exists()) {
-            byte[] image = generateImage(uml, null);
+			if (image != null) {
+				model.setSvg(new String(image, "utf-8"));
+			}
+		}
 
-            if (image != null) {
-               Files.forIO().writeTo(file, uml);
+		req.setAttribute("model", model);
+		req.getRequestDispatcher("/jsp/home.jsp").forward(req, res);
+	}
 
-               model.setMessage("Update file(" + umlFile + ") successfully!");
-            } else {
-               model.setError(true);
-               model.setMessage("UML is invalid, can't update file(" + umlFile + ")!");
-            }
-         } else {
-            model.setError(true);
-            model.setMessage("Failed to update file(" + umlFile + ")!");
-         }
-      }
-   }
+	private void updateUml(HttpServletRequest req, HttpServletResponse res,
+			UmlViewModel model) throws IOException {
+		String uml = req.getParameter("uml");
+		String umlFile = model.getUmlFile();
+
+		if (!isEmpty(umlFile) && !isEmpty(uml)) {
+			File file = new File(umlFile);
+			byte[] image = generateImage(uml, null);
+
+			try {
+				file.getParentFile().mkdirs();
+
+				if (image != null) {
+					Files.forIO().writeTo(file, uml);
+
+					model.setMessage("Update file(" + umlFile
+							+ ") successfully!");
+				} else {
+					model.setError(true);
+					model.setMessage("UML is invalid, can't update file("
+							+ umlFile + ")!");
+				}
+			} catch (IOException e) {
+				model.setError(true);
+				model.setMessage("Failed to update file(" + umlFile + ")!");
+			}
+		}
+	}
 }

@@ -13,6 +13,7 @@
       <module>codegen-maven-plugin</module>
       <module>misc-maven-plugin</module>
       <module>flex-maven-plugin</module>
+      <module>plexus-maven-plugin</module>
       <module>project-maven-plugin</module>
       <module>uml-maven-plugin</module>
       <module>webres-maven-plugin</module>
@@ -187,12 +188,12 @@ org.eclipse.jdt.core.compiler.compliance=1.6
    </reporting>
    <distributionManagement>
       <repository>
-         <id>dianping.repo</id>
-         <url>http://mvn.dianpingoa.com/dianping-releases</url>
+         <id>releases</id>
+         <url>http://maven.dev.sh.ctripcorp.com:8081/nexus/content/repositories/fxrelease</url>
       </repository>
      <snapshotRepository>
-         <id>dianping.repo.snapshots</id>
-         <url>http://mvn.dianpingoa.com/dianping-snapshots</url>
+         <id>snapshots</id>
+         <url>http://maven.dev.sh.ctripcorp.com:8081/nexus/content/repositories/fxsnapshot</url>
       </snapshotRepository>
    </distributionManagement>
    <properties>

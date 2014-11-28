@@ -33,7 +33,16 @@
 			<tr valign="top">
 				<td valign="top">
 					<textarea id="uml" name="uml" style="${model.editStyle}">${w:htmlEncode(model.uml)}</textarea>
-					<br><button type="submit" name="update" value="1" class="btn btn-medium btn-primary">Update</button>
+					<br>
+					<c:choose>
+						<c:when test="${not empty model.umlFile}">
+							<button type="submit" name="update" value="1" class="btn btn-medium btn-primary">Update</button>
+						</c:when>
+						<c:otherwise>
+							<input id="newfile" type="hidden" name="newfile">
+							<button id="saveAs" type="submit" name="saveAs" value="1" class="btn btn-medium btn-primary">Save As ...</button>
+						</c:otherwise>
+					</c:choose>
 				</td>
 				<td width="10"></td>
 				<td valign="top"><span id="svg">${model.svg}</span></td>
@@ -84,6 +93,15 @@
 			var file = $(this).children('option:selected').val();
 			
 			window.location.href="?file=" + encodeURIComponent(file);
+		});
+		
+		$('#saveAs').bind('click', function() {
+			var path = window.prompt("Please enter new uml file name. i.e. 'src/main/doc/case1.uml'","src/main/doc/case1.uml");
+			
+			if (path) {
+				$('#newfile').val(path);
+				$('#newfile').form.submit();
+			}
 		});
 		
 	    $(function(){setTimeout(refresh, interval);});
