@@ -1,6 +1,5 @@
 package org.unidal.maven.plugin.uml;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,12 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.plantuml.BlockUml;
-import net.sourceforge.plantuml.FileFormat;
-import net.sourceforge.plantuml.FileFormatOption;
-import net.sourceforge.plantuml.PSystemError;
-import net.sourceforge.plantuml.SourceStringReader;
-
 import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
@@ -29,50 +22,13 @@ import org.unidal.web.jsp.function.CodecFunction;
 public class UmlServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private byte[] generateImage(String uml, String type) throws IOException {
-		if (!uml.trim().startsWith("@startuml")) {
-			uml = "@startuml\n" + uml;
-		}
-
-		if (!uml.trim().endsWith("@enduml")) {
-			uml = uml + "\n@enduml";
-		}
-
-		SourceStringReader reader = new SourceStringReader(uml);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(8192);
-		FileFormat format = FileFormat.PNG;
-
-		for (FileFormat e : FileFormat.values()) {
-			if (e.name().equalsIgnoreCase(type)) {
-				format = e;
-				break;
-			}
-		}
-
-		reader.generateImage(baos, new FileFormatOption(format));
-
-		if (!hasError(reader.getBlocks())) {
-			return baos.toByteArray();
-		} else {
-			return null;
-		}
-	}
-
-	private boolean hasError(List<BlockUml> blocks) throws IOException {
-		for (BlockUml b : blocks) {
-			if (b.getDiagram() instanceof PSystemError) {
-				return true;
-			}
-		}
-
-		return false;
-	}
+	private UmlManager m_manager = new UmlManager();
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		try {
-			String result = new String(generateImage("testdot", "atxt"),
-					"utf-8");
+			String result = new String(m_manager.generateImage("testdot",
+					"atxt"), "utf-8");
 
 			System.out.println(result);
 
@@ -183,19 +139,10 @@ public class UmlServlet extends HttpServlet {
 		}
 
 		if (uml != null) {
-			if (type == null || "png".equals(type)) {
-				type = "png";
+			res.setContentType(m_manager.getContextType(type));
+			type = m_manager.getImageType(type);
 
-				res.setContentType("image/png");
-			} else if ("text".equals(type)) {
-				type = "svg";
-
-				res.setContentType("text/plain; charset=utf-8");
-			} else if ("svg".equals(type)) {
-				res.setContentType("image/svg+xml; charset=utf-8");
-			}
-
-			byte[] image = generateImage(uml, type);
+			byte[] image = m_manager.generateImage(uml, type);
 
 			if (image != null) {
 				res.setContentLength(image.length);
@@ -235,7 +182,7 @@ public class UmlServlet extends HttpServlet {
 		}
 
 		if (uml != null) {
-			byte[] image = generateImage(uml, "svg");
+			byte[] image = m_manager.generateImage(uml, "svg");
 
 			if (image != null) {
 				model.setSvg(new String(image, "utf-8"));
@@ -250,28 +197,10 @@ public class UmlServlet extends HttpServlet {
 			UmlViewModel model) throws IOException {
 		String uml = req.getParameter("uml");
 		String umlFile = model.getUmlFile();
+		StringBuilder message = new StringBuilder();
+		boolean success = m_manager.updateUml(umlFile, uml, message);
 
-		if (!isEmpty(umlFile) && !isEmpty(uml)) {
-			File file = new File(umlFile);
-			byte[] image = generateImage(uml, null);
-
-			try {
-				file.getParentFile().mkdirs();
-
-				if (image != null) {
-					Files.forIO().writeTo(file, uml);
-
-					model.setMessage("Update file(" + umlFile
-							+ ") successfully!");
-				} else {
-					model.setError(true);
-					model.setMessage("UML is invalid, can't update file("
-							+ umlFile + ")!");
-				}
-			} catch (IOException e) {
-				model.setError(true);
-				model.setMessage("Failed to update file(" + umlFile + ")!");
-			}
-		}
+		model.setError(!success);
+		model.setMessage(message.toString());
 	}
 }
