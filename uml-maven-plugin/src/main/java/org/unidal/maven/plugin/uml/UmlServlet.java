@@ -24,19 +24,38 @@ public class UmlServlet extends HttpServlet {
 
 	private UmlManager m_manager = new UmlManager();
 
+	private void createUml(HttpServletRequest req, UmlViewModel model) throws IOException {
+		String uml = req.getParameter("uml");
+		String umlFile = req.getParameter("newfile");
+
+		if (!umlFile.endsWith(".uml")) {
+			model.setError(true);
+			model.setMessage(String.format("Target UML file(%s) must be ending with '.uml'!", umlFile));
+		} else if (m_manager.tryCreateFile(umlFile)) {
+			StringBuilder message = new StringBuilder();
+			boolean success = m_manager.updateUml(umlFile, uml, message);
+
+			model.setError(!success);
+			model.setUmlFile(umlFile);
+			model.setMessage(message.toString());
+		} else {
+			model.setError(true);
+			model.setMessage(String.format("UML File(%s) is already existed! Please use another one.", umlFile));
+		}
+	}
+
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		try {
-			String result = new String(m_manager.generateImage("testdot",
-					"atxt"), "utf-8");
+			byte[] content = m_manager.generateImage("testdot", "atxt");
+			String result = new String(content, "utf-8");
 
 			System.out.println(result);
 
 			if (result != null && result.contains("Error")) {
-				System.err
-						.println("WARNNING: Failed to testdot, the system will be run in downgraded mode, "
-								+ "only sequence diagrams will be generated!\r\n"
-								+ "Please make sure graphviz is installed, and mare sure file /usr/bin/dot exist!");
+				System.err.println("WARNNING: Failed to testdot, the system will be run in downgraded mode, "
+				      + "only sequence diagrams will be generated!\r\n"
+				      + "Please make sure graphviz is installed, and mare sure file /usr/bin/dot exist!");
 			}
 		} catch (IOException e) {
 			// ignore it
@@ -70,32 +89,26 @@ public class UmlServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse res)
-			throws ServletException, IOException {
+	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		if (req.getCharacterEncoding() == null) {
 			req.setCharacterEncoding("utf-8");
 		}
 
-		UmlViewModel model = new UmlViewModel(req);
-		String pathInfo = req.getPathInfo();
-		String type = req.getParameter("type");
 		String update = req.getParameter("update");
 		String saveAs = req.getParameter("saveAs");
+		UmlViewModel model = new UmlViewModel(req);
 
 		try {
 			if (saveAs != null) {
-				String umlFile = req.getParameter("newfile");
-
-				model.setUmlFile(umlFile);
-				updateUml(req, res, model);
+				createUml(req, model);
 			}
 
 			if (update != null) {
-				String umlFile = req.getParameter("file");
-
-				model.setUmlFile(umlFile);
-				updateUml(req, res, model);
+				updateUml(req, model);
 			}
+
+			String pathInfo = req.getPathInfo();
+			String type = req.getParameter("type");
 
 			if (pathInfo != null && pathInfo.endsWith(".uml")) {
 				String path = CodecFunction.urlDecode(pathInfo);
@@ -113,14 +126,12 @@ public class UmlServlet extends HttpServlet {
 		}
 	}
 
-	private void showImage(HttpServletRequest req, HttpServletResponse res,
-			UmlViewModel model, String type, String path)
-			throws UnsupportedEncodingException, IOException {
+	private void showImage(HttpServletRequest req, HttpServletResponse res, UmlViewModel model, String type, String path)
+	      throws UnsupportedEncodingException, IOException {
 		String uml = req.getParameter("uml");
 
 		if (!isEmpty(path)) {
-			InputStream in = req.getSession().getServletContext()
-					.getResourceAsStream(path);
+			InputStream in = req.getSession().getServletContext().getResourceAsStream(path);
 
 			if (in == null) {
 				File file = new File(path.substring(1));
@@ -155,8 +166,8 @@ public class UmlServlet extends HttpServlet {
 		}
 	}
 
-	private void showPage(HttpServletRequest req, HttpServletResponse res,
-			UmlViewModel model) throws ServletException, IOException {
+	private void showPage(HttpServletRequest req, HttpServletResponse res, UmlViewModel model) throws ServletException,
+	      IOException {
 		String uml = req.getParameter("uml");
 		String editStyle = req.getParameter("es");
 		String umlFile = req.getParameter("file");
@@ -193,10 +204,9 @@ public class UmlServlet extends HttpServlet {
 		req.getRequestDispatcher("/jsp/home.jsp").forward(req, res);
 	}
 
-	private void updateUml(HttpServletRequest req, HttpServletResponse res,
-			UmlViewModel model) throws IOException {
+	private void updateUml(HttpServletRequest req, UmlViewModel model) throws IOException {
 		String uml = req.getParameter("uml");
-		String umlFile = model.getUmlFile();
+		String umlFile = req.getParameter("file");
 		StringBuilder message = new StringBuilder();
 		boolean success = m_manager.updateUml(umlFile, uml, message);
 

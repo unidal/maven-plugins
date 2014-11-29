@@ -96,7 +96,7 @@
 		});
 		
 		$('#saveAs').bind('click', function() {
-			var path = window.prompt("Please enter new uml file name. i.e. 'src/main/doc/case1.uml'","src/main/doc/case1.uml");
+			var path = window.prompt("Please enter new uml file name. i.e. 'src/main/doc/case101.uml'","src/main/doc/");
 			
 			if (path) {
 				$('#newfile').val(path);

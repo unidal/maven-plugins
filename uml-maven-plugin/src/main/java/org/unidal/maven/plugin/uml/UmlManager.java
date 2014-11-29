@@ -2,6 +2,7 @@ package org.unidal.maven.plugin.uml;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +103,25 @@ public class UmlManager {
 		return files;
 	}
 
+	public boolean tryCreateFile(String umlFile) {
+		File file = new File(umlFile);
+
+		if (file.exists()) {
+			return false;
+		} else {
+			file.getParentFile().mkdirs();
+
+			try {
+				FileOutputStream fos = new FileOutputStream(file);
+
+				fos.close();
+				return true;
+			} catch (IOException e) {
+				return false;
+			}
+		}
+	}
+
 	public boolean updateUml(String umlFile, String uml, StringBuilder message)
 			throws IOException {
 		if (!isEmpty(umlFile) && !isEmpty(uml)) {
@@ -109,8 +129,6 @@ public class UmlManager {
 			byte[] image = generateImage(uml, null);
 
 			try {
-				file.getParentFile().mkdirs();
-
 				if (image != null) {
 					Files.forIO().writeTo(file, uml);
 
