@@ -1,8 +1,0 @@
-@startuml
-'Default is skinparam activityShape roundBox
-skinparam activityShape octagon
-
-(*) --> "First Activity"
-"First Activity" --> (*)
-
-@enduml

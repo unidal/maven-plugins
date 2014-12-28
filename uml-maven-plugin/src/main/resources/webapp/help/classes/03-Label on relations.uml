@@ -1,9 +1,0 @@
-@startuml
-
-Class01 "1" *-- "many" Class02 : contains
-
-Class03 o-- Class04 : agregation
-
-Class05 --> "1" Class06
-
-@enduml

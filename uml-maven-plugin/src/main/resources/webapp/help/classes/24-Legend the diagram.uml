@@ -1,6 +1,0 @@
-@startuml
-
-title Simple <b>example</b>\nof title 
-Object <|-- ArrayList
-
-@enduml
