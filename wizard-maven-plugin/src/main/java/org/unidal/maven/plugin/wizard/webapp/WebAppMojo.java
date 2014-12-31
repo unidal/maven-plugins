@@ -353,7 +353,7 @@ public class WebAppMojo extends AbstractMojo {
 
       // plugins
       Element plugins = b.findOrCreateChild(build, "plugins");
-      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.1.0");
+      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.1.1");
       Element codegenPlexus = b.checkPluginExecution(codegenPlugin, "plexus", "process-classes",
             "generate plexus component descriptor");
       Element codegenPlexusConfiguration = b.findOrCreateChild(codegenPlexus, "configuration");

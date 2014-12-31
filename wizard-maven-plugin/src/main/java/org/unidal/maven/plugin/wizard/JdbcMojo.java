@@ -322,13 +322,14 @@ public class JdbcMojo extends AbstractMojo {
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
       if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "2.1.1", null)) {
+         b.checkDependency(dependencies, "com.dianping.cat", "cat-client", "1.1.5", null);
          b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.20", "runtime");
       }
 
       if (jdbc != null) {
          Element build = b.findOrCreateChild(root, "build", null, "dependencies");
          Element plugins = b.findOrCreateChild(build, "plugins");
-         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.1.0");
+         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.1.1");
          Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc model");
          Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
          Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");
