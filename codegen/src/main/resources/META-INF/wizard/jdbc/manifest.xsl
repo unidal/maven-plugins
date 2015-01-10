@@ -3,6 +3,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 <xsl:output method="xml" indent="yes" media-type="text/xml" encoding="utf-8"/>
 
+<xsl:param name="base-dir"/>
 <xsl:param name="src-main-java"/>
 <xsl:param name="src-main-resources"/>
 <xsl:param name="src-test-java"/>
@@ -19,6 +20,22 @@
 <xsl:template name="manifest">
    <xsl:element name="manifest">
       <xsl:apply-templates select="/wizard/jdbc" />
+	  
+	  <xsl:variable name="file">
+		  <xsl:choose>
+		  	 <xsl:when test="/wizard/jdbc/@file=''"><xsl:value-of select="/wizard/jdbc/@file"/></xsl:when>
+		  	 <xsl:when test="/wizard/jdbc/@file!=''"><xsl:value-of select="/wizard/jdbc/@file"/></xsl:when>
+		  	 <xsl:otherwise>datasources.xml</xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
+	  <xsl:if test="$file">
+		  <!-- datasources.xml -->
+		  <xsl:call-template name="generate-resource">
+		     <xsl:with-param name="src-dir" select="$base-dir" />
+		     <xsl:with-param name="file" select="$file"/>
+		     <xsl:with-param name="template" select="'xml/datasources.xsl'"/>
+		  </xsl:call-template>
+	  </xsl:if> 
    </xsl:element>
 </xsl:template>
 
@@ -93,7 +110,6 @@
    <xsl:param name="template"/>
    <xsl:param name="file" select="''" />
    <xsl:param name="mode" select="'create_if_not_exists'"/>
-
 
    <xsl:call-template name="generate-code">
       <xsl:with-param name="path">

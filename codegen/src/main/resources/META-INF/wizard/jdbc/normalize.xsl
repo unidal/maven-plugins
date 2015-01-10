@@ -39,6 +39,11 @@
          </xsl:call-template>
       </xsl:variable>
 
+      <xsl:attribute name="upper-name">
+         <xsl:call-template name="upper-name">
+            <xsl:with-param name="name" select="$normalized-name"/>
+         </xsl:call-template>
+      </xsl:attribute>
       <xsl:attribute name="do-package">
          <xsl:choose>
             <xsl:when test="@do-package"><xsl:value-of select="@do-package"/></xsl:when>

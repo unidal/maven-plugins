@@ -56,6 +56,7 @@ public class JobInstaller {
 			}
 		}
 
+		zip.close();
 		return count;
 	}
 
