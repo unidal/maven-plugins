@@ -348,10 +348,11 @@ public class JdbcMojo extends AbstractMojo {
             sb.append(indent.substring(3)).append(",");
             manifestElement.addContent(new CDATA(sb.toString()));
          }
-
-         Element codegenPlexus = b.checkPluginExecution(codegenPlugin, "plexus", "process-classes",
+         
+         Element plexusPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "2.1.1");
+         Element plexus = b.checkPluginExecution(plexusPlugin, "plexus", "process-classes",
                "generate plexus component descriptor");
-         Element codegenPlexusConfiguration = b.findOrCreateChild(codegenPlexus, "configuration");
+         Element codegenPlexusConfiguration = b.findOrCreateChild(plexus, "configuration");
 
          b.findOrCreateChild(codegenPlexusConfiguration, "className")
                .setText(wizard.getPackage() + ".build.ComponentsConfigurator");
