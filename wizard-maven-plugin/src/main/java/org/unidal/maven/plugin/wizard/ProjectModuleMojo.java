@@ -20,6 +20,7 @@ import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
  * Create an empty module project POM.
  * 
  * @goal project-module
+ * @aggregator
  */
 public class ProjectModuleMojo extends AbstractMojo {
    /**

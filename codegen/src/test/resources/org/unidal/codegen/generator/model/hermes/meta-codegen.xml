@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="meta" root="true">
+    <attribute name="dev-mode" value-type="boolean" />
+    <entity-ref name="connector" type="list" names="connectors" />
+  </entity>
+  <entity name="connector">
+    <attribute name="type" value-type="String" />
+    <entity-ref name="storage" type="list" names="storages" />
+    <entity-ref name="property" type="list" names="properties" />
+  </entity>
+  <entity name="storage">
+    <attribute name="type" value-type="String" />
+    <attribute name="default" value-type="boolean" />
+    <entity-ref name="property" type="list" names="properties" />
+    <entity-ref name="topic" type="list" names="topics" />
+  </entity>
+  <entity name="property">
+    <attribute name="name" value-type="String" />
+    <attribute name="value" value-type="String" />
+  </entity>
+  <entity name="topic">
+    <attribute name="name" value-type="String" />
+    <entity-ref name="property" type="list" names="properties" />
+  </entity>
+</model>
+

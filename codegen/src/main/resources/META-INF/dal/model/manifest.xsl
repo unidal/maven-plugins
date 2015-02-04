@@ -234,7 +234,7 @@
         <xsl:with-param name="template" select="'transform/default-merger.xsl'"/>
       </xsl:call-template>
    </xsl:if>
-   
+
    <xsl:variable name="policy-base-visitor">
       <xsl:call-template name="model-policy">
          <xsl:with-param name="name" select="'base-visitor'"/>
@@ -247,6 +247,21 @@
         <xsl:with-param name="class" select="'BaseVisitor'"/>
         <xsl:with-param name="package" select="$transform-package"/>
         <xsl:with-param name="template" select="'transform/base-visitor.xsl'"/>
+      </xsl:call-template>
+   </xsl:if>
+
+   <xsl:variable name="policy-base-visitor2">
+      <xsl:call-template name="model-policy">
+         <xsl:with-param name="name" select="'base-visitor2'"/>
+      </xsl:call-template>
+   </xsl:variable>
+
+   <xsl:if test="$policy-base-visitor2='true'">
+      <!-- BaseVisitor2 class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'BaseVisitor2'"/>
+        <xsl:with-param name="package" select="$transform-package"/>
+        <xsl:with-param name="template" select="'transform/base-visitor2.xsl'"/>
       </xsl:call-template>
    </xsl:if>
    
