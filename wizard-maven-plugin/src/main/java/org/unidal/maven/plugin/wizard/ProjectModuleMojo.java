@@ -79,11 +79,22 @@ public class ProjectModuleMojo extends AbstractMojo {
       b.createChild(parent, "relativePath", "../pom.xml");
 
       b.createChild(project, "modelVersion", "4.0.0");
-      b.createChild(project, "groupId", groupId);
+
+      if (!groupId.equals(m_project.getGroupId())) {
+         b.createChild(project, "groupId", groupId);
+      }
+
       b.createChild(project, "artifactId", artifactId);
-      b.createChild(project, "version", version);
+
+      if (!version.equals(m_project.getVersion())) {
+         b.createChild(project, "version", version);
+      }
+
       b.createChild(project, "name", name);
-      b.createChild(project, "packaging", packaging);
+
+      if (!packaging.equals("jar")) {
+         b.createChild(project, "packaging", packaging);
+      }
 
       return doc;
    }
@@ -144,7 +155,8 @@ public class ProjectModuleMojo extends AbstractMojo {
 
    protected void prepare() {
       if (groupId == null) {
-         groupId = PropertyProviders.fromConsole().forString("groupId", "Project group id:", m_project.getGroupId(), null);
+         groupId = PropertyProviders.fromConsole().forString("groupId", "Project group id:", m_project.getGroupId(),
+               null);
       }
 
       if (artifactId == null) {
@@ -159,6 +171,7 @@ public class ProjectModuleMojo extends AbstractMojo {
          name = PropertyProviders.fromConsole().forString("groupId", "Project name:", getProjectName(artifactId), null);
       }
    }
+
    protected void saveXml(Document doc, File file) throws IOException {
       File parent = file.getCanonicalFile().getParentFile();
 

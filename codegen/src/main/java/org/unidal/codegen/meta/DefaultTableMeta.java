@@ -105,9 +105,19 @@ public class DefaultTableMeta implements TableMeta {
       if (autoIncrement) {
          member.setAttribute("auto-increment", "true");
       }
+
+      if (name.equals("creation-date") && nullable == 0 && valueType.equals("Date")) {
+         member.setAttribute("insert-expr", "NOW()");
+      }
+
+      if (name.equals("last-modified-date") && nullable == 0 && valueType.equals("Date")) {
+         member.setAttribute("insert-expr", "NOW()");
+         member.setAttribute("update-expr", "NOW()");
+      }
    }
 
-   private void addMembers(Element entity, DatabaseMetaData meta, String table, List<String> keyMembers) throws SQLException {
+   private void addMembers(Element entity, DatabaseMetaData meta, String table, List<String> keyMembers)
+         throws SQLException {
       ResultSet rs = meta.getColumns(null, null, table, null);
 
       while (rs.next()) {
