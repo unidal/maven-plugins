@@ -186,6 +186,36 @@ org.eclipse.jdt.core.compiler.compliance=1.6
          </plugin>
       </plugins>
    </reporting>
+   <repositories>
+      <repository>
+           <id>central</id>
+           <name>Maven2 Central Repository</name>
+           <layout>default</layout>
+           <url>http://repo1.maven.org/maven2</url>
+      </repository>
+      <repository>
+         <id>frameworks</id>
+         <name>Unidal Frameworks Repository</name>
+         <url>https://raw.githubusercontent.com/unidal/frameworks/mvn-repo</url>
+         <releases>
+         	<checksumPolicy>ignore</checksumPolicy>
+         </releases>
+      </repository>
+   </repositories>
+   <pluginRepositories>
+      <pluginRepository>
+         <id>central</id>
+         <url>http://repo1.maven.org/maven2</url>
+      </pluginRepository>
+      <pluginRepository>
+         <id>maven-plugins</id>
+         <name>Unidal Maven Plugins Repository</name>
+         <url>https://raw.githubusercontent.com/unidal/maven-plugins/mvn-repo</url>
+         <releases>
+         	<checksumPolicy>ignore</checksumPolicy>
+         </releases>
+      </pluginRepository>
+   </pluginRepositories>
    <distributionManagement>
       <repository>
          <id>releases</id>
