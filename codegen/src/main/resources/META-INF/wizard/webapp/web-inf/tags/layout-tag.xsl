@@ -71,7 +71,7 @@
 	
 		<br />
 		<div class="container">
-			<footer><center>&copy;2013 Dianping ]]></xsl:text>
+			<footer><center>&copy;2015 ]]></xsl:text>
 <xsl:value-of select="/wizard/webapp/@capital-name"/>
 <xsl:text disable-output-escaping="yes"><![CDATA[ Team</center></footer>
 		</div>

@@ -31,7 +31,7 @@ public class <xsl:value-of select="$class"/> extends AbstractResourceConfigurato
       // move following line to top-level project if necessary
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 				.config(E("datasourceFile").value("datasources.xml"), //
-						E("baseDirRef").value(<xsl:value-of select="jdbc/@upper-name"/>"_HOME")));
+						E("baseDirRef").value("<xsl:value-of select="jdbc/@upper-name"/>_HOME")));
 <xsl:for-each select="jdbc">
       all.addAll(new <xsl:value-of select="@configurator-class"/>().defineComponents());
 </xsl:for-each>
