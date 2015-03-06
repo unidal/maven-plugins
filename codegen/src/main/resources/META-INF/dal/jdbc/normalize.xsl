@@ -81,7 +81,7 @@
       <xsl:attribute name="do-class">
          <xsl:choose>
             <xsl:when test="@do-class"><xsl:value-of select="@do-class"/></xsl:when>
-            <xsl:otherwise><xsl:value-of select="$class-name"/></xsl:otherwise>
+            <xsl:otherwise><xsl:value-of select="$class-name"/><xsl:value-of select="../@do-class-suffix"/></xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
       <xsl:attribute name="dao-class">
