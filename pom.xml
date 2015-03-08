@@ -11,13 +11,15 @@
       <module>codegen</module>
       <module>common</module>
       <module>codegen-maven-plugin</module>
-      <module>misc-maven-plugin</module>
-      <module>flex-maven-plugin</module>
       <module>plexus-maven-plugin</module>
       <module>project-maven-plugin</module>
+      <module>wizard-maven-plugin</module>
+      <!-- Deprecated 
+      <module>misc-maven-plugin</module>
+      <module>flex-maven-plugin</module>
       <module>uml-maven-plugin</module>
       <module>webres-maven-plugin</module>
-      <module>wizard-maven-plugin</module>
+       -->
    </modules>
    <dependencyManagement>
       <dependencies>
