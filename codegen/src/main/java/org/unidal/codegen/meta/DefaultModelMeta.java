@@ -441,8 +441,8 @@ public class DefaultModelMeta implements ModelMeta {
 
    static final class Utils {
       private static SimpleDateFormat[] s_dateFormats = new SimpleDateFormat[] {
-            new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH),
             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
+            new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH),
             new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH),
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH), };
 

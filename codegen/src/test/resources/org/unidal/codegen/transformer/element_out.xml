@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <root do-package="org.unidal.app.game.xml">
 	<element name="game" root="true" root-name="game" do-package="org.unidal.app.game.xml" do-class="Game">
 		<element name="id" value-type="int" value-type-key="" value-type-element="Integer" value-type-generic="" param-name-element="id" param-name="id" field-name="m_id" add-method="addId" get-method="getId" set-method="setId"/>

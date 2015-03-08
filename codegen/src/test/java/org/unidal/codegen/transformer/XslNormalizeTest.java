@@ -18,6 +18,8 @@ public class XslNormalizeTest extends ComponentTestCase {
 		String e = expected.replace("\r", "");
 		String a = actual.replace("\r", "");
 
+      a = a.substring("<?xml version=\"1.0\" encoding=\"utf-8\"?>".length());
+
 		Assert.assertEquals(message, e, a);
 	}
 

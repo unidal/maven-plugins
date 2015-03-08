@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <entities do-package="">
 	<entity name="user" table="user" alias="u" class-name="User" do-package="" entity-class="UserEntity" do-class="User" dao-class="UserDao" param-name="user" variable-name="m_user" get-method="getUser" set-method="setUser">
 		<member name="user-id" field="user_id" value-type="int" length="11" nullable="false" key="true" field-name="m_userId" param-name="userId" upper-name="USER_ID" get-method="getUserId" set-method="setUserId" all="true"/>

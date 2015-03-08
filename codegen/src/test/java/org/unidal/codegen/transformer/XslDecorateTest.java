@@ -18,6 +18,8 @@ public class XslDecorateTest extends ComponentTestCase {
 		String e = expected.replace("\r\n", "\n");
 		String a = actual.replace("\r\n", "\n");
 
+		a = a.substring("<?xml version=\"1.0\" encoding=\"utf-8\"?>".length());
+		
 		Assert.assertEquals(message, e, a);
 	}
 
