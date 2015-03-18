@@ -120,8 +120,8 @@
    <xsl:value-of select="$empty"/>   protected void <xsl:value-of select="@visit-children-method"/>(<xsl:value-of select="@entity-class"/> to, <xsl:value-of select="@entity-class"/> from) {<xsl:value-of select="$empty-line"/>
    <xsl:variable name="current" select="."/>
 
-   <xsl:if test="entity-ref[not(@render='false')]">
-      <xsl:for-each select="entity-ref[not(@render='false')]">
+   <xsl:if test="entity-ref">
+      <xsl:for-each select="entity-ref">
          <xsl:variable name="name" select="@name"/>
          <xsl:variable name="entity" select="//entity[@name=$name]"/>
          <xsl:choose>
@@ -180,7 +180,7 @@
    <xsl:param name="current" select="."/>
 
    <xsl:variable name="name" select="@name"/>
-   <xsl:for-each select="//entity[entity-ref[@name=$name and not(@render='false')]]">
+   <xsl:for-each select="//entity[entity-ref[@name=$name]]">
       <xsl:variable name="entity" select="."/>
       <xsl:variable name="variable">
          <xsl:choose>
@@ -196,7 +196,7 @@
       <xsl:if test="position()=1"><xsl:value-of select="'      '"/></xsl:if>
       <xsl:value-of select="$empty"/>if (parent instanceof <xsl:value-of select="@entity-class"/>) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$variable"/> = (<xsl:value-of select="@entity-class"/>) parent;<xsl:value-of select="$empty-line"/>
-      <xsl:variable name="many" select="count(entity-ref[@name=$name and not(@render='false')])!=1"></xsl:variable>
+      <xsl:variable name="many" select="count(entity-ref[@name=$name])!=1"></xsl:variable>
       <xsl:if test="$many">
          <xsl:value-of select="$empty"/>         String tag = m_tags.peek();<xsl:value-of select="$empty-line"/>
       </xsl:if>
@@ -207,7 +207,7 @@
          </xsl:choose>
       </xsl:variable>
       <xsl:value-of select="$empty-line"/>
-      <xsl:for-each select="entity-ref[@name=$name and not(@render='false')]">
+      <xsl:for-each select="entity-ref[@name=$name]">
          <xsl:if test="$many">
             <xsl:if test="position()=1"><xsl:value-of select="'         '"/></xsl:if>
             <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>

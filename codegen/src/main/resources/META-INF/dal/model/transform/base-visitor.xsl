@@ -55,8 +55,8 @@
             <xsl:value-of select="$empty"/>         child.accept(this);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
          </xsl:when>
-         <xsl:when test="entity-ref[not(@render='false')]">
-            <xsl:for-each select="entity-ref[not(@render='false')]">
+         <xsl:when test="entity-ref">
+            <xsl:for-each select="entity-ref">
                <xsl:variable name="name" select="@name"/>
                <xsl:variable name="current" select="//entity[@name=$name]"/>
                <xsl:choose>
