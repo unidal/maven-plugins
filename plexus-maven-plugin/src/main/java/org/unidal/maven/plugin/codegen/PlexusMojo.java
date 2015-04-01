@@ -29,8 +29,7 @@ import org.unidal.maven.plugins.plexus.profile.entity.Property;
 import org.unidal.maven.plugins.plexus.profile.transform.DefaultDomParser;
 
 /**
- * Code generator for Plexus dependency injection
- * descriptor(/META_INF/plexus/components.xml).
+ * Generates file(/META_INF/plexus/components.xml) for Plexus component lookup.
  * 
  * @goal plexus
  * @phase process-classes

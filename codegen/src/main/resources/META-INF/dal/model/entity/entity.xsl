@@ -68,6 +68,9 @@
       <xsl:if test="element[@list='true'] or entity-ref[@list='true'] or any">
          <xsl:value-of select="$empty"/>import java.util.ArrayList;<xsl:value-of select="$empty-line"/>
       </xsl:if>
+      <xsl:if test="entity-ref[(@set='true' or @list='true') and @thread-safe='true']">
+         <xsl:value-of select="$empty"/>import java.util.Collections;<xsl:value-of select="$empty-line"/>
+      </xsl:if>
       <xsl:if test="entity-ref[@map='true' and not(@thread-safe='true')] or @dynamic-attributes='true'">
          <xsl:value-of select="$empty"/>import java.util.LinkedHashMap;<xsl:value-of select="$empty-line"/>
       </xsl:if>
@@ -106,8 +109,14 @@
          <xsl:when test="@map='true'">
             <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new LinkedHashMap<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>();<xsl:value-of select="$empty-line"/>
          </xsl:when>
+         <xsl:when test="@set='true' and @thread-safe='true'">
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = Collections.synchronizedSet(new LinkedHashSet<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>());<xsl:value-of select="$empty-line"/>
+         </xsl:when>
          <xsl:when test="@set='true'">
             <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new LinkedHashSet<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>();<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:when test="@list='true' and @thread-safe='true'">
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = Collections.synchronizedList(new ArrayList<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>());<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@list='true'">
             <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new ArrayList<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>();<xsl:value-of select="$empty-line"/>
