@@ -10,7 +10,9 @@ import java.util.List;
 import org.jdom.CDATA;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.unidal.lookup.annotation.Named;
 
+@Named(type = TableMeta.class)
 public class DefaultTableMeta implements TableMeta {
    private static final String KEY_PREFIX = "key-";
 

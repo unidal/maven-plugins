@@ -6,25 +6,17 @@ import java.util.List;
 import org.unidal.codegen.aggregator.DefaultXmlAggregator;
 import org.unidal.codegen.aggregator.XmlAggregator;
 import org.unidal.codegen.code.DefaultObfuscater;
-import org.unidal.codegen.code.Obfuscater;
 import org.unidal.codegen.generator.Generator;
 import org.unidal.codegen.generator.XslGenerator;
 import org.unidal.codegen.manifest.DefaultManifestCreator;
 import org.unidal.codegen.manifest.DefaultManifestParser;
-import org.unidal.codegen.manifest.ManifestCreator;
 import org.unidal.codegen.manifest.ManifestParser;
 import org.unidal.codegen.meta.DefaultModelMeta;
 import org.unidal.codegen.meta.DefaultTableMeta;
 import org.unidal.codegen.meta.DefaultWizardMeta;
 import org.unidal.codegen.meta.DefaultXmlMeta;
 import org.unidal.codegen.meta.DefaultXmlMetaHelper;
-import org.unidal.codegen.meta.ModelMeta;
-import org.unidal.codegen.meta.TableMeta;
-import org.unidal.codegen.meta.WizardMeta;
-import org.unidal.codegen.meta.XmlMeta;
-import org.unidal.codegen.meta.XmlMetaHelper;
 import org.unidal.codegen.template.DefaultXslTemplateManager;
-import org.unidal.codegen.template.XslTemplateManager;
 import org.unidal.codegen.transformer.DefaultXslTransformer;
 import org.unidal.codegen.transformer.XslTransformer;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
@@ -35,21 +27,18 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
    public List<Component> defineComponents() {
       List<Component> all = new ArrayList<Component>();
 
-      all.add(C(Obfuscater.class, DefaultObfuscater.class));
+      all.add(A(DefaultObfuscater.class));
+      all.add(A(DefaultTableMeta.class));
+      all.add(A(DefaultXmlMeta.class));
+      all.add(A(DefaultModelMeta.class));
+      all.add(A(DefaultWizardMeta.class));
+      all.add(A(DefaultXmlMetaHelper.class));
+      all.add(A(DefaultManifestCreator.class));
+      all.add(A(DefaultXslTemplateManager.class));
+      all.add(A(DefaultXslTransformer.class));
+      all.add(A(DefaultManifestParser.class));
 
-      all.add(C(TableMeta.class, DefaultTableMeta.class));
-      all.add(C(XmlMeta.class, DefaultXmlMeta.class));
-      all.add(C(ModelMeta.class, DefaultModelMeta.class));
-      all.add(C(WizardMeta.class, DefaultWizardMeta.class));
-      all.add(C(XmlMetaHelper.class, DefaultXmlMetaHelper.class) //
-            .req(XmlMeta.class));
-      all.add(C(ManifestCreator.class, DefaultManifestCreator.class));
-
-      all.add(C(XslTemplateManager.class, DefaultXslTemplateManager.class));
-      all.add(C(XslTransformer.class, DefaultXslTransformer.class) //
-            .req(XslTemplateManager.class));
-      all.add(C(ManifestParser.class, DefaultManifestParser.class));
-
+      all.add(A(DefaultXmlAggregator.class));
       all.add(C(XmlAggregator.class, "dal-jdbc", DefaultXmlAggregator.class) //
             .config(E("structureFile").value("META-INF/dal/jdbc/structure.xml")));
       all.add(C(Generator.class, "dal-jdbc", XslGenerator.class).is(PER_LOOKUP) //

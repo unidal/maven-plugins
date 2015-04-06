@@ -10,6 +10,7 @@
 
 <xsl:template match="wizard">
 <xsl:text disable-output-escaping="yes"><![CDATA[<%@ tag isELIgnored="false" trimDirectiveWhitespaces="true" %>
+<%@ attribute name="head" fragment="true" required="false"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 ]]></xsl:text>
 <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>jsp:useBean id="navBar" class="<xsl:value-of select="webapp/@package"/>.view.NavigationBar" scope="page" /<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>
@@ -31,6 +32,8 @@
 	<link href="${model.webapp}/css/bootstrap-responsive.css" type="text/css" rel="stylesheet">
 	<script src="${model.webapp}/js/jquery-1.8.3.min.js" type="text/javascript"></script>
 	<script type="text/javascript">var contextpath = "${model.webapp}";</script>
+
+	<jsp:invoke fragment="head"/>
 </head>
 
 <body data-spy="scroll" data-target=".subnav" data-offset="50">

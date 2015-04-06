@@ -5,18 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.lifecycle.internal.LifecycleDependencyResolver;
 import org.apache.maven.model.Build;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.LegacySupport;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
@@ -25,6 +20,7 @@ import org.unidal.helper.Files.AutoClose;
 import org.unidal.helper.Files.IO;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.maven.plugin.common.AbstractMojoWithDependency;
 
 /**
  * Prepares web module resources for war packaging.
@@ -34,7 +30,7 @@ import org.unidal.helper.Scanners.FileMatcher;
  * @requiresDependencyResolution runtime
  * @author Frankie Wu
  */
-public class WebModuleMojo extends AbstractMojo {
+public class WebModuleMojo extends AbstractMojoWithDependency {
    /**
     * Current project
     * 
@@ -43,20 +39,6 @@ public class WebModuleMojo extends AbstractMojo {
     * @readonly
     */
    protected MavenProject m_project;
-
-   /**
-    * @component
-    * @required
-    * @readonly
-    */
-   private LifecycleDependencyResolver m_resolver;
-
-   /**
-    * @component
-    * @required
-    * @readonly
-    */
-   private LegacySupport m_legacySupport;
 
    /**
     * Verbose information or not
@@ -149,8 +131,7 @@ public class WebModuleMojo extends AbstractMojo {
       }
 
       try {
-         m_resolver.resolveProjectDependencies(m_project, Arrays.asList("compile", "runtime"),
-               Arrays.asList("compile", "runtime"), m_legacySupport.getSession(), false, new HashSet<Artifact>());
+         resolveRuntimeDependencies();
 
          Build build = m_project.getBuild();
          File base = new File(build.getDirectory(), build.getFinalName());

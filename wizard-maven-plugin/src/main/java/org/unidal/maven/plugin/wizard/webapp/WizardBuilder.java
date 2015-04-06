@@ -1,8 +1,6 @@
 package org.unidal.maven.plugin.wizard.webapp;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.unidal.maven.plugin.common.PropertyProviders;
@@ -13,17 +11,6 @@ import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;
 
 public class WizardBuilder extends BaseVisitor {
-   private WebAppMojo m_webAppMojo;
-
-   private File m_wizardFile;
-
-   private Module m_module;
-
-   public WizardBuilder(WebAppMojo webAppMojo, File wizardFile) {
-      m_webAppMojo = webAppMojo;
-      m_wizardFile = wizardFile;
-   }
-
    @Override
    public void visitModule(Module module) {
       List<String> pageNames = new ArrayList<String>(module.getPages().size());
@@ -54,29 +41,11 @@ public class WizardBuilder extends BaseVisitor {
          module.addPage(page);
       }
 
-      m_module = module;
       visitPage(page);
    }
 
    @Override
    public void visitPage(Page page) {
-      boolean flag = false; // DISABLED
-
-      if (flag) {
-         List<String> templates = Arrays.asList("default", "single");
-         String template = PropertyProviders.fromConsole().forString("template", "Page template:", templates, page.getTemplate(),
-               null);
-
-         if ("single".equals(template)) {
-            File templateFile = new File(m_wizardFile.getParentFile(), "template.xml");
-
-            try {
-               m_webAppMojo.buildTemplate(templateFile, m_module.getName(), page.getName());
-            } catch (Exception e) {
-               throw new RuntimeException(String.format("Error when building template(%s)!", templateFile), e);
-            }
-         }
-      }
    }
 
    @Override

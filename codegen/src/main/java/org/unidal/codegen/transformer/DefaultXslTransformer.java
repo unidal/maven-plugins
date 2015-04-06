@@ -12,7 +12,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.unidal.codegen.template.XslTemplateManager;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
+@Named(type = XslTransformer.class)
 public class DefaultXslTransformer implements XslTransformer {
    @Inject
    private XslTemplateManager m_templateManager;

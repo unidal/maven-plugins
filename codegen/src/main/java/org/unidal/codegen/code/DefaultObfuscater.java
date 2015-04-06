@@ -5,7 +5,9 @@ import java.nio.ByteBuffer;
 import java.util.Random;
 
 import org.unidal.helper.Bytes;
+import org.unidal.lookup.annotation.Named;
 
+@Named(type = Obfuscater.class)
 public class DefaultObfuscater implements Obfuscater {
    @Override
    public String encode(String src) throws Exception {

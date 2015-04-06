@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.unidal.lookup.annotation.Named;
+
+@Named(type = ManifestCreator.class)
 public class DefaultManifestCreator implements ManifestCreator {
    public String create(String generatedContent, String userContent) throws IOException {
       StringBuilder sb = new StringBuilder(256);
@@ -26,7 +29,7 @@ public class DefaultManifestCreator implements ManifestCreator {
 
       writer.write(content);
       writer.close();
-//      file.deleteOnExit();
+      // file.deleteOnExit();
       return file.getCanonicalFile();
    }
 }

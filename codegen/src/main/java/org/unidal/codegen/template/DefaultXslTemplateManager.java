@@ -14,7 +14,9 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
+@Named(type = XslTemplateManager.class)
 public class DefaultXslTemplateManager implements XslTemplateManager, LogEnabled {
    private Map<URL, Templates> m_cachedTemplates;
 

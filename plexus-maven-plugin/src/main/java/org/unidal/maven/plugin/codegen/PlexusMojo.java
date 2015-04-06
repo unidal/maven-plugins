@@ -19,7 +19,6 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
-
 import org.unidal.helper.Joiners;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
@@ -125,6 +124,7 @@ public class PlexusMojo extends AbstractMojo {
          }
       }
 
+      @SuppressWarnings("deprecation")
       Properties userProperties = m_project.getProjectBuildingRequest().getUserProperties();
 
       if (userProperties != null) {

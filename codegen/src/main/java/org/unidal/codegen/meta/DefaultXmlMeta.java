@@ -17,11 +17,13 @@ import java.util.Stack;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.jdom.Element;
+import org.unidal.lookup.annotation.Named;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+@Named(type = XmlMeta.class)
 public class DefaultXmlMeta implements XmlMeta {
    private void addAttributes(Element element, Collection<AttributeEntry> attributes) {
       for (AttributeEntry e : attributes) {
@@ -355,7 +357,8 @@ public class DefaultXmlMeta implements XmlMeta {
 
       @Override
       public String toString() {
-         return String.format("ElementEntry[%s, %s, %s, %s]", m_name, m_attributes, m_list ? "" : m_listName, m_elements);
+         return String.format("ElementEntry[%s, %s, %s, %s]", m_name, m_attributes, m_list ? "" : m_listName,
+               m_elements);
       }
    }
 

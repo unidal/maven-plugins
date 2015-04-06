@@ -9,14 +9,15 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.unidal.lookup.annotation.Named;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+@Named(type = ManifestParser.class)
 public class DefaultManifestParser implements ManifestParser {
-
    public List<Manifest> parse(String content) {
       try {
          Parser parser = new Parser();
@@ -86,7 +87,8 @@ public class DefaultManifestParser implements ManifestParser {
       }
 
       @Override
-      public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs) throws SAXException {
+      public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs)
+            throws SAXException {
          String tag = localName;
 
          m_propertyName = null;

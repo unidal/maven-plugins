@@ -7,8 +7,12 @@ import java.io.StringWriter;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
+@Named(type = XmlMetaHelper.class)
 public class DefaultXmlMetaHelper implements XmlMetaHelper {
+   @Inject
    private XmlMeta m_xmlMeta;
 
    public String getXmlMetaContent(Reader reader) throws IOException {
