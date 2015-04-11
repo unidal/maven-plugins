@@ -14,9 +14,14 @@
             <description>Database Query Toolkit</description>
          </page>
       </module>
-      <module name="ui" path="ui" default="true">
+      <module name="ui" path="ui">
          <page name="home" title="Home" default="true" path="home" standalone="true" template="single">
             <description>Home</description>
+         </page>
+      </module>
+      <module name="report" path="r" default="true" package="com.dianping.cat.matrix">
+         <page name="matrix" title="Matrix" default="true" path="matrix" standalone="false" template="default">
+            <description>Matrix</description>
          </page>
       </module>
    </webapp>

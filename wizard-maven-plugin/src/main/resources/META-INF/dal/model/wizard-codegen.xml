@@ -21,6 +21,7 @@
     <attribute name="name" value-type="String" />
     <attribute name="path" value-type="String" />
     <attribute name="default" value-type="boolean" />
+    <attribute name="package" value-type="String" />
     <entity-ref name="page" type="list" names="pages" />
   </entity>
   <entity name="page">

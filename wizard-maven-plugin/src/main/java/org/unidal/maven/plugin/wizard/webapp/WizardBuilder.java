@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.unidal.maven.plugin.common.PropertyProviders;
+import org.unidal.maven.plugin.common.PropertyProviders.ConsoleProvider;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
 import org.unidal.maven.plugin.wizard.model.entity.Webapp;
@@ -11,6 +12,8 @@ import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;
 
 public class WizardBuilder extends BaseVisitor {
+   private Webapp m_webapp;
+
    @Override
    public void visitModule(Module module) {
       List<String> pageNames = new ArrayList<String>(module.getPages().size());
@@ -19,19 +22,25 @@ public class WizardBuilder extends BaseVisitor {
          pageNames.add(page.getName());
       }
 
-      String pageName = PropertyProviders.fromConsole().forString("page", "Select page name below or input a new one:", pageNames,
-            null, null);
+      ConsoleProvider console = PropertyProviders.fromConsole();
+      String pageName = console.forString("page", "Select page name below or input a new one:", pageNames, null, null);
       Page page = module.findPage(pageName);
 
       if (page == null) {
-         String path = PropertyProviders.fromConsole().forString("page.path", "Page path:", pageName, null);
-
          page = new Page(pageName);
 
          if (module.getPages().isEmpty()) {
             page.setDefault(true);
          }
 
+         if (m_webapp.isModule()) {
+            String defaultPackage = module.getPackage() + ".page";
+            String packageName = console.forString("module.package", "Module package:", defaultPackage, null);
+
+            page.setPackage(packageName);
+         }
+
+         String path = console.forString("page.path", "Page path:", pageName, null);
          String caption = Character.toUpperCase(pageName.charAt(0)) + pageName.substring(1);
 
          page.setPath(path);
@@ -50,6 +59,8 @@ public class WizardBuilder extends BaseVisitor {
 
    @Override
    public void visitWebapp(Webapp webapp) {
+      m_webapp = webapp;
+
       List<Module> modules = webapp.getModules();
       List<String> moduleNames = new ArrayList<String>(modules.size());
 
@@ -57,14 +68,22 @@ public class WizardBuilder extends BaseVisitor {
          moduleNames.add(module.getName());
       }
 
-      String moduleName = PropertyProviders.fromConsole().forString("module", "Select module name below or input a new one:",
-            moduleNames, null, null);
+      ConsoleProvider console = PropertyProviders.fromConsole();
+      String moduleName = console.forString("module", "Select module name below or input a new one:", moduleNames,
+            null, null);
       Module module = webapp.findModule(moduleName);
 
-      if (module == null) {
-         String path = PropertyProviders.fromConsole().forString("module.path", "Module path:", moduleName, null);
-
+      if (module == null) { // new module
          module = new Module(moduleName);
+
+         if (webapp.isModule()) {
+            String defaultPackage = webapp.getPackage() + "." + moduleName;
+            String packageName = console.forString("module.package", "Module package:", defaultPackage, null);
+
+            module.setPackage(packageName);
+         }
+
+         String path = console.forString("module.path", "Module path:", moduleName, null);
 
          module.setPath(path);
          module.setDefault(modules.isEmpty());
@@ -79,25 +98,31 @@ public class WizardBuilder extends BaseVisitor {
       Webapp webapp = wizard.getWebapp();
 
       if (webapp == null) {
+         ConsoleProvider console = PropertyProviders.fromConsole();
+
          webapp = new Webapp();
+
+         if (webapp.getModule() == null) {
+            boolean war = PropertyProviders.fromConsole().forBoolean("war", "Is it a web project?", true);
+
+            webapp.setModule(!war);
+         }
+
          String packageName = wizard.getPackage();
          String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
-         String name = PropertyProviders.fromConsole().forString("name", "Webapp name:", defaultName, null);
-         boolean cat = PropertyProviders.fromConsole().forBoolean("cat", "Support CAT?", true);
-         boolean jstl = PropertyProviders.fromConsole().forBoolean("cat", "Support JSTL?", true);
-         boolean bootstrap = PropertyProviders.fromConsole().forBoolean("layout", "Support bootstrap layout?", true);
-         boolean pluginManagement = PropertyProviders.fromConsole().forBoolean("pluginManagement",
+         String name = console.forString("name", "Webapp name:", defaultName, null);
+         boolean cat = console.forBoolean("cat", "Support CAT?", true);
+         boolean jstl = console.forBoolean("cat", "Support JSTL?", true);
+         boolean bootstrap = console.forBoolean("layout", "Support bootstrap layout?", true);
+         boolean pluginManagement = console.forBoolean("pluginManagement",
                "Support POM plugin management for Java Compiler and Eclipse?", false);
          /*
-          * boolean webres =
-          * PropertyProviders.fromConsole().forBoolean("webres",
-          * "Support WebRes framework?", false);
+          * boolean webres = PropertyProviders.fromConsole().forBoolean("webres", "Support WebRes framework?", false);
           */
 
          wizard.setWebapp(webapp);
          webapp.setPackage(packageName);
          webapp.setName(name);
-         webapp.setModule(false);
          webapp.setWebres(false);
          webapp.setCat(cat);
          webapp.setJstl(jstl);

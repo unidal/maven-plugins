@@ -231,15 +231,9 @@ public class WebAppMojo extends AbstractMojo {
       String projectType = packaging == null ? "jar" : packaging.getText();
 
       if (!webapp.isModule() && "jar".equals(projectType)) {
-         boolean war = PropertyProviders.fromConsole().forBoolean("war", "Is it a web project?", true);
+         getLog().info(String.format("Change project packaging type from %s to war.", projectType));
 
-         if (war) {
-            getLog().info(String.format("Change project packaging type from %s to war.", projectType));
-
-            b.findOrCreateChild(root, "packaging", "dependencies", null).setText("war");
-         } else {
-            wizard.getWebapp().setModule(true);
-         }
+         b.findOrCreateChild(root, "packaging", "dependencies", null).setText("war");
       }
 
       // dependencies

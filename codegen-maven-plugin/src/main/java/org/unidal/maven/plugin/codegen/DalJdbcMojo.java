@@ -28,8 +28,7 @@ public class DalJdbcMojo extends AbstractMojo {
    /**
     * XSL code generator implementation
     * 
-    * @component role="org.unidal.codegen.generator.Generator"
-    *            role-hint="dal-jdbc"
+    * @component role="org.unidal.codegen.generator.Generator" role-hint="dal-jdbc"
     * @required
     * @readonly
     */
@@ -47,8 +46,7 @@ public class DalJdbcMojo extends AbstractMojo {
    /**
     * Current project base directory
     * 
-    * @parameter expression="${sourceDir}"
-    *            default-value="${basedir}/target/generated-sources/dal-jdbc"
+    * @parameter expression="${sourceDir}" default-value="${basedir}/target/generated-sources/dal-jdbc"
     * @required
     */
    protected String sourceDir;
@@ -56,8 +54,7 @@ public class DalJdbcMojo extends AbstractMojo {
    /**
     * Location of manifest.xml file
     * 
-    * @parameter expression="${manifest}" default-value=
-    *            "${basedir}/src/main/resources/META-INF/dal/jdbc/manifest.xml"
+    * @parameter expression="${manifest}" default-value= "${basedir}/src/main/resources/META-INF/dal/jdbc/manifest.xml"
     * @required
     */
    protected String manifest;
@@ -65,8 +62,7 @@ public class DalJdbcMojo extends AbstractMojo {
    /**
     * Location of XSL template base.
     * 
-    * @parameter expression="${resource.base}"
-    *            default-value="/META-INF/dal/jdbc"
+    * @parameter expression="${resource.base}" default-value="/META-INF/dal/jdbc"
     * @required
     */
    protected String resouceBase;
@@ -92,6 +88,13 @@ public class DalJdbcMojo extends AbstractMojo {
     */
    protected boolean skip;
 
+   /**
+    * for test or not
+    * 
+    * @parameter expression="${codegen.test}" default-value="false"
+    */
+   protected boolean test;
+
    public void execute() throws MojoExecutionException, MojoFailureException {
       if (skip) {
          getLog().info("Model codegen was skipped explicitly.");
@@ -109,7 +112,8 @@ public class DalJdbcMojo extends AbstractMojo {
       }
    }
 
-   private void generateJdbc(String manifest) throws MojoExecutionException, IOException, MalformedURLException, Exception {
+   private void generateJdbc(String manifest) throws MojoExecutionException, IOException, MalformedURLException,
+         Exception {
       File manifestFile = new File(manifest);
 
       if (!manifestFile.exists()) {
@@ -147,7 +151,13 @@ public class DalJdbcMojo extends AbstractMojo {
       };
 
       m_generator.generate(ctx);
-      m_project.addCompileSourceRoot(sourceDir);
+
+      if (test) {
+         m_project.addTestCompileSourceRoot(sourceDir);
+      } else {
+         m_project.addCompileSourceRoot(sourceDir);
+      }
+
       getLog().info(ctx.getGeneratedFiles() + " files generated.");
    }
 }
