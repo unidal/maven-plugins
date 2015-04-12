@@ -51,7 +51,7 @@
 	 * @return parent object, null if not exists.
 	 */
 	@SuppressWarnings("unchecked")
-	protected <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T getAncestor(int backLevels) {
+	protected final <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T getAncestor(int backLevels) {
 		if (m_parents.isEmpty()) {
 			return null;
 		} else if (backLevels == 1) {
@@ -68,11 +68,11 @@
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T getParent() {
+	protected final <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T getParent() {
 		return (T) getAncestor(1);
 	}
 
-	protected Stack<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> getStack() {
+	protected final Stack<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> getStack() {
 		return m_parents;
 	}
 
