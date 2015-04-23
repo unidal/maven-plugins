@@ -19,7 +19,9 @@
       <xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:call-template name='import-list'/>
-   <xsl:value-of select="$empty"/>public class <xsl:value-of select='@do-class'/> extends DataObject {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>public class <xsl:value-of select='@do-class'/> extends DataObject <xsl:value-of select="$empty"/>
+   <xsl:if test="@implements">implements <xsl:value-of select='@implements'/><xsl:value-of select="$space"/></xsl:if>
+   <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
    <xsl:call-template name="declare-field-variables"/>
    <xsl:call-template name="method-after-load"/>
    <xsl:call-template name="method-get-fields"/>
