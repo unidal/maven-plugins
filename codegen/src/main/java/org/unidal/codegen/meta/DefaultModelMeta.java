@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -447,15 +448,40 @@ public class DefaultModelMeta implements ModelMeta {
             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
             new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH),
             new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH),
+            new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH),
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH), };
 
-      public static String getValueType(Set<String> valueTypes) {
-         int len = valueTypes.size();
+      private static Map<String, String> s_mapping = new HashMap<String, String>() {
+         private static final long serialVersionUID = 1L;
+         {
+            put("int:long", "long");
+            put("double:int", "double");
+            put("double:long", "double");
+         }
+      };
 
-         if (len == 1) {
-            return valueTypes.iterator().next();
-         } else if (len == 2 && valueTypes.contains("int") && valueTypes.contains("double")) {
-            return "double";
+      public static String getValueType(Set<String> valueTypes) {
+         List<String> types = new ArrayList<String>(valueTypes);
+         String current = null;
+
+         Collections.sort(types);
+
+         for (String type : types) {
+            if (current == null) {
+               current = type;
+            } else {
+               String resolved = s_mapping.get(current + ":" + type);
+
+               if (resolved != null) {
+                  current = resolved;
+               } else {
+                  return "String";
+               }
+            }
+         }
+
+         if (current != null) {
+            return current;
          } else {
             return "String";
          }
@@ -476,10 +502,21 @@ public class DefaultModelMeta implements ModelMeta {
                } catch (Exception e) {
                   // ignore it
                }
-            } else {
+            }
+
+            if (type == null) {
                try {
                   Integer.parseInt(value);
                   type = "int";
+               } catch (Exception e) {
+                  // ignore it
+               }
+            }
+
+            if (type == null) {
+               try {
+                  Long.parseLong(value);
+                  type = "long";
                } catch (Exception e) {
                   // ignore it
                }

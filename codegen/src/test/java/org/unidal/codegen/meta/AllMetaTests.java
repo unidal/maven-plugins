@@ -12,6 +12,8 @@ import org.unidal.codegen.meta.xml.XmlMetaTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
+ModelMetaTest.class,
+
 TableMetaTest.class,
 
 XmlMetaHelperTest.class,
