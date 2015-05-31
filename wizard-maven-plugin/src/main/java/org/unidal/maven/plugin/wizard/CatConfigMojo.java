@@ -20,9 +20,9 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
-import org.unidal.maven.plugin.wizard.dom.Log4jFileBuilder;
-import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
-import org.unidal.maven.plugin.wizard.dom.WebFileBuilder;
+import org.unidal.maven.plugin.wizard.dom.Log4jXmlBuilder;
+import org.unidal.maven.plugin.wizard.dom.PomXmlBuilder;
+import org.unidal.maven.plugin.wizard.dom.WebXmlBuilder;
 
 import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
@@ -156,7 +156,7 @@ public class CatConfigMojo extends AbstractMojo {
    protected void modifyLog4jFile(File log4jFile) throws JDOMException, IOException {
       Document doc = buildDocument(log4jFile);
       Element root = doc.getRootElement();
-      Log4jFileBuilder b = new Log4jFileBuilder();
+      Log4jXmlBuilder b = new Log4jXmlBuilder();
       int index = b.indexOfLastElement(root, "appender");
       Element appender = new Element("appender").setAttribute("name", "catAppender") //
             .setAttribute("class", "com.dianping.cat.log4j.CatAppender");
@@ -174,7 +174,7 @@ public class CatConfigMojo extends AbstractMojo {
    protected void modifyPomFile(File pomFile) throws JDOMException, IOException {
       Document doc = buildDocument(pomFile);
       Element root = doc.getRootElement();
-      PomFileBuilder b = new PomFileBuilder().setLog(getLog());
+      PomXmlBuilder b = new PomXmlBuilder().setLog(getLog());
       Element dependencies = b.findOrCreateChild(root, "dependencies");
       String version = "0.6.2";
 
@@ -200,7 +200,7 @@ public class CatConfigMojo extends AbstractMojo {
 
       Document doc = buildDocument(webFile);
       Element root = doc.getRootElement();
-      WebFileBuilder b = new WebFileBuilder();
+      WebXmlBuilder b = new WebXmlBuilder();
       String version = root.getAttributeValue("version");
 
       if (version == null) {

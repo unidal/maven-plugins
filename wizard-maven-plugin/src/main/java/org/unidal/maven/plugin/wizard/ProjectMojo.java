@@ -13,7 +13,7 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.unidal.maven.plugin.common.PropertyProviders;
-import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
+import org.unidal.maven.plugin.wizard.dom.PomXmlBuilder;
 
 /**
  * Create an empty project POM.
@@ -61,7 +61,7 @@ public class ProjectMojo extends AbstractMojo {
    protected File m_pomFile = new File("pom.xml");
 
    protected Document createPom() {
-      PomFileBuilder b = new PomFileBuilder();
+      PomXmlBuilder b = new PomXmlBuilder();
       Document doc = b.createMavenDocument();
       Element project = doc.getRootElement();
 

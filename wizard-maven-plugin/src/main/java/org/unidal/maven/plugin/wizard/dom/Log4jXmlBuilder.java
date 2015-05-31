@@ -5,7 +5,7 @@ import java.util.List;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-public class Log4jFileBuilder extends JDomBuilder {
+public class Log4jXmlBuilder extends JDomBuilder {
    @SuppressWarnings("unchecked")
    public boolean checkAppenderRef(Element parent, String ref) {
       List<Object> children = parent.getContent();

@@ -1,4 +1,4 @@
-package org.unidal.maven.plugin.wizard.webapp;
+package org.unidal.maven.plugin.wizard.builder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;
 
-public class WizardBuilder extends BaseVisitor {
+public class WebAppWizardBuilder extends BaseVisitor {
    private Webapp m_webapp;
 
    @Override
@@ -112,7 +112,7 @@ public class WizardBuilder extends BaseVisitor {
          String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
          String name = console.forString("name", "Webapp name:", defaultName, null);
          boolean cat = console.forBoolean("cat", "Support CAT?", true);
-         boolean jstl = console.forBoolean("cat", "Support JSTL?", true);
+         boolean jstl = console.forBoolean("jstl", "Support JSTL?", true);
          boolean bootstrap = console.forBoolean("layout", "Support bootstrap layout?", true);
          boolean pluginManagement = console.forBoolean("pluginManagement",
                "Support POM plugin management for Java Compiler and Eclipse?", false);

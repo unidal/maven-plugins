@@ -9,7 +9,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 
-public class PomFileBuilder extends JDomBuilder {
+public class PomXmlBuilder extends JDomBuilder {
    private static Namespace NS = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
 
    private Log m_log;
@@ -197,7 +197,7 @@ public class PomFileBuilder extends JDomBuilder {
       }
    }
 
-   public PomFileBuilder setLog(Log log) {
+   public PomXmlBuilder setLog(Log log) {
       m_log = log;
       return this;
    }

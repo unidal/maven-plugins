@@ -14,7 +14,7 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.unidal.maven.plugin.common.PropertyProviders;
-import org.unidal.maven.plugin.wizard.dom.PomFileBuilder;
+import org.unidal.maven.plugin.wizard.dom.PomXmlBuilder;
 
 /**
  * Create an empty module project POM.
@@ -68,7 +68,7 @@ public class ProjectModuleMojo extends AbstractMojo {
    protected String packaging;
 
    protected Document createModulePom() {
-      PomFileBuilder b = new PomFileBuilder();
+      PomXmlBuilder b = new PomXmlBuilder();
       Document doc = b.createMavenDocument();
       Element project = doc.getRootElement();
       Element parent = b.findOrCreateChild(project, "parent");
@@ -86,7 +86,7 @@ public class ProjectModuleMojo extends AbstractMojo {
 
       b.createChild(project, "artifactId", artifactId);
 
-      if (!version.equals(m_project.getVersion())) {
+      if (version.length() > 0 && !version.equals(m_project.getVersion())) {
          b.createChild(project, "version", version);
       }
 
@@ -144,7 +144,7 @@ public class ProjectModuleMojo extends AbstractMojo {
    }
 
    protected Document modifyParentPom() {
-      PomFileBuilder b = new PomFileBuilder();
+      PomXmlBuilder b = new PomXmlBuilder();
       Document doc = b.openMavenDocument(m_project.getFile());
       Element project = doc.getRootElement();
       Element modules = b.findOrCreateChild(project, "modules", "build", null);
@@ -164,7 +164,7 @@ public class ProjectModuleMojo extends AbstractMojo {
       }
 
       if (version == null) {
-         version = PropertyProviders.fromConsole().forString("groupId", "Project version:", null, null);
+         version = PropertyProviders.fromConsole().forString("groupId", "Project version:", "", null);
       }
 
       if (name == null) {

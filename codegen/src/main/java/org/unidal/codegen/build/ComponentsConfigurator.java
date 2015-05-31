@@ -38,7 +38,6 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
       all.add(A(DefaultXslTransformer.class));
       all.add(A(DefaultManifestParser.class));
 
-      all.add(A(DefaultXmlAggregator.class));
       all.add(C(XmlAggregator.class, "dal-jdbc", DefaultXmlAggregator.class) //
             .config(E("structureFile").value("META-INF/dal/jdbc/structure.xml")));
       all.add(C(Generator.class, "dal-jdbc", XslGenerator.class).is(PER_LOOKUP) //

@@ -23,7 +23,7 @@ import org.unidal.codegen.generator.Generator;
 import org.unidal.codegen.meta.WizardMeta;
 import org.unidal.helper.Files;
 import org.unidal.maven.plugin.common.PropertyProviders;
-import org.unidal.maven.plugin.wizard.builder.WebAppWizardBuilder;
+import org.unidal.maven.plugin.wizard.builder.CatPluginWizardBuilder;
 import org.unidal.maven.plugin.wizard.dom.PomXmlBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
@@ -31,11 +31,11 @@ import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
 import org.xml.sax.SAXException;
 
 /**
- * Create web application project, modules and pages.
+ * Create a cat plugin project.
  * 
- * @goal webapp
+ * @goal cat-plugin
  */
-public class WebAppMojo extends AbstractMojo {
+public class CatPluginMojo extends AbstractMojo {
    /**
     * Current project
     * 
@@ -135,7 +135,7 @@ public class WebAppMojo extends AbstractMojo {
          wizard.setPackage(packageName);
       }
 
-      wizard.accept(new WebAppWizardBuilder());
+      wizard.accept(new CatPluginWizardBuilder());
       Files.forIO().writeTo(wizardFile, wizard.toString());
       getLog().info("File " + wizardFile.getCanonicalPath() + " generated.");
       return wizard;
@@ -237,6 +237,8 @@ public class WebAppMojo extends AbstractMojo {
       }
 
       // dependencies
+      b.checkDependency(dependencies, "com.dianping.cat", "cat-foundation", "", null);
+
       if (!b.checkDependency(dependencies, "org.unidal.framework", "web-framework", "2.2.0", null)) {
          if (webapp.isJstl()) {
             b.checkDependency(dependencies, "javax.servlet", "jstl", "1.2", null);

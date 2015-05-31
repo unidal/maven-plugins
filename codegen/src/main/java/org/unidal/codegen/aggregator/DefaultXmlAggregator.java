@@ -141,7 +141,8 @@ public class DefaultXmlAggregator implements XmlAggregator {
       }
 
       @Override
-      public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs) throws SAXException {
+      public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs)
+            throws SAXException {
          String tag = localName;
 
          try {
@@ -488,7 +489,8 @@ public class DefaultXmlAggregator implements XmlAggregator {
       }
 
       @Override
-      public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs) throws SAXException {
+      public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs)
+            throws SAXException {
          String tag = localName;
 
          try {
@@ -562,7 +564,8 @@ public class DefaultXmlAggregator implements XmlAggregator {
       }
 
       @Override
-      public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs) throws SAXException {
+      public void startElement(String namespaceURI, String localName, String rawName, Attributes attrs)
+            throws SAXException {
          try {
             NodeDefinition parentDef = m_defs.peek();
             NodeDefinition childDef = (parentDef == null ? null : parentDef.findChildNodeDefinition(localName));
