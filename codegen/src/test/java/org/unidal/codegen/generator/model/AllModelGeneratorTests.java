@@ -12,6 +12,7 @@ import org.unidal.codegen.generator.model.dobby.DobbyGeneratorTest;
 import org.unidal.codegen.generator.model.ebay.EbayGeneratorTest;
 import org.unidal.codegen.generator.model.egret.EgretGeneratorTest;
 import org.unidal.codegen.generator.model.expense.ExpenseGeneratorTest;
+import org.unidal.codegen.generator.model.key.KeysGeneratorTest;
 import org.unidal.codegen.generator.model.liger.LigerGeneratorTest;
 import org.unidal.codegen.generator.model.mvc.MvcGeneratorTest;
 import org.unidal.codegen.generator.model.phoenix.PhoenixGeneratorTest;
@@ -65,7 +66,9 @@ WebresGeneratorTest.class,
 
 ServiceModelGeneratorTest.class,
 
-WizardModelGeneratorTest.class
+WizardModelGeneratorTest.class,
+
+KeysGeneratorTest.class
 
 })
 public class AllModelGeneratorTests {

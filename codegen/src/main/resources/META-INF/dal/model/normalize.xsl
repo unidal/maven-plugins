@@ -221,6 +221,14 @@
       <xsl:attribute name="primitive">
          <xsl:call-template name="is-primitive" />
       </xsl:attribute>
+      <xsl:if test="@key">
+	      <xsl:attribute name="key-index">
+	         <xsl:choose>
+	            <xsl:when test="@key-index"><xsl:value-of select="@key-index"/></xsl:when>
+	            <xsl:otherwise>1</xsl:otherwise>
+	         </xsl:choose>
+	      </xsl:attribute>
+      </xsl:if>
       <xsl:attribute name="field-name">
          <xsl:value-of select="'m_'"/>
          <xsl:value-of select="$normalized-name"/>
@@ -365,6 +373,14 @@
       <xsl:attribute name="value-type">
          <xsl:value-of select="$value-type"/>
       </xsl:attribute>
+      <xsl:if test="@key">
+	      <xsl:attribute name="key-index">
+	         <xsl:choose>
+	            <xsl:when test="@key-index"><xsl:value-of select="@key-index"/></xsl:when>
+	            <xsl:otherwise>1</xsl:otherwise>
+	         </xsl:choose>
+	      </xsl:attribute>
+      </xsl:if>
       <xsl:attribute name="capital-name-element">
          <xsl:value-of select="$capital-name-element"/>
       </xsl:attribute>

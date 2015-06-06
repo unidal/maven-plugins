@@ -304,8 +304,10 @@
    <xsl:variable name="name" select="@name"/>
    <xsl:variable name="entity" select="//entity[@name=$name]"/>
    <xsl:for-each select="($entity/attribute|$entity/element)[@key='true']">
+      <xsl:sort select="@key-index"/>
+
+      <xsl:if test="position()!=1">, </xsl:if>
       <xsl:value-of select="$empty"/>source.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$empty"/>
-      <xsl:if test="position()!=last()">, </xsl:if>
    </xsl:for-each>
 </xsl:template>
 

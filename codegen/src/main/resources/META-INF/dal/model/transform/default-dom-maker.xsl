@@ -355,6 +355,8 @@
 <xsl:template name="create-entity-instance">
    <xsl:value-of select="$empty"/>new <xsl:value-of select="@entity-class"/>(<xsl:value-of select="$empty"/>
    <xsl:for-each select="(attribute | element)[@key='true']">
+      <xsl:sort select="@key-index"/>
+      
       <xsl:choose>
          <xsl:when test="@value-type='String'">
             <xsl:value-of select="@param-name"/>
