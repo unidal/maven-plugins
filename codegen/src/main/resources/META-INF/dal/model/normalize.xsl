@@ -665,13 +665,6 @@
          <xsl:with-param name="name" select="$normalized-name"/>
       </xsl:call-template>
    </xsl:variable>
-   <xsl:variable name="value-type-key">
-       <xsl:call-template name="normalize-key-type">
-          <xsl:with-param name="value-type">
-             <xsl:value-of select="$entity/node()[name()='attribute' or name()='element'][@key]/@value-type"/>
-          </xsl:with-param>
-       </xsl:call-template>
-   </xsl:variable>
    <xsl:variable name="value-type-element">
       <xsl:choose>
          <xsl:when test="@value-type">
@@ -713,6 +706,20 @@
             <xsl:value-of select="/model/@class-suffix"/>
          </xsl:otherwise>
       </xsl:choose>
+   </xsl:variable>
+   <xsl:variable name="value-type-key">
+   	  <xsl:choose>
+   	  	 <xsl:when test="($entity/attribute|$entity/member)[@key][2]">
+   	  	 	<xsl:value-of select="$value-type-element"/>
+   	  	 </xsl:when>
+   	  	 <xsl:otherwise>
+	        <xsl:call-template name="normalize-key-type">
+	          <xsl:with-param name="value-type">
+	             <xsl:value-of select="$entity/node()[name()='attribute' or name()='element'][@key]/@value-type"/>
+	          </xsl:with-param>
+	        </xsl:call-template>
+   	  	 </xsl:otherwise>
+   	  </xsl:choose>
    </xsl:variable>
    <xsl:variable name="value-type-generic">
        <xsl:choose>

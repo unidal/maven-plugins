@@ -8,7 +8,7 @@
       <entity-ref name="two-key" type="list" names="two-key-list" />
       <entity-ref name="two-key" alias="two-key-entry" type="map" names="two-key-map" xml-indent="true" />
       <entity-ref name="three-key" type="list" names="three-key-list" />
-      <entity-ref name="three-key" alias="three-key-entry" type="list" names="three-key-map" xml-indent="true" />
+      <entity-ref name="three-key" alias="three-key-entry" type="map" names="three-key-map" xml-indent="true" />
    </entity>
    <entity name="one-key">
       <attribute name="key" value-type="int" key="true" />
