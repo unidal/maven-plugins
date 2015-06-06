@@ -211,43 +211,58 @@
 
 <xsl:template name="method-equals">
    <xsl:variable name="entity" select="." />
-   <xsl:variable name="key" select="(attribute|element)[@key='true']" />
+   <xsl:variable name="keys" select="(attribute|element)[@key='true']" />
    <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   public boolean equals(Object obj) {<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>      if (obj instanceof <xsl:value-of select="@entity-class"/>) {<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="'         '"/><xsl:value-of select="@entity-class"/> _o = (<xsl:value-of select="@entity-class"/>) obj;<xsl:value-of select="$empty-line"/>
    <xsl:choose>
-      <xsl:when test="not($key)">
-         <xsl:for-each select="(attribute|element|entity-ref)[not(@render='false')]">
-            <xsl:value-of select="'         '"/><xsl:value-of select="@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/> = _o.<xsl:value-of select="@get-method"/>();<xsl:value-of select="$empty-line"/>
-         </xsl:for-each>
-         <xsl:value-of select="$empty"/>         boolean result = true;<xsl:value-of select="$empty-line"/>
+      <xsl:when test="not($keys)">
          <xsl:value-of select="$empty-line"/>
          <xsl:for-each select="(attribute|element|entity-ref)[not(@render='false')]">
             <xsl:choose>
                <xsl:when test="@primitive='true'">
-                  <xsl:value-of select="$empty"/>         result <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/>= (<xsl:value-of select="@field-name"/> == <xsl:value-of select="@param-name"/>);<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>         if (<xsl:value-of select="@field-name"/> != _o.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                </xsl:when>
                <xsl:otherwise>
-                  <xsl:value-of select="$empty"/>         result <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/>= (<xsl:value-of select="@field-name"/> == <xsl:value-of select="@param-name"/> || <xsl:value-of select="@field-name"/> != null <xsl:value-of select="'&amp;&amp; '" disable-output-escaping="yes"/><xsl:value-of select="@field-name"/>.equals(<xsl:value-of select="@param-name"/>));<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>         if (!equals(<xsl:value-of select="@field-name"/>, _o.<xsl:value-of select="@get-method"/>())) {<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                </xsl:otherwise>
             </xsl:choose>
+	        <xsl:value-of select="$empty-line"/>
          </xsl:for-each>
          <xsl:if test="@dynamic-attributes='true'">
-            <xsl:value-of select="$empty"/>         result <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/>= m_dynamicAttributes.equals(_o.getDynamicAttributes());<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         if (!m_dynamicAttributes.equals(_o.getDynamicAttributes())) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
          </xsl:if>
          <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>         return result;<xsl:value-of select="$empty-line"/>
-      </xsl:when>
-      <xsl:when test="$key/@primitive='true'">
-         <xsl:value-of select="'         '"/><xsl:value-of select="$key/@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="$key/@param-name"/> = _o.<xsl:value-of select="$key/@get-method"/>();<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>         return <xsl:value-of select="$key/@field-name"/> == <xsl:value-of select="$key/@param-name"/>;<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         return true;<xsl:value-of select="$empty-line"/>
       </xsl:when>
       <xsl:otherwise>
-         <xsl:value-of select="'         '"/><xsl:value-of select="$key/@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="$key/@param-name"/> = _o.<xsl:value-of select="$key/@get-method"/>();<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>         return <xsl:value-of select="$key/@field-name"/> == <xsl:value-of select="$key/@param-name"/> || <xsl:value-of select="$key/@field-name"/> != null <xsl:value-of select="'&amp;&amp; '" disable-output-escaping="yes"/><xsl:value-of select="$key/@field-name"/>.equals(<xsl:value-of select="$key/@param-name"/>);<xsl:value-of select="$empty-line"/>
+      	 <xsl:for-each select="$keys">
+      	 	 <xsl:sort select="@key-index"/>
+      	 	 
+      	 	 <xsl:choose>
+		       <xsl:when test="@primitive='true'">
+		         <xsl:value-of select="$empty"/>         if (<xsl:value-of select="@field-name"/> != _o.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+		         <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
+		         <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+		         <xsl:value-of select="$empty-line"/>
+		       </xsl:when>
+		       <xsl:otherwise>
+		         <xsl:value-of select="$empty"/>         if (!equals(<xsl:value-of select="@field-name"/>, _o.<xsl:value-of select="@get-method"/>())) {<xsl:value-of select="$empty-line"/>
+		         <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
+		         <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+		         <xsl:value-of select="$empty-line"/>
+		       </xsl:otherwise>
+      	 	 </xsl:choose>
+      	 </xsl:for-each>
+	     <xsl:value-of select="$empty"/>         return true;<xsl:value-of select="$empty-line"/>
       </xsl:otherwise>
    </xsl:choose>
    <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
@@ -284,22 +299,13 @@
                	  <xsl:sort select="@key-index"/>
 
                   <xsl:choose>
-                     <xsl:when test="@nullable='true'">
-                        <xsl:value-of select="$empty"/>         if (<xsl:value-of select='$current/@param-name-element'/>.<xsl:value-of select="@get-method"/>() == null) {<xsl:value-of select="$empty-line"/>
-                        <xsl:value-of select="$empty"/>            if (<xsl:value-of select="@param-name"/> != null) {<xsl:value-of select="$empty-line"/>
-                        <xsl:value-of select="$empty"/>               continue;<xsl:value-of select="$empty-line"/>
-                        <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
-                        <xsl:value-of select="$empty"/>         } else if (!<xsl:value-of select='$current/@param-name-element'/>.<xsl:value-of select="@get-method"/>().equals(<xsl:value-of select="@param-name"/>)) {<xsl:value-of select="$empty-line"/>
-                        <xsl:value-of select="$empty"/>            continue;<xsl:value-of select="$empty-line"/>
-                        <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
-                     </xsl:when>
                      <xsl:when test="@primitive='true'">
                         <xsl:value-of select="$empty"/>         if (<xsl:value-of select='$current/@param-name-element'/>.<xsl:value-of select="@get-method"/>() != <xsl:value-of select="@param-name"/>) {<xsl:value-of select="$empty-line"/>
                         <xsl:value-of select="$empty"/>            continue;<xsl:value-of select="$empty-line"/>
                         <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                      </xsl:when>
                      <xsl:otherwise>
-                        <xsl:value-of select="$empty"/>         if (!<xsl:value-of select='$current/@param-name-element'/>.<xsl:value-of select="@get-method"/>().equals(<xsl:value-of select="@param-name"/>)) {<xsl:value-of select="$empty-line"/>
+                        <xsl:value-of select="$empty"/>         if (!equals(<xsl:value-of select='$current/@param-name-element'/>.<xsl:value-of select="@get-method"/>(), <xsl:value-of select="@param-name"/>)) {<xsl:value-of select="$empty-line"/>
                         <xsl:value-of select="$empty"/>            continue;<xsl:value-of select="$empty-line"/>
                         <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                      </xsl:otherwise>
@@ -463,13 +469,13 @@
 
 <xsl:template name="method-hash-code">
    <xsl:variable name="entity" select="." />
-   <xsl:variable name="key" select="(attribute|element)[@key='true']" />
+   <xsl:variable name="keys" select="(attribute|element)[@key='true']" />
    <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   public int hashCode() {<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>      int hash = 0;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:choose>
-      <xsl:when test="not($key)">
+      <xsl:when test="not($keys)">
          <xsl:for-each select="(attribute|element|entity-ref)[not(@render='false')]">
              <xsl:call-template name="hash-line"/>
          </xsl:for-each>
@@ -478,9 +484,13 @@
          </xsl:if>
       </xsl:when>
       <xsl:otherwise>
-          <xsl:call-template name="hash-line">
-            <xsl:with-param name="field" select="$key"/>
-         </xsl:call-template>
+      	  <xsl:for-each select="$keys">
+      	  	 <xsl:sort select="@key-index"/>
+      	  	 
+	         <xsl:call-template name="hash-line">
+	            <xsl:with-param name="field" select="."/>
+	         </xsl:call-template>
+      	  </xsl:for-each>
          </xsl:otherwise>
    </xsl:choose>
    <xsl:value-of select="$empty-line"/>
@@ -600,7 +610,7 @@
                         <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                      </xsl:when>
                      <xsl:otherwise>
-                        <xsl:value-of select="$empty"/>         if (!<xsl:value-of select='$current/@param-name-element'/>.<xsl:value-of select="@get-method"/>().equals(<xsl:value-of select="@param-name"/>)) {<xsl:value-of select="$empty-line"/>
+                        <xsl:value-of select="$empty"/>         if (!equals(<xsl:value-of select='$current/@param-name-element'/>.<xsl:value-of select="@get-method"/>(), <xsl:value-of select="@param-name"/>)) {<xsl:value-of select="$empty-line"/>
                         <xsl:value-of select="$empty"/>            continue;<xsl:value-of select="$empty-line"/>
                         <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                      </xsl:otherwise>

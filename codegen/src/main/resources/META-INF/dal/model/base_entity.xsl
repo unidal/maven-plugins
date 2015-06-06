@@ -41,6 +41,16 @@ public abstract class BaseEntity<xsl:call-template name="generic-type"><xsl:with
       }
    }
 
+   protected boolean equals(Object o1, Object o2) {
+      if (o1 == null) {
+         return o2 == null;
+      } else if (o2 == null) {
+         return false;
+      } else {
+         return o1.equals(o2);
+      }
+   }
+
    @Override
    public void formatTo(Formatter formatter, int flags, int width, int precision) {<xsl:value-of select="$empty"/>
 <xsl:choose>
