@@ -3,12 +3,12 @@
    enable-xml-parser="true" enable-base-visitor="true" enable-xml-schema="true" enable-xml-sample="true"
    enable-sax-parser="true" enable-model-test="true" enable-native-builder="true" enable-native-parser="true">
    <entity name="root-element" dynamic-attributes="true" root="true">
-      <entity-ref name="one-key" type="list" names="one-key-list" />
-      <entity-ref name="one-key" alias="one-key-entry" type="map" names="one-key-map" xml-indent="true" />
-      <entity-ref name="two-key" type="list" names="two-key-list" />
-      <entity-ref name="two-key" alias="two-key-entry" type="map" names="two-key-map" xml-indent="true" />
-      <entity-ref name="three-key" type="list" names="three-key-list" />
-      <entity-ref name="three-key" alias="three-key-entry" type="map" names="three-key-map" xml-indent="true" />
+      <entity-ref name="one-key" type="list" names="one-key-list" method-find-or-create="true" />
+      <entity-ref name="one-key" alias="one-key-entry" type="map" names="one-key-map" xml-indent="true" method-find-or-create="true" />
+      <entity-ref name="two-key" type="list" names="two-key-list" method-find-or-create="true" />
+      <entity-ref name="two-key" alias="two-key-entry" type="map" names="two-key-map" xml-indent="true" method-find-or-create="true" />
+      <entity-ref name="three-key" type="list" names="three-key-list" xml-indent="true" method-find-or-create="true" />
+      <entity-ref name="three-key" alias="three-key-entry" type="map" names="three-key-map" xml-indent="true" method-find-or-create="true" />
    </entity>
    <entity name="one-key">
       <attribute name="key" value-type="int" key="true" />
