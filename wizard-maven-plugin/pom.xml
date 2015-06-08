@@ -9,7 +9,7 @@
    <artifactId>wizard-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
    <name>Wizard Maven Plugin</name>
-   <version>2.2.1</version>
+   <version>2.2.2</version>
    <dependencies>
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
@@ -19,7 +19,7 @@
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
          <artifactId>codegen</artifactId>
-         <version>2.2.1</version>
+         <version>2.2.2</version>
       </dependency>
       <dependency>
          <groupId>mysql</groupId>
@@ -37,7 +37,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>2.2.0</version>
+            <version>2.2.2</version>
             <executions>
                <execution>
                   <id>generate dal model files</id>
