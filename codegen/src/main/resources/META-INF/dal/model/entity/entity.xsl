@@ -637,7 +637,7 @@
       <xsl:variable name="entity" select="//entity[@name=$name]"/>
       <xsl:variable name="keys" select="($entity/attribute | $entity/element)[@key='true']"/>
       <xsl:if test="$keys">
-         <xsl:value-of select="$empty"/>   public boolean <xsl:value-of select='@remove-method'/>(<xsl:value-of select="$empty"/>
+         <xsl:value-of select="$empty"/>   public <xsl:value-of select='@value-type-element'/><xsl:value-of select='$space'/><xsl:value-of select='@remove-method'/>(<xsl:value-of select="$empty"/>
          <xsl:for-each select="$keys">
          	<xsl:sort select="@key-index"/>
 
@@ -656,10 +656,10 @@
 		      	     	<xsl:if test="position()!=1">, </xsl:if>
 		      	     	<xsl:value-of select="@param-name"/>
 		      	     </xsl:for-each>
-		      	     <xsl:value-of select="$empty"/>)) != null;<xsl:value-of select="$empty-line"/>
+		      	     <xsl:value-of select="$empty"/>));<xsl:value-of select="$empty-line"/>
                   </xsl:when>
                   <xsl:otherwise>
-               	     <xsl:value-of select="$empty"/>      return <xsl:value-of select='@field-name'/>.remove(<xsl:value-of select="$keys[1]/@param-name"/>) != null;<xsl:value-of select="$empty-line"/>
+               	     <xsl:value-of select="$empty"/>      return <xsl:value-of select='@field-name'/>.remove(<xsl:value-of select="$keys[1]/@param-name"/>);<xsl:value-of select="$empty-line"/>
                   </xsl:otherwise>
                </xsl:choose>
             </xsl:when>
@@ -687,11 +687,10 @@
                   </xsl:choose>
                   <xsl:value-of select="$empty-line"/>
                </xsl:for-each>
-               <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select='@field-name'/>.remove(i);<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>         return true;<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         return <xsl:value-of select='@field-name'/>.remove(i);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
 	           <xsl:value-of select="$empty-line"/>
-	           <xsl:value-of select="$empty"/>      return false;<xsl:value-of select="$empty-line"/>
+	           <xsl:value-of select="$empty"/>      return null;<xsl:value-of select="$empty-line"/>
             </xsl:when>
          </xsl:choose>
          <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
