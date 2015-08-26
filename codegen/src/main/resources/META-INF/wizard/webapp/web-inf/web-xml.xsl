@@ -26,10 +26,6 @@
             <param-value>/data/appdatas/cat/client.xml</param-value>
          </init-param>
          <init-param>
-            <param-name>liger-home</param-name>
-            <param-value>/data/appdatas/liger</param-value>
-         </init-param>
-         <init-param>
             <param-name>excludes</param-name>
             <param-value>/css/*,/img/*,/js/*</param-value>
          </init-param>

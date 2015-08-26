@@ -61,18 +61,18 @@ public abstract class BaseEntity<xsl:call-template name="generic-type"><xsl:with
       if (useJson) {
          DefaultJsonBuilder builder = new DefaultJsonBuilder(compact);
 
-         formatter.format(builder.build(this));
+         formatter.format("%s", builder.build(this));
       } else {
          DefaultXmlBuilder builder = new DefaultXmlBuilder(compact);
 
-         formatter.format(builder.buildXml(this));
+         formatter.format("%s", builder.buildXml(this));
       }<xsl:value-of select="$empty"/>
 </xsl:when>
 <xsl:otherwise>
       boolean compact = (precision == 0);
       DefaultXmlBuilder builder = new DefaultXmlBuilder(compact);
 
-      formatter.format(builder.buildXml(this));<xsl:value-of select="$empty"/>
+      formatter.format("%s", builder.buildXml(this));<xsl:value-of select="$empty"/>
 </xsl:otherwise>
 </xsl:choose>
    }

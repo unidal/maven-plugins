@@ -78,7 +78,7 @@
    <xsl:call-template name="generate-java">
      <xsl:with-param name="class" select="'BaseEntity'"/>
      <xsl:with-param name="package" select="$package"/>
-     <xsl:with-param name="template" select="'base_entity.xsl'"/>
+     <xsl:with-param name="template" select="'base-entity.xsl'"/>
    </xsl:call-template>
    
    <xsl:variable name="policy-filter">
