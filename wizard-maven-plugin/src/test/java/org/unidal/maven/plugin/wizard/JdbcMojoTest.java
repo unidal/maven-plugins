@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
+import org.unidal.maven.plugin.wizard.JdbcMojo;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;

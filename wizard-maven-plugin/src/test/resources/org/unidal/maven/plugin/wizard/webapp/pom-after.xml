@@ -86,10 +86,10 @@
                   <additionalConfig>
                      <file>
                         <name>.settings/org.eclipse.jdt.core.prefs</name>
-                        <content><![CDATA[org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
-eclipse.preferences.version=1
-org.eclipse.jdt.core.compiler.source=1.6
-org.eclipse.jdt.core.compiler.compliance=1.6]]></content>
+                        <content><![CDATA[eclipse.preferences.version=1
+                           org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+                           org.eclipse.jdt.core.compiler.source=1.6
+                           org.eclipse.jdt.core.compiler.compliance=1.6]]></content>
                      </file>
                   </additionalConfig>
                </configuration>
@@ -108,7 +108,7 @@ org.eclipse.jdt.core.compiler.compliance=1.6]]></content>
                      <goal>plexus</goal>
                   </goals>
                   <configuration>
-                     <className>com.dianping.test.build.ComponentsConfigurator</className>
+                     <className>org.unidal.test.build.ComponentsConfigurator</className>
                   </configuration>
                </execution>
             </executions>

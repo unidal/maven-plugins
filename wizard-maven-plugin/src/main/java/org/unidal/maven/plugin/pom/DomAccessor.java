@@ -1,4 +1,4 @@
-package org.unidal.maven.plugin.wizard.dom;
+package org.unidal.maven.plugin.pom;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import org.jdom.Parent;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 
-public class JDomBuilder {
+public class DomAccessor {
    private boolean m_modifed;
 
    public Element createChild(Element parent, String name, String value) {

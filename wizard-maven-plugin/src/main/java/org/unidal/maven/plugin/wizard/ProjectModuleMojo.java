@@ -14,7 +14,7 @@ import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.unidal.maven.plugin.common.PropertyProviders;
-import org.unidal.maven.plugin.wizard.dom.PomXmlBuilder;
+import org.unidal.maven.plugin.pom.PomDelegate;
 
 /**
  * Create an empty module project POM.
@@ -68,7 +68,7 @@ public class ProjectModuleMojo extends AbstractMojo {
    protected String packaging;
 
    protected Document createModulePom() {
-      PomXmlBuilder b = new PomXmlBuilder();
+      PomDelegate b = new PomDelegate();
       Document doc = b.createMavenDocument();
       Element project = doc.getRootElement();
       Element parent = b.findOrCreateChild(project, "parent");
@@ -144,7 +144,7 @@ public class ProjectModuleMojo extends AbstractMojo {
    }
 
    protected Document modifyParentPom() {
-      PomXmlBuilder b = new PomXmlBuilder();
+      PomDelegate b = new PomDelegate();
       Document doc = b.openMavenDocument(m_project.getFile());
       Element project = doc.getRootElement();
       Element modules = b.findOrCreateChild(project, "modules", "build", null);

@@ -1,0 +1,36 @@
+<plexus>
+	<components>
+		<component>
+			<role>org.unidal.maven.plugin.pom.MavenContainer</role>
+			<implementation>org.unidal.maven.plugin.pom.MavenContainer</implementation>
+		</component>
+		<component>
+			<role>org.unidal.maven.plugin.pom.VersionMapping</role>
+			<implementation>org.unidal.maven.plugin.pom.VersionMapping</implementation>
+		</component>
+		<component>
+			<role>org.unidal.maven.plugin.pom.PomDelegate</role>
+			<implementation>org.unidal.maven.plugin.pom.PomDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.maven.plugin.pom.VersionMapping</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.maven.plugin.wizard.webapp.WebAppPomBuilder</role>
+			<implementation>org.unidal.maven.plugin.wizard.webapp.WebAppPomBuilder</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>org.unidal.maven.plugin.wizard.webapp.WebAppGenerator</role>
+			<implementation>org.unidal.maven.plugin.wizard.webapp.WebAppGenerator</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.codegen.generator.Generator</role>
+					<role-hint>wizard-webapp</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+	</components>
+</plexus>

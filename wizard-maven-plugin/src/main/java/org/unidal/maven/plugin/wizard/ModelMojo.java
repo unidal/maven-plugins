@@ -29,7 +29,7 @@ import org.unidal.helper.Transformers;
 import org.unidal.helper.Transformers.IBuilder;
 import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
-import org.unidal.maven.plugin.wizard.dom.PomXmlBuilder;
+import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;
@@ -261,7 +261,7 @@ public class ModelMojo extends AbstractMojo {
    protected void modifyPomFile(File pomFile, Wizard wizard) throws JDOMException, IOException {
       Document doc = new SAXBuilder().build(pomFile);
       Element root = doc.getRootElement();
-      PomXmlBuilder b = new PomXmlBuilder();
+      PomDelegate b = new PomDelegate();
 
       Element build = b.findOrCreateChild(root, "build", null, "dependencies");
       Element plugins = b.findOrCreateChild(build, "plugins");

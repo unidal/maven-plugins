@@ -42,7 +42,7 @@ import org.unidal.helper.Transformers;
 import org.unidal.helper.Transformers.IBuilder;
 import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
-import org.unidal.maven.plugin.wizard.dom.PomXmlBuilder;
+import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
@@ -318,7 +318,7 @@ public class JdbcMojo extends AbstractMojo {
    protected void modifyPomFile(File pomFile, Wizard wizard, Jdbc jdbc) throws JDOMException, IOException {
       Document doc = new SAXBuilder().build(pomFile);
       Element root = doc.getRootElement();
-      PomXmlBuilder b = new PomXmlBuilder();
+      PomDelegate b = new PomDelegate();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
       if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "2.3.1", null)) {

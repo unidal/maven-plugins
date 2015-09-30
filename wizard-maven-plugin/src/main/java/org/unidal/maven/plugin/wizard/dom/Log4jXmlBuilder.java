@@ -4,8 +4,9 @@ import java.util.List;
 
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.unidal.maven.plugin.pom.DomAccessor;
 
-public class Log4jXmlBuilder extends JDomBuilder {
+public class Log4jXmlBuilder extends DomAccessor {
    @SuppressWarnings("unchecked")
    public boolean checkAppenderRef(Element parent, String ref) {
       List<Object> children = parent.getContent();

@@ -23,8 +23,8 @@ import org.unidal.codegen.generator.Generator;
 import org.unidal.codegen.meta.WizardMeta;
 import org.unidal.helper.Files;
 import org.unidal.maven.plugin.common.PropertyProviders;
+import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.wizard.builder.CatPluginWizardBuilder;
-import org.unidal.maven.plugin.wizard.dom.PomXmlBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
@@ -225,7 +225,7 @@ public class CatPluginMojo extends AbstractMojo {
    protected void modifyPomFile(File pomFile, Wizard wizard, Webapp webapp) throws Exception {
       Document doc = new SAXBuilder().build(pomFile);
       Element root = doc.getRootElement();
-      PomXmlBuilder b = new PomXmlBuilder();
+      PomDelegate b = new PomDelegate();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
       Element packaging = b.findChild(root, "packaging");
       String projectType = packaging == null ? "jar" : packaging.getText();

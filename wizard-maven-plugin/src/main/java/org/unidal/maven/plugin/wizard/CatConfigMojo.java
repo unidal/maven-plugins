@@ -20,10 +20,9 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
+import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.wizard.dom.Log4jXmlBuilder;
-import org.unidal.maven.plugin.wizard.dom.PomXmlBuilder;
 import org.unidal.maven.plugin.wizard.dom.WebXmlBuilder;
-
 import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
@@ -174,7 +173,7 @@ public class CatConfigMojo extends AbstractMojo {
    protected void modifyPomFile(File pomFile) throws JDOMException, IOException {
       Document doc = buildDocument(pomFile);
       Element root = doc.getRootElement();
-      PomXmlBuilder b = new PomXmlBuilder().setLog(getLog());
+      PomDelegate b = new PomDelegate().setLog(getLog());
       Element dependencies = b.findOrCreateChild(root, "dependencies");
       String version = "0.6.2";
 

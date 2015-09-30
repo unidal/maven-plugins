@@ -16,8 +16,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.unidal.maven.plugin.common.PropertyProviders;
 import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
-import org.unidal.maven.plugin.wizard.dom.PomXmlBuilder;
-
+import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.helper.Splitters;
 
 /**
@@ -77,7 +76,7 @@ public class ProjectDependencyMojo extends AbstractMojo {
     */
    protected Boolean withExclusions;
 
-   protected Document modifyPom(PomXmlBuilder b) {
+   protected Document modifyPom(PomDelegate b) {
       Document doc = b.openMavenDocument(m_project.getFile());
       Element project = doc.getRootElement();
       Element dependencies = b.findOrCreateChild(project, "dependencies");
@@ -110,7 +109,7 @@ public class ProjectDependencyMojo extends AbstractMojo {
    public void execute() throws MojoExecutionException, MojoFailureException {
       prepare();
 
-      PomXmlBuilder b = new PomXmlBuilder();
+      PomDelegate b = new PomDelegate();
       Document doc = modifyPom(b);
 
       try {

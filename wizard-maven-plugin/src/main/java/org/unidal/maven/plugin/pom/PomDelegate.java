@@ -1,4 +1,4 @@
-package org.unidal.maven.plugin.wizard.dom;
+package org.unidal.maven.plugin.pom;
 
 import java.io.File;
 import java.util.List;
@@ -8,11 +8,28 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Triple;
 
-public class PomXmlBuilder extends JDomBuilder {
+@Named
+public class PomDelegate extends DomAccessor {
    private static Namespace NS = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
 
-   private Log m_log;
+   @Inject
+   private VersionMapping m_mapping;
+
+   private Log m_logger;
+
+   private boolean m_verbose;
+
+   public boolean isVerbose() {
+      return m_verbose;
+   }
+
+   public void setVerbose(boolean verbose) {
+      m_verbose = verbose;
+   }
 
    public boolean checkDependency(Element dependencies, String groupId, String artifactId, String version, String scope) {
       Element dependency = findDependency(dependencies, groupId, artifactId);
@@ -32,13 +49,50 @@ public class PomXmlBuilder extends JDomBuilder {
 
          dependencies.addContent(dependency);
 
-         if (m_log != null) {
-            m_log.info(String.format("Dependency(%s:%s:%s) added.", groupId, artifactId, version));
+         if (m_logger != null) {
+            m_logger.info(String.format("Dependency(%s:%s:%s) added.", groupId, artifactId, version));
          }
 
          return false;
       } else {
          return true;
+      }
+   }
+
+   public boolean findOrCreateDependency(Element dependencies, String id, String scope) {
+      Triple<String, String, String> triple = m_mapping.findById(id);
+      String groupId = triple.getFirst();
+      String artifactId = triple.getMiddle();
+      String version = triple.getLast();
+      Element dependency = findDependency(dependencies, groupId, artifactId);
+
+      if (dependency == null) {
+         dependency = new Element("dependency", NS);
+
+         createChild(dependency, "groupId", groupId);
+         createChild(dependency, "artifactId", artifactId);
+
+         if (version != null && version.length() > 0) {
+            createChild(dependency, "version", version);
+         }
+
+         if (scope != null) {
+            createChild(dependency, "scope", scope);
+         }
+
+         dependencies.addContent(dependency);
+         verbose(String.format("Dependency(%s:%s:%s) added.", groupId, artifactId, version));
+         return false;
+      } else {
+         return true;
+      }
+   }
+
+   private void verbose(String pattern, Object... args) {
+      if (m_verbose) {
+         if (m_logger != null) {
+            m_logger.info(String.format(pattern, args));
+         }
       }
    }
 
@@ -123,7 +177,8 @@ public class PomXmlBuilder extends JDomBuilder {
       Namespace xsi = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
       root.addNamespaceDeclaration(NS);
-      root.setAttribute("schemaLocation", "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd", xsi);
+      root.setAttribute("schemaLocation", "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd",
+            xsi);
       return doc;
    }
 
@@ -197,8 +252,8 @@ public class PomXmlBuilder extends JDomBuilder {
       }
    }
 
-   public PomXmlBuilder setLog(Log log) {
-      m_log = log;
+   public PomDelegate setLog(Log log) {
+      m_logger = log;
       return this;
    }
 }

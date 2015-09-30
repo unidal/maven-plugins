@@ -9,13 +9,14 @@ import org.jdom.Document;
 import org.junit.Test;
 import org.unidal.codegen.aggregator.XmlAggregator;
 import org.unidal.lookup.ComponentTestCase;
+import org.unidal.maven.plugin.pom.DomAccessor;
 
 public class DocumentBuilderTest extends ComponentTestCase {
    @Test
    public void testSelectNodes() throws Exception {
 
       File wizardFile = new File("src/test/resources/META-INF/wizard/jdbc/wizard.xml");
-      JDomBuilder db = new JDomBuilder();
+      DomAccessor db = new DomAccessor();
       Document wizardDocument = db.loadDocument(wizardFile);
       List<String> tables = db.selectAttributes(wizardDocument, "/wizard/jdbc/group/table/@name");
 
