@@ -136,6 +136,12 @@
                <xsl:value-of select="$empty"/>      writeTag(<xsl:value-of select="$index"/>, 0);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      write<xsl:call-template name="get-type-name"/>(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
             </xsl:when>
+            <xsl:when test="@enum='true'">
+               <xsl:value-of select="$empty"/>      if (<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>() != null) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         writeTag(<xsl:value-of select="$index"/>, 1);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         writeString(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().name());<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+            </xsl:when>
             <xsl:when test="name()='element' and (@list='true' or @set='true')">
                <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         writeTag(<xsl:value-of select="$index"/>, 2);<xsl:value-of select="$empty-line"/>
@@ -299,7 +305,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='String']">
+<xsl:if test="$properties[@value-type='String' or @enum='true']">
    private void writeString(String value) {
       try {
          m_out.writeUTF(value);
