@@ -320,7 +320,7 @@
 <xsl:if test="$properties[@value-type='double' or @value-type='Double']">
    private void writeDouble(double value) {
       try {
-         m_out.writeDouble(value);
+         writeVarint(Double.doubleToLongBits(value));
       } catch (IOException e) {
          throw new RuntimeException(e);
       }

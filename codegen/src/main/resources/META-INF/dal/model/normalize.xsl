@@ -599,6 +599,12 @@
       		<xsl:attribute name="json-map">true</xsl:attribute>
       	 </xsl:when>
       </xsl:choose>
+      <xsl:attribute name="keep-order">
+      	<xsl:choose>
+      		<xsl:when test="@keep-order='false'">false</xsl:when>
+      		<xsl:otherwise>true</xsl:otherwise>
+      	</xsl:choose>
+      </xsl:attribute>
 
       <xsl:apply-templates/>
    </xsl:copy>

@@ -23,12 +23,11 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
-			<role>org.unidal.maven.plugin.wizard.webapp.WebAppGenerator</role>
-			<implementation>org.unidal.maven.plugin.wizard.webapp.WebAppGenerator</implementation>
+			<role>org.unidal.maven.plugin.wizard.webapp.WebAppWizardBuilder</role>
+			<implementation>org.unidal.maven.plugin.wizard.webapp.WebAppWizardBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>org.unidal.codegen.generator.Generator</role>
-					<role-hint>wizard-webapp</role-hint>
+					<role>org.unidal.codegen.meta.WizardMeta</role>
 				</requirement>
 			</requirements>
 		</component>

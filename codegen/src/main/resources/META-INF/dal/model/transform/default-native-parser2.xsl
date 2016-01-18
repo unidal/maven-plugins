@@ -286,7 +286,7 @@
 <xsl:if test="$properties[@value-type='double' or @value-type='Double']">
    private double readDouble() {
       try {
-         return m_in.readDouble();
+         return Double.longBitsToDouble(readVarint(64));
       } catch (IOException e) {
          throw new RuntimeException(e);
       }

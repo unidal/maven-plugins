@@ -60,8 +60,12 @@
    private DataOutputStream m_out;
 
    public DefaultNativeBuilder(OutputStream out) {
+      this(out, null);
+   }
+
+   public DefaultNativeBuilder(OutputStream out, IVisitor visitor) {
       m_out = new DataOutputStream(out);
-      m_visitor = this;
+      m_visitor = (visitor == null ? this : visitor);
    }
 
    public static byte[] build(<xsl:value-of select="$root/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$root/@param-name"/>) {
@@ -263,7 +267,7 @@
 <xsl:if test="$properties[@value-type='double' or @value-type='Double']">
    private void writeDouble(double value) {
       try {
-         m_out.writeDouble(value);
+         writeVarint(Double.doubleToLongBits(value));
       } catch (IOException e) {
          throw new RuntimeException(e);
       }

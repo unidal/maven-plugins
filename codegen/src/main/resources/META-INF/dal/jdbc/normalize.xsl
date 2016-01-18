@@ -227,8 +227,9 @@
       </xsl:attribute>
 
       <xsl:attribute name="value-type">
-         <xsl:call-template name="normalize-value-type">
+         <xsl:call-template name="convert-value-type">
             <xsl:with-param name="value-type" select="@value-type"/>
+            <xsl:with-param name="nullable" select="@nullable"/>
          </xsl:call-template>
       </xsl:attribute>
 
@@ -298,7 +299,7 @@
       </xsl:attribute>
 
       <xsl:attribute name="value-type">
-         <xsl:call-template name="normalize-value-type">
+         <xsl:call-template name="convert-value-type">
             <xsl:with-param name="value-type" select="@value-type"/>
          </xsl:call-template>
       </xsl:attribute>
@@ -465,8 +466,9 @@
 
       <!-- attribute declaration -->
       <xsl:attribute name="value-type">
-         <xsl:call-template name="normalize-value-type">
+         <xsl:call-template name="convert-value-type">
             <xsl:with-param name="value-type" select="$parent/@value-type"/>
+            <xsl:with-param name="nullable" select="@nullable"/>
             <xsl:with-param name="is-ref" select="@type='out' or @type='inout'"/>
          </xsl:call-template>
       </xsl:attribute>
@@ -528,6 +530,31 @@
 
       <xsl:apply-templates/>
    </xsl:copy>
+</xsl:template>
+
+<xsl:template name="convert-value-type">
+   <xsl:param name="value-type"/>
+   <xsl:param name="is-ref" select="false()"/>
+   <xsl:param name="nullable" select="'false'"/>
+   
+   <xsl:choose>
+      <xsl:when test="$is-ref">
+         <xsl:call-template name="normalize-value-type">
+            <xsl:with-param name="value-type" select="$value-type"/>
+            <xsl:with-param name="is-ref" select="$is-ref"/>
+         </xsl:call-template>
+   	  </xsl:when>
+      <xsl:when test="$nullable='true'">
+         <xsl:call-template name="normalize-key-type">
+            <xsl:with-param name="value-type" select="$value-type"/>
+         </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+         <xsl:call-template name="normalize-value-type">
+            <xsl:with-param name="value-type" select="$value-type"/>
+         </xsl:call-template>
+      </xsl:otherwise>
+   </xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>

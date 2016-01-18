@@ -147,7 +147,7 @@
 		<member name="author" field="author" value-type="String" length="40" />
 		<member name="origin-link" field="origin_link" value-type="String" length="250" nullable="false" />
 		<member name="source-type" field="source_type" value-type="String" length="20" nullable="false" />
-		<member name="source-id" field="source_id" value-type="int" length="10" nullable="false" />
+		<member name="source-id" field="source_id" value-type="int" length="10" nullable="true" />
 		<member name="tags" field="tags" value-type="String" length="200" nullable="false" />
 		<member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
 		<var name="key-id" value-type="int" key-member="id" />
