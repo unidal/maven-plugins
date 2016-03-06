@@ -8,8 +8,8 @@
    <name>Maven Plugins</name>
    <packaging>pom</packaging>
    <modules>
-      <module>codegen</module>
       <module>common</module>
+      <module>codegen</module>
       <module>codegen-maven-plugin</module>
       <module>plexus-maven-plugin</module>
       <module>project-maven-plugin</module>
