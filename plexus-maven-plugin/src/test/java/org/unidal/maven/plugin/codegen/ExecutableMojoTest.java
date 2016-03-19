@@ -10,16 +10,7 @@ public class ExecutableMojoTest {
 	public void copyBootstrapFiles() throws IOException {
 		ExecutableMojo mojo = new ExecutableMojo();
 
-		mojo.copyBootstrapFiles(new File("target/work"));
-	}
-
-	@Test
-	public void copyFoundationServiceJar() throws IOException {
-		ExecutableMojo mojo = new ExecutableMojo();
-
-		String path = mojo.copyFoundationServiceJar(new File("target/work"));
-
-		System.out.println(path);
+		mojo.copyBootstrapClasses(new File("target/work"));
 	}
 
 	@Test
@@ -38,10 +29,10 @@ public class ExecutableMojoTest {
 	}
 
 	@Test
-	public void packageJar() throws IOException {
+	public void packageIntoJar() throws IOException {
 		ExecutableMojo mojo = new ExecutableMojo();
 
-		mojo.packageJar(new File("target/work.jar"), new File("cat.jar"));
+		mojo.packageIntoJar(new File("target/work.jar"), new File("cat.jar"));
 	}
 
 	@Test
@@ -49,5 +40,12 @@ public class ExecutableMojoTest {
 		ExecutableMojo mojo = new ExecutableMojo();
 
 		mojo.reviseManifest(new File("target/work"));
+	}
+
+	@Test
+	public void copyClassFile() throws IOException {
+		ExecutableMojo mojo = new ExecutableMojo();
+
+		mojo.copyClassFile(new File("target/work"), "target/test-classes", "bootstrap.BootstrapTest");
 	}
 }

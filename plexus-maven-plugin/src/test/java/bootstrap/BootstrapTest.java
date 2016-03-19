@@ -5,11 +5,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class BootstrapTest {
+	public static void main(String[] args) throws Exception {
+		Bootstrap.main(null);
+	}
+
 	@Test
 	public void testUnzipWar() throws IOException {
 		Bootstrap b = new Bootstrap();
@@ -20,7 +22,7 @@ public class BootstrapTest {
 	}
 
 	@Test
-	public void testSetup() throws IOException {
+	public void testSetup() throws Exception {
 		Bootstrap b = new Bootstrap();
 		List<String> entries = b.setup(new File("target/work"), "cat.war");
 
@@ -28,13 +30,13 @@ public class BootstrapTest {
 	}
 
 	@Test
-	public void testHackClassLoader() throws IOException {
+	public void testHackClassLoader() throws Exception {
 		Bootstrap b = new Bootstrap();
 
 		b.hackClassLoader(Arrays.asList("cat.war"));
 
 		System.out.println(getClass().getResource("/WEB-INF/web.xml"));
 
-		b.startup(new File("target/work"), null);
+		// b.startup(new File("target/work"), null);
 	}
 }

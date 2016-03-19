@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -44,7 +43,7 @@ public class ExecutableMojo extends AbstractMojo {
 	/**
 	 * Working directory
 	 *
-	 * @parameter expression="${project.build.directory}/${project.build.finalName}.jar"
+	 * @parameter expression="${project.build.directory}/${project.build.finalName}_jar"
 	 * @readonly
 	 * @required
 	 */
@@ -83,14 +82,11 @@ public class ExecutableMojo extends AbstractMojo {
 	 */
 	private String mainClass;
 
-	void copyBootstrapFiles(File work) throws IOException {
-		copyClassFile(work, "/bootstrap/Bootstrap.class");
-		copyClassFile(work, "/bootstrap/Bootstrap$1.class");
-		copyClassFile(work, "/bootstrap/Bootstrap$2.class");
-		copyClassFile(work, "/bootstrap/Bootstrap$3.class");
+	void copyBootstrapClasses(File work) throws IOException {
+		copyClass(work, "/bootstrap/Bootstrap.class");
 	}
 
-	private void copyClassFile(File work, String name) throws IOException, FileNotFoundException {
+	private void copyClass(File work, String name) throws IOException, FileNotFoundException {
 		InputStream in = getClass().getResourceAsStream(name);
 		File file = new File(work, name);
 
@@ -98,16 +94,10 @@ public class ExecutableMojo extends AbstractMojo {
 		Files.forIO().copy(in, new FileOutputStream(file));
 	}
 
-	String copyFoundationServiceJar(File work) throws IOException {
-		URL url = getClass().getResource("/" + Files.class.getName().replace('.', '/') + ".class");
-		URL u = new URL(url.getFile());
-		String file = u.getFile();
-		int pos = file.indexOf('!');
-		File jarFile = new File(file.substring(0, pos));
-		String path = "lib/" + jarFile.getName();
+	void copyClassFile(File work, String testClasses, String main) throws IOException, FileNotFoundException {
+		String classFile = main.replace('.', '/') + ".class";
 
-		Files.forDir().copyFile(jarFile, new File(work, path));
-		return path;
+		Files.forDir().copyFile(new File(testClasses, classFile), new File(work, "WEB-INF/classes/" + classFile));
 	}
 
 	private void copyTestScopedDependencies(File work, List<String> compile, List<String> runtime, List<String> test)
@@ -148,23 +138,34 @@ public class ExecutableMojo extends AbstractMojo {
 	}
 
 	public void execute() throws MojoExecutionException {
+		getLog().info("Checking WAR file: " + m_warFile);
+
 		if (!m_warFile.exists()) {
-			throw new MojoExecutionException(m_warFile + " is not found, please run 'mvn package' first!");
+			throw new MojoExecutionException("Not found, please run 'mvn package' first!");
 		}
 
+		getLog().info("Working dir is " + m_work);
 		m_work.mkdirs();
 
 		try {
+			getLog().info("Extract WAR ...");
 			extractWar(m_work, m_warFile);
-			copyBootstrapFiles(m_work);
+
+			getLog().info("Copy bootstrap classes ...");
+			copyBootstrapClasses(m_work);
+
+			getLog().info("Revise MANIFEST.MF ...");
 			reviseManifest(m_work);
 
 			List<String> test = m_project.getTestClasspathElements();
 			List<String> compile = m_project.getCompileClasspathElements();
 			List<String> runtime = m_project.getRuntimeClasspathElements();
 
+			getLog().info("Copy test scope dependencies to /WEB-INF/ext ...");
 			copyTestScopedDependencies(m_work, compile, runtime, test);
-			packageJar(m_work, m_jarFile);
+
+			getLog().info("Package into jar: " + m_jarFile);
+			packageIntoJar(m_work, m_jarFile);
 
 			m_projectHelper.attachArtifact(m_project, "jar", m_jarFile);
 		} catch (Exception e) {
@@ -180,7 +181,7 @@ public class ExecutableMojo extends AbstractMojo {
 		zis.close();
 	}
 
-	void packageJar(File work, File jarFile) throws IOException {
+	void packageIntoJar(File work, File jarFile) throws IOException {
 		final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(jarFile));
 
 		Scanners.forDir().scan(work, new IMatcher<File>() {
@@ -247,19 +248,12 @@ public class ExecutableMojo extends AbstractMojo {
 			throw new IllegalStateException("TestServer is not found!");
 		}
 
+		getLog().info("Main class is " + main);
+
 		a.putValue("Main-Class", "bootstrap.Bootstrap");
 		a.putValue("X-Main-Class", main);
 
-		copyClassFile(new File(work, "WEB-INF/classes"), main);
-
-		// revise Class-Path
-		String classpath = a.getValue("Class-Path");
-
-		if (classpath == null) {
-			String path = copyFoundationServiceJar(work);
-
-			a.putValue("Class-Path", path);
-		}
+		copyClassFile(work, m_project.getBuild().getTestOutputDirectory(), main);
 
 		FileOutputStream out = new FileOutputStream(file);
 
