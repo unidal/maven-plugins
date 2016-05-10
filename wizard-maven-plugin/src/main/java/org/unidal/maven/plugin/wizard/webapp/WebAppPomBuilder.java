@@ -53,7 +53,7 @@ public class WebAppPomBuilder implements LogEnabled {
    }
 
    private void buildDependencies(Element dependencies) {
-      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "web-framework", "2.2.0", null)) {
+      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "web-framework", "2.4.0", null)) {
          if (m_webapp.isJstl()) {
             m_pom.checkDependency(dependencies, "javax.servlet", "jstl", "1.2", null);
          }
@@ -64,8 +64,8 @@ public class WebAppPomBuilder implements LogEnabled {
 
          m_pom.checkDependency(dependencies, "javax.servlet", "servlet-api", "2.5", "provided");
          m_pom.checkDependency(dependencies, "junit", "junit", "4.8.1", "test");
-         m_pom.checkDependency(dependencies, "org.unidal.framework", "foundation-service", "2.2.0", null);
-         m_pom.checkDependency(dependencies, "org.unidal.framework", "test-framework", "2.2.0", "test");
+         m_pom.checkDependency(dependencies, "org.unidal.framework", "foundation-service", "2.4.0", null);
+         m_pom.checkDependency(dependencies, "org.unidal.framework", "test-framework", "2.4.0", "test");
          m_pom.checkDependency(dependencies, "org.mortbay.jetty", "jetty", "6.1.14", "test");
          m_pom.checkDependency(dependencies, "org.mortbay.jetty", "jsp-2.1", "6.1.14", "test");
       }
@@ -108,7 +108,7 @@ public class WebAppPomBuilder implements LogEnabled {
 
    private void buildPlugins(Element build) {
       Element plugins = m_pom.findOrCreateChild(build, "plugins");
-      Element plexusPlugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "2.2.0");
+      Element plexusPlugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "2.4.1");
       Element plexus = m_pom.checkPluginExecution(plexusPlugin, "plexus", null, "generate plexus component descriptor");
       Element codegenPlexusConfiguration = m_pom.findOrCreateChild(plexus, "configuration");
 

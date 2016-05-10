@@ -105,33 +105,34 @@
       <xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:for-each select="attribute | element | entity-ref">
+      <xsl:variable name="transient"><xsl:if test="@render='false'">transient </xsl:if></xsl:variable>
       <xsl:choose>
          <xsl:when test="@map='true' and @thread-safe='true'">
-            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new ConcurrentHashMap<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new ConcurrentHashMap<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@map='true' and @keep-order='false'">
-            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new HashMap<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new HashMap<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@map='true'">
-            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new LinkedHashMap<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new LinkedHashMap<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@set='true' and @thread-safe='true'">
-            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = Collections.synchronizedSet(new LinkedHashSet<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>));<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = Collections.synchronizedSet(new LinkedHashSet<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>));<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@set='true'">
-            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new LinkedHashSet<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new LinkedHashSet<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@list='true' and @thread-safe='true'">
-            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = Collections.synchronizedList(new ArrayList<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>));<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = Collections.synchronizedList(new ArrayList<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>));<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@list='true'">
-            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new ArrayList<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new ArrayList<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@default-value">
-            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = <xsl:call-template name="field-default-value"/>;<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = <xsl:call-template name="field-default-value"/>;<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:value-of select="$empty"/>   private <xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/>;<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/>;<xsl:value-of select="$empty-line"/>
          </xsl:otherwise>
       </xsl:choose>
       <xsl:value-of select="$empty-line"/>
