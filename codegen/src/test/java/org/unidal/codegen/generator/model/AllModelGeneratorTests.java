@@ -12,6 +12,7 @@ import org.unidal.codegen.generator.model.dobby.DobbyGeneratorTest;
 import org.unidal.codegen.generator.model.ebay.EbayGeneratorTest;
 import org.unidal.codegen.generator.model.egret.EgretGeneratorTest;
 import org.unidal.codegen.generator.model.expense.ExpenseGeneratorTest;
+import org.unidal.codegen.generator.model.hermes.HermesGeneratorTest;
 import org.unidal.codegen.generator.model.key.KeysGeneratorTest;
 import org.unidal.codegen.generator.model.liger.LigerGeneratorTest;
 import org.unidal.codegen.generator.model.mvc.MvcGeneratorTest;
@@ -24,6 +25,7 @@ import org.unidal.codegen.generator.model.test.EunitMetaGeneratorTest;
 import org.unidal.codegen.generator.model.test.EunitTestGeneratorTest;
 import org.unidal.codegen.generator.model.webres.WebresGeneratorTest;
 import org.unidal.codegen.generator.model.wizard.WizardModelGeneratorTest;
+import org.unidal.codegen.generator.model.xpipe.XpipeGeneratorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -46,7 +48,11 @@ EgretGeneratorTest.class,
 
 ExpenseGeneratorTest.class,
 
+HermesGeneratorTest.class,
+
 LigerGeneratorTest.class,
+
+KeysGeneratorTest.class,
 
 MvcGeneratorTest.class,
 
@@ -68,7 +74,7 @@ ServiceModelGeneratorTest.class,
 
 WizardModelGeneratorTest.class,
 
-KeysGeneratorTest.class
+XpipeGeneratorTest.class,
 
 })
 public class AllModelGeneratorTests {

@@ -74,7 +74,6 @@ public class PlexusMojo extends AbstractMojo {
 	 */
 	protected boolean skip;
 
-	@SuppressWarnings("deprecation")
 	protected Map<String, String> buildProperties() {
 		Map<String, String> properties = new LinkedHashMap<String, String>();
 		Properties userProperties = m_project.getProjectBuildingRequest().getUserProperties();

@@ -265,7 +265,7 @@ public class ModelMojo extends AbstractMojo {
 
       Element build = b.findOrCreateChild(root, "build", null, "dependencies");
       Element plugins = b.findOrCreateChild(build, "plugins");
-      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.4.1");
+      Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.4.2");
       Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-model", "generate-sources", "generate dal model files");
       Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
       Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");

@@ -125,6 +125,7 @@ public class UnzipMojo extends AbstractMojo {
             created++;
          }
 
+         zip.close();
          getLog().info(created + " of " + total + " files created");
       } catch (ZipException e) {
          throw new MojoExecutionException("Invalid zip file: " + zipFile, e);

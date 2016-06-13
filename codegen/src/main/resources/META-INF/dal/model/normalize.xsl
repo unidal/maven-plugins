@@ -24,11 +24,11 @@
          </xsl:choose>
       </xsl:attribute>
       
-      <xsl:apply-templates mode="entity"/>
+      <xsl:apply-templates/>
    </xsl:copy>
 </xsl:template>
 
-<xsl:template match="entity" mode="entity">
+<xsl:template match="entity">
    <xsl:copy>
       <xsl:copy-of select="@*"/>
       
@@ -148,6 +148,18 @@
             <xsl:value-of select="'getAllChildrenInSequence'"/>
          </xsl:attribute>
       </xsl:if>
+      
+       <xsl:variable name="entity-name" select="@name"/>
+       <xsl:attribute name="parent">
+         <xsl:choose>
+            <xsl:when test="@parent"><xsl:value-of select="@parent"/></xsl:when>
+            <xsl:when test="/model/@parent and not(@root='true')"><xsl:value-of select="/model/@parent"/></xsl:when>
+            <xsl:otherwise>false</xsl:otherwise>
+         </xsl:choose>
+       </xsl:attribute>
+       <xsl:if test="count(//entity[entity-ref/@name=$name]) = 1">
+          <xsl:attribute name="parent-entity"><xsl:value-of select="//entity[entity-ref/@name=$entity-name]/@name"/></xsl:attribute>
+       </xsl:if>
       
       <xsl:apply-templates/>
    </xsl:copy>
@@ -552,18 +564,6 @@
    </xsl:copy>
 </xsl:template>
 
-<xsl:template match="entity">
-   <xsl:copy>
-      <xsl:copy-of select="@*"/>
-      
-       <xsl:call-template name="entity">
-          <xsl:with-param name="entity" select="."/>
-       </xsl:call-template>
-      
-      <xsl:apply-templates/>
-   </xsl:copy>
-</xsl:template>
-
 <xsl:template match="entity-ref">
    <xsl:copy>
       <xsl:copy-of select="@*"/>
@@ -605,6 +605,13 @@
       		<xsl:otherwise>true</xsl:otherwise>
       	</xsl:choose>
       </xsl:attribute>
+       <xsl:attribute name="parent">
+         <xsl:choose>
+            <xsl:when test="$entity/@parent"><xsl:value-of select="$entity/@parent"/></xsl:when>
+            <xsl:when test="/model/@parent and not($entity/@root='true')"><xsl:value-of select="/model/@parent"/></xsl:when>
+            <xsl:otherwise>false</xsl:otherwise>
+         </xsl:choose>
+       </xsl:attribute>
 
       <xsl:apply-templates/>
    </xsl:copy>

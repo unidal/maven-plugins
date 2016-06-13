@@ -108,7 +108,7 @@ public class WebAppPomBuilder implements LogEnabled {
 
    private void buildPlugins(Element build) {
       Element plugins = m_pom.findOrCreateChild(build, "plugins");
-      Element plexusPlugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "2.4.1");
+      Element plexusPlugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "2.4.2");
       Element plexus = m_pom.checkPluginExecution(plexusPlugin, "plexus", null, "generate plexus component descriptor");
       Element codegenPlexusConfiguration = m_pom.findOrCreateChild(plexus, "configuration");
 

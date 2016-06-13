@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="model" root="true">
+    <attribute name="type" value-type="String" />
+    <attribute name="id" value-type="Date" format="yyyy-MM-dd" />
+    <entity-ref name="product" type="list" names="products" />
+  </entity>
+  <entity name="product">
+    <attribute name="name" value-type="String" />
+    <entity-ref name="set" />
+    <entity-ref name="count" />
+    <entity-ref name="latency" />
+    <entity-ref name="rate" />
+  </entity>
+  <entity name="set">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="elements" type="list" names="elementses" />
+  </entity>
+  <entity name="elements">
+    <attribute name="unit" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+  <entity name="count">
+    <attribute name="id" value-type="String" />
+    <attribute name="version" value-type="String" />
+    <attribute name="unit" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+    <entity-ref name="values" type="list" names="valueses" />
+  </entity>
+  <entity name="values">
+    <attribute name="unit" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+  <entity name="latency">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="time-window" type="list" names="time-windows" />
+    <entity-ref name="distribution" type="list" names="distributions" />
+  </entity>
+  <entity name="time-window">
+    <attribute name="unit" value-type="String" />
+    <entity-ref name="count" />
+    <entity-ref name="sum" />
+  </entity>
+  <entity name="sum">
+    <attribute name="unit" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+  <entity name="distribution">
+    <attribute name="unit" value-type="String" />
+    <element name="range" value-type="String" />
+    <entity-ref name="count" />
+  </entity>
+  <entity name="rate">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="count" type="list" names="counts" />
+    <entity-ref name="sum" type="list" names="sums" />
+  </entity>
+</model>
+

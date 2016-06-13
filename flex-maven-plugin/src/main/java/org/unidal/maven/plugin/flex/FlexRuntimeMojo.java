@@ -234,6 +234,7 @@ public class FlexRuntimeMojo extends AbstractMojoWithDependency {
             fos.close();
          }
 
+         zip.close();
          getLog().info("Flex runtime unzipped");
       } catch (ZipException e) {
          throw new MojoExecutionException("Invalid zip file: " + flexRuntime, e);

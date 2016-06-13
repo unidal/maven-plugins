@@ -22,7 +22,7 @@
       <xsl:with-param name="type" select="@entity-class"/>
    </xsl:call-template>
    <xsl:if test="@implements">
-      <xsl:value-of select="$empty"/> implements <xsl:value-of select="@implements"/><xsl:value-of select="$empty"/>
+      <xsl:value-of select="$empty"/> implements <xsl:value-of select="@implements" disable-output-escaping="yes"/><xsl:value-of select="$empty"/>
    </xsl:if>
    <xsl:value-of select="$empty"/> {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name="declare-field-variables"/>
@@ -38,6 +38,7 @@
    <xsl:call-template name="method-get-dynamic-attributes"/>
    <xsl:call-template name="method-get-dynamic-elements"/>
    <xsl:call-template name="method-get-fields"/>
+   <xsl:call-template name="method-get-parent"/>
    <xsl:call-template name="method-has-text"/>
    <xsl:call-template name="method-hash-code"/>
    <xsl:call-template name="method-inc-fields"/>
@@ -51,6 +52,7 @@
    <xsl:call-template name="method-set-dynamic-attributes"/>
    <xsl:call-template name="method-set-dynamic-elements"/>
    <xsl:call-template name="method-set-fields"/>
+   <xsl:call-template name="method-set-parent"/>
    <xsl:call-template name="snippets"/>
    <xsl:value-of select="$empty"/>}<xsl:value-of select="$empty-line"/>
 </xsl:template>
@@ -145,6 +147,10 @@
       <xsl:value-of select="$empty"/>   private <xsl:value-of select="any/@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='any/@field-name'/> = new ArrayList<xsl:value-of select="any/@value-type-generic" disable-output-escaping="yes"/>();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:if>
+   <xsl:if test="@parent='true'">
+      <xsl:value-of select="$empty"/>   private transient <xsl:call-template name="parent-value-type"/> m_parent; <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+   </xsl:if>
 </xsl:template>
 
 <xsl:template name="constructor">
@@ -192,6 +198,9 @@
       <xsl:sort select="@add-method"/>
       
       <xsl:value-of select="$empty"/>   public <xsl:value-of select='$entity/@entity-class'/><xsl:value-of select="$space"/><xsl:value-of select='@add-method'/>(<xsl:value-of select='@value-type-element' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@param-name-element'/>) {<xsl:value-of select="$empty-line"/>
+      <xsl:if test="@parent='true'">
+	     	<xsl:value-of select="'      '"/><xsl:value-of select='@param-name-element'/>.setParent(this);<xsl:value-of select="$empty-line"/>
+      </xsl:if>
       <xsl:if test="$entity/@all-children-in-sequence='true'">
 	     	<xsl:value-of select="'      '"/><xsl:value-of select='$entity/@field-all-children-in-sequence'/>.add(<xsl:value-of select='@param-name-element'/>);<xsl:value-of select="$empty-line"/>
       </xsl:if>
@@ -524,6 +533,27 @@
    </xsl:for-each>
 </xsl:template>
 
+<xsl:template name="method-get-parent">
+   <xsl:if test="@parent='true'">
+      <xsl:variable name="parent-value-type"><xsl:call-template name="parent-value-type"/></xsl:variable>
+      <xsl:choose>
+         <xsl:when test="$parent-value-type='Object'">
+            <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   public <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T getParent() {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>      return (T) m_parent;<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="$empty"/>   public <xsl:value-of select="$parent-value-type"/><xsl:value-of select="$space"/>getParent() {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>      return m_parent;<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty-line"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:if>
+</xsl:template>
+
 <xsl:template name="method-has-text">
    <xsl:for-each select="attribute[@text='true']">
       <xsl:value-of select="$empty"/>   public boolean hasText() {<xsl:value-of select="$empty-line"/>
@@ -737,6 +767,17 @@
    </xsl:for-each>
 </xsl:template>
 
+<xsl:template name="method-set-parent">
+   <xsl:if test="@parent='true'">
+      <xsl:value-of select="$empty"/>   public <xsl:value-of select="@class-name" disable-output-escaping="yes"/><xsl:value-of select="$space"/>setParent(<xsl:call-template name="parent-value-type"/> parent) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      m_parent = parent;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return this;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+   </xsl:if>
+</xsl:template>
+
+
 <xsl:template name="method-inc-fields">
    <xsl:variable name="entity" select="." />
    <xsl:for-each select="(attribute | element)[@inc-method]">
@@ -806,6 +847,17 @@
       <xsl:otherwise>
          <xsl:value-of select="$empty"/>      hash = hash * 31 + (<xsl:value-of select="$field/@field-name"/> == null ? 0 : <xsl:value-of select="$field/@field-name"/>.hashCode());<xsl:value-of select="$empty-line"/>
       </xsl:otherwise>
+   </xsl:choose>
+</xsl:template>
+
+<xsl:template name="parent-value-type">
+   <xsl:param name="entity" select="."/>
+   
+   <xsl:choose>
+      <xsl:when test="$entity/@parent='true' and $entity/@parent-entity">
+         <xsl:value-of select="/model/entity[@name = $entity/@parent-entity]/@class-name"/>
+      </xsl:when>
+      <xsl:when test="$entity/@parent='true'">Object</xsl:when>
    </xsl:choose>
 </xsl:template>
 
