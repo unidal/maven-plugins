@@ -539,13 +539,13 @@
       <xsl:choose>
          <xsl:when test="$parent-value-type='Object'">
             <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$empty"/>   public <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T getParent() {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   public <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T parent() {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      return (T) m_parent;<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:value-of select="$empty"/>   public <xsl:value-of select="$parent-value-type"/><xsl:value-of select="$space"/>getParent() {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>   public <xsl:value-of select="$parent-value-type"/><xsl:value-of select="$space"/>parent() {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>      return m_parent;<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty-line"/>

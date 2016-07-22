@@ -61,6 +61,10 @@
       </xsl:if>
    </xsl:for-each>
    <xsl:value-of select="$empty-line"/>
+   <xsl:if test="//entity/entity-ref[@map='true' and @keep-order='false']">
+      <xsl:value-of select="$empty"/>import java.util.TreeMap;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+   </xsl:if>
    <xsl:if test="//entity[@all-children-in-sequence='true']">
       <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.BaseEntity;<xsl:value-of select="$empty-line"/>
    </xsl:if>
@@ -361,10 +365,10 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:choose>
          <xsl:when test="@list='true' or @map='true' or @set='true'">
-            <xsl:variable name="suffix">
+            <xsl:variable name="values">
                <xsl:choose>
-                  <xsl:when test="@map='true'">.values()</xsl:when>
-                  <xsl:otherwise></xsl:otherwise>
+                  <xsl:when test="@map='true'"><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>().values()</xsl:when>
+                  <xsl:otherwise><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()</xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
             <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
@@ -372,7 +376,7 @@
                <xsl:value-of select="$empty"/>         startTag(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
             </xsl:if>
-            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$suffix"/>.toArray(new <xsl:value-of select="@value-type-element" disable-output-escaping="yes"/>[0])) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$values"/>) {<xsl:value-of select="$empty-line"/>
             <xsl:choose>
                <xsl:when test="@value-type-element='String'">
                   <xsl:value-of select="$empty"/>            tagWithText(<xsl:value-of select="@upper-name-element"/>, <xsl:value-of select="@local-name-element"/>);<xsl:value-of select="$empty-line"/>
@@ -418,10 +422,11 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:choose>
          <xsl:when test="@list='true' or @map='true' or @set='true'">
-            <xsl:variable name="suffix">
+            <xsl:variable name="values">
                <xsl:choose>
-                  <xsl:when test="@map='true'">.values()</xsl:when>
-                  <xsl:otherwise></xsl:otherwise>
+                  <xsl:when test="@map='true' and @keep-order='false'">new TreeMap<xsl:value-of select="@value-type-generic"/>(<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()).values()</xsl:when>
+                  <xsl:when test="@map='true'"><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>().values()</xsl:when>
+                  <xsl:otherwise><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()</xsl:otherwise>
                </xsl:choose>
             </xsl:variable>
             <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
@@ -429,7 +434,7 @@
                <xsl:value-of select="$empty"/>         startTag(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
             </xsl:if>
-            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>()<xsl:value-of select="$suffix"/>.toArray(new <xsl:value-of select="$entity/@entity-class"/>[0])) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         for (<xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$values" disable-output-escaping="yes"/>) {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>            <xsl:value-of select="'            '"/><xsl:value-of select="@local-name-element"/>.accept(m_visitor);<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
             <xsl:if test="@xml-indent='true'">
