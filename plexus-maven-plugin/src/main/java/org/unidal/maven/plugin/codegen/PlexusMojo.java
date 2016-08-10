@@ -18,6 +18,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.cli.StreamConsumer;
+import org.unidal.helper.Files;
 import org.unidal.helper.Joiners;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
@@ -41,7 +42,7 @@ public class PlexusMojo extends AbstractMojo {
 	protected MavenProject m_project;
 
 	/**
-	 * Configurator class names delimitered with comma(',').
+	 * Configurator class names delimited with comma(',').
 	 * 
 	 * @parameter expression="${className}"
 	 * @required
@@ -74,6 +75,53 @@ public class PlexusMojo extends AbstractMojo {
 	 */
 	protected boolean skip;
 
+	private String buildClasspath(List<String> elements) {
+		String path = Joiners.by(System.getProperty("path.separator")).join(elements);
+
+		// to work around windows command line length limitation
+		if (path.length() >= 2000) {
+			String os = System.getProperty("os.name");
+
+			if (os.toLowerCase().contains("windows")) {
+				StringBuilder sb = new StringBuilder(2048);
+				char sp = File.pathSeparatorChar;
+				File tmpDir = new File("target/tmplib");
+				int index = 0;
+
+				Files.forDir().delete(tmpDir, true);
+				tmpDir.mkdirs();
+
+				for (String element : elements) {
+					File source = new File(element);
+
+					if (sb.length() > 0) {
+						sb.append(sp);
+					}
+
+					if (source.isFile()) {
+						try {
+							File target = new File(tmpDir, (index++) + ".jar");
+
+							Files.forDir().copyFile(source, target);
+							sb.append(target.getCanonicalPath());
+							target.deleteOnExit();
+							continue;
+						} catch (Exception e) {
+							// ignore it
+							System.err.println(e);
+						}
+					}
+
+					sb.append(element);
+				}
+
+				return sb.toString();
+			}
+		}
+
+		return path;
+	}
+
 	protected Map<String, String> buildProperties() {
 		Map<String, String> properties = new LinkedHashMap<String, String>();
 		Properties userProperties = m_project.getProjectBuildingRequest().getUserProperties();
@@ -101,10 +149,10 @@ public class PlexusMojo extends AbstractMojo {
 			List<String> names = Splitters.by(',').noEmptyItem().trim().split(className);
 			List<String> classpathElements = m_project.getCompileClasspathElements();
 			ClassLoader classLoader = makeClassLoader(classpathElements);
-			String classpath = Joiners.by(System.getProperty("path.separator")).join(classpathElements);
+			String classpath = buildClasspath(classpathElements);
 
 			if (verbose) {
-				getLog().info("Configurators: " + className);
+				getLog().info("Configurator: " + className);
 				getLog().info("Classpath: " + classpath);
 			}
 
