@@ -14,7 +14,7 @@
 
 <xsl:variable name="webapp-root">
    <xsl:choose>
-      <xsl:when test="/wizard/webapp/@module='true'"><xsl:value-of select="concat($src-main-resources, '/WEB-MODULE', /wizard/webapp/@path)"/></xsl:when>
+      <xsl:when test="/wizard/webapp/@module='true'"><xsl:value-of select="concat($src-main-resources, '/META-INF/resources', /wizard/webapp/@path)"/></xsl:when>
       <xsl:otherwise><xsl:value-of select="$src-main-webapp"/></xsl:otherwise>
    </xsl:choose>
 </xsl:variable>
@@ -62,10 +62,10 @@
    </xsl:call-template>
 
    <!-- WEB-INF/web.xml file -->
-   <xsl:call-template name="generate-web-resource">
+   <!-- <xsl:call-template name="generate-web-resource">
      <xsl:with-param name="file" select="'WEB-INF/web.xml'"/>
      <xsl:with-param name="template" select="'web-inf/web-xml.xsl'"/>
-   </xsl:call-template>
+   </xsl:call-template> -->
 
    <xsl:if test="@cat='true'">
       <!-- META-INF/cat/client.xml file -->
