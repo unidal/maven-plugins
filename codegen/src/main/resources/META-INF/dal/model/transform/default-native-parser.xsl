@@ -28,6 +28,14 @@
    <xsl:value-of select="$empty"/>import java.io.DataInputStream;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.IOException;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.InputStream;<xsl:value-of select="$empty-line"/>
+   <xsl:if test="//entity/attribute[not(@render='false') and @list='true']">
+      <xsl:value-of select="$empty"/>import java.util.ArrayList;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import java.util.List;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
+   <xsl:if test="//entity/attribute[not(@render='false') and @set='true']">
+      <xsl:value-of select="$empty"/>import java.util.LinkedHashSet;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import java.util.Set;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
    <xsl:if test="//entity[@dynamic-attributes='true'] | entity/any">
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>import java.util.Map;<xsl:value-of select="$empty-line"/>
@@ -139,94 +147,126 @@
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   protected void <xsl:value-of select="@visit-method"/>Children(<xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>, int _field, int _type) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      switch (_field) {<xsl:value-of select="$empty-line"/>
-      <xsl:variable name="indent" select="'            '"/>
-      <xsl:for-each select="(attribute | element)[not(@render='false')]">
-         <xsl:variable name="index" select="position()"/>
-         
-         <xsl:choose>
-            <xsl:when test="@primitive='true'">
-               <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@set-method"/>(read<xsl:call-template name="get-type-name"/>());<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
-            </xsl:when>
-            <xsl:when test="@enum='true'">
-               <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@set-method"/>(<xsl:call-template name="get-type-name"/>.valueOf(readString()));<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
-            </xsl:when>
-            <xsl:when test="name()='element' and (@list='true' or @set='true')">
-               <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            if (_type == 1) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>               <xsl:value-of select="'                  '"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@add-method"/>(read<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>());<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            } else if (_type == 2) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>               for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>               <xsl:value-of select="'                  '"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@add-method"/>(read<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>());<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>               }<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
-            </xsl:when>
-            <xsl:otherwise>
-               <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@set-method"/>(read<xsl:call-template name="get-type-name"/>());<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
-            </xsl:otherwise>
-         </xsl:choose>
-      </xsl:for-each>
-      <xsl:for-each select="entity-ref[not(@render='false')]">
-         <xsl:variable name="index" select="position() + 32"/>
-         <xsl:variable name="name" select="@name"/>
-         <xsl:variable name="current" select="//entity[@name=$name]"/>
-         
-         <xsl:choose>
-            <xsl:when test="@list='true' or @map='true'">
-               <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            if (_type == 1) {<xsl:value-of select="$empty-line"/>
-               <xsl:call-template name="visit-child">
-                  <xsl:with-param name="entity" select="$current"/>
-                  <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
-                  <xsl:with-param name="indent" select="'              '"/>
-                  <xsl:with-param name="param-name" select="@local-name"/>
-               </xsl:call-template>
-               <xsl:value-of select="$empty"/>            } else if (_type == 2) {<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>               for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
-               <xsl:call-template name="visit-child">
-                  <xsl:with-param name="entity" select="$current"/>
-                  <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
-                  <xsl:with-param name="indent" select="'                 '"/>
-                  <xsl:with-param name="param-name" select="@local-name"/>
-               </xsl:call-template>
-               <xsl:value-of select="$empty"/>               }<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
-            </xsl:when>
-            <xsl:otherwise>
-               <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
-               <xsl:call-template name="visit-child">
-                  <xsl:with-param name="entity" select="$current"/>
-                  <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
-                  <xsl:with-param name="indent" select="'            '"/>
-               </xsl:call-template>
-               <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
-            </xsl:otherwise>
-         </xsl:choose>
-      </xsl:for-each>
-      <xsl:if test="@dynamic-attributes='true'">
-         <xsl:value-of select="$empty"/>         case 63:<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>            Map<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> dynamicAttribute = <xsl:value-of select="$entity/@param-name"/>.getDynamicAttributes();<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>            for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>               String key = readString();<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>               String value = readString();<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>               dynamicAttribute.put(key, value);<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
-         <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
-      </xsl:if>
-      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:call-template name="method-visit-children" />
    </xsl:for-each>
+</xsl:template>
+
+<xsl:template name="method-visit-children">
+   <xsl:variable name="entity" select="."/>
+
+   <xsl:value-of select="$empty"/>   protected void <xsl:value-of select="@visit-method"/>Children(<xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>, int _field, int _type) {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>      switch (_field) {<xsl:value-of select="$empty-line"/>
+   <xsl:variable name="indent" select="'            '"/>
+   <xsl:for-each select="(attribute | element)[not(@render='false')]">
+      <xsl:variable name="index" select="position()"/>
+      
+      <xsl:choose>
+         <xsl:when test="@primitive='true' and not(@type)">
+            <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@set-method"/>(read<xsl:call-template name="get-type-name"/>());<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:when test="@enum='true'">
+            <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@set-method"/>(<xsl:call-template name="get-type-name"/>.valueOf(readString()));<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:when test="name()='attribute' and @array='true'">
+            <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
+            <xsl:variable name="len" select="concat('_l', $index)"/>
+            <xsl:value-of select="$empty"/>            int <xsl:value-of select="$len"/> = readInt();<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="@value-type-element"/>[] <xsl:value-of select="@local-name"/> = new <xsl:value-of select="@value-type-element"/>[<xsl:value-of select="$len"/>];<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            for (int _i = 0; _i <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> <xsl:value-of select="$len"/>; _i++) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>               <xsl:value-of select="'                  '"/><xsl:value-of select="@local-name"/>[_i] = read<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>();<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@set-method"/>(<xsl:value-of select="@local-name"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:when test="name()='attribute' and (@list='true' or @set='true')">
+            <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
+            <xsl:variable name="len" select="concat('_l', $index)"/>
+            <xsl:value-of select="$empty"/>            int <xsl:value-of select="$len"/> = readInt();<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="@value-type" disable-output-escaping="yes"/> <xsl:value-of select="@local-name"/> = new <xsl:value-of select="@value-type-implementation-generic" disable-output-escaping="yes"/>(<xsl:value-of select="$len"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            for (int _i = 0; _i <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> <xsl:value-of select="$len"/>; _i++) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>               <xsl:value-of select="'                  '"/><xsl:value-of select="@local-name"/>.add(read<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>());<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@set-method"/>(<xsl:value-of select="@local-name"/>);<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:when test="name()='element' and (@list='true' or @set='true')">
+            <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            if (_type == 1) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>               <xsl:value-of select="'                  '"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@add-method"/>(read<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>());<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            } else if (_type == 2) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>               for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>               <xsl:value-of select="'                  '"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@add-method"/>(read<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>());<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>               }<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@set-method"/>(read<xsl:call-template name="get-type-name"/>());<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:for-each>
+   <xsl:for-each select="entity-ref[not(@render='false')]">
+      <xsl:variable name="index" select="position() + 32"/>
+      <xsl:variable name="name" select="@name"/>
+      <xsl:variable name="current" select="//entity[@name=$name]"/>
+      
+      <xsl:choose>
+         <xsl:when test="@list='true' or @map='true'">
+            <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            if (_type == 1) {<xsl:value-of select="$empty-line"/>
+            <xsl:call-template name="visit-child">
+               <xsl:with-param name="entity" select="$current"/>
+               <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
+               <xsl:with-param name="indent" select="'              '"/>
+               <xsl:with-param name="param-name" select="@local-name"/>
+            </xsl:call-template>
+            <xsl:value-of select="$empty"/>            } else if (_type == 2) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>               for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
+            <xsl:call-template name="visit-child">
+               <xsl:with-param name="entity" select="$current"/>
+               <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
+               <xsl:with-param name="indent" select="'                 '"/>
+               <xsl:with-param name="param-name" select="@local-name"/>
+            </xsl:call-template>
+            <xsl:value-of select="$empty"/>               }<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
+            <xsl:call-template name="visit-child">
+               <xsl:with-param name="entity" select="$current"/>
+               <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
+               <xsl:with-param name="indent" select="'            '"/>
+            </xsl:call-template>
+            <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:for-each>
+   <xsl:if test="@dynamic-attributes='true'">
+      <xsl:value-of select="$empty"/>         case 63:<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            Map<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> dynamicAttribute = <xsl:value-of select="$entity/@param-name"/>.getDynamicAttributes();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               String key = readString();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               String value = readString();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               dynamicAttribute.put(key, value);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
+   <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
 </xsl:template>
 
 <xsl:template name="visit-child">
@@ -243,7 +283,7 @@
 
 <xsl:template name="method-read-methods">
 <xsl:variable name="properties" select="(//entity/attribute | //entity/element)[not(@render='false')]"/>
-<xsl:if test="$properties[@value-type='Boolean' or @value-type='boolean']">
+<xsl:if test="$properties[@value-type='Boolean' or @value-type='boolean' or @value-type-element='Boolean' or @value-type-element='boolean']">
    private boolean readBoolean() {
       try {
          return m_in.readByte() == 1 ? Boolean.TRUE : Boolean.FALSE;
@@ -252,7 +292,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='byte' or @value-type='Byte']">
+<xsl:if test="$properties[@value-type='byte' or @value-type='Byte' or @value-type-element='byte' or @value-type-element='Byte']">
    private byte readByte() {
       try {
          return m_in.readByte();
@@ -261,7 +301,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='char' or @value-type='Character']">
+<xsl:if test="$properties[@value-type='char' or @value-type='Character' or @value-type-element='char' or @value-type-element='Character']">
    private char readChar() {
       try {
          return (char) readVarint(16);
@@ -288,7 +328,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='double' or @value-type='Double']">
+<xsl:if test="$properties[@value-type='double' or @value-type='Double' or @value-type-element='double' or @value-type-element='Double']">
    private double readDouble() {
       try {
          return Double.longBitsToDouble(readVarint(64));
@@ -297,7 +337,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='float' or @value-type='Float']">
+<xsl:if test="$properties[@value-type='float' or @value-type='Float' or @value-type-element='float' or @value-type-element='Float']">
    private float readFloat() {
       try {
          return m_in.readFloat();
@@ -306,7 +346,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='int' or @value-type='Integer'] | //entity/element[@list='true' or @set='true'] or //entity/entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or //entity/any">
+<xsl:if test="$properties[@value-type='int' or @value-type='Integer' or @value-type-element='int' or @value-type-element='Integer'] | //entity/attribute[@array='true' or @list='true' or @set='true'] | //entity/element[@list='true' or @set='true'] or //entity/entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or //entity/any">
    private int readInt() {
       try {
          return (int) readVarint(32);
@@ -315,7 +355,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='long' or @value-type='Long']">
+<xsl:if test="$properties[@value-type='long' or @value-type='Long' or @value-type-element='long' or @value-type-element='Long']">
    private long readLong() {
       try {
          return readVarint(64);
@@ -324,7 +364,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='short' or @value-type='Short']">
+<xsl:if test="$properties[@value-type='short' or @value-type='Short' or @value-type-element='short' or @value-type-element='Short']">
    private short readShort() {
       try {
          return (short) readVarint(16);
@@ -333,7 +373,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='String']">
+<xsl:if test="$properties[@value-type='String' or @value-type-element='String']">
    private String readString() {
       try {
          return m_in.readUTF();

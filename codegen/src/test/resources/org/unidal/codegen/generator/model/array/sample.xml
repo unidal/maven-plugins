@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model id="1" first="1,2,3" second="12,34,56" third="true,false,true" fourth="1,3,5,7" fifth="2,4,6,8" sixth="12,89" nineth="one,two,three">
+   <child-model first="2,4,6" second="4,6,8,10"/>
+</model>

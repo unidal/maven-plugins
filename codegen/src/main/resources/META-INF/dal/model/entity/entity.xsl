@@ -66,7 +66,7 @@
       <xsl:value-of select="$empty"/>import static <xsl:value-of select="$model-package"/>.Constants.<xsl:value-of select='@upper-name'/>;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:if>
-   <xsl:if test="element[@list='true' or @set='true'] or entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or any">
+   <xsl:if test="(attribute|element)[@list='true' or @set='true'] or entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or any">
       <xsl:if test="element[@list='true'] or entity-ref[@list='true'] or any">
          <xsl:value-of select="$empty"/>import java.util.ArrayList;<xsl:value-of select="$empty-line"/>
       </xsl:if>
@@ -79,7 +79,7 @@
       <xsl:if test="element[@set='true']">
          <xsl:value-of select="$empty"/>import java.util.LinkedHashSet;<xsl:value-of select="$empty-line"/>
       </xsl:if>
-      <xsl:if test="element[@list='true'] or entity-ref[@list='true'] or any">
+      <xsl:if test="(attribute|element)[@list='true'] or entity-ref[@list='true'] or any">
          <xsl:value-of select="$empty"/>import java.util.List;<xsl:value-of select="$empty-line"/>
       </xsl:if>
       <xsl:if test="entity-ref[@map='true' and @keep-order='false']">
@@ -88,7 +88,7 @@
       <xsl:if test="entity-ref[@map='true'] or @dynamic-attributes='true'">
          <xsl:value-of select="$empty"/>import java.util.Map;<xsl:value-of select="$empty-line"/>
       </xsl:if>
-      <xsl:if test="element[@set='true']">
+      <xsl:if test="(attribute|element)[@set='true']">
          <xsl:value-of select="$empty"/>import java.util.Set;<xsl:value-of select="$empty-line"/>
       </xsl:if>
       <xsl:if test="entity-ref[@map='true' and @thread-safe='true']">
@@ -118,11 +118,17 @@
          <xsl:when test="@map='true'">
             <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new LinkedHashMap<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
+         <xsl:when test="@set='true' and name()='attribute'">
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/>;<xsl:value-of select="$empty-line"/>
+         </xsl:when>
          <xsl:when test="@set='true' and @thread-safe='true'">
             <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = Collections.synchronizedSet(new LinkedHashSet<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>));<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@set='true'">
             <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new LinkedHashSet<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>);<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:when test="@list='true' and name()='attribute'">
+            <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/>;<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@list='true' and @thread-safe='true'">
             <xsl:value-of select="$empty"/>   private <xsl:value-of select="$transient"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = Collections.synchronizedList(new ArrayList<xsl:value-of select='@value-type-generic' disable-output-escaping="yes"/>(<xsl:value-of select="@initial-capacity"/>));<xsl:value-of select="$empty-line"/>
@@ -583,9 +589,7 @@
       	  <xsl:for-each select="$keys">
       	  	 <xsl:sort select="@key-index"/>
       	  	 
-	         <xsl:call-template name="hash-line">
-	            <xsl:with-param name="field" select="."/>
-	         </xsl:call-template>
+	         <xsl:call-template name="hash-line" />
       	  </xsl:for-each>
          </xsl:otherwise>
    </xsl:choose>
@@ -649,7 +653,7 @@
    <xsl:for-each select="$entity/attribute[not(@key='true')]">
       <xsl:choose>
       	<!-- TODO @default-value -->
-      	<xsl:when test="not(@primitive='true')">
+      	<xsl:when test="not(@primitive='true') or (@type='array' or @type='list' or @type='set')">
 	      <xsl:value-of select="$empty"/>      if (other.<xsl:value-of select='@get-method'/>() != null) {<xsl:value-of select="$empty-line"/>
 	      <xsl:value-of select="$empty"/><xsl:value-of select="'         '"/><xsl:value-of select='@field-name'/> = other.<xsl:value-of select='@get-method'/>();<xsl:value-of select="$empty-line"/>
 	      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
@@ -825,24 +829,69 @@
 <xsl:template name="hash-line">
    <xsl:param name="field" select="."/>
    
+   <xsl:variable name="value-type" select="$field/@value-type" />
+   <xsl:variable name="value-type-element" select="$field/@value-type-element" />
+   
    <xsl:choose>
-      <xsl:when test="$field/@primitive='true' and $field/@value-type='int'">
-         <xsl:value-of select="$empty"/>      hash = hash * 31 + <xsl:value-of select="$field/@field-name"/>;<xsl:value-of select="$empty-line"/>
+      <xsl:when test="$field/@primitive='true' and ($field/@type='array' or $field/@type='list' or $field/@type='set')">
+         <xsl:value-of select="$empty"/>      for (<xsl:value-of select="$value-type-element" /> e : <xsl:value-of select="$field/@field-name" />) {<xsl:value-of select="$empty-line"/>
+         <xsl:choose>
+            <xsl:when test="$value-type-element='boolean'">
+               <xsl:value-of select="$empty"/>         hash = hash * 31 + (e ? 1 : 0);<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:when test="$value-type-element='int' or $value-type-element='short' or $value-type-element='byte'">
+               <xsl:value-of select="$empty"/>         hash = hash * 31 + e;<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:when test="$value-type-element='long'">
+               <xsl:value-of select="$empty"/>         hash = hash * 31 + (int) (e ^ (e<xsl:value-of select="' &gt;&gt;&gt;'" disable-output-escaping="yes"/> 32));<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:when test="$value-type-element='double'">
+               <xsl:value-of select="$empty"/>         hash = hash * 31 + (int) (Double.doubleToLongBits(e) ^ (Double.doubleToLongBits(e) <xsl:value-of select="'&gt;&gt;&gt;'" disable-output-escaping="yes"/> 32));<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:when test="$value-type-element='float'">
+               <xsl:value-of select="$empty"/>         hash = hash * 31 + Float.floatToIntBits(e);<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="$empty"/>         hash = hash * 31 + (int) e;<xsl:value-of select="$empty-line"/>
+            </xsl:otherwise>
+         </xsl:choose>
+         <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty-line"/>
       </xsl:when>
-      <xsl:when test="$field/@primitive='true' and $field/@value-type='boolean'">
-         <xsl:value-of select="$empty"/>      hash = hash * 31 + (<xsl:value-of select="$field/@field-name"/> ? 1 : 0);<xsl:value-of select="$empty-line"/>
-      </xsl:when>
-      <xsl:when test="$field/@primitive='true' and $field/@value-type='long'">
-         <xsl:value-of select="$empty"/>      hash = hash * 31 + (int) (<xsl:value-of select="$field/@field-name"/> ^ (<xsl:value-of select="$field/@field-name"/><xsl:value-of select="' &gt;&gt;&gt;'" disable-output-escaping="yes"/> 32));<xsl:value-of select="$empty-line"/>
-      </xsl:when>
-      <xsl:when test="$field/@primitive='true' and $field/@value-type='float'">
-         <xsl:value-of select="$empty"/>      hash = hash * 31 + Float.floatToIntBits(<xsl:value-of select="$field/@field-name"/>);<xsl:value-of select="$empty-line"/>
-      </xsl:when>
-      <xsl:when test="$field/@primitive='true' and $field/@value-type='double'">
-         <xsl:value-of select="$empty"/>      hash = hash * 31 + (int) (Double.doubleToLongBits(<xsl:value-of select="$field/@field-name"/>) ^ (Double.doubleToLongBits(<xsl:value-of select="$field/@field-name"/>) <xsl:value-of select="'&gt;&gt;&gt;'" disable-output-escaping="yes"/> 32));<xsl:value-of select="$empty-line"/>
+      <xsl:when test="$field/@type='array' or $field/@type='list' or $field/@type='set'">
+         <xsl:value-of select="$empty"/>      for (<xsl:value-of select="$value-type-element" /> e : <xsl:value-of select="$field/@field-name" />) {<xsl:value-of select="$empty-line"/>
+         <xsl:choose>
+            <xsl:when test="$value-type-element='Boolean'">
+               <xsl:value-of select="$empty"/>         hash = hash * 31 + (e == null ? 0: (e.booleanValue() ? 1 : 0));<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="$empty"/>         hash = hash * 31 + (e == null ? 0 :e.intValue());<xsl:value-of select="$empty-line"/>
+            </xsl:otherwise>
+         </xsl:choose>
+         <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty-line"/>
       </xsl:when>
       <xsl:when test="$field/@primitive='true'">
-         <xsl:value-of select="$empty"/>      hash = hash * 31 + (int) <xsl:value-of select="$field/@field-name"/>;<xsl:value-of select="$empty-line"/>
+         <xsl:choose>
+            <xsl:when test="$value-type='boolean'">
+               <xsl:value-of select="$empty"/>      hash = hash * 31 + (<xsl:value-of select="$field/@field-name"/> ? 1 : 0);<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:when test="$value-type='int' or $value-type='short' or $value-type='byte'">
+               <xsl:value-of select="$empty"/>      hash = hash * 31 + <xsl:value-of select="$field/@field-name"/>;<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:when test="$value-type='long'">
+               <xsl:value-of select="$empty"/>      hash = hash * 31 + (int) (<xsl:value-of select="$field/@field-name"/> ^ (<xsl:value-of select="$field/@field-name"/><xsl:value-of select="' &gt;&gt;&gt;'" disable-output-escaping="yes"/> 32));<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:when test="$value-type='double'">
+               <xsl:value-of select="$empty"/>      hash = hash * 31 + (int) (Double.doubleToLongBits(<xsl:value-of select="$field/@field-name"/>) ^ (Double.doubleToLongBits(<xsl:value-of select="$field/@field-name"/>) <xsl:value-of select="'&gt;&gt;&gt;'" disable-output-escaping="yes"/> 32));<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:when test="$value-type='float'">
+               <xsl:value-of select="$empty"/>      hash = hash * 31 + Float.floatToIntBits(<xsl:value-of select="$field/@field-name"/>);<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="$empty"/>      hash = hash * 31 + (int) <xsl:value-of select="$field/@field-name"/>;<xsl:value-of select="$empty-line"/>
+            </xsl:otherwise>
+         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
          <xsl:value-of select="$empty"/>      hash = hash * 31 + (<xsl:value-of select="$field/@field-name"/> == null ? 0 : <xsl:value-of select="$field/@field-name"/>.hashCode());<xsl:value-of select="$empty-line"/>

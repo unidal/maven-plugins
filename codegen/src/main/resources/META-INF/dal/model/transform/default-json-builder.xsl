@@ -75,8 +75,8 @@
       </xsl:if>
    </xsl:for-each>
    <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import java.lang.reflect.Array;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.util.Collection;<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="$empty"/>import java.util.List;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.util.Map;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:if test="//entity[@all-children-in-sequence='true']">
@@ -140,15 +140,32 @@
          Object attrValue = nameValues[i + 1];
 
          if (attrValue != null) {
-            if (attrValue instanceof List) {
+            if (attrValue instanceof Collection) {
                @SuppressWarnings("unchecked")
-               List<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> list = (List<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/>) attrValue;
+               Collection<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> items = (Collection<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/>) attrValue;
 
-               if (!list.isEmpty()) {
+               if (!items.isEmpty()) {
                   indent();
                   m_sb.append('"').append(attrName).append(m_compact ? "\":[" : "\": [");
 
-                  for (Object item : list) {
+                  for (Object item : items) {
+                     m_sb.append(' ');
+                     toString(m_sb, item);
+                     m_sb.append(',');
+                  }
+
+                  m_sb.setLength(m_sb.length() - 1);
+                  m_sb.append(m_compact ? "]," : " ],\r\n");
+               }
+            } else if (attrValue.getClass().isArray()) {
+               int length = Array.getLength(attrValue);
+
+               if (length <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0) {
+                  indent();
+                  m_sb.append('"').append(attrName).append(m_compact ? "\":[" : "\": [");
+
+                  for (int j = 0; j <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> length; j++) {
+                     Object item = Array.get(attrValue, j);
                      m_sb.append(' ');
                      toString(m_sb, item);
                      m_sb.append(',');
@@ -351,7 +368,7 @@
             <xsl:value-of select="$empty"/>      objectEnd(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:if test="(attribute | element)[not(@render='false' or @json-list='true' or @list='true' or @set='true')]">
+            <xsl:if test="attribute[not(@render='false')] or element[not(@render='false' or @json-list='true' or @list='true' or @set='true')]">
                <xsl:value-of select="$empty"/>      attributes(<xsl:call-template name="get-dynamic-attributes"/><xsl:call-template name="tag-fields"/>);<xsl:value-of select="$empty-line"/>
             </xsl:if>
             <xsl:if test="element[not(@render='false') and (@json-list='true' or @list='true' or @set='true')]">
@@ -437,7 +454,7 @@
 <xsl:template name="tag-fields">
    <xsl:param name="entity" select="."/>
    
-   <xsl:for-each select="(attribute | element)[not(@render='false' or @json-list='true' or @list='true' or @set='true')]">
+   <xsl:for-each select="attribute[not(@render='false')] | element[not(@render='false' or @json-list='true' or @list='true' or @set='true')]">
       <xsl:choose>
          <xsl:when test="@value-type='Class&lt;?&gt;'">
             <xsl:value-of select="$empty"/>, <xsl:value-of select="@upper-name"/>, <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>() == null ? null : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().getName()<xsl:value-of select="$empty"/>

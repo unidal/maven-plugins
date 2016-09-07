@@ -40,6 +40,14 @@
       <xsl:value-of select="$empty"/>import java.util.Arrays;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>import java.util.HashSet;<xsl:value-of select="$empty-line"/>
    </xsl:if>
+   <xsl:if test="entity[attribute[not(@render='false') and @type]]">
+      <xsl:value-of select="$empty"/>import java.lang.reflect.Array;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import java.util.ArrayList;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import java.util.LinkedHashSet;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import java.util.List;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import java.util.Set;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import java.util.regex.Pattern;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
    <xsl:if test="entity[@dynamic-attributes='true'] | entity/any">
       <xsl:if test="entity[@dynamic-attributes='true']">
          <xsl:value-of select="$empty"/>import java.util.Map;<xsl:value-of select="$empty-line"/>
@@ -81,6 +89,9 @@
          <xsl:otherwise>
             <xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
+            <xsl:if test="attribute[not(@render='false') and (@type='list' or @list='set')]">
+               <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")<xsl:value-of select="$empty-line"/>
+            </xsl:if>
             <xsl:value-of select="$empty"/>   public <xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@build-method"/>(Attributes attributes) {<xsl:value-of select="$empty-line"/>
             <xsl:call-template name="define-variable-from-attributes"/>
             <xsl:value-of select="'      '"/><xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name"/> = <xsl:call-template name="create-entity-instance"/>
@@ -102,8 +113,8 @@
 </xsl:template>
 
 <xsl:template name="define-variable-from-attributes">
-   <xsl:if test="attribute[not(@text='true' or @list='true' or @set='true' or @render='false')]">
-      <xsl:for-each select="attribute[not(@text='true' or @list='true' or @set='true' or @render='false')]">
+   <xsl:if test="attribute[not(@text='true' or @render='false')]">
+      <xsl:for-each select="attribute[not(@text='true' or @render='false')]">
          <xsl:value-of select="$empty"/>      String <xsl:value-of select="@param-name"/> = attributes.getValue(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
       </xsl:for-each>
    </xsl:if>
@@ -133,7 +144,7 @@
 <xsl:template name="set-optional-fields">
    <xsl:param name="entity" select="."/>
    
-   <xsl:for-each select="attribute[not(@key='true' or @text='true' or @render='false' or @list='true' or @set='true')]">
+   <xsl:for-each select="attribute[not(@key='true' or @text='true' or @render='false')]">
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      if (<xsl:value-of select="@param-name"/> != null) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="$entity/@local-name"/>.<xsl:value-of select="@set-method"/>(<xsl:value-of select="$empty"/>
@@ -149,6 +160,7 @@
    <xsl:param name="value" select="@param-name"/>
    
    <xsl:choose>
+      <xsl:when test="@type">convertCollection(<xsl:value-of select="$value"/>, <xsl:value-of select="@value-type-class" disable-output-escaping="yes"/>, <xsl:value-of select="@value-type-element"/>.class)</xsl:when>
       <xsl:when test="$enum='true'"><xsl:value-of select="$value-type"/>.valueOf(<xsl:value-of select="$value"/>)</xsl:when>
       <xsl:when test="$value-type='String'"><xsl:value-of select="$value"/></xsl:when>
       <xsl:when test="$value-type='java.util.Date'">toDate(<xsl:value-of select="$value"/>, "<xsl:value-of select="@format"/>", null)</xsl:when>
@@ -216,30 +228,65 @@
 <xsl:template name="method-convert-value">
    @SuppressWarnings("unchecked")
    protected <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T convert(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, String value, T defaultValue) {
-      if (value == null) {
+      if (value == null || value.length() == 0) {
          return defaultValue;
       }
 
-      if (type == Boolean.class) {
+      if (type == Boolean.class || type == Boolean.TYPE) {
          return (T) Boolean.valueOf(value);
-      } else if (type == Integer.class) {
+      } else if (type == Integer.class || type == Integer.TYPE) {
          return (T) Integer.valueOf(value);
-      } else if (type == Long.class) {
+      } else if (type == Long.class || type == Long.TYPE) {
          return (T) Long.valueOf(value);
-      } else if (type == Short.class) {
+      } else if (type == Short.class || type == Short.TYPE) {
          return (T) Short.valueOf(value);
-      } else if (type == Float.class) {
+      } else if (type == Float.class || type == Float.TYPE) {
          return (T) Float.valueOf(value);
-      } else if (type == Double.class) {
+      } else if (type == Double.class || type == Double.TYPE) {
          return (T) Double.valueOf(value);
-      } else if (type == Byte.class) {
+      } else if (type == Byte.class || type == Byte.TYPE) {
          return (T) Byte.valueOf(value);
-      } else if (type == Character.class) {
+      } else if (type == Character.class || type == Character.TYPE) {
          return (T) (Character) value.charAt(0);
       } else {
          return (T) value;
       }
    }
+<xsl:if test="//entity/attribute[not(@render='false') and @type]">
+   @SuppressWarnings("unchecked")
+   protected <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T convertCollection(String value, Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, Class<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> elementType) {
+      String[] parts = value.split(Pattern.quote(","));
+      Object result = null;
+
+      if (List.class.isAssignableFrom(type)) {
+         List<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> list = new ArrayList<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/>(parts.length);
+
+         for (String part : parts) {
+            list.add(convert(elementType, part, null));
+         }
+
+         result = list;
+      } else if (Set.class.isAssignableFrom(type)) {
+         Set<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> set = new LinkedHashSet<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/>(parts.length);
+
+         for (String part : parts) {
+            set.add(convert(elementType, part, null));
+         }
+
+         result = set;
+      } else {
+         int index = 0;
+
+         result = Array.newInstance(elementType, parts.length);
+
+         for (String part : parts) {
+            Array.set(result, index++, convert(elementType, part, null));
+         }
+      }
+
+      return (T) result;
+   }
+</xsl:if>
 </xsl:template>
 
 <xsl:template name="method-to-class">

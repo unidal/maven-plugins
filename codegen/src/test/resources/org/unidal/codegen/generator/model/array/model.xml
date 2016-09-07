@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="org.unidal.codegen.array.model" enable-merger="true" enable-json-builder="true" enable-json-parser="false"
+   enable-xml-parser="true" enable-base-visitor="true" enable-xml-schema="true" enable-xml-sample="true"
+   enable-sax-parser="true" enable-model-test="true" enable-native-builder="true" enable-native-parser="true">
+	<entity name="model" root="true">
+		<attribute name="id" value-type="int" key="true" />
+		<attribute name="first" value-type="int" primitive="true" type="array" />
+		<attribute name="second" value-type="long" type="array" />
+		<attribute name="third" value-type="boolean" type="array" />
+		<attribute name="fourth" value-type="short" type="array" />
+		<attribute name="fifth" value-type="float" type="list" />
+		<attribute name="sixth" value-type="double" type="set" />
+		<attribute name="seventh" value-type="byte" primitive="true" type="array" />
+		<attribute name="eighth" value-type="char" primitive="true" type="array" />
+		<attribute name="nineth" value-type="String" type="array" />
+        <entity-ref name="child-model" />
+	</entity>
+	<entity name="child-model">
+		<attribute name="first" value-type="int" primitive="true" type="array" names="firsts" />
+		<attribute name="second" value-type="long" type="array" names="seconds" />
+	</entity>
+</model>
+

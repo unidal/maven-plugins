@@ -170,15 +170,42 @@
       <xsl:copy-of select="@*"/>
       
       <!-- variable definition -->
-      <xsl:variable name="name">
+      <xsl:variable name="element-name">
          <xsl:choose>
             <xsl:when test="@alias"><xsl:value-of select="@alias"/></xsl:when>
             <xsl:otherwise><xsl:value-of select="@name"/></xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
+      <xsl:variable name="name">
+         <xsl:choose>
+            <xsl:when test="(@type='array' or @type='list' or @type='set') and @names"><xsl:value-of select="@names"/></xsl:when>
+            <xsl:when test="@type='array'"><xsl:value-of select="$element-name"/>Array</xsl:when>
+            <xsl:when test="@type='set'"><xsl:value-of select="$element-name"/>Set</xsl:when>
+            <xsl:when test="@type='list'"><xsl:value-of select="$element-name"/>List</xsl:when>
+            <xsl:when test="@alias"><xsl:value-of select="@alias"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="@name"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="normalized-name-element">
+         <xsl:call-template name="normalize">
+            <xsl:with-param name="source" select="$element-name"/>
+         </xsl:call-template>
+      </xsl:variable>
       <xsl:variable name="normalized-name">
          <xsl:call-template name="normalize">
             <xsl:with-param name="source" select="$name"/>
+         </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="normalized-value-type">
+          <xsl:call-template name="normalize-key-type">
+             <xsl:with-param name="value-type">
+                <xsl:call-template name="convert-type"/>
+             </xsl:with-param>
+          </xsl:call-template>
+      </xsl:variable>
+      <xsl:variable name="capital-name-element">
+         <xsl:call-template name="capital-name">
+            <xsl:with-param name="name" select="$normalized-name-element"/>
          </xsl:call-template>
       </xsl:variable>
       <xsl:variable name="capital-name">
@@ -186,20 +213,101 @@
             <xsl:with-param name="name" select="$normalized-name"/>
          </xsl:call-template>
       </xsl:variable>
+      <xsl:variable name="value-type-element">
+         <xsl:choose>
+            <xsl:when test="contains($normalized-value-type, '.')">
+               <xsl:value-of select="$normalized-value-type"/>
+            </xsl:when>
+            <xsl:when test="@primitive='true'">
+               <xsl:call-template name="convert-type"/>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:call-template name="capital-name">
+                  <xsl:with-param name="name" select="$normalized-value-type" />
+               </xsl:call-template>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="value-type-generic">
+          <xsl:choose>
+             <xsl:when test="@type='array'">
+               <xsl:value-of select="$value-type-element" />
+             </xsl:when>
+             <xsl:when test="@type='list' or @type='set'">
+                <xsl:call-template name="generic-type">
+                   <xsl:with-param name="type" select="$value-type-element"/>
+                </xsl:call-template>
+             </xsl:when>
+             <xsl:otherwise>
+               <xsl:value-of select="$value-type-element" />
+             </xsl:otherwise>
+          </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="value-type">
+          <xsl:choose>
+             <xsl:when test="@type='array'">
+                <xsl:value-of select="$value-type-element"/>
+                <xsl:value-of select="'[]'"/>
+             </xsl:when>
+             <xsl:when test="@type='list'">
+                <xsl:value-of select="'List'"/>
+                <xsl:value-of select="$value-type-generic" disable-output-escaping="yes"/>
+             </xsl:when>
+             <xsl:when test="@type='set'">
+                <xsl:value-of select="'Set'"/>
+                <xsl:value-of select="$value-type-generic" disable-output-escaping="yes"/>
+             </xsl:when>
+             <xsl:otherwise>
+                <xsl:value-of select="$value-type-element"/>
+             </xsl:otherwise>
+          </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="value-type-class">
+          <xsl:choose>
+             <xsl:when test="@type='array'">
+                <xsl:value-of select="$value-type-element"/>
+                <xsl:value-of select="'[].class'"/>
+             </xsl:when>
+             <xsl:when test="@type='list'">
+                <xsl:value-of select="'List.class'"/>
+             </xsl:when>
+             <xsl:when test="@type='set'">
+                <xsl:value-of select="'Set.class'"/>
+             </xsl:when>
+             <xsl:otherwise>
+                <xsl:value-of select="$value-type-element"/>
+                <xsl:value-of select="'class'"/>
+             </xsl:otherwise>
+          </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="value-type-implementation-generic">
+          <xsl:choose>
+             <xsl:when test="@type='list'">
+                <xsl:value-of select="'ArrayList'"/>
+                <xsl:value-of select="$value-type-generic" disable-output-escaping="yes"/>
+             </xsl:when>
+             <xsl:when test="@type='set'">
+                <xsl:value-of select="'LinkedHashSet'"/>
+                <xsl:value-of select="$value-type-generic" disable-output-escaping="yes"/>
+             </xsl:when>
+          </xsl:choose>
+      </xsl:variable>
 
       <!-- attribute definition -->
+      <xsl:attribute name="value-type-element">
+         <xsl:value-of select="$value-type-element"/>
+      </xsl:attribute>
+      <xsl:attribute name="value-type-generic">
+         <xsl:value-of select="$value-type-generic"/>
+      </xsl:attribute>
       <xsl:attribute name="value-type">
-         <xsl:call-template name="normalize-value-type">
-            <xsl:with-param name="value-type">
-               <xsl:call-template name="convert-type"/>
-            </xsl:with-param>
-         </xsl:call-template>
+         <xsl:value-of select="$value-type"/>
       </xsl:attribute>
-      <xsl:attribute name="param-name">
-         <xsl:value-of select="$normalized-name"/>
+      <xsl:attribute name="value-type-class">
+         <xsl:value-of select="$value-type-class"/>
       </xsl:attribute>
-      <xsl:attribute name="ref-name">
-         <xsl:value-of select="$name"/>
+      <xsl:attribute name="value-type-implementation-generic">
+         <xsl:value-of select="$value-type-implementation-generic"/>
       </xsl:attribute>
       <xsl:attribute name="render">
          <xsl:choose>
@@ -241,15 +349,42 @@
 	         </xsl:choose>
 	      </xsl:attribute>
       </xsl:if>
+      <xsl:attribute name="capital-name-element">
+         <xsl:value-of select="$capital-name-element"/>
+      </xsl:attribute>
+      <xsl:attribute name="param-name-element">
+         <xsl:value-of select="$normalized-name-element"/>
+      </xsl:attribute>
       <xsl:attribute name="field-name">
          <xsl:value-of select="'m_'"/>
          <xsl:value-of select="$normalized-name"/>
       </xsl:attribute>
+      <xsl:attribute name="param-name">
+         <xsl:value-of select="$normalized-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="ref-name">
+         <xsl:value-of select="$name"/>
+      </xsl:attribute>
+      <xsl:attribute name="local-name-element">
+         <xsl:value-of select="$normalized-name-element"/>
+      </xsl:attribute>
+      <xsl:attribute name="local-name">
+         <xsl:choose>
+            <xsl:when test="$normalized-name='node'">node_</xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="$normalized-name"/>
+            </xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
       <xsl:attribute name="upper-name">
          <xsl:value-of select="'ATTR_'"/>
          <xsl:call-template name="upper-name">
-            <xsl:with-param name="name" select="$name"/>
+            <xsl:with-param name="name" select="$element-name"/>
          </xsl:call-template>
+      </xsl:attribute>
+      <xsl:attribute name="add-method">
+         <xsl:value-of select="'add'"/>
+         <xsl:value-of select="$capital-name-element"/>
       </xsl:attribute>
       <xsl:attribute name="get-method">
          <xsl:value-of select="'get'"/>
@@ -277,6 +412,18 @@
             <xsl:value-of select="$capital-name"/>
          </xsl:attribute>
       </xsl:if>
+
+      <xsl:choose>
+         <xsl:when test="@type='array'">
+            <xsl:attribute name="array">true</xsl:attribute>
+         </xsl:when>
+         <xsl:when test="@type='list'">
+            <xsl:attribute name="list">true</xsl:attribute>
+         </xsl:when>
+         <xsl:when test="@type='set'">
+            <xsl:attribute name="set">true</xsl:attribute>
+         </xsl:when>
+      </xsl:choose>
       
       <xsl:apply-templates/>
    </xsl:copy>
@@ -358,12 +505,12 @@
       </xsl:variable>
       <xsl:variable name="value-type">
           <xsl:choose>
-             <xsl:when test="@type='set'">
-                <xsl:value-of select="'Set'"/>
-                <xsl:value-of select="$value-type-generic" disable-output-escaping="yes"/>
-             </xsl:when>
              <xsl:when test="@type='list'">
                 <xsl:value-of select="'List'"/>
+                <xsl:value-of select="$value-type-generic" disable-output-escaping="yes"/>
+             </xsl:when>
+             <xsl:when test="@type='set'">
+                <xsl:value-of select="'Set'"/>
                 <xsl:value-of select="$value-type-generic" disable-output-escaping="yes"/>
              </xsl:when>
              <xsl:otherwise>
@@ -373,9 +520,6 @@
       </xsl:variable>
    
       <!-- attribute definition -->
-      <xsl:attribute name="primitive">
-         <xsl:call-template name="is-primitive" />
-      </xsl:attribute>
       <xsl:attribute name="value-type-element">
          <xsl:value-of select="$value-type-element"/>
       </xsl:attribute>
@@ -384,6 +528,9 @@
       </xsl:attribute>
       <xsl:attribute name="value-type">
          <xsl:value-of select="$value-type"/>
+      </xsl:attribute>
+      <xsl:attribute name="primitive">
+         <xsl:call-template name="is-primitive" />
       </xsl:attribute>
       <xsl:if test="@key">
 	      <xsl:attribute name="key-index">
@@ -399,8 +546,15 @@
       <xsl:attribute name="param-name-element">
          <xsl:value-of select="$normalized-name-element"/>
       </xsl:attribute>
+      <xsl:attribute name="field-name">
+         <xsl:value-of select="'m_'"/>
+         <xsl:value-of select="$normalized-name"/>
+      </xsl:attribute>
       <xsl:attribute name="param-name">
          <xsl:value-of select="$normalized-name"/>
+      </xsl:attribute>
+      <xsl:attribute name="ref-name">
+         <xsl:value-of select="$element-name"/>
       </xsl:attribute>
       <xsl:attribute name="local-name-element">
          <xsl:value-of select="$normalized-name-element"/>
@@ -412,9 +566,6 @@
                <xsl:value-of select="$normalized-name"/>
             </xsl:otherwise>
          </xsl:choose>
-      </xsl:attribute>
-      <xsl:attribute name="ref-name">
-         <xsl:value-of select="$element-name"/>
       </xsl:attribute>
       <xsl:attribute name="upper-name">
          <xsl:value-of select="'ELEMENT_'"/>
@@ -430,10 +581,6 @@
       </xsl:attribute>
       <xsl:attribute name="tag-name">
          <xsl:value-of select="$name"/>
-      </xsl:attribute>
-      <xsl:attribute name="field-name">
-         <xsl:value-of select="'m_'"/>
-         <xsl:value-of select="$normalized-name"/>
       </xsl:attribute>
       <xsl:attribute name="add-method">
          <xsl:value-of select="'add'"/>

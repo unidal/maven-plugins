@@ -61,6 +61,9 @@
       </xsl:if>
    </xsl:for-each>
    <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import java.lang.reflect.Array;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import java.util.Collection;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty-line"/>
    <xsl:if test="//entity/entity-ref[@map='true' and @keep-order='false']">
       <xsl:value-of select="$empty"/>import java.util.TreeMap;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
@@ -130,7 +133,7 @@
          return null;
       }
 
-      String str = value.toString();
+      String str = toString(value);
       int len = str.length();
       StringBuilder sb = new StringBuilder(len + 16);
 
@@ -216,6 +219,53 @@
    
          m_sb.append("<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
       }
+   }
+
+   @SuppressWarnings("unchecked")
+   protected String toString(Object value) {
+      if (value instanceof String) {
+         return (String) value;
+      } else if (value instanceof Collection) {
+         Collection<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/> list = (Collection<xsl:value-of select="'&lt;Object&gt;'" disable-output-escaping="yes"/>) value;
+         StringBuilder sb = new StringBuilder(32);
+         boolean first = true;
+
+         for (Object item : list) {
+            if (first) {
+               first = false;
+            } else {
+               sb.append(',');
+            }
+
+            if (item != null) {
+               sb.append(item);
+            }
+         }
+
+		return sb.toString();
+	} else if (value.getClass().isArray()) {
+		int len = Array.getLength(value);
+		StringBuilder sb = new StringBuilder(32);
+		boolean first = true;
+
+		for (int i = 0; i <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> len; i++) {
+			Object item = Array.get(value, i);
+
+			if (first) {
+				first = false;
+			} else {
+				sb.append(',');
+			}
+
+			if (item != null) {
+				sb.append(item);
+			}
+		}
+		
+		return sb.toString();
+      }
+         
+      return String.valueOf(value);
    }
 <xsl:if test="//entity/element[not(@render='false' or @text='true')] | //entity/any">
    protected void tagWithText(String name, String text, Object... nameValues) {

@@ -136,7 +136,7 @@
          <xsl:variable name="index" select="position()"/>
          
          <xsl:choose>
-            <xsl:when test="@primitive='true'">
+            <xsl:when test="@primitive='true' and not(@type)">
                <xsl:value-of select="$empty"/>      writeTag(<xsl:value-of select="$index"/>, 0);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      write<xsl:call-template name="get-type-name"/>(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
             </xsl:when>
@@ -146,8 +146,18 @@
                <xsl:value-of select="$empty"/>         writeString(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().name());<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
             </xsl:when>
-            <xsl:when test="name()='element' and (@list='true' or @set='true')">
-               <xsl:value-of select="$empty"/>      if (!<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().isEmpty()) {<xsl:value-of select="$empty-line"/>
+            <xsl:when test="@array='true'">
+               <xsl:value-of select="$empty"/>      if (<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>() != null) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         writeTag(<xsl:value-of select="$index"/>, 2);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         writeInt(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().length);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         for (<xsl:value-of select="@value-type-element"/><xsl:value-of select="$space"/><xsl:value-of select="@local-name-element"/> : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>            write<xsl:call-template name="get-type-name"><xsl:with-param name="value-type" select="@value-type-element"/></xsl:call-template>(<xsl:value-of select="@local-name-element"/>);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+            </xsl:when>
+            <xsl:when test="@list='true' or @set='true'">
+               <xsl:value-of select="$empty"/>      if (<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>() != null) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         writeTag(<xsl:value-of select="$index"/>, 2);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>         writeInt(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>().size());<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty-line"/>
@@ -219,7 +229,8 @@
 
 <xsl:template name="method-write-methods">
 <xsl:variable name="properties" select="(//entity/attribute | //entity/element)[not(@render='false')]"/>
-<xsl:if test="$properties[@value-type='Boolean' or @value-type='boolean']">
+
+<xsl:if test="$properties[@value-type='Boolean' or @value-type='boolean' or @value-type-element='Boolean' or @value-type-element='boolean']">
    private void writeBoolean(boolean value) {
       try {
          m_out.writeByte(value ? 1 : 0);
@@ -228,7 +239,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='byte' or @value-type='Byte']">
+<xsl:if test="$properties[@value-type='byte' or @value-type='Byte' or @value-type-element='byte' or @value-type-element='Byte']">
    private void writeByte(byte value) {
       try {
          m_out.writeByte(value);
@@ -237,7 +248,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='char' or @value-type='Character']">
+<xsl:if test="$properties[@value-type='char' or @value-type='Character' or @value-type-element='char' or @value-type-element='Character']">
    private void writeChar(char value) {
       try {
          writeVarint(value <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> 0xFFFFL);
@@ -264,7 +275,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='double' or @value-type='Double']">
+<xsl:if test="$properties[@value-type='double' or @value-type='Double' or @value-type-element='double' or @value-type-element='Double']">
    private void writeDouble(double value) {
       try {
          writeVarint(Double.doubleToLongBits(value));
@@ -273,7 +284,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='float' or @value-type='Float']">
+<xsl:if test="$properties[@value-type='float' or @value-type='Float' or @value-type-element='float' or @value-type-element='Float']">
    private void writeFloat(float value) {
       try {
          m_out.writeFloat(value);
@@ -282,7 +293,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='int' or @value-type='Integer'] | //entity/element[@list='true' or @set='true'] or //entity/entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or //entity/any">
+<xsl:if test="$properties[@value-type='int' or @value-type='Integer' or @value-type-element='int' or @value-type-element='Integer'] | //entity/attribute[@array='true' or @list='true' or @set='true'] | //entity/element[@list='true' or @set='true'] or //entity/entity-ref[@list='true' or @map='true'] or @dynamic-attributes='true' or //entity/any">
    private void writeInt(int value) {
       try {
          writeVarint(value <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> 0xFFFFFFFFL);
@@ -291,7 +302,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='long' or @value-type='Long']">
+<xsl:if test="$properties[@value-type='long' or @value-type='Long' or @value-type-element='long' or @value-type-element='Long']">
    private void writeLong(long value) {
       try {
          writeVarint(value);
@@ -300,7 +311,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='short' or @value-type='Short']">
+<xsl:if test="$properties[@value-type='short' or @value-type='Short' or @value-type-element='short' or @value-type-element='Short']">
    private void writeShort(short value) {
       try {
          writeVarint(value <xsl:value-of select="'&amp;'" disable-output-escaping="yes"/> 0xFFFFL);
@@ -309,7 +320,7 @@
       }
    }
 </xsl:if>
-<xsl:if test="$properties[@value-type='String' or @enum='true']">
+<xsl:if test="$properties[@value-type='String' or @value-type-element='String' or @enum='true']">
    private void writeString(String value) {
       try {
          m_out.writeUTF(value);
