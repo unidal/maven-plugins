@@ -157,6 +157,12 @@
             <xsl:with-param name="name" select="@name"/>
          </xsl:call-template>
       </xsl:attribute>
+      <xsl:attribute name="multiple">
+         <xsl:choose>
+            <xsl:when test="@multiple='true'">true</xsl:when>
+            <xsl:otherwise>false</xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
 
       <xsl:attribute name="value-type">
          <xsl:choose>

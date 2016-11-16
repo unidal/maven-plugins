@@ -69,7 +69,7 @@
 
 <xsl:template name="relation-definition">
    <xsl:for-each select="relation">
-      <xsl:value-of select='$empty'/>   @Relation(logicalName = "<xsl:value-of select="@entity-name"/>", alias = "<xsl:value-of select='@entity-alias'/>", join = "<xsl:value-of select="@join"/>")<xsl:value-of select='$empty-line'/>
+      <xsl:value-of select='$empty'/>   @Relation(logicalName = "<xsl:value-of select="@entity-name"/>", alias = "<xsl:value-of select='@entity-alias'/>", join = "<xsl:value-of select="@join"/>", multiple = <xsl:value-of select="@multiple"/>)<xsl:value-of select='$empty-line'/>
       <xsl:value-of select="$empty"/>   public static final DataField <xsl:value-of select="@upper-name"/> = new DataField("<xsl:value-of select="@name"/>");<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:for-each>
