@@ -865,7 +865,7 @@
                <xsl:value-of select="$empty"/>         hash = hash * 31 + (e == null ? 0: (e.booleanValue() ? 1 : 0));<xsl:value-of select="$empty-line"/>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:value-of select="$empty"/>         hash = hash * 31 + (e == null ? 0 :e.intValue()); // TODO<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>         hash = hash * 31 + (e == null ? 0 :e.hashCode());<xsl:value-of select="$empty-line"/>
             </xsl:otherwise>
          </xsl:choose>
          <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
