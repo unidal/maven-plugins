@@ -9,7 +9,7 @@
     <element name="latest" value-type="String" />
     <element name="release" value-type="String" />
     <element name="version" value-type="String" type="list" names="versions" xml-indent="true" />
-    <element name="lastUpdated" value-type="String" />
+    <element name="lastUpdated" value-type="long" />
   </entity>
 </model>
 
