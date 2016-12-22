@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.ctrip.kpi.model" enable-merger="true" enable-sax-parser="true"
+   enable-base-visitor="true"  enable-native-parser="true"  enable-native-builder="true" enable-json-builder="true">
+  <entity name="fx-kpi-report" root="true">
+   <attribute name="domain" value-type="String" key="true"/>
+   <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="kpi" type="map" names="kpis" xml-indent="true" method-find-or-create="true" />
+  </entity>
+  <entity name="kpi">
+    <attribute name="name" value-type="String" key="true" />
+    <attribute name="type" value-type="String" />
+    <attribute name="ratio" value-type="double" primitive="true" format="0.000"/>
+    <attribute name="total" value-type="long"  primitive="true" method-inc="true"/>
+    <attribute name="eligible" value-type="long" primitive="true" method-inc="true"/>
+    <attribute name="sum" value-type="double"  primitive="true" default-value="0"/>
+    <attribute name="count" value-type="long" primitive="true" method-inc="true"/>
+    <attribute name="avg" value-type="double" primitive="true" format="0.00"/>
+    <entity-ref name="group" type="map" names="groups" method-find-or-create="true" />
+    <!-- 用于框架费用分摊统计 -->
+    <entity-ref name="per-bu-traffic" type="map" names="bu-traffics" method-find-or-create="true"/>
+    <entity-ref name="per-bu-dotNet-vs-java" type="map" names="bu-dotNet-vs-java" method-find-or-create="true"/>
+  </entity>
+  <entity name="group">
+    <attribute name="id" value-type="String" key="true" />
+    <entity-ref name="segment" type="map" names="segments" method-find-or-create="true" json-type="list"/>
+  </entity>
+  <entity name="segment">
+    <attribute name="name" value-type="String" key="true"/>
+    <attribute name="version" value-type="String" key="true" default-value="N/A"/>
+    <attribute name="stop" value-type="String"/>
+    <attribute name="ratio" value-type="double" primitive="true" format="0.000"/>
+    <attribute name="sum" value-type="double" primitive="true" default-value="0" />
+    <attribute name="count" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="average" value-type="double" primitive="true" format="0.00" />
+    <attribute name="percentage" value-type="double" primitive="true" format="0.000" />
+    <attribute name="pv" value-type="int" primitive="true" method-inc="true"/>
+  </entity>
+    <entity name="per-bu-traffic">
+        <attribute name="bu-name" value-type="String" key="true"/>
+        <attribute name="sum" value-type="double" primitive="true" default-value="0" />
+        <attribute name="count" value-type="long" primitive="true" method-inc="true" />
+        <attribute name="bytes" value-type="long" primitive="true" method-inc="true" />
+        <attribute name="average" value-type="double" primitive="true" format="0.00" />
+    </entity>
+    <entity name="per-bu-dotNet-vs-java">
+        <attribute name="bu-name" value-type="String" key="true"/>
+        <entity-ref name="dotNet-domain" type="map" names="dotNet-domains" method-find-or-create="true"/>
+        <entity-ref name="java-domain" type="map" names="java-domains" method-find-or-create="true"/>
+    </entity>
+    <entity name="dotNet-domain">
+        <attribute name="domain-id" value-type="String" key="true"/>
+    </entity>
+    <entity name="java-domain">
+        <attribute name="domain-id" value-type="String" key="true"/>
+    </entity>
+</model>
+

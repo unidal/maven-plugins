@@ -22,7 +22,12 @@ public class KpiGeneratorTest extends ModelGenerateTestSupport {
    }
 
    @Test
-   public void testGenerate() throws Exception {
+   public void testModel() throws Exception {
       generate("model-manifest.xml");
+   }
+   
+   @Test
+   public void testFxKpi() throws Exception {
+   	generate("fx-kpi-manifest.xml");
    }
 }
