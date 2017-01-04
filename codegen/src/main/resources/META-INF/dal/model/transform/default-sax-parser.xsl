@@ -269,6 +269,18 @@
                                  </xsl:otherwise>
                               </xsl:choose>
                            </xsl:when>
+                           <xsl:when test="(@list='true' or @set='true') and @xml-indent='true'">
+                              <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(m_tags.peek())) {<xsl:value-of select="$empty-line"/>
+                              <xsl:value-of select="$indent"/>   if (<xsl:value-of select="@upper-name-element"/>.equals(currentTag)) {<xsl:value-of select="$empty-line"/>
+                              <xsl:value-of select="$indent"/>   <xsl:value-of select="'      '"/><xsl:value-of select="$entity/@local-name"/>.<xsl:value-of select="@add-method"/>(<xsl:value-of select="$empty"/>
+                              <xsl:call-template name="convert-type">
+                                 <xsl:with-param name="value-type" select="@value-type-element"/>
+                                 <xsl:with-param name="value" select="'getText()'"/>
+                              </xsl:call-template>
+                              <xsl:value-of select="$empty"/>);<xsl:value-of select="$empty-line"/>
+                              <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
+                              <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty"/>
+                           </xsl:when>
                            <xsl:when test="@list='true' or @set='true'">
                               <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name-element"/>.equals(currentTag)) {<xsl:value-of select="$empty-line"/>
                               <xsl:value-of select="$indent"/>   <xsl:value-of select="'   '"/><xsl:value-of select="$entity/@local-name"/>.<xsl:value-of select="@add-method"/>(<xsl:value-of select="$empty"/>

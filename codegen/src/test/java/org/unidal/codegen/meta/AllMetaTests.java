@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.unidal.codegen.meta.model.GameModelMetaTest;
 import org.unidal.codegen.meta.model.MavenModelMetaTest;
+import org.unidal.codegen.meta.model.StarterMetadataMetaTest;
 import org.unidal.codegen.meta.table.TableMetaTest;
 import org.unidal.codegen.meta.xml.XmlMetaHelperTest;
 import org.unidal.codegen.meta.xml.XmlMetaTest;
@@ -22,7 +23,9 @@ XmlMetaTest.class,
 
 GameModelMetaTest.class,
 
-MavenModelMetaTest.class
+MavenModelMetaTest.class,
+
+StarterMetadataMetaTest.class,
 
 })
 public class AllMetaTests {

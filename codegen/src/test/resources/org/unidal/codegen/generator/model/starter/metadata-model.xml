@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.ctrip.framework.garden.model.metadata" class-suffix="Meta" enable-sax-parser="true"
+	enable-json-builder="true" enable-json-parser="true" enable-native-builder="true" enable-native-parser="true" 
+    enable-base-visitor="true">
+	<entity name="facet">
+		<attribute name="id" value-type="String" key="true" />
+	</entity>
+	<entity name="product">
+		<attribute name="id" value-type="String" key="true" />
+	</entity>
+    <!-- <entity name="template">
+       <element name="file" alias="java-source" value-type="String" type="list" names="java-sources" xml-indent="true" />
+       <element name="file" alias="java-resource" value-type="String" type="list" names="java-resources" xml-indent="true" />
+       <element name="file" alias="test-source" value-type="String" type="list" names="test-sources" xml-indent="true" />
+       <element name="file" alias="test-resource" value-type="String" type="list" names="test-resources" xml-indent="true" />
+    </entity> -->
+	<entity name="artifact">
+		<element name="group-id" value-type="String" key="true" />
+		<element name="artifact-id" value-type="String" key="rue" />
+	</entity>
+</model>
+

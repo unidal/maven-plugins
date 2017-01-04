@@ -21,6 +21,7 @@ import org.unidal.codegen.generator.model.pixie.PixieGeneratorTest;
 import org.unidal.codegen.generator.model.pom.PomGeneratorTest;
 import org.unidal.codegen.generator.model.rule.RuleGeneratorTest;
 import org.unidal.codegen.generator.model.service.ServiceModelGeneratorTest;
+import org.unidal.codegen.generator.model.starter.StarterGeneratorTest;
 import org.unidal.codegen.generator.model.test.EunitMetaGeneratorTest;
 import org.unidal.codegen.generator.model.test.EunitTestGeneratorTest;
 import org.unidal.codegen.generator.model.webres.WebresGeneratorTest;
@@ -75,6 +76,8 @@ ServiceModelGeneratorTest.class,
 WizardModelGeneratorTest.class,
 
 XpipeGeneratorTest.class,
+
+StarterGeneratorTest.class,
 
 })
 public class AllModelGeneratorTests {
