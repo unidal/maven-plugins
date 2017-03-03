@@ -223,12 +223,12 @@
       <xsl:choose>
          <xsl:when test="@list='true' or @map='true'">
             <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$empty"/>            if (_type == 1) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            if (_type == 1) { <xsl:value-of select="$empty-line"/>
             <xsl:call-template name="visit-child">
                <xsl:with-param name="entity" select="$current"/>
                <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
                <xsl:with-param name="indent" select="'              '"/>
-               <xsl:with-param name="param-name" select="@local-name"/>
+               <xsl:with-param name="param-name" select="@local-name-element"/>
             </xsl:call-template>
             <xsl:value-of select="$empty"/>            } else if (_type == 2) {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>               for (int i = readInt(); i <xsl:value-of select="'&gt;'" disable-output-escaping="yes"/> 0; i--) {<xsl:value-of select="$empty-line"/>
@@ -236,7 +236,7 @@
                <xsl:with-param name="entity" select="$current"/>
                <xsl:with-param name="parent-param-name" select="$entity/@param-name"/>
                <xsl:with-param name="indent" select="'                 '"/>
-               <xsl:with-param name="param-name" select="@local-name"/>
+               <xsl:with-param name="param-name" select="@local-name-element"/>
             </xsl:call-template>
             <xsl:value-of select="$empty"/>               }<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
