@@ -545,7 +545,7 @@
          <xsl:value-of select="$indent"/>   // do nothing here<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/>} else <xsl:value-of select="$empty"/>
       </xsl:if>
-      <xsl:for-each select="(attribute | element)[not(@render='false')]">
+      <xsl:for-each select="(attribute | element)[not(@render='false')][not(@deprecated='true')]">
          <xsl:value-of select="$empty"/>if (<xsl:value-of select="@upper-name"/>.equals(tag)) {<xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$indent"/><xsl:value-of select="'   '"/><xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="$empty"/>
          <xsl:choose>

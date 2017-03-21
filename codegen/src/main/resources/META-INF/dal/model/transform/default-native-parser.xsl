@@ -161,6 +161,11 @@
       <xsl:variable name="index" select="position()"/>
       
       <xsl:choose>
+         <xsl:when test="@deprecated='true'">
+            <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/>read<xsl:call-template name="get-type-name"/>(); // DEPRECATED<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            break;<xsl:value-of select="$empty-line"/>
+         </xsl:when>
          <xsl:when test="@primitive='true' and not(@type)">
             <xsl:value-of select="$empty"/>         case <xsl:value-of select="$index"/>:<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>            <xsl:value-of select="$indent"/><xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@set-method"/>(read<xsl:call-template name="get-type-name"/>());<xsl:value-of select="$empty-line"/>

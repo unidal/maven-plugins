@@ -136,6 +136,11 @@
          <xsl:variable name="index" select="position()"/>
          
          <xsl:choose>
+            <xsl:when test="@deprecated='true'">
+               <xsl:value-of select="$empty"/>      // DEPRECATED<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      // writeTag(<xsl:value-of select="$index"/>, 0);<xsl:value-of select="$empty-line"/>
+               <xsl:value-of select="$empty"/>      // write<xsl:call-template name="get-type-name"/>(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>
+            </xsl:when>
             <xsl:when test="@primitive='true' and not(@type)">
                <xsl:value-of select="$empty"/>      writeTag(<xsl:value-of select="$index"/>, 0);<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      write<xsl:call-template name="get-type-name"/>(<xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="@get-method"/>());<xsl:value-of select="$empty-line"/>

@@ -113,8 +113,8 @@
 </xsl:template>
 
 <xsl:template name="define-variable-from-attributes">
-   <xsl:if test="attribute[not(@text='true' or @render='false')]">
-      <xsl:for-each select="attribute[not(@text='true' or @render='false')]">
+   <xsl:if test="attribute[not(@text='true' or @render='false')][not(@deprecated='true')]">
+      <xsl:for-each select="attribute[not(@text='true' or @render='false')][not(@deprecated='true')]">
          <xsl:value-of select="$empty"/>      String <xsl:value-of select="@param-name"/> = attributes.getValue(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
       </xsl:for-each>
    </xsl:if>
@@ -144,7 +144,7 @@
 <xsl:template name="set-optional-fields">
    <xsl:param name="entity" select="."/>
    
-   <xsl:for-each select="attribute[not(@key='true' or @text='true' or @render='false')]">
+   <xsl:for-each select="attribute[not(@key='true' or @text='true' or @render='false')][not(@deprecated='true')]">
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      if (<xsl:value-of select="@param-name"/> != null) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         <xsl:value-of select="'         '"/><xsl:value-of select="$entity/@local-name"/>.<xsl:value-of select="@set-method"/>(<xsl:value-of select="$empty"/>
