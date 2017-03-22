@@ -135,6 +135,9 @@ public class DefaultModelMeta implements ModelMeta {
 		Element model = new Element("model");
 
 		model.setAttribute("model-package", packageName);
+		model.setAttribute("enable-sax-parser", "true");
+		model.setAttribute("enable-base-visitor", "true");
+
 		return new Document(model);
 	}
 

@@ -80,8 +80,10 @@
       </xsl:if>
    </xsl:for-each>
    <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import java.io.BufferedInputStream;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.IOException;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.InputStream;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import java.io.BufferedReader;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.Reader;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.StringReader;<xsl:value-of select="$empty-line"/>
    <xsl:if test="entity/any">
@@ -127,28 +129,20 @@
    <xsl:variable name="current" select="."/>
    <xsl:value-of select="$empty-line"/>
    <xsl:for-each select="entity[@root='true']">
-      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(InputSource is) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return parseEntity(<xsl:value-of select="@entity-class"/>.class, is);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(InputStream in) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return parse(new InputSource(in));<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return parseEntity(<xsl:value-of select="@entity-class"/>.class, new InputSource(removeBOM(in)));<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(Reader reader) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return parse(new InputSource(reader));<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return parseEntity(<xsl:value-of select="@entity-class"/>.class, new InputSource(removeBOM(reader)));<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(String xml) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return parse(new InputSource(new StringReader(xml)));<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, String xml) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return parseEntity(type, new InputSource(new StringReader(xml)));<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return parseEntity(<xsl:value-of select="@entity-class"/>.class, new InputSource(new StringReader(removeBOM(xml))));<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, InputSource is) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   private static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, InputSource is) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         DefaultSaxParser handler = new DefaultSaxParser();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         SAXParserFactory factory = SAXParserFactory.newInstance();<xsl:value-of select="$empty-line"/>
@@ -164,6 +158,49 @@
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, InputStream in) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return parseEntity(type, new InputSource(removeBOM(in)));<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, String xml) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return parseEntity(type, new InputSource(new StringReader(removeBOM(xml))));<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   // to remove Byte Order Mark(BOM) at the head of windows utf-8 file<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   private static <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T removeBOM(T obj) throws IOException {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      if (obj instanceof String) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         String str = (String) obj;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         if (str.charAt(0) == 0xFEFF) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            return (T) str.substring(1);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         } else {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            return obj;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      } else if (obj instanceof InputStream) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         BufferedInputStream in = new BufferedInputStream((InputStream) obj);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         in.mark(3);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         if (in.read() != 0xEF || in.read() != 0xBB || in.read() != 0xBF) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            in.reset();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         return (T) in;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      } else if (obj instanceof Reader) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         BufferedReader in = new BufferedReader((Reader) obj);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         in.mark(1);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         if (in.read() != 0xFEFF) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            in.reset();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         return (T) in;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      } else {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         return obj;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    </xsl:for-each>
 </xsl:template>
 

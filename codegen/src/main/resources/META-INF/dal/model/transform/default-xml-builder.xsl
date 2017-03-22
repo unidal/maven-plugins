@@ -242,29 +242,29 @@
             }
          }
 
-		return sb.toString();
-	} else if (value.getClass().isArray()) {
-		int len = Array.getLength(value);
-		StringBuilder sb = new StringBuilder(32);
-		boolean first = true;
+         return sb.toString();
+      } else if (value.getClass().isArray()) {
+         int len = Array.getLength(value);
+         StringBuilder sb = new StringBuilder(32);
+         boolean first = true;
 
-		for (int i = 0; i <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> len; i++) {
-			Object item = Array.get(value, i);
+         for (int i = 0; i <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> len; i++) {
+            Object item = Array.get(value, i);
 
-			if (first) {
-				first = false;
-			} else {
-				sb.append(',');
-			}
+            if (first) {
+               first = false;
+            } else {
+               sb.append(',');
+            }
 
-			if (item != null) {
-				sb.append(item);
-			}
-		}
+            if (item != null) {
+               sb.append(item);
+            }
+         }
 		
-		return sb.toString();
+         return sb.toString();
       }
-         
+ 
       return String.valueOf(value);
    }
 <xsl:if test="//entity/element[not(@render='false' or @text='true')] | //entity/any">
