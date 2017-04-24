@@ -279,6 +279,11 @@
             <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
          </xsl:if>
+         <xsl:for-each select="any[not(@render='false')]">
+            <xsl:value-of select="$empty"/>         if (!<xsl:value-of select="@field-name"/>.equals(_o.<xsl:value-of select="@get-method"/>())) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+         </xsl:for-each>
          <xsl:value-of select="$empty-line"/>
          <xsl:value-of select="$empty"/>         return true;<xsl:value-of select="$empty-line"/>
       </xsl:when>

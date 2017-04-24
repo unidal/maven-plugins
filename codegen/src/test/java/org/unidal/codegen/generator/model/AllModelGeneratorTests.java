@@ -7,6 +7,7 @@ import org.unidal.codegen.generator.model.all.AllGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatConsumerGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatCoreGeneratorTest;
 import org.unidal.codegen.generator.model.cat.CatHomeGeneratorTest;
+import org.unidal.codegen.generator.model.cat2.CatGeneratorTest;
 import org.unidal.codegen.generator.model.dal.DalGeneratorTest;
 import org.unidal.codegen.generator.model.dobby.DobbyGeneratorTest;
 import org.unidal.codegen.generator.model.ebay.EbayGeneratorTest;
@@ -81,6 +82,8 @@ XpipeGeneratorTest.class,
 StarterGeneratorTest.class,
 
 RoutingGeneratorTest.class,
+
+CatGeneratorTest.class,
 
 })
 public class AllModelGeneratorTests {

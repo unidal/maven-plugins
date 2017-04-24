@@ -229,6 +229,11 @@ public class DefaultModelMeta implements ModelMeta {
 				m_valueTypes.add(valueType);
 			}
 		}
+
+		@Override
+		public String toString() {
+			return String.format("AttributeEntry[name: %s, types: %s, format: %s]", m_name, m_valueTypes, m_formats);
+		}
 	}
 
 	static final class ElementEntry {
@@ -433,8 +438,8 @@ public class DefaultModelMeta implements ModelMeta {
 
 		@Override
 		public String toString() {
-			return String.format("ElementEntry[%s, %s, %s, %s]", m_name, m_attributes, m_list ? "" : m_listName,
-			      m_elements);
+			return String.format("ElementEntry[name: %s, attributes: %s, list: %s, elements: %s]", m_name,
+			      m_attributes.keySet(), m_list ? "" : m_listName, m_elements.keySet());
 		}
 	}
 
@@ -467,6 +472,7 @@ public class DefaultModelMeta implements ModelMeta {
 
 	static final class Utils {
 		private static SimpleDateFormat[] s_dateFormats = new SimpleDateFormat[] {
+			   new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH),
 		      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH),
 		      new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH),
 		      new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH),

@@ -443,7 +443,6 @@ public class DefaultXmlAggregator implements XmlAggregator {
          String[] names = m_keyName.split(",");
 
          for (String name : names) {
-
             for (int i = 0; i < length; i++) {
                String attrName = attrs.getQName(i);
 
@@ -473,9 +472,7 @@ public class DefaultXmlAggregator implements XmlAggregator {
    }
 
    static class NodeDefinitionParser extends XmlHandler {
-      private Stack<NodeDefinition> m_objs = new Stack<NodeDefinition>(); // ELEMENT
-
-      // object
+      private Stack<NodeDefinition> m_objs = new Stack<NodeDefinition>(); // ELEMENT object
 
       private NodeDefinition m_root;
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="client-config" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="ip" value-type="String" />
+    <attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="enabled" value-type="boolean" />
+    <entity-ref name="server-node" type="list" names="server-nodes" xml-indent="true" />
+    <entity-ref name="property" type="list" names="properties" xml-indent="true" />
+  </entity>
+  <entity name="server-node">
+    <attribute name="type" value-type="String" />
+    <attribute name="ip" value-type="String" />
+    <attribute name="port" value-type="int" />
+    <attribute name="enabled" value-type="boolean" />
+  </entity>
+  <entity name="property">
+    <attribute name="name" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+</model>
+

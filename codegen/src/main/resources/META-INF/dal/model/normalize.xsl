@@ -28,7 +28,7 @@
    </xsl:copy>
 </xsl:template>
 
-<xsl:template match="entity">
+<xsl:template match="entity[not(@enabled='false')]">
    <xsl:copy>
       <xsl:copy-of select="@*"/>
       
@@ -429,7 +429,7 @@
    </xsl:copy>
 </xsl:template>
 
-<xsl:template match="element">
+<xsl:template match="element[not(@enabled='false')]">
    <xsl:copy>
       <xsl:copy-of select="@*"/>
       
@@ -633,7 +633,7 @@
    </xsl:copy>
 </xsl:template>
 
-<xsl:template match="any">
+<xsl:template match="any[not(@enabled='false')]">
    <xsl:copy>
       <xsl:copy-of select="@*"/>
       
@@ -711,7 +711,7 @@
    </xsl:copy>
 </xsl:template>
 
-<xsl:template match="entity-ref">
+<xsl:template match="entity-ref[not(@enabled='false')]">
    <xsl:copy>
       <xsl:copy-of select="@*"/>
       
@@ -764,7 +764,7 @@
    </xsl:copy>
 </xsl:template>
 
-<xsl:template match="snippet">
+<xsl:template match="snippet[not(@enabled='false')]">
    <xsl:copy>
       <xsl:copy-of select="@*"/>
       
