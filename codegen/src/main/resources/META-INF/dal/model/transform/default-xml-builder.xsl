@@ -293,8 +293,8 @@
       m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>/").append(name).append("<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
    }
 
-   protected void element(String name, String text, boolean escape) {
-      if (text == null) {
+   protected void element(String name, String text, String defaultValue, boolean escape) {
+      if (text == null || text.equals(defaultValue)) {
          return;
       }
       
@@ -359,14 +359,20 @@
       <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      } else {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         startTag(any.getName(), false, any.getAttributes());<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         m_sb.setLength(m_sb.length() - 2);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         if (m_compact) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            m_sb.setLength(m_sb.length() - 2);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         for (Any child : any.getChildren()) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>            child.accept(m_visitor);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         endTag(any.getName());<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         m_sb.setLength(m_sb.length() - 2);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         if (m_compact) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            m_sb.setLength(m_sb.length() - 2);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    </xsl:if>
@@ -451,7 +457,7 @@
          <xsl:otherwise>
             <xsl:choose>
                <xsl:when test="@value-type-element='String'">
-                  <xsl:value-of select="$empty"/>      element(<xsl:value-of select="@upper-name-element"/>, <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>(), <xsl:value-of select="@escape"/>);<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>      element(<xsl:value-of select="@upper-name-element"/>, <xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>(), <xsl:call-template name="field-default-value"/>,  <xsl:value-of select="@escape"/>);<xsl:value-of select="$empty-line"/>
                </xsl:when>
                <xsl:when test="@format">
                   <xsl:value-of select="$empty"/>      tagWithText(<xsl:value-of select="@upper-name-element"/>, toString(<xsl:value-of select="$current/@param-name"/>.<xsl:value-of select="@get-method"/>(), "<xsl:value-of select="@format"/>"));<xsl:value-of select="$empty-line"/>
@@ -503,13 +509,17 @@
    <xsl:if test="any">
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      for (Any any : <xsl:value-of select="@param-name"/>.<xsl:value-of select="any/@get-method"/>()) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         boolean compact = m_compact;<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         m_compact = true;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         any.accept(m_visitor);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         m_compact = compact;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
    </xsl:if>
+</xsl:template>
+
+<xsl:template name="field-default-value">
+   <xsl:choose>
+      <xsl:when test="not(@default-value)">null</xsl:when>
+      <xsl:when test="@value-type = 'String'">"<xsl:value-of select="@default-value" disable-output-escaping="yes"/>"</xsl:when>
+      <xsl:otherwise><xsl:value-of select="@default-value" disable-output-escaping="yes"/></xsl:otherwise>
+   </xsl:choose>
 </xsl:template>
 
 <xsl:template name="tag-fields">

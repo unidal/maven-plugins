@@ -19,6 +19,7 @@ import org.unidal.codegen.generator.model.liger.LigerGeneratorTest;
 import org.unidal.codegen.generator.model.mvc.MvcGeneratorTest;
 import org.unidal.codegen.generator.model.phoenix.PhoenixGeneratorTest;
 import org.unidal.codegen.generator.model.pixie.PixieGeneratorTest;
+import org.unidal.codegen.generator.model.plexus.PlexusGeneratorTest;
 import org.unidal.codegen.generator.model.pom.PomGeneratorTest;
 import org.unidal.codegen.generator.model.routing.RoutingGeneratorTest;
 import org.unidal.codegen.generator.model.rule.RuleGeneratorTest;
@@ -84,6 +85,8 @@ StarterGeneratorTest.class,
 RoutingGeneratorTest.class,
 
 CatGeneratorTest.class,
+
+PlexusGeneratorTest.class,
 
 })
 public class AllModelGeneratorTests {
