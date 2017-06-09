@@ -262,12 +262,12 @@
          <xsl:for-each select="(attribute|element|entity-ref)[not(@render='false')]">
             <xsl:choose>
                <xsl:when test="@primitive='true'">
-                  <xsl:value-of select="$empty"/>         if (<xsl:value-of select="@field-name"/> != _o.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>         if (<xsl:value-of select="@get-method"/>() != _o.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                </xsl:when>
                <xsl:otherwise>
-                  <xsl:value-of select="$empty"/>         if (!equals(<xsl:value-of select="@field-name"/>, _o.<xsl:value-of select="@get-method"/>())) {<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>         if (!equals(<xsl:value-of select="@get-method"/>(), _o.<xsl:value-of select="@get-method"/>())) {<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
                   <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
                </xsl:otherwise>
@@ -280,7 +280,7 @@
             <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
          </xsl:if>
          <xsl:for-each select="any[not(@render='false')]">
-            <xsl:value-of select="$empty"/>         if (!<xsl:value-of select="@field-name"/>.equals(_o.<xsl:value-of select="@get-method"/>())) {<xsl:value-of select="$empty-line"/>
+            <xsl:value-of select="$empty"/>         if (!<xsl:value-of select="@get-method"/>().equals(_o.<xsl:value-of select="@get-method"/>())) {<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
             <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
          </xsl:for-each>
@@ -294,13 +294,13 @@
       	 	 
       	 	 <xsl:choose>
 		       <xsl:when test="@primitive='true'">
-		         <xsl:value-of select="$empty"/>         if (<xsl:value-of select="@field-name"/> != _o.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+		         <xsl:value-of select="$empty"/>         if (<xsl:value-of select="@get-method"/>() != _o.<xsl:value-of select="@get-method"/>()) {<xsl:value-of select="$empty-line"/>
 		         <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
 		         <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
 		         <xsl:value-of select="$empty-line"/>
 		       </xsl:when>
 		       <xsl:otherwise>
-		         <xsl:value-of select="$empty"/>         if (!equals(<xsl:value-of select="@field-name"/>, _o.<xsl:value-of select="@get-method"/>())) {<xsl:value-of select="$empty-line"/>
+		         <xsl:value-of select="$empty"/>         if (!equals(<xsl:value-of select="@get-method"/>(), _o.<xsl:value-of select="@get-method"/>())) {<xsl:value-of select="$empty-line"/>
 		         <xsl:value-of select="$empty"/>            return false;<xsl:value-of select="$empty-line"/>
 		         <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
 		         <xsl:value-of select="$empty-line"/>
@@ -544,7 +544,7 @@
 </xsl:template>
 
 <xsl:template name="method-get-fields">
-   <xsl:for-each select="attribute[not(@deprecated='true')] | element | entity-ref">
+   <xsl:for-each select="attribute[not(@deprecated='true')][not(@method-get='false')] | element[not(@method-get='false')] | entity-ref">
       <xsl:sort select="@get-method"/>
       
       <xsl:value-of select="$empty"/>   public <xsl:value-of select="@value-type" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@get-method'/>() {<xsl:value-of select="$empty-line"/>
