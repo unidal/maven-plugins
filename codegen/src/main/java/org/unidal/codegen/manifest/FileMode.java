@@ -3,9 +3,7 @@ package org.unidal.codegen.manifest;
 public enum FileMode {
    CREATE_OR_OVERWRITE("create_or_overwrite"),
 
-   CREATE_IF_NOT_EXISTS("create_if_not_exists"),
-
-   CREATE_OR_APPEND("create_or_append");
+   CREATE_IF_NOT_EXISTS("create_if_not_exists");
 
    private String m_name;
 

@@ -21,7 +21,7 @@ public class VersionMapping implements Initializable, LogEnabled {
       map("javax.servlet", "servlet-api", "2.5");
       map("javax.servlet", "jstl", "1.2");
 
-      map("org.unidal.framework", "web-framework", "2.2.0");
+      map("org.unidal.framework", "web-framework", "3.0.4");
       map("org.unidal.webres", "WebResServer", "1.2.1");
    }
 

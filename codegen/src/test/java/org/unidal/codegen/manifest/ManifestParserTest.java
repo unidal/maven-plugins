@@ -2,16 +2,16 @@ package org.unidal.codegen.manifest;
 
 import java.util.List;
 
-import org.codehaus.plexus.util.IOUtil;
 import org.junit.Assert;
 import org.junit.Test;
+import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 public class ManifestParserTest extends ComponentTestCase {
    @Test
    public void testParseJdbcManifest() throws Exception {
       ManifestParser parser = lookup(ManifestParser.class);
-      String content = IOUtil.toString(getClass().getResourceAsStream("jdbc_manifest.xml"));
+      String content = Files.forIO().readUtf8String(getClass().getResourceAsStream("jdbc_manifest.xml"));
 
       List<Manifest> manifests = parser.parse(content);
       Assert.assertEquals(10, manifests.size());
@@ -25,7 +25,7 @@ public class ManifestParserTest extends ComponentTestCase {
    @Test
    public void testParseXmlManifest() throws Exception {
       ManifestParser parser = lookup(ManifestParser.class);
-      String content = IOUtil.toString(getClass().getResourceAsStream("xml_manifest.xml"));
+      String content = Files.forIO().readUtf8String(getClass().getResourceAsStream("xml_manifest.xml"));
       
       List<Manifest> manifests = parser.parse(content);
       Assert.assertEquals(5, manifests.size());

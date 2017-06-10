@@ -3,7 +3,6 @@ package org.unidal.codegen.meta.xml;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 
-import org.codehaus.plexus.util.IOUtil;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -11,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.codegen.meta.DefaultXmlMeta;
 import org.unidal.codegen.meta.XmlMeta;
+import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 public class XmlMetaTest extends ComponentTestCase {
@@ -24,7 +24,7 @@ public class XmlMetaTest extends ComponentTestCase {
       outputter.output(root, writer);
 
       String result = writer.toString();
-      String expected = IOUtil.toString(getClass().getResourceAsStream("sanguo_meta.xml"));
+      String expected = Files.forIO().readUtf8String(getClass().getResourceAsStream("sanguo_meta.xml"));
 
       Assert.assertEquals(expected.replaceAll("\\r", ""), result.replaceAll("\\r", ""));
    }
@@ -39,7 +39,7 @@ public class XmlMetaTest extends ComponentTestCase {
       outputter.output(root, writer);
 
       String result = writer.toString();
-      String expected = IOUtil.toString(getClass().getResourceAsStream("sina_news_meta.xml"));
+      String expected = Files.forIO().readUtf8String(getClass().getResourceAsStream("sina_news_meta.xml"));
 
       Assert.assertEquals(expected.replaceAll("\\r", ""), result.replaceAll("\\r", ""));
    }

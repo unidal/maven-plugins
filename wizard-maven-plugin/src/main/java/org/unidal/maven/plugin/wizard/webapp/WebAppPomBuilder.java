@@ -53,7 +53,7 @@ public class WebAppPomBuilder implements LogEnabled {
    }
 
    private void buildDependencies(Element dependencies) {
-      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "web-framework", "2.4.0", null)) {
+      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "web-framework", "3.0.4", null)) {
          if (m_webapp.isJstl()) {
             m_pom.checkDependency(dependencies, "javax.servlet", "jstl", "1.2", null);
          }
@@ -64,8 +64,8 @@ public class WebAppPomBuilder implements LogEnabled {
 
          m_pom.checkDependency(dependencies, "javax.servlet", "servlet-api", "2.5", "provided");
          m_pom.checkDependency(dependencies, "junit", "junit", "4.8.1", "test");
-         m_pom.checkDependency(dependencies, "org.unidal.framework", "foundation-service", "2.4.0", null);
-         m_pom.checkDependency(dependencies, "org.unidal.framework", "test-framework", "2.4.0", "test");
+         m_pom.checkDependency(dependencies, "org.unidal.framework", "foundation-service", "3.0.4", null);
+         m_pom.checkDependency(dependencies, "org.unidal.framework", "test-framework", "3.0.4", "test");
          m_pom.checkDependency(dependencies, "org.mortbay.jetty", "jetty", "6.1.14", "test");
          m_pom.checkDependency(dependencies, "org.mortbay.jetty", "jsp-2.1", "6.1.14", "test");
       }

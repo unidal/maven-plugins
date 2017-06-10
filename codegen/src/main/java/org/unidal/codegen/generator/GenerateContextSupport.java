@@ -1,16 +1,13 @@
 package org.unidal.codegen.generator;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.plexus.util.IOUtil;
 import org.unidal.codegen.manifest.FileMode;
 import org.unidal.codegen.manifest.Manifest;
 import org.unidal.helper.Files;
@@ -70,31 +67,25 @@ public abstract class GenerateContextSupport implements GenerateContext {
 
 	public void addFileToStorage(Manifest manifest, String content) throws IOException {
 		FileMode mode = manifest.getMode();
-		Writer writer = null;
 		File file = getPath(manifest.getPath()).getCanonicalFile();
 
 		file.getParentFile().mkdirs();
 
 		switch (mode) {
 		case CREATE_OR_OVERWRITE:
-			writer = new FileWriter(file);
+			Files.forIO().writeTo(file, content);
+			log(LogLevel.INFO, file + " generated");
+			m_generatedFiles++;
+
 			break;
 		case CREATE_IF_NOT_EXISTS:
 			if (!file.exists()) {
-				writer = new FileWriter(file);
+				Files.forIO().writeTo(file, content);
+				log(LogLevel.INFO, file + " generated");
+				m_generatedFiles++;
 			}
 
 			break;
-		case CREATE_OR_APPEND:
-			writer = new FileWriter(file, true);
-			break;
-		}
-
-		if (writer != null) {
-			IOUtil.copy(content, writer);
-			log(LogLevel.INFO, file + " generated");
-			writer.close();
-			m_generatedFiles++;
 		}
 	}
 
