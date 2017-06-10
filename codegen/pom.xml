@@ -22,11 +22,6 @@
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
-      <dependency>
-         <groupId>org.apache.parquet</groupId>
-         <artifactId>parquet-column</artifactId>
-         <scope>provided</scope>
-      </dependency>
    </dependencies>
 </project>
 
