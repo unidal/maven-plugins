@@ -47,6 +47,7 @@
    </developers>
    <properties>
       <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+      <codegen.version>${project.version}</codegen.version>
       
       <!-- plugin params -->
       <javadoc.opts>-Xdoclint:none</javadoc.opts>
@@ -124,6 +125,11 @@ org.eclipse.jdt.core.compiler.compliance=1.6
             <plugin>
                <artifactId>maven-source-plugin</artifactId>
                <version>2.2.1</version>
+            </plugin>
+            <plugin>
+               <groupId>org.unidal.maven.plugins</groupId>
+               <artifactId>codegen-maven-plugin</artifactId>
+               <version>${codegen.version}</version>
             </plugin>
          </plugins>
       </pluginManagement>
