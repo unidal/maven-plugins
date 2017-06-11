@@ -5,13 +5,13 @@ cache:
   - ~/.m2
 
 git:
-  depth: 3
+  depth: 1
 
 branches:
   only:
     - master
 
 install:
-  mvn clean install -Dmaven.test.skip -B -fae
+  mvn clean install -Dmaven.test.skip -B -fae -s settings.xml
 
 script: true
