@@ -148,7 +148,6 @@
       <xsl:value-of select="$empty"/>         SAXParserFactory factory = SAXParserFactory.newInstance();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         factory.setValidating(false);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         factory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         factory.setFeature("http://xml.org/sax/features/validation", false);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         factory.newSAXParser().parse(is, handler);<xsl:value-of select="$empty-line"/>
