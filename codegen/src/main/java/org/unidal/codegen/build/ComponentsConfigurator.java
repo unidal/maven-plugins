@@ -23,6 +23,10 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 class ComponentsConfigurator extends AbstractResourceConfigurator {
+   public static void main(String[] args) {
+      generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+   }
+
    @Override
    public List<Component> defineComponents() {
       List<Component> all = new ArrayList<Component>();
@@ -80,7 +84,8 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
       return all;
    }
 
-   public static void main(String[] args) {
-      generatePlexusComponentsXmlFile(new ComponentsConfigurator());
-   }
+	@Override
+	protected boolean isMavenPlugin() {
+		return true;
+	}
 }

@@ -20,4 +20,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
    public static void main(String[] args) {
       generatePlexusComponentsXmlFile(new ComponentsConfigurator());
    }
+
+	@Override
+	protected boolean isMavenPlugin() {
+		return true;
+	}
 }

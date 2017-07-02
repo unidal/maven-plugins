@@ -321,7 +321,7 @@ public class JdbcMojo extends AbstractMojo {
       PomDelegate b = new PomDelegate();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
-      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "2.4.0", null)) {
+      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "3.1.0", null)) {
          b.checkDependency(dependencies, "com.dianping.cat", "cat-client", "1.3.6", null);
          b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.35", "runtime");
       }
@@ -329,7 +329,7 @@ public class JdbcMojo extends AbstractMojo {
       if (jdbc != null) {
          Element build = b.findOrCreateChild(root, "build", null, "dependencies");
          Element plugins = b.findOrCreateChild(build, "plugins");
-         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.4.2");
+         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "2.5.7");
          Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc model");
          Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
          Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");
@@ -349,7 +349,7 @@ public class JdbcMojo extends AbstractMojo {
             manifestElement.addContent(new CDATA(sb.toString()));
          }
          
-         Element plexusPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "2.4.2");
+         Element plexusPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "2.5.7");
          Element plexus = b.checkPluginExecution(plexusPlugin, "plexus", "process-classes",
                "generate plexus component descriptor");
          Element codegenPlexusConfiguration = b.findOrCreateChild(plexus, "configuration");

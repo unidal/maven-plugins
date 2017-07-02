@@ -12,21 +12,26 @@ import org.unidal.maven.plugin.wizard.webapp.WebAppPomBuilder;
 import org.unidal.maven.plugin.wizard.webapp.WebAppWizardBuilder;
 
 class ComponentsConfigurator extends AbstractResourceConfigurator {
-   @Override
-   public List<Component> defineComponents() {
-      List<Component> all = new ArrayList<Component>();
+	public static void main(String[] args) {
+		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	}
 
-      all.add(A(MavenContainer.class));
-      all.add(A(VersionMapping.class));
-      all.add(A(PomDelegate.class));
+	@Override
+	public List<Component> defineComponents() {
+		List<Component> all = new ArrayList<Component>();
 
-      all.add(A(WebAppPomBuilder.class));
-      all.add(A(WebAppWizardBuilder.class));
-      
-      return all;
-   }
+		all.add(A(MavenContainer.class));
+		all.add(A(VersionMapping.class));
+		all.add(A(PomDelegate.class));
 
-   public static void main(String[] args) {
-      generatePlexusComponentsXmlFile(new ComponentsConfigurator());
-   }
+		all.add(A(WebAppPomBuilder.class));
+		all.add(A(WebAppWizardBuilder.class));
+
+		return all;
+	}
+
+	@Override
+	protected boolean isMavenPlugin() {
+		return true;
+	}
 }
