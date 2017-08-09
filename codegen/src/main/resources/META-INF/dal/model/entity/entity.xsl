@@ -149,6 +149,9 @@
          <xsl:when test="@default-value">
             <xsl:value-of select="$prefix"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = <xsl:call-template name="field-default-value"/>;<xsl:value-of select="$empty-line"/>
          </xsl:when>
+         <xsl:when test="name()='entity-ref' and @required='true'">
+            <xsl:value-of select="$prefix"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/> = new <xsl:value-of select='@value-type' disable-output-escaping="yes"/>();<xsl:value-of select="$empty-line"/>
+         </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="$prefix"/><xsl:value-of select='@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='@field-name'/>;<xsl:value-of select="$empty-line"/>
          </xsl:otherwise>

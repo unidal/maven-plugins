@@ -171,7 +171,7 @@
       <xsl:value-of select="$empty"/>      if (obj instanceof String) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         String str = (String) obj;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         if (str.charAt(0) == 0xFEFF) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         if (str.length() != 0 <xsl:value-of select="'&amp;&amp;'" disable-output-escaping="yes"/> str.charAt(0) == 0xFEFF) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>            return (T) str.substring(1);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         } else {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>            return obj;<xsl:value-of select="$empty-line"/>
