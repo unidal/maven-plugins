@@ -41,6 +41,8 @@ public class ConsoleProvider extends AbstractPropertyProvider {
             } else {
                System.out.print(String.format("%s[%s]: ", prompt, defaultValue));
             }
+            
+            System.out.flush();
 
             byte[] buffer = new byte[256];
             int size = 0;

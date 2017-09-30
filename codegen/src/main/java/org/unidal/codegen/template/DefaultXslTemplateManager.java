@@ -12,65 +12,57 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.URIResolver;
 import javax.xml.transform.stream.StreamSource;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Named;
 
 @Named(type = XslTemplateManager.class)
-public class DefaultXslTemplateManager implements XslTemplateManager, LogEnabled {
-   private Map<URL, Templates> m_cachedTemplates;
+public class DefaultXslTemplateManager implements XslTemplateManager {
+	private Map<URL, Templates> m_cachedTemplates;
 
-   private Map<URL, Long> m_lastModifiedDates;
+	private Map<URL, Long> m_lastModifiedDates;
 
-   Logger m_logger;
+	public DefaultXslTemplateManager() {
+		m_cachedTemplates = new HashMap<URL, Templates>();
+		m_lastModifiedDates = new HashMap<URL, Long>();
+	}
 
-   public DefaultXslTemplateManager() {
-      m_cachedTemplates = new HashMap<URL, Templates>();
-      m_lastModifiedDates = new HashMap<URL, Long>();
-   }
+	public Templates getTemplates(URL style) {
+		Templates templates = m_cachedTemplates.get(style);
+		Long lastModifiedDate = m_lastModifiedDates.get(style);
+		long lastModified = 0;
 
-   public void enableLogging(Logger logger) {
-      m_logger = logger;
-   }
+		if ("file".equals(style.getProtocol())) {
+			lastModified = new File(style.getFile()).lastModified();
+		}
 
-   public Templates getTemplates(URL style) {
-      Templates templates = m_cachedTemplates.get(style);
-      Long lastModifiedDate = m_lastModifiedDates.get(style);
-      long lastModified = 0;
+		if (templates == null || lastModifiedDate.longValue() != lastModified) {
+			TransformerFactory factory = TransformerFactory.newInstance();
 
-      if ("file".equals(style.getProtocol())) {
-         lastModified = new File(style.getFile()).lastModified();
-      }
+			try {
+				factory.setURIResolver(new URIResolver() {
+					public Source resolve(String href, String base) throws TransformerException {
+						try {
+							URL uri = new URL(new URL(base), href);
 
-      if (templates == null || lastModifiedDate.longValue() != lastModified) {
-         TransformerFactory factory = TransformerFactory.newInstance();
+							return new StreamSource(uri.openStream(), uri.toString());
+						} catch (Exception e) {
+							// ignore it
+							System.err.println("Can't result URI (" + base + "," + href + ") " + e);
+						}
 
-         try {
-            factory.setURIResolver(new URIResolver() {
-               public Source resolve(String href, String base) throws TransformerException {
-                  try {
-                     URL uri = new URL(new URL(base), href);
+						// let the processor to resolve the URI itself
+						return null;
+					}
+				});
 
-                     return new StreamSource(uri.openStream(), uri.toString());
-                  } catch (Exception e) {
-                     // ignore it
-                     m_logger.warn("Can't result URI (" + base + "," + href + ")", e);
-                  }
+				templates = factory.newTemplates(new StreamSource(style.openStream(), style.toString()));
 
-                  // let the processor to resolve the URI itself
-                  return null;
-               }
-            });
+				m_cachedTemplates.put(style, templates);
+				m_lastModifiedDates.put(style, new Long(lastModified));
+			} catch (Exception e) {
+				throw new RuntimeException("Fail to open XSL template: " + style, e);
+			}
+		}
 
-            templates = factory.newTemplates(new StreamSource(style.openStream(), style.toString()));
-
-            m_cachedTemplates.put(style, templates);
-            m_lastModifiedDates.put(style, new Long(lastModified));
-         } catch (Exception e) {
-            throw new RuntimeException("Fail to open XSL template: " + style, e);
-         }
-      }
-
-      return templates;
-   }
+		return templates;
+	}
 }

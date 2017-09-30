@@ -81,6 +81,8 @@ public class PropertyProviders {
             } else {
                System.out.print(sb.toString());
             }
+            
+            System.out.flush();
 
             try {
                int size = System.in.read(buffer);

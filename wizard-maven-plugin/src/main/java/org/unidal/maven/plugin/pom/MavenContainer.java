@@ -56,31 +56,11 @@ public class MavenContainer implements Contextualizable {
       }
    }
 
-   public <T> List<T> lookupList(Class<T> role, List<String> roleHints) throws LookupException {
-      try {
-         return (List<T>) m_container.lookupList(role, roleHints);
-      } catch (ComponentLookupException e) {
-         String key = role.getName() + ":" + roleHints;
-
-         throw new LookupException("Component list(" + key + ") lookup failure. Details: " + e.getMessage(), e);
-      }
-   }
-
    public <T> Map<String, T> lookupMap(Class<T> role) throws LookupException {
       try {
          return (Map<String, T>) m_container.lookupMap(role);
       } catch (ComponentLookupException e) {
          String key = role.getName();
-
-         throw new LookupException("Component map(" + key + ") lookup failure. Details: " + e.getMessage(), e);
-      }
-   }
-
-   public <T> Map<String, T> lookupMap(Class<T> role, List<String> roleHints) throws LookupException {
-      try {
-         return (Map<String, T>) m_container.lookupMap(role, roleHints);
-      } catch (ComponentLookupException e) {
-         String key = role.getName() + ":" + roleHints;
 
          throw new LookupException("Component map(" + key + ") lookup failure. Details: " + e.getMessage(), e);
       }
