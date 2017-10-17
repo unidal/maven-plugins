@@ -268,6 +268,26 @@
       return String.valueOf(value);
    }
 <xsl:if test="//entity/element[not(@render='false' or @text='true')] | //entity/any">
+   protected void tagWithText(String name, String text, java.util.Map<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> attributes) {
+      if (text == null) {
+         return;
+      }
+      
+      indent();
+
+      m_sb.append('<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>').append(name);
+
+      if (attributes != null) {
+         for (java.util.Map.Entry<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> e : attributes.entrySet()) {
+            m_sb.append(' ').append(e.getKey()).append("=\"").append(escape(e.getValue())).append('"');
+         }
+      }
+
+      m_sb.append("<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>");
+      m_sb.append(escape(text, true));
+      m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>/").append(name).append("<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
+   }
+
    protected void tagWithText(String name, String text, Object... nameValues) {
       if (text == null) {
          return;
@@ -342,11 +362,7 @@
       <xsl:value-of select="$empty"/>      if (any.getChildren().isEmpty()) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         if (!any.getAttributes().isEmpty()) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>            if (any.hasValue() <xsl:value-of select="'&amp;&amp;'" disable-output-escaping="yes"/> any.getValue().length() != 0) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>               startTag(any.getName(), false, any.getAttributes());<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>               m_sb.setLength(m_sb.length() - 2);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>               m_sb.append(any.getValue());<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>               endTag(any.getName());<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>               m_sb.setLength(m_sb.length() - 2);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               tagWithText(any.getName(), any.getValue(), any.getAttributes());<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>            } else {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>               startTag(any.getName(), true, any.getAttributes());<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>

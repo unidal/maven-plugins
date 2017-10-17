@@ -17,7 +17,7 @@
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +49,7 @@ public class Any extends BaseEntity<xsl:value-of select="'&lt;Any&gt;'" disable-
             return Collections.emptyMap();
          }
 
-         m_attributes = new HashMap<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/>();
+         m_attributes = new LinkedHashMap<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/>();
       }
 
       return m_attributes;

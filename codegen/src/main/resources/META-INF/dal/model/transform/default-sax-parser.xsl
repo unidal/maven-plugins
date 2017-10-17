@@ -248,6 +248,7 @@
             <xsl:choose>
                <xsl:when test="//entity[element[not(@render='false')]] | //entity[any]">
                   <xsl:value-of select="$empty"/>         Object currentObj = m_objs.pop();<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>         String text = m_text.toString().trim();<xsl:value-of select="$empty-line"/>
                   <xsl:choose>
                      <xsl:when test="//entity/element[not(@text='true') and not(@render='false')]">
                         <xsl:value-of select="$empty"/>         String currentTag = m_tags.pop();<xsl:value-of select="$empty-line"/>
@@ -348,16 +349,16 @@
                         <xsl:otherwise><xsl:value-of select="$indent"/></xsl:otherwise>
                      </xsl:choose>
                      <xsl:value-of select="$empty"/>if (currentObj instanceof Any) {<xsl:value-of select="$empty-line"/>
-                     <xsl:value-of select="$indent"/>   if (m_text.toString().length() != 0) {<xsl:value-of select="$empty-line"/>
-                     <xsl:value-of select="$indent"/>      ((Any) currentObj).setValue(m_text.toString());<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   if (text.length() != 0) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>      ((Any) currentObj).setValue(text);<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty"/>
                   </xsl:if>
                   <xsl:for-each select="//entity/any">
                      <xsl:variable name="indent" select="'         '"/>
                      <xsl:value-of select="$empty"/> else if (currentObj instanceof <xsl:value-of select="../@entity-class"/>) {<xsl:value-of select="$empty-line"/>
-                     <xsl:value-of select="$indent"/>   if (m_text.toString().length() != 0) {<xsl:value-of select="$empty-line"/>
-                     <xsl:value-of select="$indent"/>      ((<xsl:value-of select="../@entity-class"/>) currentObj).<xsl:value-of select="@get-method"/>().add(new <xsl:value-of select="@entity-class"/>().setValue(m_text.toString()));<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   if (text.length() != 0) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>      ((<xsl:value-of select="../@entity-class"/>) currentObj).<xsl:value-of select="@get-method"/>().add(new <xsl:value-of select="@entity-class"/>().setValue(text));<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty"/>
                   </xsl:for-each>
@@ -520,8 +521,10 @@
                <xsl:choose>
                   <xsl:when test="$refs | entity-ref[not(@render='false')]">
                      <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
-                     <xsl:value-of select="$indent"/>   if (m_text.toString().length() != 0) {<xsl:value-of select="$empty-line"/>
-                     <xsl:value-of select="$indent"/>      Any any = new <xsl:value-of select="any/@entity-class"/>().setValue(m_text.toString());<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   String text = m_text.toString().trim();<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   if (text.length() != 0) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>      Any any = new <xsl:value-of select="any/@entity-class"/>().setValue(text);<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$indent"/>      parentObj.<xsl:value-of select="any/@get-method"/>().add(any);<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$indent"/>   }<xsl:value-of select="$empty-line"/>
@@ -535,8 +538,10 @@
                      <xsl:value-of select="$indent"/>m_tags.push(qName);<xsl:value-of select="$empty-line"/>
                   </xsl:when>
                   <xsl:otherwise>
-                     <xsl:value-of select="$indent"/>if (m_text.toString().length() != 0) {<xsl:value-of select="$empty-line"/>
-                     <xsl:value-of select="$indent"/>   Any any = new <xsl:value-of select="any/@entity-class"/>().setValue(m_text.toString());<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>String text = m_text.toString().trim();<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>if (text.length() != 0) {<xsl:value-of select="$empty-line"/>
+                     <xsl:value-of select="$indent"/>   Any any = new <xsl:value-of select="any/@entity-class"/>().setValue(text);<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$indent"/>   parentObj.<xsl:value-of select="any/@get-method"/>().add(any);<xsl:value-of select="$empty-line"/>
                      <xsl:value-of select="$indent"/>}<xsl:value-of select="$empty-line"/>
