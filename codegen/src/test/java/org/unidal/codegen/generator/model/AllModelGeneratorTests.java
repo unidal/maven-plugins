@@ -27,6 +27,7 @@ import org.unidal.codegen.generator.model.service.ServiceModelGeneratorTest;
 import org.unidal.codegen.generator.model.starter.StarterGeneratorTest;
 import org.unidal.codegen.generator.model.test.EunitMetaGeneratorTest;
 import org.unidal.codegen.generator.model.test.EunitTestGeneratorTest;
+import org.unidal.codegen.generator.model.tulip.TulipGeneratorTest;
 import org.unidal.codegen.generator.model.webres.WebresGeneratorTest;
 import org.unidal.codegen.generator.model.wizard.WizardModelGeneratorTest;
 import org.unidal.codegen.generator.model.xpipe.XpipeGeneratorTest;
@@ -87,6 +88,8 @@ RoutingGeneratorTest.class,
 CatGeneratorTest.class,
 
 PlexusGeneratorTest.class,
+
+TulipGeneratorTest.class,
 
 })
 public class AllModelGeneratorTests {

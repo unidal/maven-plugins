@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.pingan.tulip.model" enable-sax-parser="true" enable-base-visitor="true" enable-base-visitor2="true">
+  <entity name="model" root="true">
+    <entity-ref name="metadata" />
+    <entity-ref name="configuration" />
+    <entity-ref name="event" type="list" names="events" xml-indent="true" />
+  </entity>
+  <entity name="metadata">
+    <attribute name="version" value-type="int" />
+    <entity-ref name="entity" type="map" names="entities" />
+  </entity>
+  <entity name="entity" class-name="EntityMeta">
+    <attribute name="name" value-type="String" key="true" />
+    <entity-ref name="attribute" type="map" names="attributes" />
+  </entity>
+  <entity name="attribute" class-name="AttributeMeta">
+    <attribute name="name" value-type="String" key="true" />
+    <attribute name="type" value-type="String" />
+    <attribute name="required" value-type="boolean" />
+    <attribute name="key" value-type="boolean" />
+    <attribute name="display-name" value-type="String" />
+    <attribute name="unique" value-type="boolean" />
+    <attribute name="ref-type" value-type="String" />
+  </entity>
+  <entity name="configuration">
+    <attribute name="version" value-type="int" />
+    <any name="entities"/>
+  </entity>
+  <entity name="event">
+    <attribute name="id" value-type="int" key="true" />
+    <attribute name="type" value-type="String" />
+    <attribute name="entity" value-type="String" />
+    <attribute name="creation-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="key" value-type="String" />
+    <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="change-set" type="list" names="change-sets" />
+  </entity>
+  <entity name="change-set">
+    <attribute name="name" value-type="String" key="true" />
+    <entity-ref name="change" type="list" names="changes" />
+  </entity>
+  <entity name="change">
+    <attribute name="attribute" value-type="String" key="true" />
+    <attribute name="new-value" value-type="String" />
+    <attribute name="value" value-type="String" />
+  </entity>
+</model>
+
