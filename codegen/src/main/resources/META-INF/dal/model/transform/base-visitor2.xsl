@@ -107,14 +107,14 @@
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   protected void <xsl:value-of select="@visit-method"/>Children(<xsl:value-of select="@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="@param-name"/>) {<xsl:value-of select="$empty-line"/>
-      <xsl:if test="entity-ref">
+      <xsl:if test="entity-ref | any">
 	      <xsl:choose>
 	         <xsl:when test="@all-children-in-sequence='true'">
 	            <xsl:value-of select="$empty"/>      for (BaseEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> child : <xsl:value-of select="@param-name"/>.<xsl:value-of select="@method-get-all-children-in-sequence"/>()) {<xsl:value-of select="$empty-line"/>
 	            <xsl:value-of select="$empty"/>         child.accept(this);<xsl:value-of select="$empty-line"/>
 	            <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
 	         </xsl:when>
-	         <xsl:when test="entity-ref">
+	         <xsl:when test="entity-ref | any">
 	            <xsl:for-each select="entity-ref">
 	               <xsl:variable name="name" select="@name"/>
 	               <xsl:variable name="current" select="//entity[@name=$name]"/>
@@ -139,6 +139,14 @@
 	                  <xsl:value-of select="$empty-line"/>
 	               </xsl:if>
 	            </xsl:for-each>
+               <xsl:if test="any">
+                  <xsl:if test="entity-ref">
+                     <xsl:value-of select="$empty-line"/>
+                  </xsl:if>
+                  <xsl:value-of select="$empty"/>      for (Any any : <xsl:value-of select="$entity/@param-name"/>.<xsl:value-of select="any/@get-method"/>()) {<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>         visitAny(any);<xsl:value-of select="$empty-line"/>
+                  <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+               </xsl:if>
 	         </xsl:when>
 	      </xsl:choose>
       </xsl:if>
