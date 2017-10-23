@@ -28,6 +28,7 @@ import org.unidal.web.mvc.annotation.ModulePagesMeta;
    <xsl:if test="position()!=last()">,<xsl:value-of select="$empty-line"/></xsl:if>
 </xsl:for-each>
 })
+@Named(type = Module.class, value = "<xsl:value-of select="@module-class"/>")
 public class <xsl:value-of select="@module-class"/> extends AbstractModule {
 
 }
