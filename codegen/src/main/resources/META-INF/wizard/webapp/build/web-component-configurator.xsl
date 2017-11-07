@@ -17,32 +17,38 @@
 
 import java.util.ArrayList;
 import java.util.List;
-<xsl:for-each select="module">
-import <xsl:value-of select="@package"/>.<xsl:value-of select="@module-class"/>;<xsl:value-of select="$empty"/>
-</xsl:for-each>
 
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
-import org.unidal.web.configuration.AbstractWebComponentsConfigurator;
+import org.unidal.web.mvc.model.ModuleRegistry;
 
 class WebComponentConfigurator extends AbstractWebComponentsConfigurator {
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> defineComponents() {
-		List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/>();
+   @Override
+   public List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> defineComponents() {
+      List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/>();
 
-		defineModuleRegistry(all, <xsl:value-of select="$empty"/>
-        <xsl:choose>
-           <xsl:when test="module[@default='true']"><xsl:value-of select="module[@default='true']/@module-class"/>.class</xsl:when>
-           <xsl:when test="module"><xsl:value-of select="module/@module-class"/>.class</xsl:when>
-           <xsl:otherwise>null</xsl:otherwise>
-        </xsl:choose>
-        <xsl:for-each select="module">
-           <xsl:value-of select="$empty"/>, <xsl:value-of select="@module-class"/>.class<xsl:value-of select="$empty"/>
-        </xsl:for-each>
-        <xsl:value-of select="$empty"/>);
+<xsl:choose>
+  <xsl:when test="module[@default='true']">
+      all.add(A(ModuleRegistry.class).config(E("default-module").value(<xsl:value-of select="module[@default='true']/@package"/>.<xsl:value-of select="module[@default='true']/@module-class"/>.class.getName())));
+  </xsl:when>
+  <xsl:when test="module">
+  <xsl:value-of select="module/@module-class"/>.class
+      all.add(A(ModuleRegistry.class).config(E("default-module").value(<xsl:value-of select="module/@package"/>.<xsl:value-of select="module/@module-class"/>.class.getName())));
+  </xsl:when>
+  <xsl:otherwise>
+      all.add(A(ModuleRegistry.class));
+  </xsl:otherwise>
+</xsl:choose>
 
-		return all;
-	}
+<xsl:for-each select="module">
+      all.add(A(<xsl:value-of select="@package"/>.<xsl:value-of select="@module-class"/>.class));
+<xsl:for-each select="page">
+      all.add(A(<xsl:value-of select="@package"/>.<xsl:value-of select="@handler-class"/>.class));
+      all.add(A(<xsl:value-of select="@package"/>.<xsl:value-of select="@jsp-viewer-class"/>.class));
+</xsl:for-each>
+</xsl:for-each>
+      return all;
+   }
 }
 </xsl:template>
 

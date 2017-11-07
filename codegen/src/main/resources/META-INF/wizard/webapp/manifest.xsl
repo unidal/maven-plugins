@@ -62,10 +62,10 @@
    </xsl:call-template>
 
    <!-- WEB-INF/web.xml file -->
-   <!-- <xsl:call-template name="generate-web-resource">
+   <xsl:call-template name="generate-web-resource">
      <xsl:with-param name="file" select="'WEB-INF/web.xml'"/>
      <xsl:with-param name="template" select="'web-inf/web-xml.xsl'"/>
-   </xsl:call-template> -->
+   </xsl:call-template>
 
    <xsl:if test="@cat='true'">
       <!-- META-INF/cat/client.xml file -->

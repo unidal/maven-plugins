@@ -17,8 +17,10 @@
 <xsl:template match="page">
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;
 
-import <xsl:value-of select="../@package"></xsl:value-of>.<xsl:value-of select="../@page-class"/>;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.web.mvc.view.BaseJspViewer;
+
+import <xsl:value-of select="../@package"></xsl:value-of>.<xsl:value-of select="../@page-class"/>;
 <xsl:variable name="type">
 	<xsl:value-of select="../@page-class"/>
 	<xsl:value-of select="', '"/>
@@ -28,6 +30,7 @@ import org.unidal.web.mvc.view.BaseJspViewer;
 	<xsl:value-of select="', '"/>
 	<xsl:value-of select="@model-class"/>
 </xsl:variable>
+@Named
 public class <xsl:value-of select="@jsp-viewer-class"/> extends BaseJspViewer<xsl:call-template name="generic-type"><xsl:with-param name="type" select="$type"/></xsl:call-template> {
 	@Override
 	protected String getJspFilePath(<xsl:value-of select="@context-class"/> ctx, <xsl:value-of select="@model-class"/> model) {

@@ -16,7 +16,9 @@
 <xsl:template match="module">
 <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;
 
+import org.unidal.lookup.annotation.Named;
 import org.unidal.web.mvc.AbstractModule;
+import org.unidal.web.mvc.Module;
 import org.unidal.web.mvc.annotation.ModuleMeta;
 import org.unidal.web.mvc.annotation.ModulePagesMeta;
 
@@ -24,11 +26,10 @@ import org.unidal.web.mvc.annotation.ModulePagesMeta;
 @ModulePagesMeta({
 <xsl:for-each select="page">
    <xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="@package"/>.<xsl:value-of select="@handler-class"/>.class<xsl:value-of select="$empty"/>
-   <xsl:if test="position()!=last()">,<xsl:value-of select="$empty-line"/></xsl:if>
+   <xsl:value-of select="@package"/>.<xsl:value-of select="@handler-class"/>.class,<xsl:value-of select="$empty-line"/>
 </xsl:for-each>
 })
-@Named(type = Module.class, value = "<xsl:value-of select="@module-class"/>")
+@Named(type = Module.class, value = "<xsl:value-of select="$package"/>.<xsl:value-of select="@module-class"/>")
 public class <xsl:value-of select="@module-class"/> extends AbstractModule {
 
 }

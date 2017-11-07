@@ -48,20 +48,20 @@
 	 * Get parent object if have.
 	 * 
 	 * @param backLevels
-	 *           1 means parent, 2 means parent of parent, and so on.
+	 *           0 means self, 1 means parent, 2 means parent of parent, and so on.
 	 * @return parent object, null if not exists.
 	 */
 	@SuppressWarnings("unchecked")
 	protected final <xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> T getAncestor(int backLevels) {
 		if (m_parents.isEmpty()) {
 			return null;
-		} else if (backLevels == 1) {
+		} else if (backLevels == 0) {
 			return (T) m_parents.peek();
 		} else {
 			int size = m_parents.size();
 
-			if (backLevels <xsl:value-of select="'&lt;='" disable-output-escaping="yes"/> size) {
-				return (T) m_parents.get(size - backLevels);
+			if (backLevels <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> size) {
+				return (T) m_parents.get(size - backLevels - 1);
 			} else {
 				return null;
 			}
@@ -82,7 +82,7 @@
 <xsl:template name="method-visit">
    <xsl:if test="entity/any">
       <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   public void <xsl:value-of select="entity/any/@visit-method"/>(Any any) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public final void <xsl:value-of select="entity/any/@visit-method"/>(Any any) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      m_parents.push(any);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      visitAnyChildren(any);<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      m_parents.pop();<xsl:value-of select="$empty-line"/>
