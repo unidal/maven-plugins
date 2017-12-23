@@ -97,13 +97,13 @@
 </xsl:template>
 
 <xsl:template name="method-commons">
-   private IVisitor m_visitor;
+   protected IVisitor m_visitor;
 
-   private int m_level;
+   protected int m_level;
 
-   private StringBuilder m_sb;
+   protected StringBuilder m_sb;
 
-   private boolean m_compact;
+   protected boolean m_compact;
 
    public DefaultJsonBuilder() {
       this(false);
@@ -342,14 +342,14 @@
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public void <xsl:value-of select="entity/any/@visit-method"/>(<xsl:value-of select="entity/any/@entity-class"/> any) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      objectBegin(any.getName());<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      attributes(any.getAttributes());<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      for (Any child : any.getChildren()) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         objectBegin(child.getName());<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         visitAny(child);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         objectEnd(child.getName());<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      objectEnd(any.getName());<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:for-each select="entity">
