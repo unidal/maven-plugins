@@ -22,7 +22,7 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 import org.unidal.web.mvc.model.ModuleRegistry;
 
-class WebComponentConfigurator extends AbstractWebComponentsConfigurator {
+class WebComponentConfigurator extends AbstractResourceConfigurator {
    @Override
    public List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> defineComponents() {
       List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/>();

@@ -36,7 +36,7 @@ public class WebAppMojo extends AbstractWizardMojo {
          Generator generator = lookup(Generator.class, "wizard-webapp");
          GenerateContext ctx = createGenerateContext();
 
-         generator.generate(createGenerateContext());
+         generator.generate(ctx);
 
          getLog().info(ctx.getGeneratedFiles() + " files generated.");
 
