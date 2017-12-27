@@ -19,6 +19,7 @@
    <xsl:call-template name='import-list'/>
    <xsl:value-of select="$empty"/>public class DefaultNativeParser implements IVisitor {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name='method-commons'/>
+   <xsl:call-template name='method-parse'/>
    <xsl:call-template name='method-visit'/>
    <xsl:call-template name='method-read-methods'/>
    <xsl:value-of select="$empty"/>}<xsl:value-of select="$empty-line"/>
@@ -42,6 +43,7 @@
       <xsl:value-of select="$empty"/>import java.util.Map;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IEntity;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IVisitor;<xsl:value-of select="$empty-line"/>
    <xsl:if test="entity/any">
       <xsl:value-of select="$empty"/>import <xsl:value-of select="entity/any/@entity-package"/>.Any;<xsl:value-of select="$empty-line"/>
@@ -63,28 +65,38 @@
    public DefaultNativeParser(InputStream in) {
       m_in = new DataInputStream(in);
    }
+</xsl:template>
 
-   public static <xsl:value-of select="$root/@entity-class"/> parse(byte[] data) {
-      return parse(new ByteArrayInputStream(data));
-   }
-
-   public static <xsl:value-of select="$root/@entity-class"/> parse(InputStream in) {
-      DefaultNativeParser parser = new DefaultNativeParser(in);
-      <xsl:value-of select="$root/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$root/@param-name"/> = new <xsl:value-of select="entity[@root='true']/@entity-class"/>();
-
-      try {
-         <xsl:value-of select="$root/@param-name"/>.accept(parser);
-      } catch (RuntimeException e) {
-         if (e.getCause() !=null <xsl:value-of select="'&amp;&amp;'" disable-output-escaping="yes"/> e.getCause() instanceof java.io.EOFException) {
-            // ignore it
-         } else {
-            throw e;
-         }
-      }
-      
-      parser.m_linker.finish();
-      return <xsl:value-of select="$root/@param-name"/>;
-   }
+<xsl:template name="method-parse">
+   <xsl:variable name="current" select="."/>
+   <xsl:value-of select="$empty-line"/>
+   <xsl:for-each select="entity[@root='true']">
+      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(byte[] data) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return parseEntity(new <xsl:value-of select="@entity-class"/>(), new ByteArrayInputStream(data));<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(InputStream in) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return parseEntity(new <xsl:value-of select="@entity-class"/>(), in);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(T entity, InputStream in) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      DefaultNativeParser parser = new DefaultNativeParser(in);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         entity.accept(parser);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      } catch (RuntimeException e) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         if (e.getCause() !=null <xsl:value-of select="'&amp;&amp;'" disable-output-escaping="yes"/> e.getCause() instanceof java.io.EOFException) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            // ignore it<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         } else {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            throw e;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      parser.m_linker.finish();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return entity;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+   </xsl:for-each>
 </xsl:template>
 
 <xsl:template name="method-visit">

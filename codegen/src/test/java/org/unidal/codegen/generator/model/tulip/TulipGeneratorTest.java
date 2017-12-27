@@ -22,7 +22,12 @@ public class TulipGeneratorTest extends ModelGenerateTestSupport {
    }
 
    @Test
-   public void testGeneratePom() throws Exception {
+   public void testModel() throws Exception {
       generate("model-manifest.xml");
+   }
+   
+   @Test
+   public void testScenarios() throws Exception {
+	   generate("scenarios-manifest.xml");
    }
 }
