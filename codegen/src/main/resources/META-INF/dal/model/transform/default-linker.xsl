@@ -36,7 +36,7 @@
 </xsl:template>
 
 <xsl:template name="declare-field-variables">
-<xsl:if test="not(//entity/entity-ref/@map='true')">
+<xsl:if test="not(//entity/entity-ref/@map='true' and //entity/element[@key='true'])">
    <xsl:value-of select="$empty"/>   @SuppressWarnings("unused")
 </xsl:if>
    <xsl:value-of select="$empty"/>   private boolean m_deferrable;
@@ -66,6 +66,9 @@
       <xsl:value-of select="$empty"/>   public boolean <xsl:value-of select="@on-event-method"/>(final <xsl:value-of select="../@entity-class"/> parent, final <xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$entity/@param-name"/>) {<xsl:value-of select="$empty-line"/>
       <xsl:choose>
          <xsl:when test="@list='true'">
+            <xsl:value-of select="$empty"/>      parent.<xsl:value-of select="@add-method"/>(<xsl:value-of select="$entity/@param-name"/>);<xsl:value-of select="$empty-line"/>
+         </xsl:when>
+         <xsl:when test="@map='true' and not($entity/element[@key='true'])">
             <xsl:value-of select="$empty"/>      parent.<xsl:value-of select="@add-method"/>(<xsl:value-of select="$entity/@param-name"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:when test="@map='true'">
