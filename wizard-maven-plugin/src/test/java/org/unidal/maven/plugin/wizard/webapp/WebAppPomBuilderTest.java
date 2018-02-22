@@ -2,6 +2,7 @@ package org.unidal.maven.plugin.wizard.webapp;
 
 import java.io.File;
 
+import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -19,6 +20,7 @@ public class WebAppPomBuilderTest extends ComponentTestCase {
       Wizard wizard = new Wizard().setPackage("org.unidal.test");
       WebAppPomBuilder builder = lookup(WebAppPomBuilder.class);
 
+      builder.enableLogging(new ConsoleLogger());
       Files.forDir().copyFile(pomFile, tmpFile);
 
       wizard.setWebapp(new Webapp().setPackage("org.unidal.test"));

@@ -86,7 +86,7 @@
   <entity name="ProjectReference">
     <attribute name="Include" value-type="String" />
     <element name="Name" value-type="String" />
-    <element name="Project" value-type="String" />
+    <entity-ref name="Project" />
   </entity>
   <entity name="VisualStudioVersion">
     <attribute name="Condition" value-type="String" />
