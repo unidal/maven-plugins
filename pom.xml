@@ -4,7 +4,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.unidal.maven.plugins</groupId>
    <artifactId>default</artifactId>
-   <version>3.0.4</version>
+   <version>3.0.5</version>
    <name>Maven Plugins</name>
    <packaging>pom</packaging>
    <modules>
@@ -49,7 +49,7 @@
    <properties>
       <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
       <codegen.version>${project.version}</codegen.version>
-      <foundation-service.version>4.0.1</foundation-service.version>
+      <foundation-service.version>4.0.2</foundation-service.version>
 
       <!-- plugin params -->
       <javadoc.opts>-Xdoclint:none</javadoc.opts>
