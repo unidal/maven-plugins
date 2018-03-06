@@ -34,29 +34,29 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>web-framework</artifactId>
-         <version>4.0.1</version>
+         <version>4.0.4</version>
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>javax.servlet-api</artifactId>
-         <version>3.1.0</version>
+         <version>3.0.1</version>
          <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>foundation-service</artifactId>
-         <version>4.0.1</version>
+         <version>4.0.2</version>
       </dependency>
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>test-framework</artifactId>
-         <version>4.0.1</version>
+         <version>4.0.2</version>
          <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.eclipse.jetty</groupId>
          <artifactId>jetty-jsp</artifactId>
-         <version>9.2.9.v20150224</version>
+         <version>8.1.22.v20160922</version>
          <scope>test</scope>
       </dependency>
    </dependencies>
@@ -94,7 +94,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>plexus-maven-plugin</artifactId>
-            <version>3.0.4</version>
+            <version>3.0.5</version>
             <executions>
                <execution>
                   <id>generate plexus component descriptor</id>
