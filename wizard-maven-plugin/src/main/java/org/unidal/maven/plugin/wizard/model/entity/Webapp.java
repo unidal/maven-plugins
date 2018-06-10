@@ -17,7 +17,7 @@ public class Webapp extends BaseEntity<Webapp> {
 
    private Boolean m_cat;
 
-   private Boolean m_pluginManagement = true;
+   private Boolean m_pluginManagement;
 
    private Boolean m_jstl;
 

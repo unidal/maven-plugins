@@ -2,7 +2,7 @@
 
 <model model-package="org.unidal.maven.plugin.wizard.model" enable-sax-parser="true" enable-base-visitor="true">
   <entity name="webapp">
-    <attribute name="plugin-management" value-type="boolean" default-value="true"/>
+    <attribute name="plugin-management" value-type="boolean" default-value="false"/>
   </entity>
    <entity name="module">
       <attribute name="name" value-type="String" key="true" />
