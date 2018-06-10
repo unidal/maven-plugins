@@ -39,12 +39,14 @@
      <xsl:with-param name="template" select="'test/all-tests.xsl'"/>
    </xsl:call-template>
 
-   <!-- TestServer class -->
-   <xsl:call-template name="generate-test-java">
-     <xsl:with-param name="package" select="@package"/>
-     <xsl:with-param name="class" select="'TestServer'"/>
-     <xsl:with-param name="template" select="'test/test-server.xsl'"/>
-   </xsl:call-template>
+   <xsl:if test="@module='false'">
+      <!-- TestServer class -->
+      <xsl:call-template name="generate-test-java">
+        <xsl:with-param name="package" select="@package"/>
+        <xsl:with-param name="class" select="'TestServer'"/>
+        <xsl:with-param name="template" select="'test/test-server.xsl'"/>
+      </xsl:call-template>
+   </xsl:if>
 
    <!-- ComponentsConfigurator class -->
    <xsl:call-template name="generate-java">
@@ -61,11 +63,13 @@
      <xsl:with-param name="mode" select="'create_or_overwrite'"/>
    </xsl:call-template>
 
-   <!-- WEB-INF/web.xml file -->
-   <xsl:call-template name="generate-web-resource">
-     <xsl:with-param name="file" select="'WEB-INF/web.xml'"/>
-     <xsl:with-param name="template" select="'web-inf/web-xml.xsl'"/>
-   </xsl:call-template>
+   <xsl:if test="@module='false'">
+      <!-- WEB-INF/web.xml file -->
+      <xsl:call-template name="generate-web-resource">
+        <xsl:with-param name="file" select="'WEB-INF/web.xml'"/>
+        <xsl:with-param name="template" select="'web-inf/web-xml.xsl'"/>
+      </xsl:call-template>
+   </xsl:if>
 
    <xsl:if test="@cat='true'">
       <!-- META-INF/cat/client.xml file -->
@@ -131,20 +135,13 @@
 </xsl:template>
 
 <xsl:template match="page">
-   <xsl:variable name="template">
-      <xsl:choose>
-         <xsl:when test="single">single</xsl:when>
-         <xsl:otherwise>default</xsl:otherwise>
-      </xsl:choose>
-   </xsl:variable>
-   
    <!-- Action class -->
    <xsl:call-template name="generate-java">
      <xsl:with-param name="class" select="@action-class"/>
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="module" select="../@name"/>
      <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="template" select="concat('page/', $template, '/action.xsl')"/>
+     <xsl:with-param name="template" select="concat('page',  '/action.xsl')"/>
    </xsl:call-template>
 
    <!-- Context class -->
@@ -153,19 +150,8 @@
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="module" select="../@name"/>
      <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="template" select="concat('page/', $template, '/context.xsl')"/>
+     <xsl:with-param name="template" select="concat('page', '/context.xsl')"/>
    </xsl:call-template>
-
-   <xsl:if test="$template='single'">
-      <!-- Delegate class -->
-      <xsl:call-template name="generate-java">
-        <xsl:with-param name="class" select="@delegate-class"/>
-        <xsl:with-param name="package" select="@package"/>
-        <xsl:with-param name="module" select="../@name"/>
-        <xsl:with-param name="name" select="@name"/>
-        <xsl:with-param name="template" select="concat('page/', $template, '/delegate.xsl')"/>
-      </xsl:call-template>
-   </xsl:if>
 
    <!-- Handler class -->
    <xsl:call-template name="generate-java">
@@ -173,7 +159,7 @@
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="module" select="../@name"/>
      <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="template" select="concat('page/', $template, '/handler.xsl')"/>
+     <xsl:with-param name="template" select="concat('page', '/handler.xsl')"/>
    </xsl:call-template>
 
    <!-- JspFile class -->
@@ -182,7 +168,7 @@
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="module" select="../@name"/>
      <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="template" select="concat('page/', $template, '/jsp-file.xsl')"/>
+     <xsl:with-param name="template" select="concat('page', '/jsp-file.xsl')"/>
    </xsl:call-template>
 
    <!-- JspViewer class -->
@@ -191,7 +177,7 @@
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="module" select="../@name"/>
      <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="template" select="concat('page/', $template, '/jsp-viewer.xsl')"/>
+     <xsl:with-param name="template" select="concat('page', '/jsp-viewer.xsl')"/>
    </xsl:call-template>
 
    <!-- Model class -->
@@ -200,7 +186,7 @@
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="module" select="../@name"/>
      <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="template" select="concat('page/', $template, '/model.xsl')"/>
+     <xsl:with-param name="template" select="concat('page', '/model.xsl')"/>
    </xsl:call-template>
 
    <!-- Payload class -->
@@ -209,43 +195,18 @@
      <xsl:with-param name="package" select="@package"/>
      <xsl:with-param name="module" select="../@name"/>
      <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="template" select="concat('page/', $template, '/payload.xsl')"/>
+     <xsl:with-param name="template" select="concat('page', '/payload.xsl')"/>
    </xsl:call-template>
    
-   <xsl:choose>
-      <xsl:when test="$template='single'">
-         <!-- list.jsp -->
-         <xsl:call-template name="generate-resource">
-           <xsl:with-param name="src-dir" select="$webapp-root" />
-           <xsl:with-param name="package" select="@package"/>
-           <xsl:with-param name="module" select="../@name"/>
-           <xsl:with-param name="name" select="@name"/>
-           <xsl:with-param name="file" select="substring(@view,1)"/>
-           <xsl:with-param name="template" select="concat('pres/', $template, '/list-jsp.xsl')"/>
-         </xsl:call-template>
-         
-         <!-- view.jsp -->
-         <xsl:call-template name="generate-resource">
-           <xsl:with-param name="src-dir" select="$webapp-root" />
-           <xsl:with-param name="package" select="@package"/>
-           <xsl:with-param name="module" select="../@name"/>
-           <xsl:with-param name="name" select="@name"/>
-           <xsl:with-param name="file" select="substring(@detail-view,1)"/>
-           <xsl:with-param name="template" select="concat('pres/', $template, '/view-jsp.xsl')"/>
-         </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-         <!-- view.jsp -->
-         <xsl:call-template name="generate-resource">
-           <xsl:with-param name="src-dir" select="$webapp-root" />
-           <xsl:with-param name="package" select="@package"/>
-           <xsl:with-param name="module" select="../@name"/>
-           <xsl:with-param name="name" select="@name"/>
-           <xsl:with-param name="file" select="substring(@view,1)"/>
-           <xsl:with-param name="template" select="concat('pres/', $template, '/view-jsp.xsl')"/>
-         </xsl:call-template>
-      </xsl:otherwise>
-   </xsl:choose>
+   <!-- view.jsp -->
+   <xsl:call-template name="generate-resource">
+     <xsl:with-param name="src-dir" select="$webapp-root" />
+     <xsl:with-param name="package" select="@package"/>
+     <xsl:with-param name="module" select="../@name"/>
+     <xsl:with-param name="name" select="@name"/>
+     <xsl:with-param name="file" select="substring(@view,1)"/>
+     <xsl:with-param name="template" select="concat('pres', '/view-jsp.xsl')"/>
+   </xsl:call-template>
 </xsl:template>
 
 <xsl:template name="wizard-policy">

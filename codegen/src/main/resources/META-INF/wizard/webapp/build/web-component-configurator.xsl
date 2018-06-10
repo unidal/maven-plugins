@@ -26,13 +26,11 @@ class WebComponentConfigurator extends AbstractResourceConfigurator {
    @Override
    public List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> defineComponents() {
       List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/>();
-
 <xsl:choose>
   <xsl:when test="module[@default='true']">
       all.add(A(ModuleRegistry.class).config(E("default-module").value(<xsl:value-of select="module[@default='true']/@package"/>.<xsl:value-of select="module[@default='true']/@module-class"/>.class.getName())));
   </xsl:when>
   <xsl:when test="module">
-  <xsl:value-of select="module/@module-class"/>.class
       all.add(A(ModuleRegistry.class).config(E("default-module").value(<xsl:value-of select="module/@package"/>.<xsl:value-of select="module/@module-class"/>.class.getName())));
   </xsl:when>
   <xsl:otherwise>

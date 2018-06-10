@@ -215,6 +215,9 @@
       </xsl:variable>
       <xsl:variable name="value-type-element">
          <xsl:choose>
+            <xsl:when test="@render='false'">
+               <xsl:value-of select="@value-type"/>
+            </xsl:when>
             <xsl:when test="contains($normalized-value-type, '.')">
                <xsl:value-of select="$normalized-value-type"/>
             </xsl:when>
@@ -478,6 +481,9 @@
       </xsl:variable>
       <xsl:variable name="value-type-element">
          <xsl:choose>
+            <xsl:when test="@render='false'">
+               <xsl:value-of select="@value-type"/>
+            </xsl:when>
             <xsl:when test="contains($normalized-value-type, '.')">
                <xsl:value-of select="$normalized-value-type"/>
             </xsl:when>

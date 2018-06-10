@@ -187,7 +187,7 @@
       <xsl:attribute name="package">
          <xsl:choose>
             <xsl:when test="@package"><xsl:value-of select="@package"/></xsl:when>
-            <!-- @module is used for version back-compactible -->
+            <!-- @module is used for version back-compatible -->
             <xsl:when test="../../@module and ../@package"><xsl:value-of select="../@package"/>.<xsl:value-of select="$normalized-name"/></xsl:when>
             <xsl:when test="../@package"><xsl:value-of select="../@package"/>.page.<xsl:value-of select="$normalized-name"/></xsl:when>
             <xsl:when test="../../@module"><xsl:value-of select="../../@package"/>.<xsl:value-of select="$normalized-module-name"/>.<xsl:value-of select="$normalized-name"/></xsl:when>
@@ -257,20 +257,6 @@
             <xsl:otherwise>/jsp/<xsl:value-of select="../@name"/>/<xsl:value-of select="@name"/>.jsp</xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
-      <xsl:attribute name="detail-view">
-         <xsl:choose>
-            <xsl:when test="starts-with(@detail-view, '/')"><xsl:value-of select="@detail-view"/></xsl:when>
-            <xsl:when test="@view">/jsp/<xsl:value-of select="../@name"/>/<xsl:value-of select="@detail-view"/></xsl:when>
-            <xsl:otherwise>/jsp/<xsl:value-of select="../@name"/>/<xsl:value-of select="@name"/>-detail.jsp</xsl:otherwise>
-         </xsl:choose>
-      </xsl:attribute>
-      
-      <xsl:if test="$template-file">
-         <xsl:variable name="doc" select="document($template-file)"/>
-         <xsl:variable name="page-name" select="@name"/>
-         <xsl:variable name="module-name" select="../@name"/>
-         <xsl:apply-templates select="$doc/template/page[@name=$page-name and @module=$module-name]/single"/>
-      </xsl:if>
    </xsl:copy>
 </xsl:template>
 
