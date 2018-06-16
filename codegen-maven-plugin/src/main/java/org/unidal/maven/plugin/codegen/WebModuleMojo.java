@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -14,6 +15,7 @@ import org.apache.maven.project.MavenProject;
 import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Scanners.ZipEntryMatcher;
 
 /**
  * Prepare war resource from web modules.
@@ -78,9 +80,9 @@ public class WebModuleMojo extends AbstractMojo {
 
       private void processElement(File classpathElement) throws IOException {
          if (!classpathElement.isDirectory()) {
-            List<String> entries = Scanners.forJar().scan(classpathElement, new FileMatcher() {
+            List<String> entries = Scanners.forJar().scan(classpathElement, new ZipEntryMatcher() {
                @Override
-               public Direction matches(File base, String path) {
+               public Direction matches(ZipEntry entry, String path) {
                   if (path.startsWith("WEB-MODULE")) {
                      return Direction.MATCHED;
                   }

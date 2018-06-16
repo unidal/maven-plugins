@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
 
 import org.unidal.codegen.manifest.FileMode;
 import org.unidal.codegen.manifest.Manifest;
 import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Scanners.ZipEntryMatcher;
 import org.unidal.tuple.Pair;
 
 public abstract class GenerateContextSupport implements GenerateContext {
@@ -101,9 +103,9 @@ public abstract class GenerateContextSupport implements GenerateContext {
 			final String prefix = from.substring(pos + 6);
 			final List<Pair<File, String>> list = new ArrayList<Pair<File, String>>();
 
-			Scanners.forJar().scan(jarFile, new FileMatcher() {
+			Scanners.forJar().scan(jarFile, new ZipEntryMatcher() {
 				@Override
-				public Direction matches(File base, String path) {
+				public Direction matches(ZipEntry entry, String path) {
 					if (path.equals(prefix)) {
 						int pos = path.lastIndexOf('/');
 						String relativePath = path.substring(pos + 1);
