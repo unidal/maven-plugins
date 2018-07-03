@@ -27,7 +27,7 @@
 					<url><xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>![CDATA[<xsl:value-of select="normalize-space(url)" disable-output-escaping="yes"/>]]<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/></url>
 					<user><xsl:value-of select="normalize-space(user)" disable-output-escaping="yes"/></user>
 					<password><xsl:value-of select="normalize-space(password)" disable-output-escaping="yes"/></password>
-					<connectionProperties><xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>![CDATA[<xsl:value-of select="normalize-space(properties)"/>]]<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/></connectionProperties>
+					<connectionProperties><xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>![CDATA[<xsl:value-of select="normalize-space(properties)" disable-output-escaping="yes"/>]]<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/></connectionProperties>
 				</properties>
 			</xsl:for-each>
 		</data-source>

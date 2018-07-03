@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<plexus>
-	<components>
-		<component>
-			<role>org.unidal.maven.plugin.common.SharedContext</role>
-			<implementation>org.unidal.maven.plugin.common.SharedContext</implementation>
-		</component>
-	</components>
-</plexus>

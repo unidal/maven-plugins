@@ -14,8 +14,6 @@ import org.unidal.codegen.manifest.ManifestParser;
 import org.unidal.codegen.meta.DefaultModelMeta;
 import org.unidal.codegen.meta.DefaultTableMeta;
 import org.unidal.codegen.meta.DefaultWizardMeta;
-import org.unidal.codegen.meta.DefaultXmlMeta;
-import org.unidal.codegen.meta.DefaultXmlMetaHelper;
 import org.unidal.codegen.template.DefaultXslTemplateManager;
 import org.unidal.codegen.transformer.DefaultXslTransformer;
 import org.unidal.codegen.transformer.XslTransformer;
@@ -33,10 +31,8 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
 
       all.add(A(DefaultObfuscater.class));
       all.add(A(DefaultTableMeta.class));
-      all.add(A(DefaultXmlMeta.class));
       all.add(A(DefaultModelMeta.class));
       all.add(A(DefaultWizardMeta.class));
-      all.add(A(DefaultXmlMetaHelper.class));
       all.add(A(DefaultManifestCreator.class));
       all.add(A(DefaultXslTemplateManager.class));
       all.add(A(DefaultXslTransformer.class));
@@ -50,12 +46,6 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
       all.add(C(Generator.class, "dal-ibatis", XslGenerator.class).is(PER_LOOKUP) //
             .req(XslTransformer.class, ManifestParser.class) //
             .req(XmlAggregator.class, "dal-jdbc"));
-
-      all.add(C(XmlAggregator.class, "dal-xml", DefaultXmlAggregator.class) //
-            .config(E("structureFile").value("META-INF/dal/xml/structure.xml")));
-      all.add(C(Generator.class, "dal-xml", XslGenerator.class).is(PER_LOOKUP) //
-            .req(XslTransformer.class, ManifestParser.class) //
-            .req(XmlAggregator.class, "dal-xml"));
 
       all.add(C(XmlAggregator.class, "dal-model", DefaultXmlAggregator.class) //
             .config(E("structureFile").value("META-INF/dal/model/structure.xml")));

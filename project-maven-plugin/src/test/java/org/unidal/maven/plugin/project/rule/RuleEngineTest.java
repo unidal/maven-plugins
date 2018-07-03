@@ -14,8 +14,7 @@ import static org.unidal.maven.plugin.project.rule.RuleFailure.METHOD_VISIBILITY
 
 import java.lang.reflect.AnnotatedElement;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

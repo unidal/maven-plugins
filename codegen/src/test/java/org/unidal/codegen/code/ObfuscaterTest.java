@@ -1,7 +1,6 @@
 package org.unidal.codegen.code;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Codes;
 import org.unidal.lookup.ComponentTestCase;

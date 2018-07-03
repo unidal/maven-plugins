@@ -4,7 +4,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.unidal.codegen.code.Obfuscater;
-import org.unidal.maven.plugin.common.PropertyProviders;
+import org.unidal.codegen.helper.PropertyProviders;
 
 /**
  * Encode a text.

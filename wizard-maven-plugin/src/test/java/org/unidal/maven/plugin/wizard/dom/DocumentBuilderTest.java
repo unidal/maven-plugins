@@ -3,8 +3,7 @@ package org.unidal.maven.plugin.wizard.dom;
 import java.io.File;
 import java.util.List;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.jdom.Document;
 import org.junit.Test;
 import org.unidal.codegen.aggregator.XmlAggregator;

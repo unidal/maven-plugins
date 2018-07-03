@@ -35,14 +35,14 @@ import org.unidal.codegen.code.Obfuscater;
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.GenerateContextSupport;
 import org.unidal.codegen.generator.Generator;
+import org.unidal.codegen.helper.PropertyProviders;
+import org.unidal.codegen.helper.PropertyProviders.IValidator;
 import org.unidal.codegen.meta.TableMeta;
 import org.unidal.codegen.meta.WizardMeta;
 import org.unidal.helper.Codes;
 import org.unidal.helper.Files;
 import org.unidal.helper.Transformers;
 import org.unidal.helper.Transformers.IBuilder;
-import org.unidal.maven.plugin.common.PropertyProviders;
-import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
 import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
@@ -325,16 +325,16 @@ public class JdbcMojo extends AbstractMojo {
       PomDelegate b = new PomDelegate();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
-      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "4.0.2", null)) {
-         b.checkDependency(dependencies, "com.dianping.cat", "cat-client", "2.0.0", null);
-         b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.35", "runtime");
+      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "4.0.4", null)) {
+         b.checkDependency(dependencies, "org.unidal.cat", "cat-client", "2.0-SNAPSHOT", null);
+         b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.39", "runtime");
       }
 
       if (jdbc != null) {
          Element build = b.findOrCreateChild(root, "build", null, "dependencies");
          Element plugins = b.findOrCreateChild(build, "plugins");
          Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "3.0.5");
-         Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc model");
+         Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc files");
          Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
          Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");
 
@@ -600,7 +600,7 @@ public class JdbcMojo extends AbstractMojo {
             }
 
             ds.setProperties(PropertyProviders.fromConsole().forString("connectionProperties", "Connection properties:",
-                  "useUnicode=true&characterEncoding=UTF-8&autoReconnect=true", null));
+                  "useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false", null));
 
          }
 

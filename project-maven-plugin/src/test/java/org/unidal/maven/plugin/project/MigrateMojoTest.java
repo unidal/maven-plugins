@@ -4,10 +4,9 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 
-import junit.framework.Assert;
-
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,71 +14,74 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.unidal.helper.Reflects;
 import org.unidal.lookup.ComponentTestCase;
-import org.unidal.maven.plugin.common.Injector;
 
 @RunWith(JUnit4.class)
 public class MigrateMojoTest extends ComponentTestCase {
-   @Mock
-   private MavenProject m_project;
+	@Mock
+	private MavenProject m_project;
 
-   @Before
-   public void before() {
-      MockitoAnnotations.initMocks(this);
-   }
+	@Before
+	public void before() {
+		MockitoAnnotations.initMocks(this);
+	}
 
-   private MavenProject createMavenProject(String finalName, String path) throws Exception {
-      File baseDir = new File(path).getCanonicalFile();
+	private void checkReverse(String packageName, String reversedPackageName) {
+		String actual = new MigrateMojo().reversePackage(packageName);
 
-      when(m_project.getBasedir()).thenReturn(baseDir);
-      when(m_project.getPackaging()).thenReturn("war");
-      // when(m_project.getFile()).thenReturn(new File(baseDir, finalName +
-      // ".jar"));
+		Assert.assertEquals("Reversed package name incorrecct!", reversedPackageName, actual);
+	}
 
-      // MavenProject m_project = new MavenProject();
+	private MavenProject createMavenProject(String finalName, String path) throws Exception {
+		File baseDir = new File(path).getCanonicalFile();
 
-      // m_project.setFile(new File(baseDir, finalName + ".jar"));
-      m_project.getCompileSourceRoots().add(new File(baseDir, "src/main/java").toString());
-      m_project.getTestCompileSourceRoots().add(new File(baseDir, "src/test/java").toString());
-      m_project.getResources().add(createResource(new File(baseDir, "src/main/resources")));
-      m_project.getTestResources().add(createResource(new File(baseDir, "src/test/resources")));
+		when(m_project.getBasedir()).thenReturn(baseDir);
+		when(m_project.getPackaging()).thenReturn("war");
+		// when(m_project.getFile()).thenReturn(new File(baseDir, finalName +
+		// ".jar"));
 
-      return m_project;
-   }
+		// MavenProject m_project = new MavenProject();
 
-   protected Resource createResource(File directory) {
-      Resource resource = new Resource();
+		// m_project.setFile(new File(baseDir, finalName + ".jar"));
+		m_project.getCompileSourceRoots().add(new File(baseDir, "src/main/java").toString());
+		m_project.getTestCompileSourceRoots().add(new File(baseDir, "src/test/java").toString());
+		m_project.getResources().add(createResource(new File(baseDir, "src/main/resources")));
+		m_project.getTestResources().add(createResource(new File(baseDir, "src/test/resources")));
 
-      resource.setDirectory(directory.toString());
-      return resource;
-   }
+		return m_project;
+	}
 
-   @Test
-   @Ignore
-   public void testMigrate() throws Exception {
-      MigrateMojo mojo = new MigrateMojo();
+	protected Resource createResource(File directory) {
+		Resource resource = new Resource();
 
-      Injector.setField(mojo, "project", createMavenProject("project-maven-plugin", "."));
-      Injector.setField(mojo, "sourcePackage", "org.unidal.maven");
-      Injector.setField(mojo, "targetPackage", "org.unidal.test");
-      Injector.setField(mojo, "targetDir", "target/project-maven-plugin");
-      Injector.setField(mojo, "verbose", false);
+		resource.setDirectory(directory.toString());
+		return resource;
+	}
 
-      mojo.execute();
-   }
+	private void setField(MigrateMojo mojo, String field, Object value) {
+		Reflects.forField().setDeclaredFieldValue(mojo.getClass(), field, mojo, value);
+	}
 
-   @Test
-   public void testReversePackage() {
-      checkReverse("a.b", "b.a");
-      checkReverse("a.b.c", "c.b.a");
+	@Test
+	@Ignore
+	public void testMigrate() throws Exception {
+		MigrateMojo mojo = new MigrateMojo();
 
-      checkReverse("a.b.", ".b.a");
-      checkReverse("a.b.c.", ".c.b.a");
-   }
+		setField(mojo, "project", createMavenProject("project-maven-plugin", "."));
+		setField(mojo, "sourcePackage", "org.unidal.maven");
+		setField(mojo, "targetPackage", "org.unidal.test");
+		setField(mojo, "targetDir", "target/project-maven-plugin");
 
-   private void checkReverse(String packageName, String reversedPackageName) {
-      String actual = new MigrateMojo().reversePackage(packageName);
+		mojo.execute();
+	}
 
-      Assert.assertEquals("Reversed package name incorrecct!", reversedPackageName, actual);
-   }
+	@Test
+	public void testReversePackage() {
+		checkReverse("a.b", "b.a");
+		checkReverse("a.b.c", "c.b.a");
+
+		checkReverse("a.b.", ".b.a");
+		checkReverse("a.b.c.", ".c.b.a");
+	}
 }

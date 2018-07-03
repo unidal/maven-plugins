@@ -5,8 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.maven.plugin.property.PropertyProviders.StringPropertyAccessor;
 

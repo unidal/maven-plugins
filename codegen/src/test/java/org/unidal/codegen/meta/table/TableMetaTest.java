@@ -1,7 +1,6 @@
 package org.unidal.codegen.meta.table;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.codegen.meta.DefaultTableMeta;
 

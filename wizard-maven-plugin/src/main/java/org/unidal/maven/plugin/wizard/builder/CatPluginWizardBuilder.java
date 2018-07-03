@@ -3,8 +3,8 @@ package org.unidal.maven.plugin.wizard.builder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.maven.plugin.common.PropertyProviders;
-import org.unidal.maven.plugin.common.PropertyProviders.ConsoleProvider;
+import org.unidal.codegen.helper.PropertyProviders;
+import org.unidal.codegen.helper.PropertyProviders.ConsoleProvider;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
 import org.unidal.maven.plugin.wizard.model.entity.Webapp;

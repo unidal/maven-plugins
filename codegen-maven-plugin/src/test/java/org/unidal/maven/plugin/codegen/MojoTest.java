@@ -9,16 +9,12 @@ import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.codegen.generator.Generator;
-import org.unidal.codegen.manifest.ManifestCreator;
 import org.unidal.codegen.meta.DefaultModelMeta;
 import org.unidal.codegen.meta.DefaultTableMeta;
-import org.unidal.codegen.meta.DefaultXmlMeta;
-import org.unidal.codegen.meta.XmlMetaHelper;
 import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
@@ -118,77 +114,6 @@ public class MojoTest extends ComponentTestCase {
       mojo.outputDir = "target/generated-resources";
       mojo.packageName = "org.unidal.sango.xml";
       mojo.prefix = "sango";
-      mojo.execute();
-
-      Assert.assertTrue("File is not generated", mojo.baseDir.exists());
-   }
-
-   @Test
-   public void testGenerateDalXml() throws Exception {
-      DalXmlMojo mojo = new DalXmlMojo();
-      MavenProject project = new MavenProject();
-      File baseDir = new File(".");
-
-      // following for debug purpose
-      String debugBaseDir = "D:/dev/workshop/mvc-framework";
-      boolean debug = false;
-
-      project.setFile(new File(baseDir, "mock"));
-      mojo.m_project = project;
-      mojo.m_generator = lookup(Generator.class, "dal-xml");
-
-      if (!debug) {
-         mojo.manifest = getClass().getResource("xml_manifest.xml").getFile();
-      } else {
-         mojo.manifest = debugBaseDir + "/src/main/resources/META-INF/dal/xml/manifest.xml";
-      }
-
-      mojo.resouceBase = "/META-INF/dal/xml";
-
-      if (!debug) {
-         mojo.sourceDir = baseDir + "/target/generated-sources/dal-xml";
-      } else {
-         mojo.sourceDir = debugBaseDir + "/target/generated-sources/dal-xml";
-      }
-
-      mojo.verbose = false;
-      mojo.execute();
-
-      checkSource(project.getCompileSourceRoots(), mojo.sourceDir);
-      Assert.assertTrue("Files are not generated", new File(mojo.sourceDir).exists());
-   }
-
-   @Test
-   @Ignore
-   public void testGenerateDalXml2() throws Exception {
-      DalXmlMojo mojo = new DalXmlMojo();
-      MavenProject project = new MavenProject();
-      File baseDir = new File(".");
-
-      project.setFile(baseDir);
-      mojo.m_project = project;
-      mojo.m_generator = lookup(Generator.class, "dal-xml");
-      mojo.m_xmlMetaHelper = lookup(XmlMetaHelper.class);
-      mojo.m_manifestCreator = lookup(ManifestCreator.class);
-      mojo.sourceInput = "http://rss.sina.com.cn/news/marquee/ddt.xml";
-      mojo.sourcePackage = "org.unidal.sina.rss";
-      mojo.resouceBase = "/META-INF/dal/xml";
-      mojo.sourceDir = baseDir + "/target/generated-sources/dal-xml";
-      mojo.verbose = false;
-      mojo.execute();
-
-      checkSource(project.getCompileSourceRoots(), mojo.sourceDir);
-      Assert.assertTrue("Files are not generated", new File(mojo.sourceDir).exists());
-   }
-
-   @Test
-   public void testGenerateDalXmlMeta() throws Exception {
-      DalXmlMetaMojo mojo = new DalXmlMetaMojo();
-
-      mojo.m_meta = new DefaultXmlMeta();
-      mojo.baseDir = new File(".");
-      mojo.inputFile = getClass().getResource("sanguo.xml").getPath();
-      mojo.outputFile = "target/generated-resources/sanguo_xml_meta.xml";
       mojo.execute();
 
       Assert.assertTrue("File is not generated", mojo.baseDir.exists());

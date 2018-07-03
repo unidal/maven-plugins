@@ -12,7 +12,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.unidal.maven.plugin.common.PropertyProviders;
+import org.unidal.codegen.helper.PropertyProviders;
 import org.unidal.maven.plugin.pom.PomDelegate;
 
 /**

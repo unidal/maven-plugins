@@ -16,7 +16,7 @@
    <dependencies>
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
-         <artifactId>common</artifactId>
+         <artifactId>codegen</artifactId>
       </dependency>
       <dependency>
          <groupId>junit</groupId>

@@ -1,4 +1,4 @@
-package org.unidal.maven.plugin.common;
+package org.unidal.codegen.helper;
 
 import java.util.List;
 

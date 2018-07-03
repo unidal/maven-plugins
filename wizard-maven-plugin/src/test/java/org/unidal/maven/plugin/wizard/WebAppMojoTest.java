@@ -6,8 +6,8 @@ import org.apache.maven.project.MavenProject;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.helper.Files;
+import org.unidal.helper.Reflects;
 import org.unidal.lookup.ComponentTestCase;
-import org.unidal.maven.plugin.common.Injector;
 import org.unidal.maven.plugin.pom.AbstractWizardMojo;
 import org.unidal.maven.plugin.pom.MavenContainer;
 
@@ -24,10 +24,10 @@ public class WebAppMojoTest extends ComponentTestCase {
 
 		project.setFile(tmpFile);
 
-		Injector.setField(mojo, AbstractWizardMojo.class, "m_project", project);
-		Injector.setField(mojo, AbstractWizardMojo.class, "m_container", lookup(MavenContainer.class));
-		Injector.setField(mojo, AbstractWizardMojo.class, "debug", true);
-		Injector.setField(mojo, AbstractWizardMojo.class, "verbose", false);
+		setField(mojo, AbstractWizardMojo.class, "m_project", project);
+		setField(mojo, AbstractWizardMojo.class, "m_container", lookup(MavenContainer.class));
+		setField(mojo, AbstractWizardMojo.class, "debug", true);
+		setField(mojo, AbstractWizardMojo.class, "verbose", false);
 
 		System.setProperty("war", "true");
 		System.setProperty("module", "ui");
@@ -35,5 +35,9 @@ public class WebAppMojoTest extends ComponentTestCase {
 		System.setProperty("template", "default");
 
 		mojo.execute();
+	}
+
+	private void setField(WebAppMojo mojo, Class<?> clazz, String field, Object value) {
+		Reflects.forField().setDeclaredFieldValue(clazz, field, mojo, value);
 	}
 }

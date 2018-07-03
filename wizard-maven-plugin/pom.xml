@@ -12,10 +12,6 @@
    <dependencies>
       <dependency>
          <groupId>org.unidal.maven.plugins</groupId>
-         <artifactId>common</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.unidal.maven.plugins</groupId>
          <artifactId>codegen</artifactId>
       </dependency>
       <dependency>
@@ -43,8 +39,5 @@
          </plugin>
       </plugins>
    </build>
-   <properties>
-      <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-   </properties>
 </project>
 
