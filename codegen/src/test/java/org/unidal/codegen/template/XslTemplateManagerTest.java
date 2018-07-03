@@ -35,19 +35,4 @@ public class XslTemplateManagerTest extends ComponentTestCase {
    public void testJdbcNormalizeXsl() throws Exception {
       checkTemplate("/META-INF/dal/jdbc/normalize.xsl");
    }
-
-   @Test
-   public void testXmlDoXsl() throws Exception {
-      checkTemplate("/META-INF/dal/xml/do.xsl");
-   }
-
-   @Test
-   public void testXmlManifestXsl() throws Exception {
-      checkTemplate("/META-INF/dal/xml/manifest.xsl");
-   }
-
-   @Test
-   public void testXmlNormalizeXsl() throws Exception {
-      checkTemplate("/META-INF/dal/xml/normalize.xsl");
-   }
 }

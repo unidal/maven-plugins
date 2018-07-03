@@ -11,25 +11,12 @@
 			<implementation>org.unidal.codegen.meta.DefaultTableMeta</implementation>
 		</component>
 		<component>
-			<role>org.unidal.codegen.meta.XmlMeta</role>
-			<implementation>org.unidal.codegen.meta.DefaultXmlMeta</implementation>
-		</component>
-		<component>
 			<role>org.unidal.codegen.meta.ModelMeta</role>
 			<implementation>org.unidal.codegen.meta.DefaultModelMeta</implementation>
 		</component>
 		<component>
 			<role>org.unidal.codegen.meta.WizardMeta</role>
 			<implementation>org.unidal.codegen.meta.DefaultWizardMeta</implementation>
-		</component>
-		<component>
-			<role>org.unidal.codegen.meta.XmlMetaHelper</role>
-			<implementation>org.unidal.codegen.meta.DefaultXmlMetaHelper</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.codegen.meta.XmlMeta</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.codegen.manifest.ManifestCreator</role>
@@ -93,32 +80,6 @@
 				<requirement>
 					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
 					<role-hint>dal-jdbc</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>org.unidal.codegen.aggregator.XmlAggregator</role>
-			<role-hint>dal-xml</role-hint>
-			<implementation>org.unidal.codegen.aggregator.DefaultXmlAggregator</implementation>
-			<configuration>
-				<structureFile>META-INF/dal/xml/structure.xml</structureFile>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.codegen.generator.Generator</role>
-			<role-hint>dal-xml</role-hint>
-			<implementation>org.unidal.codegen.generator.XslGenerator</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>org.unidal.codegen.transformer.XslTransformer</role>
-				</requirement>
-				<requirement>
-					<role>org.unidal.codegen.manifest.ManifestParser</role>
-				</requirement>
-				<requirement>
-					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
-					<role-hint>dal-xml</role-hint>
 				</requirement>
 			</requirements>
 		</component>

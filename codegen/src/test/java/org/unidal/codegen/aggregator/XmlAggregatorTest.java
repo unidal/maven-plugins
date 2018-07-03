@@ -21,17 +21,4 @@ public class XmlAggregatorTest extends ComponentTestCase {
 
 		Assert.assertEquals(StringUtils.normalizeSpace(expected), StringUtils.normalizeSpace(result));
 	}
-
-	@Test
-	public void testAggregateXml() throws Exception {
-		XmlAggregator aggregator = lookup(XmlAggregator.class, "dal-xml");
-
-		Assert.assertNotNull(aggregator);
-
-		File manifest = new File(getClass().getResource("xml_manifest.xml").getFile());
-		String result = aggregator.aggregate(manifest);
-		String expected = Files.forIO().readUtf8String(getClass().getResourceAsStream("xml_aggregated.xml"));
-
-		Assert.assertEquals(expected, result);
-	}
 }
