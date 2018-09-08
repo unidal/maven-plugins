@@ -4,7 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.unidal.codegen.generator.wizard.AllWizardGeneratorTests;
-import org.unidal.maven.plugin.wizard.CatConfigMojoTest;
 import org.unidal.maven.plugin.wizard.JdbcMojoTest;
 import org.unidal.maven.plugin.wizard.ModelMojoTest;
 import org.unidal.maven.plugin.wizard.ProjectTest;
@@ -29,8 +28,6 @@ WebAppMojoTest.class,
 JdbcMojoTest.class,
 
 ModelMojoTest.class,
-
-CatConfigMojoTest.class,
 
 AllWizardGeneratorTests.class,
 

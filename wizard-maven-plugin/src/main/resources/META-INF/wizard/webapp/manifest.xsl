@@ -71,13 +71,14 @@
       </xsl:call-template>
    </xsl:if>
 
+   <!--    
    <xsl:if test="@cat='true'">
-      <!-- META-INF/cat/client.xml file -->
       <xsl:call-template name="generate-resource">
         <xsl:with-param name="file" select="'META-INF/cat/client.xml'"/>
         <xsl:with-param name="template" select="'cat/client-xml.xsl'"/>
       </xsl:call-template>
    </xsl:if>
+   -->
    
    <xsl:if test="@layout='bootstrap'">
       <!-- NavigationBar class -->

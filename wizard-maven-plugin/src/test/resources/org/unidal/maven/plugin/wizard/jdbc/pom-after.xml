@@ -33,11 +33,11 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>dal-jdbc</artifactId>
-         <version>4.0.2</version>
+         <version>5.0.0</version>
       </dependency>
       <dependency>
-         <groupId>com.dianping.cat</groupId>
-         <artifactId>cat-client</artifactId>
+         <groupId>org.unidal.cat</groupId>
+         <artifactId>cat-all</artifactId>
          <version>2.0.0</version>
       </dependency>
    </dependencies>
@@ -46,10 +46,10 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>3.0.5</version>
+            <version>4.0.0</version>
             <executions>
                <execution>
-                  <id>generate dal jdbc model</id>
+                  <id>generate dal jdbc files</id>
                   <phase>generate-sources</phase>
                   <goals>
                      <goal>dal-jdbc</goal>
@@ -67,7 +67,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>plexus-maven-plugin</artifactId>
-            <version>3.0.5</version>
+            <version>4.0.0</version>
             <executions>
                <execution>
                   <id>generate plexus component descriptor</id>

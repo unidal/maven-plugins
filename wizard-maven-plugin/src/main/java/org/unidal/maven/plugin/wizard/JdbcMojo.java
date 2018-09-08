@@ -325,15 +325,15 @@ public class JdbcMojo extends AbstractMojo {
       PomDelegate b = new PomDelegate();
       Element dependencies = b.findOrCreateChild(root, "dependencies");
 
-      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "4.0.4", null)) {
-         b.checkDependency(dependencies, "org.unidal.cat", "cat-client", "2.0-SNAPSHOT", null);
-         b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.39", "runtime");
+      if (!b.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "5.0.0", null)) {
+         b.checkDependency(dependencies, "org.unidal.cat", "cat-all", "2.0.0", null);
+         b.checkDependency(dependencies, "mysql", "mysql-connector-java", "5.1.46", "runtime");
       }
 
       if (jdbc != null) {
          Element build = b.findOrCreateChild(root, "build", null, "dependencies");
          Element plugins = b.findOrCreateChild(build, "plugins");
-         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "3.0.5");
+         Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "4.0.0");
          Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-jdbc", "generate-sources", "generate dal jdbc files");
          Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
          Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");
@@ -342,32 +342,24 @@ public class JdbcMojo extends AbstractMojo {
             StringBuilder sb = new StringBuilder();
             String indent = "                        ";
 
-            sb.append(",\r\n");
+            sb.append("\r\n");
 
             for (Group group : jdbc.getGroups()) {
                sb.append(indent);
                sb.append(String.format("${basedir}/src/main/resources/META-INF/dal/jdbc/%s-manifest.xml,\r\n", group.getName()));
             }
 
-            sb.append(indent.substring(3)).append(",");
+            sb.append(indent.substring(3));
             manifestElement.addContent(new CDATA(sb.toString()));
          }
          
-         Element plexusPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "3.0.5");
+         Element plexusPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "4.0.0");
          Element plexus = b.checkPluginExecution(plexusPlugin, "plexus", "process-classes",
                "generate plexus component descriptor");
          Element codegenPlexusConfiguration = b.findOrCreateChild(plexus, "configuration");
 
          b.findOrCreateChild(codegenPlexusConfiguration, "className")
                .setText(wizard.getPackage() + ".build.ComponentsConfigurator");
-
-         // properties
-         Element properties = b.findOrCreateChild(root, "properties");
-         Element sourceEncoding = b.findOrCreateChild(properties, "project.build.sourceEncoding");
-
-         if (sourceEncoding.getText().length() == 0) {
-            sourceEncoding.setText("utf-8");
-         }
       }
 
       if (b.isModified()) {
@@ -600,8 +592,7 @@ public class JdbcMojo extends AbstractMojo {
             }
 
             ds.setProperties(PropertyProviders.fromConsole().forString("connectionProperties", "Connection properties:",
-                  "useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false", null));
-
+                  "useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&verifyServerCertificate=false", null));
          }
 
          m_jdbc = jdbc;

@@ -172,33 +172,37 @@ public class MigrateMojo extends AbstractMojo {
 	}
 
 	protected void migrateFile(File source, File target) {
-		try {
-			String encoding = "utf-8";
-			String original = Files.forIO().readFrom(source, encoding);
-			String migrated = replaceAll(original, sourcePackage, targetPackage);
+		String path = source.getPath();
 
-			// for tld uri, cookie domain name etc.
-			migrated = replaceAll(migrated, m_reversedSourcePackage, m_reversedTargetPackage);
+		if (path.endsWith(".java") || path.endsWith(".xml") || path.endsWith(".properties")) {
+			try {
+				String encoding = "utf-8";
+				String original = Files.forIO().readFrom(source, encoding);
+				String migrated = replaceAll(original, sourcePackage, targetPackage);
 
-			Files.forIO().writeTo(target, migrated, encoding);
-			m_success++;
+				// for tld uri, cookie domain name etc.
+				migrated = replaceAll(migrated, m_reversedSourcePackage, m_reversedTargetPackage);
 
-			boolean changed = !original.equals(migrated);
+				Files.forIO().writeTo(target, migrated, encoding);
+				m_success++;
 
-			if (changed) {
-				m_changed++;
-			}
+				boolean changed = !original.equals(migrated);
 
-			if (verbose) {
 				if (changed) {
-					getLog().info(String.format("File(%s) migrated, content length is %s.", target, target.length()));
-				} else {
-					getLog().info(String.format("File(%s) copied, content length is %s.", target, target.length()));
+					m_changed++;
 				}
+
+				if (verbose) {
+					if (changed) {
+						getLog().info(String.format("File(%s) migrated, content length is %s.", target, target.length()));
+					} else {
+						getLog().info(String.format("File(%s) copied, content length is %s.", target, target.length()));
+					}
+				}
+			} catch (Exception e) {
+				getLog().warn(String.format("Error when migrating file(%s)!", source), e);
+				m_failure++;
 			}
-		} catch (Exception e) {
-			getLog().warn(String.format("Error when migrating file(%s)!", source), e);
-			m_failure++;
 		}
 	}
 

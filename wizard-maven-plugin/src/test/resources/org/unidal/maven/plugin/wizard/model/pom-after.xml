@@ -36,7 +36,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>3.0.5</version>
+            <version>4.0.0</version>
             <executions>
                <execution>
                   <id>generate dal model files</id>

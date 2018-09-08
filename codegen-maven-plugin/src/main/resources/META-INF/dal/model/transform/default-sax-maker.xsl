@@ -109,7 +109,24 @@
 <xsl:template name="method-build-any">
    <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   public Any <xsl:value-of select="entity/any/@build-method"/>(Attributes attributes) {<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="$empty"/>      throw new UnsupportedOperationException("Not needed!");<xsl:value-of select="$empty-line"/>
+   <xsl:choose>
+     <xsl:when test="//entity/any">
+       <xsl:value-of select="$empty"/>      Any any = new Any();<xsl:value-of select="$empty-line"/>
+       <xsl:value-of select="$empty"/>      int len = attributes.getLength();<xsl:value-of select="$empty-line"/>
+       <xsl:value-of select="$empty-line"/>
+       <xsl:value-of select="$empty"/>      for (int i = 0; i <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> len; i++) {<xsl:value-of select="$empty-line"/>
+       <xsl:value-of select="$empty"/>         String name = attributes.getQName(i);<xsl:value-of select="$empty-line"/>
+       <xsl:value-of select="$empty"/>         String value = attributes.getValue(i);<xsl:value-of select="$empty-line"/>
+       <xsl:value-of select="$empty-line"/>
+       <xsl:value-of select="$empty"/>         any.setAttribute(name, value);<xsl:value-of select="$empty-line"/>
+       <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+       <xsl:value-of select="$empty-line"/>
+       <xsl:value-of select="$empty"/>      return any;<xsl:value-of select="$empty-line"/>
+     </xsl:when>
+   	 <xsl:otherwise>
+       <xsl:value-of select="$empty"/>      throw new UnsupportedOperationException("Not needed!");<xsl:value-of select="$empty-line"/>
+   	 </xsl:otherwise>
+   </xsl:choose>
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
 </xsl:template>
 

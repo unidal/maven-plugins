@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat">
-   <webapp package="com.dianping.cat" name="cat" module="false" webres="true" cat="true" plugin-management="true" jstl="true" layout="bootstrap">
+   <webapp package="com.dianping.cat" name="cat" module="false" cat="true" plugin-management="true" jstl="true" layout="bootstrap">
       <module name="dashboard" path="d" default="true">
          <page name="home" title="Home" default="true" package="com.dianping.cat.page.home">
             <description>Home Page of Garden</description>
@@ -15,12 +15,12 @@
          </page>
       </module>
       <module name="ui" path="ui">
-         <page name="home" title="Home" default="true" path="home" standalone="true" template="single">
+         <page name="home" title="Home" default="true" path="home" standalone="true">
             <description>Home</description>
          </page>
       </module>
       <module name="report" path="r" default="true" package="com.dianping.cat.matrix">
-         <page name="matrix" title="Matrix" default="true" path="matrix" standalone="false" template="default">
+         <page name="matrix" title="Matrix" default="true" path="matrix" standalone="false">
             <description>Matrix</description>
          </page>
       </module>

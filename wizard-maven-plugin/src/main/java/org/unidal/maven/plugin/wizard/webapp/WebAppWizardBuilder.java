@@ -138,7 +138,6 @@ public class WebAppWizardBuilder implements LogEnabled {
 				page.setPath(path);
 				page.setTitle(caption);
 				page.setDescription(caption);
-				page.setTemplate("default");
 				module.addPage(page);
 			}
 
@@ -220,7 +219,6 @@ public class WebAppWizardBuilder implements LogEnabled {
 					boolean pluginManagement = console.forBoolean("pluginManagement",
 							"Support POM plugin management for Java Compiler and Eclipse?", false);
 
-					webapp.setWebres(false);
 					webapp.setCat(cat);
 					webapp.setJstl(jstl);
 					webapp.setLayout(bootstrap ? "bootstrap" : null);

@@ -477,7 +477,9 @@ public class DefaultModelMeta implements ModelMeta {
 		      new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH),
 		      new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH),
 		      new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.ENGLISH),
-		      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH), };
+		      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.ENGLISH), 
+		      new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH), 
+		      };
 
 		private static Map<String, String> s_mapping = new HashMap<String, String>() {
 			private static final long serialVersionUID = 1L;

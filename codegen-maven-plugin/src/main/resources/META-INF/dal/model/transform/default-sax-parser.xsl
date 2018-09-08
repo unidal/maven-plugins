@@ -401,7 +401,19 @@
       </xsl:if>
    </xsl:for-each>
    <xsl:value-of select="$empty"/>{<xsl:value-of select="$empty-line"/>
-   <xsl:value-of select="$empty"/>         throw new SAXException("Unknown root element(" + qName + ") found!");<xsl:value-of select="$empty-line"/>
+   <xsl:choose>
+     <xsl:when test="//entity/any">
+         <xsl:value-of select="$empty"/>         Any any = m_maker.buildAny(attributes);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         any.setName(qName);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         m_entity = any;<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         m_objs.push(any);<xsl:value-of select="$empty-line"/>
+         <xsl:value-of select="$empty"/>         m_tags.push(qName);<xsl:value-of select="$empty-line"/>
+     </xsl:when>
+   	 <xsl:otherwise>
+	   <xsl:value-of select="$empty"/>         throw new SAXException("Unknown root element(" + qName + ") found!");<xsl:value-of select="$empty-line"/>
+   	 </xsl:otherwise>
+   </xsl:choose>
    <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
 </xsl:template>

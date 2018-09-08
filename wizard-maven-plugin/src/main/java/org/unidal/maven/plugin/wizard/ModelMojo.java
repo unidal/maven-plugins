@@ -92,7 +92,8 @@ public class ModelMojo extends AbstractMojo {
 	/**
 	 * Location of manifest.xml file
 	 * 
-	 * @parameter expression="${manifest}" default-value= "${basedir}/src/main/resources/META-INF/wizard/model/manifest.xml"
+	 * @parameter expression="${manifest}" default-value=
+	 *            "${basedir}/src/main/resources/META-INF/wizard/model/manifest.xml"
 	 * @required
 	 */
 	protected String manifest;
@@ -100,13 +101,15 @@ public class ModelMojo extends AbstractMojo {
 	/**
 	 * Location of generated source directory
 	 * 
-	 * @parameter expression="${resource.base}" default-value="/META-INF/wizard/model"
+	 * @parameter expression="${resource.base}"
+	 *            default-value="/META-INF/wizard/model"
 	 * @required
 	 */
 	protected String resourceBase;
 
 	/**
-	 * @parameter expression="${outputDir}" default-value="${basedir}/src/main/resources/META-INF/dal/model"
+	 * @parameter expression="${outputDir}"
+	 *            default-value="${basedir}/src/main/resources/META-INF/dal/model"
 	 * @required
 	 */
 	protected String outputDir;
@@ -144,7 +147,7 @@ public class ModelMojo extends AbstractMojo {
 
 		for (Model model : wizard.getModels()) {
 			String line = String.format("${basedir}/src/main/resources/META-INF/dal/model/%s-manifest.xml",
-			      model.getName());
+					model.getName());
 
 			all.add(line);
 		}
@@ -254,7 +257,7 @@ public class ModelMojo extends AbstractMojo {
 		String packageName = (groupId + "." + artifactId.substring(index + 1)).replace('-', '.');
 
 		packageName = PropertyProviders.fromConsole().forString("package", "Please input project-level package name:",
-		      packageName, null);
+				packageName, null);
 		return packageName;
 	}
 
@@ -265,9 +268,9 @@ public class ModelMojo extends AbstractMojo {
 
 		Element build = b.findOrCreateChild(root, "build", null, "dependencies");
 		Element plugins = b.findOrCreateChild(build, "plugins");
-		Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "3.0.5");
+		Element codegenPlugin = b.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "4.0.0");
 		Element codegenGenerate = b.checkPluginExecution(codegenPlugin, "dal-model", "generate-sources",
-		      "generate dal model files");
+				"generate dal model files");
 		Element codegenGenerateConfiguration = b.findOrCreateChild(codegenGenerate, "configuration");
 		Element manifestElement = b.findOrCreateChild(codegenGenerateConfiguration, "manifest");
 
@@ -343,20 +346,20 @@ public class ModelMojo extends AbstractMojo {
 				}
 			});
 			String name = PropertyProviders.fromConsole().forString("model",
-			      "Select model name below or input a sample xml file:", names, null, new IValidator<String>() {
-				      @Override
-				      public boolean validate(String value) {
-					      if (wizard.findModel(value) != null) {
-						      return true;
-					      }
+					"Select model name below or input a sample xml file:", names, null, new IValidator<String>() {
+						@Override
+						public boolean validate(String value) {
+							if (wizard.findModel(value) != null) {
+								return true;
+							}
 
-					      if (new File(value).isFile()) {
-						      return true;
-					      }
+							if (new File(value).isFile()) {
+								return true;
+							}
 
-					      return false;
-				      }
-			      });
+							return false;
+						}
+					});
 			Model model = wizard.findModel(name);
 
 			if (model == null) {
@@ -364,21 +367,21 @@ public class ModelMojo extends AbstractMojo {
 					File sampleFile = new File(name);
 					String rootName = getRootName(sampleFile);
 					String prefix = PropertyProviders.fromConsole().forString("prefix", "Prefix name of target files:",
-					      rootName, new IValidator<String>() {
-						      @Override
-						      public boolean validate(String value) {
-							      if (wizard.findModel(value) != null) {
-								      System.out.println("The prefix has been already used by others.");
-								      return false;
-							      }
+							rootName, new IValidator<String>() {
+								@Override
+								public boolean validate(String value) {
+									if (wizard.findModel(value) != null) {
+										System.out.println("The prefix has been already used by others.");
+										return false;
+									}
 
-							      return true;
-						      }
-					      });
+									return true;
+								}
+							});
 
 					String defaultPackage = wizard.getPackage() + "." + prefix.substring(prefix.indexOf('-') + 1);
 					String packageName = PropertyProviders.fromConsole().forString("package",
-					      "Package name of generated model:", defaultPackage, null);
+							"Package name of generated model:", defaultPackage, null);
 
 					model = new Model(prefix);
 
@@ -392,9 +395,9 @@ public class ModelMojo extends AbstractMojo {
 				File file = new File(model.getSampleModel());
 
 				if (!file.exists()) {
-					String sampleModel = PropertyProviders.fromConsole().forString("model.sample",
-					      String.format("Sample model(%s) does not exist, please input a new one:", model.getSampleModel()),
-					      null, null);
+					String sampleModel = PropertyProviders.fromConsole().forString("model.sample", String
+							.format("Sample model(%s) does not exist, please input a new one:", model.getSampleModel()),
+							null, null);
 
 					model.setSampleModel(sampleModel);
 				}

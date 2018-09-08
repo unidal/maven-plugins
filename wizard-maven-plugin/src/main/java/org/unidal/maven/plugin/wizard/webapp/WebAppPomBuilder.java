@@ -49,23 +49,18 @@ public class WebAppPomBuilder implements LogEnabled {
       buildDependencies(dependencies);
       buildPluginManagement(build);
       buildPlugins(build);
-      buildProperties(root);
    }
 
    private void buildDependencies(Element dependencies) {
-      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "web-framework", "4.0.4", null)) {
+      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "web-framework", "5.0.0", null)) {
          if (m_webapp.isJstl()) {
             m_pom.checkDependency(dependencies, "javax.servlet", "jstl", "1.2", null);
          }
 
-         if (m_webapp.isWebres()) {
-            m_pom.checkDependency(dependencies, "org.unidal.webres", "WebResServer", "1.2.1", null);
-         }
-
          m_pom.checkDependency(dependencies, "javax.servlet", "javax.servlet-api", "3.0.1", "provided");
          m_pom.checkDependency(dependencies, "junit", "junit", "4.8.1", "test");
-         m_pom.checkDependency(dependencies, "org.unidal.framework", "foundation-service", "4.0.2", null);
-         m_pom.checkDependency(dependencies, "org.unidal.framework", "test-framework", "4.0.2", "test");
+         m_pom.checkDependency(dependencies, "org.unidal.fouondation", "foundation-service", "5.0.0", null);
+         m_pom.checkDependency(dependencies, "org.unidal.framework", "test-framework", "5.0.0", "test");
          m_pom.checkDependency(dependencies, "org.eclipse.jetty", "jetty-jsp", "8.1.22.v20160922", "test");
       }
    }
@@ -74,13 +69,13 @@ public class WebAppPomBuilder implements LogEnabled {
       if (m_webapp.isPluginManagement()) {
          Element pluginManagement = m_pom.findOrCreateChild(build, "pluginManagement");
          Element pluginManagementPlugins = m_pom.findOrCreateChild(pluginManagement, "plugins");
-         Element compilerPlugin = m_pom.checkPlugin(pluginManagementPlugins, null, "maven-compiler-plugin", "2.5.1");
+         Element compilerPlugin = m_pom.checkPlugin(pluginManagementPlugins, null, "maven-compiler-plugin", "3.7.0");
          Element compilerConfiguration = m_pom.findOrCreateChild(compilerPlugin, "configuration");
 
          m_pom.findOrCreateChild(compilerConfiguration, "source").setText("1.6");
          m_pom.findOrCreateChild(compilerConfiguration, "target").setText("1.6");
 
-         Element eclipsePlugin = m_pom.checkPlugin(pluginManagementPlugins, null, "maven-eclipse-plugin", "2.9");
+         Element eclipsePlugin = m_pom.checkPlugin(pluginManagementPlugins, null, "maven-eclipse-plugin", "2.10");
          Element eclipseConfiguration = m_pom.findOrCreateChild(eclipsePlugin, "configuration");
 
          m_pom.findOrCreateChild(eclipseConfiguration, "downloadSources").setText("true");
@@ -107,7 +102,7 @@ public class WebAppPomBuilder implements LogEnabled {
 
    private void buildPlugins(Element build) {
       Element plugins = m_pom.findOrCreateChild(build, "plugins");
-      Element plexusPlugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "3.0.5");
+      Element plexusPlugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "4.0.0");
       Element plexus = m_pom.checkPluginExecution(plexusPlugin, "plexus", null, "generate plexus component descriptor");
       Element codegenPlexusConfiguration = m_pom.findOrCreateChild(plexus, "configuration");
 
@@ -123,15 +118,6 @@ public class WebAppPomBuilder implements LogEnabled {
          m_logger.info(String.format("Change project packaging type from %s to war.", projectType));
 
          m_pom.findOrCreateChild(project, "packaging", "dependencies", null).setText("war");
-      }
-   }
-
-   private void buildProperties(Element project) {
-      Element properties = m_pom.findOrCreateChild(project, "properties");
-      Element sourceEncoding = m_pom.findOrCreateChild(properties, "project.build.sourceEncoding");
-
-      if (sourceEncoding.getText().length() == 0) {
-         sourceEncoding.setText("utf-8");
       }
    }
 
