@@ -133,15 +133,6 @@ public class Any extends BaseEntity<xsl:value-of select="'&lt;Any&gt;'" disable-
       m_value = value;
       return this;
    }
-
-   @Override
-   public String toString() {
-      if (m_value != null) {
-         return String.format("<xsl:value-of select="'&lt;%s&gt;%s&lt;/%1$s&gt;'" disable-output-escaping="yes"/>", m_name,m_value);
-      } else {
-         return super.toString();
-      }
-   }
 }
 </xsl:template>
 
