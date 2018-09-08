@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.pab.framework.lotus.engine.model.deployment" class-suffix="Model"
+  enable-native-parser="true" enable-native-builder="true" enable-sax-parser="true" enable-json-builder="true" enable-base-visitor="true">
+  <entity name="deployment" root="true">
+    <attribute name="id" value-type="long" key="true"/>
+    <entity-ref name="plan" />
+    <entity-ref name="deploy" />
+    <snippet><![CDATA[
+      public Integer getDeployType() {
+        if(null == m_plan) return null;
+        return m_plan.getDeployType();
+      }
+      public Integer getDeployMethod() {
+        if(null == m_plan) return null;
+        return m_plan.getDeployMethod();
+      }
+      public String getReleaseVersion() {
+        if(null == m_plan) return null;
+        return m_plan.getReleaseVersion();
+      }
+      public String getAppId() {
+        if(null == m_plan) return null;
+        return m_plan.getAppId();
+      }
+      public StrategyModel getStrategy() {
+        if(null == m_plan) return null;
+        return m_plan.getStrategy();
+      }
+      public Long getDeployId() {
+        if(null == m_deploy) return m_id;
+        return m_deploy.getId();
+      }
+      public Integer getKind() {
+        if(null == m_deploy) return null;
+        return m_deploy.getKind();
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="plan">
+    <attribute name="deployType" value-type="int" />
+    <attribute name="deployMethod" value-type="int" />
+    <attribute name="releaseVersion" value-type="String" />
+    <entity-ref name="app" />
+    <entity-ref name="strategy" />
+    <entity-ref name="property" type="list" names="properties" method-find-or-create="true" />
+    <snippet><![CDATA[
+      public String getAppId() {
+        if(null == m_app) return null;
+        return m_app.getId();
+      }
+      public List<NodeDefModel> getNodeDefs() {
+        if(null == m_app) return null;
+        if(null == m_app.getZone()) return null;
+        return m_app.getZone().getNodeDefs();
+      }
+      public List<NodeDefModel> getFortNodeDefs() {
+        if(null == m_app) return null;
+        if(null == m_app.getZone()) return null;
+        return m_app.getZone().getFortNodeDefs();
+      }
+      public List<NodeDefModel> getNormalNodeDefs() {
+        if(null == m_app) return null;
+        if(null == m_app.getZone()) return null;
+        return m_app.getZone().getNormalNodeDefs();
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="app">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="code" value-type="String" />
+    <attribute name="subsys" value-type="String" />
+    <attribute name="po" value-type="String" />
+    <entity-ref name="zone" />
+  </entity>
+  <entity name="zone">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="idc" value-type="String" />
+    <entity-ref name="node-def" type="list" names="node-defs" method-find-or-create="true" />
+    <snippet><![CDATA[
+      public List<NodeDefModel> getFortNodeDefs() {
+        List<NodeDefModel> nodeDefList = new ArrayList<NodeDefModel>();
+        if(m_nodeDefs.size() > 0) {
+          for(NodeDefModel nodeDef : m_nodeDefs) {
+            if(nodeDef.isFort()){
+              nodeDefList.add(nodeDef);
+            }
+          }
+        }
+        return nodeDefList;
+      }
+      public List<NodeDefModel> getNormalNodeDefs() {
+        List<NodeDefModel> nodeDefList = new ArrayList<NodeDefModel>();
+        if(m_nodeDefs.size() > 0) {
+          for(NodeDefModel nodeDef : m_nodeDefs) {
+            if(!nodeDef.isFort()){
+              nodeDefList.add(nodeDef);
+            }
+          }
+        }
+        return nodeDefList;
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="node-def">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="ip" value-type="String" />
+    <attribute name="fort" value-type="boolean" />
+  </entity>
+  <entity name="strategy" dynamic-attributes="true">
+    <attribute name="wireNginx" value-type="boolean" enabled="false" />
+  </entity>
+  <entity name="deploy">
+    <attribute name="id" value-type="long" key="true" />
+    <attribute name="kind" value-type="int" />
+    <entity-ref name="group" type="list" names="groups" method-find-or-create="true"/>
+    <snippet><![CDATA[
+      public void setGroups(List<GroupModel> groupList) {
+        m_groups = groupList;
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="group">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="type" value-type="int" />
+    <entity-ref name="node" type="list" names="nodes" method-find-or-create="true" />
+    <snippet><![CDATA[
+      public void setNodes(List<NodeModel> nodeList) {
+        m_nodes = nodeList;
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="node">
+    <!--<attribute name="id" value-type="String" key="true"/>-->
+    <attribute name="ip" value-type="String" />
+    <entity-ref name="step" type="list" names="steps" method-find-or-create="true"/>
+    <snippet><![CDATA[
+      public void setSteps(List<StepModel> stepList) {
+        m_steps = stepList;
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="step">
+    <attribute name="name" value-type="String" key="true" />
+    <element name="log" value-type="String" />
+    <entity-ref name="task" type="list" names="tasks" method-find-or-create="true" />
+    <snippet><![CDATA[
+      public void setTasks(List<TaskModel> taskList) {
+        m_tasks = taskList;
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="task">
+    <attribute name="id" value-type="String" key="true" />
+    <entity-ref name="property" type="list" names="properties" xml-indent="false" method-find-or-create="true" />
+    <entity-ref name="state" type="list" names="states" method-find-or-create="true" />
+    <snippet><![CDATA[
+      public void setStates(List<StateModel> stateList) {
+        m_states = stateList;
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="state">
+    <attribute name="name" value-type="String" key="true" />
+    <element name="log" value-type="String" />
+  </entity>
+</model>
+

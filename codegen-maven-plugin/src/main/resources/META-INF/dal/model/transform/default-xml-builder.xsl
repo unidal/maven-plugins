@@ -427,6 +427,9 @@
          <xsl:when test="attribute[not(@render='false')]">
             <xsl:value-of select="$empty"/>      startTag(<xsl:value-of select="@upper-name"/>, true, <xsl:call-template name="get-dynamic-attributes"/><xsl:call-template name="tag-fields"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
+         <xsl:when test="@dynamic-attributes='true'">
+            <xsl:value-of select="$empty"/>      startTag(<xsl:value-of select="@upper-name"/>, true, <xsl:call-template name="get-dynamic-attributes"/><xsl:call-template name="tag-fields"/>);<xsl:value-of select="$empty-line"/>
+         </xsl:when>
       </xsl:choose>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
    </xsl:for-each>

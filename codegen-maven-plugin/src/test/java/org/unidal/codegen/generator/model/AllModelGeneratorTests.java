@@ -16,6 +16,7 @@ import org.unidal.codegen.generator.model.expense.ExpenseGeneratorTest;
 import org.unidal.codegen.generator.model.hermes.HermesGeneratorTest;
 import org.unidal.codegen.generator.model.key.KeysGeneratorTest;
 import org.unidal.codegen.generator.model.liger.LigerGeneratorTest;
+import org.unidal.codegen.generator.model.lotus.LotusGeneratorTest;
 import org.unidal.codegen.generator.model.mvc.MvcGeneratorTest;
 import org.unidal.codegen.generator.model.phoenix.PhoenixGeneratorTest;
 import org.unidal.codegen.generator.model.pixie.PixieGeneratorTest;
@@ -90,6 +91,8 @@ CatGeneratorTest.class,
 PlexusGeneratorTest.class,
 
 TulipGeneratorTest.class,
+
+LotusGeneratorTest.class,
 
 })
 public class AllModelGeneratorTests {

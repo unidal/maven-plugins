@@ -55,11 +55,9 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/first-manifest.xml,
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/first-manifest.xml,
                         ${basedir}/src/main/resources/META-INF/dal/jdbc/second-manifest.xml,
-                        ${basedir}/src/main/resources/META-INF/dal/jdbc/third-manifest.xml,
-                     ,]]></manifest>
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/third-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>
@@ -83,8 +81,5 @@
          </plugin>
       </plugins>
    </build>
-   <properties>
-      <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-   </properties>
 </project>
 
