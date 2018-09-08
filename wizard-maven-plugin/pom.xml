@@ -3,7 +3,7 @@
    <parent>
       <groupId>org.unidal.maven.plugins</groupId>
       <artifactId>default</artifactId>
-      <version>4.0.0</version>
+      <version>4.0.1</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>wizard-maven-plugin</artifactId>
@@ -36,6 +36,20 @@
                ]]></manifest>
             </configuration>
             <!-- regenerate the mode in the command line using command "mvn codegen:dal-model" -->
+            <executions>
+               <execution>
+                  <id>generate dal model files</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[
+                        ${basedir}/src/main/resources/META-INF/dal/model/wizard-manifest.xml,
+                     ]]></manifest>
+                  </configuration>
+               </execution>
+            </executions>
          </plugin>
       </plugins>
    </build>
