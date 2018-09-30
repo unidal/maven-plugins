@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.pab.framework.lotus.engine.model.deployment" class-suffix="Model"
-  enable-native-parser="true" enable-native-builder="true" enable-sax-parser="true" enable-json-builder="true" enable-base-visitor="true">
+  enable-native-parser="true" enable-native-builder="true" enable-sax-parser="true" enable-json-builder="true" enable-json-parser="true" enable-base-visitor="true">
   <entity name="deployment" root="true">
     <attribute name="id" value-type="long" key="true"/>
     <entity-ref name="plan" />
