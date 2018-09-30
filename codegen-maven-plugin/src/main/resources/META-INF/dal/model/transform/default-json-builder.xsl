@@ -369,7 +369,7 @@
             <xsl:value-of select="$empty"/>      objectEnd(<xsl:value-of select="@upper-name"/>);<xsl:value-of select="$empty-line"/>
          </xsl:when>
          <xsl:otherwise>
-            <xsl:if test="attribute[not(@render='false')] or element[not(@render='false' or @json-list='true' or @list='true' or @set='true')]">
+            <xsl:if test="attribute[not(@render='false')] or element[not(@render='false' or @json-list='true' or @list='true' or @set='true')] or @dynamic-attributes='true'">
                <xsl:value-of select="$empty"/>      attributes(<xsl:call-template name="get-dynamic-attributes"/><xsl:call-template name="tag-fields"/>);<xsl:value-of select="$empty-line"/>
             </xsl:if>
             <xsl:if test="element[not(@render='false') and (@json-list='true' or @list='true' or @set='true')]">
