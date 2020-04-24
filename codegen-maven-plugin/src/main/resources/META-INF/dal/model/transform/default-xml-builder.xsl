@@ -369,7 +369,9 @@
       <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         } else if (any.hasValue()) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>            if (any.getName() == null) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>               m_sb.append(any.getValue());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>               if (any.getValue().trim().length() != 0) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>                  m_sb.append(any.getValue());<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>                }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>            } else {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>               tagWithText(any.getName(), any.getValue());<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>            }<xsl:value-of select="$empty-line"/>

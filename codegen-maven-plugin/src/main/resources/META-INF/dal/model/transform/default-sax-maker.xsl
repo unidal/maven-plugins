@@ -37,10 +37,6 @@
       </xsl:for-each>
       <xsl:value-of select="$empty-line"/>
    </xsl:if>
-   <xsl:if test="entity[any and entity-ref[not(@render='false')]]">
-      <xsl:value-of select="$empty"/>import java.util.Arrays;<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>import java.util.HashSet;<xsl:value-of select="$empty-line"/>
-   </xsl:if>
    <xsl:if test="entity[attribute[not(@render='false') and @type]]">
       <xsl:value-of select="$empty"/>import java.lang.reflect.Array;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>import java.util.ArrayList;<xsl:value-of select="$empty-line"/>

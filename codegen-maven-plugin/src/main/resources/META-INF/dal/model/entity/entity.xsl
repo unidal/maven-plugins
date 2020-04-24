@@ -761,8 +761,9 @@
 
 <xsl:template name="method-set-dynamic-attributes">
    <xsl:if test="@dynamic-attributes='true'">
-      <xsl:value-of select="$empty"/>   public void setDynamicAttribute(String name, String value) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public <xsl:value-of select='@entity-class'/><xsl:value-of select='$space'/>setDynamicAttribute(String name, String value) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      m_dynamicAttributes.put(name, value);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return this;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:if>
@@ -770,8 +771,9 @@
 
 <xsl:template name="method-set-dynamic-elements">
    <xsl:if test="any">
-      <xsl:value-of select="$empty"/>   public void <xsl:value-of select='any/@set-method'/>(<xsl:value-of select='any/@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='any/@param-name'/>) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public <xsl:value-of select='@entity-class'/><xsl:value-of select='$space'/><xsl:value-of select='any/@set-method'/>(<xsl:value-of select='any/@value-type' disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select='any/@param-name'/>) {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      <xsl:value-of select="'      '"/><xsl:value-of select='any/@field-name'/> = <xsl:value-of select='any/@param-name'/>;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      return this;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:if>

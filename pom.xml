@@ -9,7 +9,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.unidal.maven.plugins</groupId>
    <artifactId>default</artifactId>
-   <version>4.0.3</version>
+   <version>4.0.4</version>
    <name>Maven Plugins</name>
    <packaging>pom</packaging>
    <modules>
@@ -26,7 +26,7 @@
       <tag>HEAD</tag>
    </scm>
    <properties>
-      <foundation-service.version>5.0.0</foundation-service.version>
+      <foundation-service.version>5.0.2</foundation-service.version>
       <maven-core.version>3.2.1</maven-core.version>
       <jdom.version>1.0</jdom.version>
       <mysql.version>5.1.46</mysql.version>
