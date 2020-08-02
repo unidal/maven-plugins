@@ -68,6 +68,29 @@ public class Any extends BaseEntity<xsl:value-of select="'&lt;Any&gt;'" disable-
       return m_children;
    }
 
+   @Override
+   public boolean equals(Object obj) {
+      if (obj instanceof Any) {
+         Any _o = (Any) obj;
+
+         if (!equals(getName(), _o.getName())) {
+            return false;
+         }
+
+         if (!equals(getValue(), _o.getValue())) {
+            return false;
+         }
+
+         if (!equals(getAttributes(), _o.getAttributes())) {
+            return false;
+         }
+
+         return true;
+      }
+
+      return false;
+   }
+
    public List<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/> getAllChildren(String name) {
       List<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/>();
 
@@ -108,6 +131,17 @@ public class Any extends BaseEntity<xsl:value-of select="'&lt;Any&gt;'" disable-
 
    public String getValue() {
       return m_value;
+   }
+
+   @Override
+   public int hashCode() {
+      int hash = 0;
+
+      hash = hash * 31 + (m_name == null ? 0 : m_name.hashCode());
+      hash = hash * 31 + (m_value == null ? 0 : m_value.hashCode());
+      hash = hash * 31 + getAttributes().hashCode();
+
+      return hash;
    }
 
    public boolean hasValue() {
