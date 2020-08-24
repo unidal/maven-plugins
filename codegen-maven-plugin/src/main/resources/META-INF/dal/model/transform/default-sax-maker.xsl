@@ -137,7 +137,7 @@
 <xsl:template name="set-dynamic-attributes">
    <xsl:if test="@dynamic-attributes='true'">
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      Map<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> dynamicAttributes = <xsl:value-of select="@param-name"/>.getDynamicAttributes();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      Map<xsl:value-of select="'&lt;String, String&gt;'" disable-output-escaping="yes"/> dynamicAttributes = <xsl:value-of select="@local-name"/>.getDynamicAttributes();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      int _length = attributes == null ? 0 : attributes.getLength();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      for (int i = 0; i <xsl:value-of select="'&lt;'" disable-output-escaping="yes"/> _length; i++) {<xsl:value-of select="$empty-line"/>
@@ -304,7 +304,7 @@
 </xsl:template>
 
 <xsl:template name="method-to-class">
-<xsl:if test="//entity/attribute[@value-type='Class&lt;?&gt;']">
+<xsl:if test="//entity/attribute[@value-type='Class&lt;?&gt;'][not(@render='false')]">
    private Class<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'?'"/></xsl:call-template> toClass(String className) {
       try {
          return Class.forName(className);
