@@ -29,7 +29,7 @@
       <foundation-service.version>5.0.2</foundation-service.version>
       <maven-core.version>3.2.1</maven-core.version>
       <jdom.version>1.0</jdom.version>
-      <mysql.version>5.1.46</mysql.version>
+      <mysql.version>8.0.16</mysql.version>
       <junit.version>4.12</junit.version>
       <mockito.version>1.9.0</mockito.version>
       <plexus-archiver.version>2.1.1</plexus-archiver.version>
