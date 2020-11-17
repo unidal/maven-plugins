@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="org.unidal.tulip.model.graphql" class-suffix="Model" enable-sax-parser="true" enable-base-visitor="true">
+  <entity name="graphql" root="true">
+    <entity-ref name="query" type="map" names="queries" />
+  </entity>
+  <entity name="query">
+    <attribute name="name" value-type="String" key="true" />
+    <element name="schema" value-type="String" />
+    <entity-ref name="template" type="map" names="templates" xml-indent="true" method-find-or-create='true' />
+  </entity>
+  <entity name="template">
+    <attribute name="id" value-type="String" key="true" />
+    <element name="content" value-type="String" />
+  </entity>
+</model>
+

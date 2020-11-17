@@ -45,29 +45,29 @@ public class Constants {
 
    public static final String ENTITY_GROUP = "group";
 
-   public static final String ENTITY_GROUPS = "groups";
-
    public static final String ENTITY_JDBC = "jdbc";
-
-   public static final String ENTITY_JDBCS = "jdbcs";
 
    public static final String ENTITY_MODEL = "model";
 
-   public static final String ENTITY_MODELS = "models";
-
    public static final String ENTITY_MODULE = "module";
-
-   public static final String ENTITY_MODULES = "modules";
 
    public static final String ENTITY_PAGE = "page";
 
-   public static final String ENTITY_PAGES = "pages";
-
    public static final String ENTITY_TABLE = "table";
-
-   public static final String ENTITY_TABLES = "tables";
 
    public static final String ENTITY_WEBAPP = "webapp";
 
    public static final String ENTITY_WIZARD = "wizard";
+
+   public static final String ENTITY_GROUPS = "groups";
+
+   public static final String ENTITY_JDBCS = "jdbcs";
+
+   public static final String ENTITY_MODELS = "models";
+
+   public static final String ENTITY_MODULES = "modules";
+
+   public static final String ENTITY_PAGES = "pages";
+
+   public static final String ENTITY_TABLES = "tables";
 }

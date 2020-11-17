@@ -22,6 +22,7 @@ import org.unidal.codegen.generator.model.phoenix.PhoenixGeneratorTest;
 import org.unidal.codegen.generator.model.pixie.PixieGeneratorTest;
 import org.unidal.codegen.generator.model.plexus.PlexusGeneratorTest;
 import org.unidal.codegen.generator.model.pom.PomGeneratorTest;
+import org.unidal.codegen.generator.model.query.QueryGeneratorTest;
 import org.unidal.codegen.generator.model.routing.RoutingGeneratorTest;
 import org.unidal.codegen.generator.model.rule.RuleGeneratorTest;
 import org.unidal.codegen.generator.model.service.ServiceModelGeneratorTest;
@@ -93,6 +94,8 @@ PlexusGeneratorTest.class,
 TulipGeneratorTest.class,
 
 LotusGeneratorTest.class,
+
+QueryGeneratorTest.class,
 
 })
 public class AllModelGeneratorTests {

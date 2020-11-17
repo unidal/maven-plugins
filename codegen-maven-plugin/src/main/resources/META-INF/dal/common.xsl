@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:n="org.unidal.maven.plugin.codegen.function.Normalizer" extension-element-prefixes="n">
 
 <xsl:template name="normalize-value-type">
    <xsl:param name="value-type"/>
@@ -54,41 +54,7 @@
    <xsl:param name="source"/>
    <xsl:param name="pos" select="1"/>
 
-   <xsl:variable name="ch" select="substring($source,$pos,1)"/>
-   <xsl:choose>
-      <xsl:when test="$ch='-' or $ch='_' or $ch=':'">
-         <xsl:call-template name="normalize">
-            <xsl:with-param name="source">
-               <xsl:value-of select="substring($source,1,$pos - 1)"/>
-               <xsl:value-of select="translate(substring($source,$pos + 1,1),'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
-               <xsl:value-of select="substring($source,$pos + 2)"/>
-            </xsl:with-param>
-            <xsl:with-param name="pos" select="$pos + 1"/>
-         </xsl:call-template>
-      </xsl:when>
-      <xsl:otherwise>
-         <xsl:choose>
-            <xsl:when test="$pos = 1">
-               <xsl:call-template name="normalize">
-                  <xsl:with-param name="source">
-                     <xsl:value-of select="translate(substring($source,$pos,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
-                     <xsl:value-of select="substring($source,$pos + 1)"/>
-                  </xsl:with-param>
-                  <xsl:with-param name="pos" select="$pos + 1"/>
-               </xsl:call-template>
-            </xsl:when>
-            <xsl:when test="$pos &lt;= string-length($source)">
-               <xsl:call-template name="normalize">
-                  <xsl:with-param name="source" select="$source"/>
-                  <xsl:with-param name="pos" select="$pos + 1"/>
-               </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-               <xsl:value-of select="$source"/>
-            </xsl:otherwise>
-         </xsl:choose>
-      </xsl:otherwise>
-   </xsl:choose>
+   <xsl:value-of select="n:normalize($source)" />
 </xsl:template>
 
 <xsl:template name="replace">

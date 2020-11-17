@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="org.unidal.tulip.model.scenario" class-suffix="Model" enable-sax-parser="true" enable-native-builder="true" enable-native-parser="true" enable-json-builder="true" enable-base-visitor="true">
+  <entity name="scenarios" root="true">
+    <entity-ref name="scenario" type="map" names="scenarios" />
+  </entity>
+  <entity name="scenario">
+    <attribute name="name" value-type="String" key="true" />
+    <entity-ref name="query" />
+  </entity>
+  <entity name="query">
+    <attribute name="limit" value-type="int" default-value="50"/>
+    <entity-ref name="query" type="list" names="sub-queries"/>
+  	 <snippet><![CDATA[
+      public List<String> getTags() {
+         List<String> tags = new ArrayList<>();
+         boolean all = false;
+
+         for (FieldModel field : m_fields) {
+            if (field.isTag()) {
+               if ("*".equals(field.getName())) {
+                  all = true;
+                  break;
+               } else {
+                  List<String> parts = org.unidal.helper.Splitters.by(',').trim().noEmptyItem().split(field.getName());
+
+                  tags.addAll(parts);
+               }
+            }
+         }
+
+         if (all) {
+            tags.clear();
+            tags.add("*");
+         }
+
+         return tags;
+      }
+
+      public boolean hasAggregator() {
+         for (FieldModel field: m_fields) {
+            if (field.isCount()) {
+               return true;
+            }
+         }
+
+         return false;
+      }
+  	 ]]></snippet>
+  </entity>
+  <entity name="condition">
+    <attribute name="case-sensitive" value-type="boolean" default-value="true" />
+  </entity>
+  <entity name="subscription" dynamic-attributes="true">
+    <attribute name="type" value-type="String" />
+    <attribute name="url" value-type="String" enabled="false"/>
+    <attribute name="enabled" value-type="boolean" default-value="true"/>
+  </entity>
+</model>
+
