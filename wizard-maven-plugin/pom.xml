@@ -35,7 +35,6 @@
                   ${basedir}/src/main/resources/META-INF/dal/model/wizard-manifest.xml,
                ]]></manifest>
             </configuration>
-            <!-- regenerate the mode in the command line using command "mvn codegen:dal-model" -->
             <executions>
                <execution>
                   <id>generate dal model files</id>

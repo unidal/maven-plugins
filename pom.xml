@@ -10,7 +10,7 @@
    <groupId>org.unidal.maven.plugins</groupId>
    <artifactId>default</artifactId>
    <version>4.0.6</version>
-   <name>Maven Plugins</name>
+   <name>Maven Plugins Parent POM</name>
    <packaging>pom</packaging>
    <modules>
       <module>codegen</module>
@@ -19,6 +19,7 @@
       <module>project-maven-plugin</module>
       <module>wizard-maven-plugin</module>
    </modules>
+   <url>https://github.com/unidal/maven-plugins</url>
    <scm>
       <connection>scm:git:git://github.com/unidal/maven-plugins.git</connection>
       <developerConnection>scm:git:ssh://git@github.com/unidal/maven-plugins.git</developerConnection>
@@ -26,7 +27,7 @@
       <tag>HEAD</tag>
    </scm>
    <properties>
-      <foundation-service.version>5.0.2</foundation-service.version>
+      <foundation.version>5.0.3</foundation.version>
       <maven-core.version>3.2.1</maven-core.version>
       <jdom.version>1.0</jdom.version>
       <mysql.version>5.1.46</mysql.version>
@@ -46,7 +47,7 @@
          <dependency>
             <groupId>org.unidal.foundation</groupId>
             <artifactId>foundation-service</artifactId>
-            <version>${foundation-service.version}</version>
+            <version>${foundation.version}</version>
          </dependency>
          <dependency>
             <groupId>org.apache.maven</groupId>
@@ -96,7 +97,7 @@
             <plugin>
                <groupId>org.unidal.maven.plugins</groupId>
                <artifactId>codegen-maven-plugin</artifactId>
-               <version>${codegen.plugin.version}</version>
+               <version>4.0.6</version>
             </plugin>
          </plugins>
       </pluginManagement>
