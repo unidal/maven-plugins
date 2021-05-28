@@ -3,7 +3,7 @@
    <parent>
       <groupId>org.unidal.maven.plugins</groupId>
       <artifactId>default</artifactId>
-      <version>4.0.6</version>
+      <version>5.0.0</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>wizard-maven-plugin</artifactId>
@@ -11,7 +11,7 @@
    <name>Wizard Maven Plugin</name>
    <dependencies>
       <dependency>
-         <groupId>org.unidal.maven.plugins</groupId>
+         <groupId>${project.groupId}</groupId>
          <artifactId>codegen</artifactId>
       </dependency>
       <dependency>
