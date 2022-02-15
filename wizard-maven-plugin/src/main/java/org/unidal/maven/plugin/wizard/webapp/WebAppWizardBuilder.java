@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.LogEnabled;
@@ -16,6 +17,8 @@ import org.unidal.codegen.helper.PropertyProviders;
 import org.unidal.codegen.helper.PropertyProviders.ConsoleProvider;
 import org.unidal.codegen.meta.WizardMeta;
 import org.unidal.helper.Files;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.DirMatcher;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
@@ -28,205 +31,210 @@ import org.xml.sax.SAXException;
 
 @Named
 public class WebAppWizardBuilder implements LogEnabled {
-	@Inject
-	private WizardMeta m_wizardMeta;
+   @Inject
+   private WizardMeta m_wizardMeta;
 
-	private Logger m_logger;
+   private Logger m_logger;
 
-	private MavenProject m_project;
+   private MavenProject m_project;
 
-	public Wizard build(MavenProject project, File manifestFile) throws IOException, SAXException {
-		m_project = project;
-		File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
-		Wizard wizard = buildWizard(wizardFile);
+   public Wizard build(MavenProject project, File manifestFile) throws IOException, SAXException {
+      m_project = project;
+      File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
+      Wizard wizard = buildWizard(wizardFile);
 
-		if (!manifestFile.exists()) {
-			saveXml(m_wizardMeta.getManifest("wizard.xml"), manifestFile);
-		}
+      if (!manifestFile.exists()) {
+         saveXml(m_wizardMeta.getManifest("wizard.xml"), manifestFile);
+      }
 
-		return wizard;
-	}
+      return wizard;
+   }
 
-	private Wizard buildWizard(File wizardFile) throws IOException, SAXException {
-		Wizard wizard;
+   private Wizard buildWizard(File wizardFile) throws IOException, SAXException {
+      Wizard wizard;
 
-		if (wizardFile.isFile()) {
-			String content = Files.forIO().readFrom(wizardFile, "utf-8");
+      if (wizardFile.isFile()) {
+         String content = Files.forIO().readFrom(wizardFile, "utf-8");
 
-			wizard = DefaultSaxParser.parse(content);
-		} else {
-			String packageName = getPackageName();
+         wizard = DefaultSaxParser.parse(content);
+      } else {
+         String packageName = getPackageName();
 
-			wizard = new Wizard();
-			wizard.setPackage(packageName);
-		}
+         wizard = new Wizard();
+         wizard.setPackage(packageName);
+      }
 
-		wizard.accept(new Builder());
-		Files.forIO().writeTo(wizardFile, wizard.toString());
-		m_logger.info("File " + wizardFile.getCanonicalPath() + " generated.");
-		return wizard;
-	}
+      wizard.accept(new Builder());
+      Files.forIO().writeTo(wizardFile, wizard.toString());
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
+      m_logger.info("File " + wizardFile.getCanonicalPath() + " generated.");
 
-	private String getPackageName() {
-		String groupId = m_project.getGroupId();
-		String artifactId = m_project.getArtifactId();
-		int index = artifactId.lastIndexOf('-');
-		String packageName = (groupId + "." + artifactId.substring(index + 1)).replace('-', '.');
+      return wizard;
+   }
 
-		packageName = PropertyProviders.fromConsole().forString("package", "Please input project-level package name:",
-				packageName, null);
-		return packageName;
-	}
+   @Override
+   public void enableLogging(Logger logger) {
+      m_logger = logger;
+   }
 
-	private void saveXml(Document doc, File file) throws IOException {
-		File parent = file.getCanonicalFile().getParentFile();
+   private String getPackageName() {
+      String defaultPackageName = guessPackageName();
 
-		if (!parent.exists()) {
-			parent.mkdirs();
-		}
+      if (defaultPackageName == null) {
+         String groupId = m_project.getGroupId();
+         String artifactId = m_project.getArtifactId();
+         int index = artifactId.lastIndexOf('-');
 
-		Format format = Format.getPrettyFormat().setIndent("   ");
-		XMLOutputter outputter = new XMLOutputter(format);
-		FileWriter writer = new FileWriter(file);
+         defaultPackageName = (groupId + "." + artifactId.substring(index + 1)).replace('-', '.');
+      }
 
-		try {
-			outputter.output(doc, writer);
-			m_logger.info("File " + file.getCanonicalPath() + " generated.");
-		} finally {
-			writer.close();
-		}
-	}
+      String packageName = PropertyProviders.fromConsole().forString("package",
+            "Please input project-level package name:", defaultPackageName, null);
 
-	static class Builder extends BaseVisitor {
-		private Webapp m_webapp;
+      return packageName;
+   }
 
-		@Override
-		public void visitModule(Module module) {
-			List<String> pageNames = new ArrayList<String>(module.getPages().size());
+   private String guessPackageName() {
+      for (String sourceRoot : m_project.getCompileSourceRoots()) {
+         final AtomicReference<String> packageName = new AtomicReference<String>();
 
-			for (Page page : module.getPages()) {
-				pageNames.add(page.getName());
-			}
+         Scanners.forDir().scan(new File(sourceRoot), new DirMatcher() {
+            @Override
+            public Direction matches(File base, String path) {
+               if (path.endsWith("/build")) {
+                  packageName.set(path.substring(0, path.length() - 6).replace('/', '.'));
+                  return Direction.MATCHED;
+               } else {
+                  return Direction.DOWN;
+               }
+            }
+         });
 
-			ConsoleProvider console = PropertyProviders.fromConsole();
-			String pageName = console.forString("page", "Select page name below or input a new one:", pageNames, null,
-					null);
-			Page page = module.findPage(pageName);
+         if (packageName.get() != null) {
+            return packageName.get();
+         }
+      }
 
-			if (page == null) {
-				page = new Page(pageName);
+      return null;
+   }
 
-				if (module.getPages().isEmpty()) {
-					page.setDefault(true);
-				}
+   private void saveXml(Document doc, File file) throws IOException {
+      File parent = file.getCanonicalFile().getParentFile();
 
-				if (m_webapp.isModule()) {
-					String defaultPackage = module.getPackage() + ".page";
-					String packageName = console.forString("module.package", "Module package:", defaultPackage, null);
+      if (!parent.exists()) {
+         parent.mkdirs();
+      }
 
-					page.setPackage(packageName);
-				}
+      Format format = Format.getPrettyFormat().setIndent("   ");
+      XMLOutputter outputter = new XMLOutputter(format);
+      FileWriter writer = new FileWriter(file);
 
-				String path = console.forString("page.path", "Page path:", pageName, null);
-				String caption = Character.toUpperCase(pageName.charAt(0)) + pageName.substring(1);
+      try {
+         outputter.output(doc, writer);
+         m_logger.info("File " + file.getCanonicalPath() + " generated.");
+      } finally {
+         writer.close();
+      }
+   }
 
-				page.setPath(path);
-				page.setTitle(caption);
-				page.setDescription(caption);
-				module.addPage(page);
-			}
+   static class Builder extends BaseVisitor {
+      @Override
+      public void visitModule(Module module) {
+         List<String> pageNames = new ArrayList<String>();
 
-			visitPage(page);
-		}
+         for (Page page : module.getPages()) {
+            pageNames.add(page.getName());
+         }
 
-		@Override
-		public void visitPage(Page page) {
-		}
+         ConsoleProvider console = PropertyProviders.fromConsole();
+         String pageName = console.forString("page", "Select page below or new one:", pageNames, null, null);
+         Page page = module.findPage(pageName);
 
-		@Override
-		public void visitWebapp(Webapp webapp) {
-			m_webapp = webapp;
+         if (page == null) {
+            page = new Page(pageName);
 
-			List<Module> modules = webapp.getModules();
-			List<String> moduleNames = new ArrayList<String>(modules.size());
+            if (module.getPages().isEmpty()) {
+               page.setDefault(true);
+            }
 
-			for (Module module : modules) {
-				moduleNames.add(module.getName());
-			}
+            page.setPath(pageName);
+            page.setTitle(Character.toUpperCase(pageName.charAt(0)) + pageName.substring(1));
+            page.setDescription(page.getTitle());
+            page.setPackage(module.getPackage() + "." + pageName);
+            module.addPage(page);
+         }
 
-			ConsoleProvider console = PropertyProviders.fromConsole();
-			String moduleName = console.forString("module", "Select module name below or input a new one:", moduleNames,
-					null, null);
-			Module module = webapp.findModule(moduleName);
+         visitPage(page);
+      }
 
-			if (module == null) { // new module
-				module = new Module(moduleName);
+      @Override
+      public void visitPage(Page page) {
+      }
 
-				if (webapp.isModule()) {
-					String defaultPackage = webapp.getPackage() + "." + moduleName;
-					String packageName = console.forString("module.package", "Module package:", defaultPackage, null);
+      @Override
+      public void visitWebapp(Webapp webapp) {
+         List<String> moduleNames = new ArrayList<String>();
 
-					module.setPackage(packageName);
-				}
+         for (Module module : webapp.getModules()) {
+            moduleNames.add(module.getName());
+         }
 
-				String path = console.forString("module.path", "Module path:", moduleName, null);
+         ConsoleProvider console = PropertyProviders.fromConsole();
+         String moduleName = console.forString("module", "Select module below or new name:", moduleNames, null, null);
+         Module module = webapp.findModule(moduleName);
 
-				module.setPath(path);
-				module.setDefault(modules.isEmpty());
-				webapp.addModule(module);
-			}
+         if (module == null) { // new module
+            module = new Module(moduleName);
 
-			visitModule(module);
-		}
+            if (webapp.isModule()) {
+               module.setPackage(webapp.getPackage() + ".page");
+            } else {
+               module.setPackage(webapp.getPackage() + "." + moduleName);
+            }
 
-		@Override
-		public void visitWizard(Wizard wizard) {
-			Webapp webapp = wizard.getWebapp();
+            module.setPath(moduleName);
+            module.setDefault(moduleNames.isEmpty());
+            webapp.addModule(module);
+         }
 
-			if (webapp == null) {
-				ConsoleProvider console = PropertyProviders.fromConsole();
+         visitModule(module);
+      }
 
-				webapp = new Webapp();
-				wizard.setWebapp(webapp);
+      @Override
+      public void visitWizard(Wizard wizard) {
+         Webapp webapp = wizard.getWebapp();
 
-				boolean module = webapp.isModule();
+         if (webapp == null) {
+            ConsoleProvider console = PropertyProviders.fromConsole();
 
-				if (webapp.getModule() == null) {
-					boolean war = PropertyProviders.fromConsole().forBoolean("war", "Is it a web project?", true);
+            webapp = new Webapp();
+            wizard.setWebapp(webapp);
 
-					module = !war;
-					webapp.setModule(module);
-				}
+            if (webapp.getModule() == null) {
+               boolean module = PropertyProviders.fromConsole().forBoolean("module", "Is it a web module?", true);
 
-				String packageName = wizard.getPackage();
+               webapp.setModule(module);
+            }
 
-				webapp.setPackage(packageName);
+            String packageName = wizard.getPackage();
 
-				if (!module) {
-					String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
-					String name = console.forString("name", "Webapp name:", defaultName, null);
+            webapp.setPackage(packageName);
 
-					webapp.setName(name);
-					
-					boolean cat = console.forBoolean("cat", "Support CAT?", true);
-					boolean jstl = console.forBoolean("jstl", "Support JSTL?", true);
-					boolean bootstrap = console.forBoolean("layout", "Support bootstrap layout?", true);
-					boolean pluginManagement = console.forBoolean("pluginManagement",
-							"Support POM plugin management for Java Compiler and Eclipse?", false);
+            if (!webapp.isModule()) {
+               String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
+               String name = console.forString("name", "Webapp name:", defaultName, null);
 
-					webapp.setCat(cat);
-					webapp.setJstl(jstl);
-					webapp.setLayout(bootstrap ? "bootstrap" : null);
-					webapp.setPluginManagement(pluginManagement);
-				}
-			}
+               webapp.setName(name);
 
-			visitWebapp(webapp);
-		}
-	}
+               boolean cat = console.forBoolean("cat", "Support CAT?", true);
+               boolean jstl = console.forBoolean("jstl", "Support JSTL?", true);
+
+               webapp.setCat(cat);
+               webapp.setJstl(jstl);
+            }
+         }
+
+         visitWebapp(webapp);
+      }
+   }
 }

@@ -52,16 +52,13 @@ public class WebAppPomBuilder implements LogEnabled {
    }
 
    private void buildDependencies(Element dependencies) {
-      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "web-framework", "5.0.0", null)) {
+      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "web-framework", "6.0.0", null)) {
          if (m_webapp.isJstl()) {
             m_pom.checkDependency(dependencies, "javax.servlet", "jstl", "1.2", null);
          }
 
          m_pom.checkDependency(dependencies, "javax.servlet", "javax.servlet-api", "3.0.1", "provided");
-         m_pom.checkDependency(dependencies, "junit", "junit", "4.8.1", "test");
-         m_pom.checkDependency(dependencies, "org.unidal.fouondation", "foundation-service", "5.0.0", null);
-         m_pom.checkDependency(dependencies, "org.unidal.framework", "test-framework", "5.0.0", "test");
-         m_pom.checkDependency(dependencies, "org.eclipse.jetty", "jetty-jsp", "8.1.22.v20160922", "test");
+         m_pom.checkDependency(dependencies, "org.unidal.test", "test-framework", "6.0.0", "test");
       }
    }
 
@@ -72,8 +69,8 @@ public class WebAppPomBuilder implements LogEnabled {
          Element compilerPlugin = m_pom.checkPlugin(pluginManagementPlugins, null, "maven-compiler-plugin", "3.7.0");
          Element compilerConfiguration = m_pom.findOrCreateChild(compilerPlugin, "configuration");
 
-         m_pom.findOrCreateChild(compilerConfiguration, "source").setText("1.6");
-         m_pom.findOrCreateChild(compilerConfiguration, "target").setText("1.6");
+         m_pom.findOrCreateChild(compilerConfiguration, "source").setText("1.8");
+         m_pom.findOrCreateChild(compilerConfiguration, "target").setText("1.8");
 
          Element eclipsePlugin = m_pom.checkPlugin(pluginManagementPlugins, null, "maven-eclipse-plugin", "2.10");
          Element eclipseConfiguration = m_pom.findOrCreateChild(eclipsePlugin, "configuration");
@@ -93,21 +90,21 @@ public class WebAppPomBuilder implements LogEnabled {
 
             contentElement.addContent(new CDATA( //
                   indent + "eclipse.preferences.version=1\r\n" + //
-                        indent + "org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6\r\n" + //
-                        indent + "org.eclipse.jdt.core.compiler.source=1.6\r\n" + //
-                        indent + "org.eclipse.jdt.core.compiler.compliance=1.6\r\n"));
+                        indent + "org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8\r\n" + //
+                        indent + "org.eclipse.jdt.core.compiler.source=1.8\r\n" + //
+                        indent + "org.eclipse.jdt.core.compiler.compliance=1.8\r\n"));
          }
       }
    }
 
    private void buildPlugins(Element build) {
       Element plugins = m_pom.findOrCreateChild(build, "plugins");
-      Element plexusPlugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "4.0.0");
+      Element plexusPlugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "5.0.0");
       Element plexus = m_pom.checkPluginExecution(plexusPlugin, "plexus", null, "generate plexus component descriptor");
       Element codegenPlexusConfiguration = m_pom.findOrCreateChild(plexus, "configuration");
+      Element className = m_pom.findOrCreateChild(codegenPlexusConfiguration, "className");
 
-      m_pom.findOrCreateChild(codegenPlexusConfiguration, "className").setText(
-            m_wizard.getPackage() + ".build.ComponentsConfigurator");
+      className.setText(m_wizard.getPackage() + ".build.ComponentsConfigurator");
    }
 
    private void buildProject(Element project) {

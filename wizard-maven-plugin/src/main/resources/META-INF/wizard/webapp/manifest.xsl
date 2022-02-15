@@ -25,13 +25,14 @@
 
 <xsl:template name="manifest">
    <xsl:element name="manifest">
+      <xsl:apply-templates select="/wizard"/>
       <xsl:apply-templates select="/wizard/webapp"/>
       <xsl:apply-templates select="/wizard/webapp/module"/>
       <xsl:apply-templates select="/wizard/webapp/module/page"/>
    </xsl:element>
 </xsl:template>
 
-<xsl:template match="webapp">
+<xsl:template match="wizard">
    <!-- AllTests class -->
    <xsl:call-template name="generate-test-java">
      <xsl:with-param name="package" select="@package"/>
@@ -70,16 +71,9 @@
         <xsl:with-param name="template" select="'web-inf/web-xml.xsl'"/>
       </xsl:call-template>
    </xsl:if>
+</xsl:template>
 
-   <!--    
-   <xsl:if test="@cat='true'">
-      <xsl:call-template name="generate-resource">
-        <xsl:with-param name="file" select="'META-INF/cat/client.xml'"/>
-        <xsl:with-param name="template" select="'cat/client-xml.xsl'"/>
-      </xsl:call-template>
-   </xsl:if>
-   -->
-   
+<xsl:template match="webapp">
    <xsl:if test="@layout='bootstrap'">
       <!-- NavigationBar class -->
       <xsl:call-template name="generate-java">
