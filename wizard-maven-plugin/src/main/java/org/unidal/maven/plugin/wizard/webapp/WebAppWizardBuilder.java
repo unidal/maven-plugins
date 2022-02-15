@@ -223,14 +223,11 @@ public class WebAppWizardBuilder implements LogEnabled {
             if (!webapp.isModule()) {
                String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
                String name = console.forString("name", "Webapp name:", defaultName, null);
-
-               webapp.setName(name);
-
-               boolean cat = console.forBoolean("cat", "Support CAT?", true);
                boolean jstl = console.forBoolean("jstl", "Support JSTL?", true);
 
-               webapp.setCat(cat);
+               webapp.setName(name);
                webapp.setJstl(jstl);
+               webapp.setLayout("bootstrap");
             }
          }
 

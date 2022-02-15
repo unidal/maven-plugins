@@ -14,15 +14,13 @@ public class Webapp extends BaseEntity<Webapp> {
 
    private Boolean m_module;
 
-   private Boolean m_cat;
-
-   private Boolean m_pluginManagement = false;
-
    private Boolean m_jstl;
 
    private String m_layout;
 
    private List<Module> m_modules = new ArrayList<Module>();
+
+   private Boolean m_pluginManagement = false;
 
    public Webapp() {
    }
@@ -54,14 +52,6 @@ public class Webapp extends BaseEntity<Webapp> {
             return false;
          }
 
-         if (!equals(getCat(), _o.getCat())) {
-            return false;
-         }
-
-         if (!equals(getPluginManagement(), _o.getPluginManagement())) {
-            return false;
-         }
-
          if (!equals(getJstl(), _o.getJstl())) {
             return false;
          }
@@ -71,6 +61,10 @@ public class Webapp extends BaseEntity<Webapp> {
          }
 
          if (!equals(getModules(), _o.getModules())) {
+            return false;
+         }
+
+         if (!equals(getPluginManagement(), _o.getPluginManagement())) {
             return false;
          }
 
@@ -91,10 +85,6 @@ public class Webapp extends BaseEntity<Webapp> {
       }
 
       return null;
-   }
-
-   public Boolean getCat() {
-      return m_cat;
    }
 
    public Boolean getJstl() {
@@ -132,20 +122,15 @@ public class Webapp extends BaseEntity<Webapp> {
       hash = hash * 31 + (m_package == null ? 0 : m_package.hashCode());
       hash = hash * 31 + (m_name == null ? 0 : m_name.hashCode());
       hash = hash * 31 + (m_module == null ? 0 : m_module.hashCode());
-      hash = hash * 31 + (m_cat == null ? 0 : m_cat.hashCode());
-      hash = hash * 31 + (m_pluginManagement == null ? 0 : m_pluginManagement.hashCode());
       hash = hash * 31 + (m_jstl == null ? 0 : m_jstl.hashCode());
       hash = hash * 31 + (m_layout == null ? 0 : m_layout.hashCode());
       for (Module e : m_modules) {
          hash = hash * 31 + (e == null ? 0 :e.hashCode());
       }
 
+      hash = hash * 31 + (m_pluginManagement == null ? 0 : m_pluginManagement.hashCode());
 
       return hash;
-   }
-
-   public boolean isCat() {
-      return m_cat != null && m_cat.booleanValue();
    }
 
    public boolean isJstl() {
@@ -174,20 +159,16 @@ public class Webapp extends BaseEntity<Webapp> {
          m_module = other.getModule();
       }
 
-      if (other.getCat() != null) {
-         m_cat = other.getCat();
-      }
-
-      if (other.getPluginManagement() != null) {
-         m_pluginManagement = other.getPluginManagement();
-      }
-
       if (other.getJstl() != null) {
          m_jstl = other.getJstl();
       }
 
       if (other.getLayout() != null) {
          m_layout = other.getLayout();
+      }
+
+      if (other.getPluginManagement() != null) {
+         m_pluginManagement = other.getPluginManagement();
       }
    }
 
@@ -205,11 +186,6 @@ public class Webapp extends BaseEntity<Webapp> {
       }
 
       return null;
-   }
-
-   public Webapp setCat(Boolean cat) {
-      m_cat = cat;
-      return this;
    }
 
    public Webapp setJstl(Boolean jstl) {

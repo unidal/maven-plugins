@@ -3,8 +3,6 @@ package org.unidal.maven.plugin.wizard.model;
 
 public class Constants {
 
-   public static final String ATTR_CAT = "cat";
-
    public static final String ATTR_DEFAULT = "default";
 
    public static final String ATTR_JSTL = "jstl";
@@ -20,8 +18,6 @@ public class Constants {
    public static final String ATTR_PATH = "path";
 
    public static final String ATTR_PLUGIN_MANAGEMENT = "plugin-management";
-
-   public static final String ATTR_STANDALONE = "standalone";
 
    public static final String ATTR_TITLE = "title";
 

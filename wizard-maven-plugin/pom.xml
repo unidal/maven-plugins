@@ -17,6 +17,7 @@
       <dependency>
          <groupId>mysql</groupId>
          <artifactId>mysql-connector-java</artifactId>
+         <scope>runtime</scope>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
@@ -42,11 +43,6 @@
                   <goals>
                      <goal>dal-model</goal>
                   </goals>
-                  <configuration>
-                     <manifest><![CDATA[
-                        ${basedir}/src/main/resources/META-INF/dal/model/wizard-manifest.xml,
-                     ]]></manifest>
-                  </configuration>
                </execution>
             </executions>
          </plugin>

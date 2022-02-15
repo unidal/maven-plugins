@@ -57,7 +57,7 @@ public class DefaultXslTemplateManager implements XslTemplateManager {
 				templates = factory.newTemplates(new StreamSource(style.openStream(), style.toString()));
 
 				m_cachedTemplates.put(style, templates);
-				m_lastModifiedDates.put(style, new Long(lastModified));
+				m_lastModifiedDates.put(style, Long.valueOf(lastModified));
 			} catch (Exception e) {
 				throw new RuntimeException("Fail to open XSL template: " + style, e);
 			}

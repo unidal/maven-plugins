@@ -61,7 +61,7 @@
       
       <xsl:attribute name="app-tld">
          <xsl:choose>
-            <xsl:when test="@module='true'">http://www.unidal.org/cat/layout</xsl:when>
+            <xsl:when test="@module='true'">/WEB-INF/<xsl:value-of select="@name"/>.tld</xsl:when>
             <xsl:otherwise>/WEB-INF/app.tld</xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>

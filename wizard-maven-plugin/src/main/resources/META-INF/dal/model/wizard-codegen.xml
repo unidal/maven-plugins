@@ -11,8 +11,6 @@
     <attribute name="package" value-type="String" />
     <attribute name="name" value-type="String" />
     <attribute name="module" value-type="boolean" />
-    <attribute name="cat" value-type="boolean" />
-    <attribute name="plugin-management" value-type="boolean" />
     <attribute name="jstl" value-type="boolean" />
     <attribute name="layout" value-type="String" />
     <entity-ref name="module" type="list" names="modules" />
@@ -31,7 +29,6 @@
     <attribute name="package" value-type="String" />
     <attribute name="path" value-type="String" />
     <attribute name="view" value-type="String" />
-    <attribute name="standalone" value-type="boolean" />
     <element name="description" value-type="String" />
   </entity>
   <entity name="jdbc">

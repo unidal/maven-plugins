@@ -20,8 +20,6 @@ public class Page extends BaseEntity<Page> {
 
    private String m_view;
 
-   private Boolean m_standalone;
-
    private String m_description;
 
    public Page() {
@@ -71,10 +69,6 @@ public class Page extends BaseEntity<Page> {
       return m_path;
    }
 
-   public Boolean getStandalone() {
-      return m_standalone;
-   }
-
    public String getTitle() {
       return m_title;
    }
@@ -94,10 +88,6 @@ public class Page extends BaseEntity<Page> {
 
    public boolean isDefault() {
       return m_default != null && m_default.booleanValue();
-   }
-
-   public boolean isStandalone() {
-      return m_standalone != null && m_standalone.booleanValue();
    }
 
    @Override
@@ -123,10 +113,6 @@ public class Page extends BaseEntity<Page> {
       if (other.getView() != null) {
          m_view = other.getView();
       }
-
-      if (other.getStandalone() != null) {
-         m_standalone = other.getStandalone();
-      }
    }
 
    public Page setDefault(Boolean _default) {
@@ -151,11 +137,6 @@ public class Page extends BaseEntity<Page> {
 
    public Page setPath(String path) {
       m_path = path;
-      return this;
-   }
-
-   public Page setStandalone(Boolean standalone) {
-      m_standalone = standalone;
       return this;
    }
 
