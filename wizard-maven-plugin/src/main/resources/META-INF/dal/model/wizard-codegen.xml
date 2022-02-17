@@ -28,6 +28,7 @@
     <attribute name="default" value-type="boolean" />
     <attribute name="package" value-type="String" />
     <attribute name="path" value-type="String" />
+    <attribute name="standalone" value-type="boolean" />
     <attribute name="view" value-type="String" />
     <element name="description" value-type="String" />
   </entity>

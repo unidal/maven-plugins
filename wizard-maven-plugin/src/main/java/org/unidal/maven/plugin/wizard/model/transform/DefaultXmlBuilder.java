@@ -9,6 +9,7 @@ import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_NAME;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PACKAGE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PATH;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PLUGIN_MANAGEMENT;
+import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_STANDALONE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_TITLE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_VIEW;
 import static org.unidal.maven.plugin.wizard.model.Constants.ELEMENT_DESCRIPTION;
@@ -357,7 +358,7 @@ public class DefaultXmlBuilder implements IVisitor {
 
    @Override
    public void visitPage(Page page) {
-      startTag(ENTITY_PAGE, null, ATTR_NAME, page.getName(), ATTR_TITLE, page.getTitle(), ATTR_DEFAULT, page.getDefault(), ATTR_PACKAGE, page.getPackage(), ATTR_PATH, page.getPath(), ATTR_VIEW, page.getView());
+      startTag(ENTITY_PAGE, null, ATTR_NAME, page.getName(), ATTR_TITLE, page.getTitle(), ATTR_DEFAULT, page.getDefault(), ATTR_PACKAGE, page.getPackage(), ATTR_PATH, page.getPath(), ATTR_STANDALONE, page.getStandalone(), ATTR_VIEW, page.getView());
 
       element(ELEMENT_DESCRIPTION, page.getDescription(), null,  true);
 

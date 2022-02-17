@@ -9,6 +9,7 @@ import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_NAME;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PACKAGE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PATH;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PLUGIN_MANAGEMENT;
+import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_STANDALONE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_TITLE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_VIEW;
 
@@ -103,6 +104,7 @@ public class DefaultSaxMaker implements IMaker<Attributes> {
       String _default = attributes.getValue(ATTR_DEFAULT);
       String _package = attributes.getValue(ATTR_PACKAGE);
       String path = attributes.getValue(ATTR_PATH);
+      String standalone = attributes.getValue(ATTR_STANDALONE);
       String view = attributes.getValue(ATTR_VIEW);
       Page page = new Page(name);
 
@@ -120,6 +122,10 @@ public class DefaultSaxMaker implements IMaker<Attributes> {
 
       if (path != null) {
          page.setPath(path);
+      }
+
+      if (standalone != null) {
+         page.setStandalone(convert(Boolean.class, standalone, null));
       }
 
       if (view != null) {

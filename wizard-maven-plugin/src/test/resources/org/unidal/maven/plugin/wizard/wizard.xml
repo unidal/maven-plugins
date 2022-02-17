@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat">
-   <webapp package="com.dianping.cat" name="cat" module="false" cat="true" plugin-management="true" jstl="true" layout="bootstrap">
+   <webapp package="com.dianping.cat" name="cat" module="false" jstl="true" layout="bootstrap" plugin-management="true">
       <module name="dashboard" path="d" default="true">
          <page name="home" title="Home" default="true" package="com.dianping.cat.page.home">
             <description>Home Page of Garden</description>
          </page>
-         <page name="trend" title="Trend" path="trend" view="trend.jsp" standalone="true">
+         <page name="trend" title="Trend" path="trend" standalone="true" view="trend.jsp">
             <description>Technical Trends</description>
          </page>
       </module>

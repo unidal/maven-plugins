@@ -19,6 +19,8 @@ public class Constants {
 
    public static final String ATTR_PLUGIN_MANAGEMENT = "plugin-management";
 
+   public static final String ATTR_STANDALONE = "standalone";
+
    public static final String ATTR_TITLE = "title";
 
    public static final String ATTR_VIEW = "view";

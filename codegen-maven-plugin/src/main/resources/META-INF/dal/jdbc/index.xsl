@@ -8,7 +8,7 @@
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
 
 <xsl:template match="/">
-   <xsl:value-of select="$empty"/>package <xsl:value-of select="//entity/@do-package"/>;<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>package <xsl:value-of select="/entities/@do-package"/>;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:call-template name='import-list'/>
    <xsl:value-of select="$empty"/>public class _INDEX {<xsl:value-of select="$empty-line"/>
