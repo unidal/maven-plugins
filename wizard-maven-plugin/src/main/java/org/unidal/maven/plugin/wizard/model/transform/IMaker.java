@@ -2,8 +2,10 @@
 package org.unidal.maven.plugin.wizard.model.transform;
 
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
+import org.unidal.maven.plugin.wizard.model.entity.File;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
+import org.unidal.maven.plugin.wizard.model.entity.Manifest;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
@@ -15,9 +17,13 @@ public interface IMaker<T> {
 
    public Datasource buildDatasource(T node);
 
+   public File buildFile(T node);
+
    public Group buildGroup(T node);
 
    public Jdbc buildJdbc(T node);
+
+   public Manifest buildManifest(T node);
 
    public Model buildModel(T node);
 

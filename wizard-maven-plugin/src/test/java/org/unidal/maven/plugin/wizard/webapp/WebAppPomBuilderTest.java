@@ -9,6 +9,7 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.maven.plugin.wizard.model.entity.Webapp;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
+import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder;
 
 public class WebAppPomBuilderTest extends ComponentTestCase {
    @Test
@@ -24,10 +25,10 @@ public class WebAppPomBuilderTest extends ComponentTestCase {
       Files.forDir().copyFile(pomFile, tmpFile);
 
       wizard.setWebapp(new Webapp().setPackage("org.unidal.test"));
+      
       builder.build(tmpFile, wizard);
       builder.build(tmpFile, wizard);
       builder.build(tmpFile, wizard);
-      builder.save();
 
       String actual = Files.forIO().readFrom(tmpFile, "utf-8");
 

@@ -2,13 +2,11 @@
 package org.unidal.maven.plugin.wizard.model.transform;
 
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_DEFAULT;
-import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_JSTL;
-import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_LAYOUT;
+import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_LANGUAGE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_MODULE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_NAME;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PACKAGE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PATH;
-import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PLUGIN_MANAGEMENT;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_STANDALONE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_TITLE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_VIEW;
@@ -20,8 +18,11 @@ import static org.unidal.maven.plugin.wizard.model.Constants.ELEMENT_SAMPLE_MODE
 import static org.unidal.maven.plugin.wizard.model.Constants.ELEMENT_URL;
 import static org.unidal.maven.plugin.wizard.model.Constants.ELEMENT_USER;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_DATASOURCE;
+import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_FILE;
+import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_FILES;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_GROUP;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_JDBC;
+import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_MANIFEST;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_MODEL;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_MODULE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_PAGE;
@@ -35,8 +36,10 @@ import java.util.Collection;
 import org.unidal.maven.plugin.wizard.model.IEntity;
 import org.unidal.maven.plugin.wizard.model.IVisitor;
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
+import org.unidal.maven.plugin.wizard.model.entity.File;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
+import org.unidal.maven.plugin.wizard.model.entity.Manifest;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
@@ -305,6 +308,11 @@ public class DefaultXmlBuilder implements IVisitor {
    }
 
    @Override
+   public void visitFile(File file) {
+      startTag(ENTITY_FILE, true, null, ATTR_PATH, file.getPath());
+   }
+
+   @Override
    public void visitGroup(Group group) {
       startTag(ENTITY_GROUP, null, ATTR_NAME, group.getName(), ATTR_PACKAGE, group.getPackage());
 
@@ -335,6 +343,23 @@ public class DefaultXmlBuilder implements IVisitor {
    }
 
    @Override
+   public void visitManifest(Manifest manifest) {
+      startTag(ENTITY_MANIFEST, null);
+
+      if (!manifest.getFiles().isEmpty()) {
+         startTag(ENTITY_FILES);
+
+         for (File file : manifest.getFiles()) {
+            file.accept(m_visitor);
+         }
+
+         endTag(ENTITY_FILES);
+      }
+
+      endTag(ENTITY_MANIFEST);
+   }
+
+   @Override
    public void visitModel(Model model) {
       startTag(ENTITY_MODEL, null, ATTR_PACKAGE, model.getPackage(), ATTR_NAME, model.getName());
 
@@ -358,7 +383,7 @@ public class DefaultXmlBuilder implements IVisitor {
 
    @Override
    public void visitPage(Page page) {
-      startTag(ENTITY_PAGE, null, ATTR_NAME, page.getName(), ATTR_TITLE, page.getTitle(), ATTR_DEFAULT, page.getDefault(), ATTR_PACKAGE, page.getPackage(), ATTR_PATH, page.getPath(), ATTR_STANDALONE, page.getStandalone(), ATTR_VIEW, page.getView());
+      startTag(ENTITY_PAGE, null, ATTR_NAME, page.getName(), ATTR_PATH, page.getPath(), ATTR_DEFAULT, page.getDefault(), ATTR_PACKAGE, page.getPackage(), ATTR_TITLE, page.getTitle(), ATTR_STANDALONE, page.getStandalone(), ATTR_VIEW, page.getView());
 
       element(ELEMENT_DESCRIPTION, page.getDescription(), null,  true);
 
@@ -372,7 +397,7 @@ public class DefaultXmlBuilder implements IVisitor {
 
    @Override
    public void visitWebapp(Webapp webapp) {
-      startTag(ENTITY_WEBAPP, null, ATTR_PACKAGE, webapp.getPackage(), ATTR_NAME, webapp.getName(), ATTR_MODULE, webapp.getModule(), ATTR_JSTL, webapp.getJstl(), ATTR_LAYOUT, webapp.getLayout(), ATTR_PLUGIN_MANAGEMENT, webapp.getPluginManagement());
+      startTag(ENTITY_WEBAPP, null, ATTR_PACKAGE, webapp.getPackage(), ATTR_NAME, webapp.getName(), ATTR_MODULE, webapp.getModule(), ATTR_LANGUAGE, webapp.getLanguage());
 
       if (!webapp.getModules().isEmpty()) {
          for (Module module : webapp.getModules()) {
@@ -386,6 +411,10 @@ public class DefaultXmlBuilder implements IVisitor {
    @Override
    public void visitWizard(Wizard wizard) {
       startTag(ENTITY_WIZARD, null, ATTR_PACKAGE, wizard.getPackage());
+
+      if (wizard.getManifest() != null) {
+         wizard.getManifest().accept(m_visitor);
+      }
 
       if (wizard.getWebapp() != null) {
          wizard.getWebapp().accept(m_visitor);

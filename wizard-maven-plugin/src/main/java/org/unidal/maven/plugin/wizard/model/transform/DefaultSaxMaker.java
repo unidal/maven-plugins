@@ -2,13 +2,11 @@
 package org.unidal.maven.plugin.wizard.model.transform;
 
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_DEFAULT;
-import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_JSTL;
-import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_LAYOUT;
+import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_LANGUAGE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_MODULE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_NAME;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PACKAGE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PATH;
-import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_PLUGIN_MANAGEMENT;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_STANDALONE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_TITLE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_VIEW;
@@ -16,8 +14,10 @@ import static org.unidal.maven.plugin.wizard.model.Constants.ATTR_VIEW;
 import org.xml.sax.Attributes;
 
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
+import org.unidal.maven.plugin.wizard.model.entity.File;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
+import org.unidal.maven.plugin.wizard.model.entity.Manifest;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
@@ -33,6 +33,18 @@ public class DefaultSaxMaker implements IMaker<Attributes> {
       Datasource datasource = new Datasource(name);
 
       return datasource;
+   }
+
+   @Override
+   public File buildFile(Attributes attributes) {
+      String path = attributes.getValue(ATTR_PATH);
+      File file = new File();
+
+      if (path != null) {
+         file.setPath(path);
+      }
+
+      return file;
    }
 
    @Override
@@ -59,6 +71,13 @@ public class DefaultSaxMaker implements IMaker<Attributes> {
       }
 
       return jdbc;
+   }
+
+   @Override
+   public Manifest buildManifest(Attributes attributes) {
+      Manifest manifest = new Manifest();
+
+      return manifest;
    }
 
    @Override
@@ -100,16 +119,16 @@ public class DefaultSaxMaker implements IMaker<Attributes> {
    @Override
    public Page buildPage(Attributes attributes) {
       String name = attributes.getValue(ATTR_NAME);
-      String title = attributes.getValue(ATTR_TITLE);
+      String path = attributes.getValue(ATTR_PATH);
       String _default = attributes.getValue(ATTR_DEFAULT);
       String _package = attributes.getValue(ATTR_PACKAGE);
-      String path = attributes.getValue(ATTR_PATH);
+      String title = attributes.getValue(ATTR_TITLE);
       String standalone = attributes.getValue(ATTR_STANDALONE);
       String view = attributes.getValue(ATTR_VIEW);
       Page page = new Page(name);
 
-      if (title != null) {
-         page.setTitle(title);
+      if (path != null) {
+         page.setPath(path);
       }
 
       if (_default != null) {
@@ -120,8 +139,8 @@ public class DefaultSaxMaker implements IMaker<Attributes> {
          page.setPackage(_package);
       }
 
-      if (path != null) {
-         page.setPath(path);
+      if (title != null) {
+         page.setTitle(title);
       }
 
       if (standalone != null) {
@@ -148,9 +167,7 @@ public class DefaultSaxMaker implements IMaker<Attributes> {
       String _package = attributes.getValue(ATTR_PACKAGE);
       String name = attributes.getValue(ATTR_NAME);
       String module = attributes.getValue(ATTR_MODULE);
-      String jstl = attributes.getValue(ATTR_JSTL);
-      String layout = attributes.getValue(ATTR_LAYOUT);
-      String pluginManagement = attributes.getValue(ATTR_PLUGIN_MANAGEMENT);
+      String language = attributes.getValue(ATTR_LANGUAGE);
       Webapp webapp = new Webapp();
 
       if (_package != null) {
@@ -165,16 +182,8 @@ public class DefaultSaxMaker implements IMaker<Attributes> {
          webapp.setModule(convert(Boolean.class, module, null));
       }
 
-      if (jstl != null) {
-         webapp.setJstl(convert(Boolean.class, jstl, null));
-      }
-
-      if (layout != null) {
-         webapp.setLayout(layout);
-      }
-
-      if (pluginManagement != null) {
-         webapp.setPluginManagement(convert(Boolean.class, pluginManagement, null));
+      if (language != null) {
+         webapp.setLanguage(language);
       }
 
       return webapp;

@@ -10,13 +10,13 @@ import org.unidal.maven.plugin.wizard.model.IVisitor;
 public class Page extends BaseEntity<Page> {
    private String m_name;
 
-   private String m_title;
+   private String m_path;
 
    private Boolean m_default;
 
    private String m_package;
 
-   private String m_path;
+   private String m_title;
 
    private Boolean m_standalone;
 
@@ -104,8 +104,8 @@ public class Page extends BaseEntity<Page> {
    public void mergeAttributes(Page other) {
       assertAttributeEquals(other, ENTITY_PAGE, ATTR_NAME, m_name, other.getName());
 
-      if (other.getTitle() != null) {
-         m_title = other.getTitle();
+      if (other.getPath() != null) {
+         m_path = other.getPath();
       }
 
       if (other.getDefault() != null) {
@@ -116,8 +116,8 @@ public class Page extends BaseEntity<Page> {
          m_package = other.getPackage();
       }
 
-      if (other.getPath() != null) {
-         m_path = other.getPath();
+      if (other.getTitle() != null) {
+         m_title = other.getTitle();
       }
 
       if (other.getStandalone() != null) {

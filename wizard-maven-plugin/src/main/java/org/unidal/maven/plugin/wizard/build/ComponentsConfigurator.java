@@ -8,8 +8,8 @@ import org.unidal.lookup.configuration.Component;
 import org.unidal.maven.plugin.pom.MavenContainer;
 import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.pom.VersionMapping;
-import org.unidal.maven.plugin.wizard.webapp.WebAppPomBuilder;
-import org.unidal.maven.plugin.wizard.webapp.WebAppWizardBuilder;
+import org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder;
+import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder;
 
 class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {

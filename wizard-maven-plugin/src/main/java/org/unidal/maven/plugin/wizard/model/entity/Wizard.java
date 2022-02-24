@@ -10,6 +10,8 @@ import org.unidal.maven.plugin.wizard.model.IVisitor;
 public class Wizard extends BaseEntity<Wizard> {
    private String m_package;
 
+   private Manifest m_manifest;
+
    private Webapp m_webapp;
 
    private List<Jdbc> m_jdbcs = new ArrayList<Jdbc>();
@@ -40,6 +42,10 @@ public class Wizard extends BaseEntity<Wizard> {
          Wizard _o = (Wizard) obj;
 
          if (!equals(getPackage(), _o.getPackage())) {
+            return false;
+         }
+
+         if (!equals(getManifest(), _o.getManifest())) {
             return false;
          }
 
@@ -90,6 +96,10 @@ public class Wizard extends BaseEntity<Wizard> {
       return m_jdbcs;
    }
 
+   public Manifest getManifest() {
+      return m_manifest;
+   }
+
    public List<Model> getModels() {
       return m_models;
    }
@@ -107,6 +117,7 @@ public class Wizard extends BaseEntity<Wizard> {
       int hash = 0;
 
       hash = hash * 31 + (m_package == null ? 0 : m_package.hashCode());
+      hash = hash * 31 + (m_manifest == null ? 0 : m_manifest.hashCode());
       hash = hash * 31 + (m_webapp == null ? 0 : m_webapp.hashCode());
       for (Jdbc e : m_jdbcs) {
          hash = hash * 31 + (e == null ? 0 :e.hashCode());
@@ -157,6 +168,11 @@ public class Wizard extends BaseEntity<Wizard> {
       }
 
       return null;
+   }
+
+   public Wizard setManifest(Manifest manifest) {
+      m_manifest = manifest;
+      return this;
    }
 
    public Wizard setPackage(String _package) {

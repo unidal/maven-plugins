@@ -20,18 +20,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.maven.plugin.wizard.webapp.WebAppPomBuilder</role>
-			<implementation>org.unidal.maven.plugin.wizard.webapp.WebAppPomBuilder</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<role>org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder</role>
+			<implementation>org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder</implementation>
 		</component>
 		<component>
-			<role>org.unidal.maven.plugin.wizard.webapp.WebAppWizardBuilder</role>
-			<implementation>org.unidal.maven.plugin.wizard.webapp.WebAppWizardBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.codegen.meta.WizardMeta</role>
-				</requirement>
-			</requirements>
+			<role>org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder</role>
+			<implementation>org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder</implementation>
 		</component>
 	</components>
 </plexus>

@@ -4,8 +4,10 @@ package org.unidal.maven.plugin.wizard.model.transform;
 import java.util.ArrayList;
 import java.util.List;
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
+import org.unidal.maven.plugin.wizard.model.entity.File;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
+import org.unidal.maven.plugin.wizard.model.entity.Manifest;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
@@ -36,6 +38,12 @@ public class DefaultLinker implements ILinker {
    }
 
    @Override
+   public boolean onFile(final Manifest parent, final File file) {
+      parent.addFile(file);
+      return true;
+   }
+
+   @Override
    public boolean onGroup(final Jdbc parent, final Group group) {
       parent.addGroup(group);
       return true;
@@ -44,6 +52,12 @@ public class DefaultLinker implements ILinker {
    @Override
    public boolean onJdbc(final Wizard parent, final Jdbc jdbc) {
       parent.addJdbc(jdbc);
+      return true;
+   }
+
+   @Override
+   public boolean onManifest(final Wizard parent, final Manifest manifest) {
+      parent.setManifest(manifest);
       return true;
    }
 

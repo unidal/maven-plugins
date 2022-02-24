@@ -14,13 +14,9 @@ public class Webapp extends BaseEntity<Webapp> {
 
    private Boolean m_module;
 
-   private Boolean m_jstl;
-
-   private String m_layout;
+   private String m_language;
 
    private List<Module> m_modules = new ArrayList<Module>();
-
-   private Boolean m_pluginManagement = false;
 
    public Webapp() {
    }
@@ -52,19 +48,11 @@ public class Webapp extends BaseEntity<Webapp> {
             return false;
          }
 
-         if (!equals(getJstl(), _o.getJstl())) {
-            return false;
-         }
-
-         if (!equals(getLayout(), _o.getLayout())) {
+         if (!equals(getLanguage(), _o.getLanguage())) {
             return false;
          }
 
          if (!equals(getModules(), _o.getModules())) {
-            return false;
-         }
-
-         if (!equals(getPluginManagement(), _o.getPluginManagement())) {
             return false;
          }
 
@@ -87,12 +75,8 @@ public class Webapp extends BaseEntity<Webapp> {
       return null;
    }
 
-   public Boolean getJstl() {
-      return m_jstl;
-   }
-
-   public String getLayout() {
-      return m_layout;
+   public String getLanguage() {
+      return m_language;
    }
 
    public Boolean getModule() {
@@ -111,10 +95,6 @@ public class Webapp extends BaseEntity<Webapp> {
       return m_package;
    }
 
-   public Boolean getPluginManagement() {
-      return m_pluginManagement;
-   }
-
    @Override
    public int hashCode() {
       int hash = 0;
@@ -122,27 +102,17 @@ public class Webapp extends BaseEntity<Webapp> {
       hash = hash * 31 + (m_package == null ? 0 : m_package.hashCode());
       hash = hash * 31 + (m_name == null ? 0 : m_name.hashCode());
       hash = hash * 31 + (m_module == null ? 0 : m_module.hashCode());
-      hash = hash * 31 + (m_jstl == null ? 0 : m_jstl.hashCode());
-      hash = hash * 31 + (m_layout == null ? 0 : m_layout.hashCode());
+      hash = hash * 31 + (m_language == null ? 0 : m_language.hashCode());
       for (Module e : m_modules) {
          hash = hash * 31 + (e == null ? 0 :e.hashCode());
       }
 
-      hash = hash * 31 + (m_pluginManagement == null ? 0 : m_pluginManagement.hashCode());
 
       return hash;
    }
 
-   public boolean isJstl() {
-      return m_jstl != null && m_jstl.booleanValue();
-   }
-
    public boolean isModule() {
       return m_module != null && m_module.booleanValue();
-   }
-
-   public boolean isPluginManagement() {
-      return m_pluginManagement != null && m_pluginManagement.booleanValue();
    }
 
    @Override
@@ -159,16 +129,8 @@ public class Webapp extends BaseEntity<Webapp> {
          m_module = other.getModule();
       }
 
-      if (other.getJstl() != null) {
-         m_jstl = other.getJstl();
-      }
-
-      if (other.getLayout() != null) {
-         m_layout = other.getLayout();
-      }
-
-      if (other.getPluginManagement() != null) {
-         m_pluginManagement = other.getPluginManagement();
+      if (other.getLanguage() != null) {
+         m_language = other.getLanguage();
       }
    }
 
@@ -188,13 +150,8 @@ public class Webapp extends BaseEntity<Webapp> {
       return null;
    }
 
-   public Webapp setJstl(Boolean jstl) {
-      m_jstl = jstl;
-      return this;
-   }
-
-   public Webapp setLayout(String layout) {
-      m_layout = layout;
+   public Webapp setLanguage(String language) {
+      m_language = language;
       return this;
    }
 
@@ -210,11 +167,6 @@ public class Webapp extends BaseEntity<Webapp> {
 
    public Webapp setPackage(String _package) {
       m_package = _package;
-      return this;
-   }
-
-   public Webapp setPluginManagement(Boolean pluginManagement) {
-      m_pluginManagement = pluginManagement;
       return this;
    }
 

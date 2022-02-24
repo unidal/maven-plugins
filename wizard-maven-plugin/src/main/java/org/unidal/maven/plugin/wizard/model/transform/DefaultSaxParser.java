@@ -10,14 +10,17 @@ import static org.unidal.maven.plugin.wizard.model.Constants.ELEMENT_URL;
 import static org.unidal.maven.plugin.wizard.model.Constants.ELEMENT_USER;
 
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_DATASOURCE;
+import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_FILE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_GROUP;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_JDBC;
+import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_MANIFEST;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_MODEL;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_MODULE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_PAGE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_TABLE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_WEBAPP;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_WIZARD;
+import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_FILES;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -37,8 +40,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import org.unidal.maven.plugin.wizard.model.IEntity;
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
+import org.unidal.maven.plugin.wizard.model.entity.File;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
+import org.unidal.maven.plugin.wizard.model.entity.Manifest;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
@@ -225,6 +230,11 @@ public class DefaultSaxParser extends DefaultHandler {
       m_tags.push(qName);
    }
 
+   private void parseForFile(File parentObj, String parentTag, String qName, Attributes attributes) throws SAXException {
+      m_objs.push(parentObj);
+      m_tags.push(qName);
+   }
+
    private void parseForGroup(Group parentObj, String parentTag, String qName, Attributes attributes) throws SAXException {
       if (ENTITY_TABLE.equals(qName)) {
          Table table = m_maker.buildTable(attributes);
@@ -251,6 +261,21 @@ public class DefaultSaxParser extends DefaultHandler {
          m_objs.push(group);
       } else {
          throw new SAXException(String.format("Element(%s) is not expected under jdbc!", qName));
+      }
+
+      m_tags.push(qName);
+   }
+
+   private void parseForManifest(Manifest parentObj, String parentTag, String qName, Attributes attributes) throws SAXException {
+      if (ENTITY_FILES.equals(qName)) {
+         m_objs.push(parentObj);
+      } else if (ENTITY_FILE.equals(qName)) {
+         File file = m_maker.buildFile(attributes);
+
+         m_linker.onFile(parentObj, file);
+         m_objs.push(file);
+      } else {
+         throw new SAXException(String.format("Element(%s) is not expected under manifest!", qName));
       }
 
       m_tags.push(qName);
@@ -308,7 +333,12 @@ public class DefaultSaxParser extends DefaultHandler {
    }
 
    private void parseForWizard(Wizard parentObj, String parentTag, String qName, Attributes attributes) throws SAXException {
-      if (ENTITY_WEBAPP.equals(qName)) {
+      if (ENTITY_MANIFEST.equals(qName)) {
+         Manifest manifest = m_maker.buildManifest(attributes);
+
+         m_linker.onManifest(parentObj, manifest);
+         m_objs.push(manifest);
+      } else if (ENTITY_WEBAPP.equals(qName)) {
          Webapp webapp = m_maker.buildWebapp(attributes);
 
          m_linker.onWebapp(parentObj, webapp);
@@ -336,6 +366,18 @@ public class DefaultSaxParser extends DefaultHandler {
 
          m_entity = wizard;
          m_objs.push(wizard);
+         m_tags.push(qName);
+      } else if (ENTITY_MANIFEST.equals(qName)) {
+         Manifest manifest = m_maker.buildManifest(attributes);
+
+         m_entity = manifest;
+         m_objs.push(manifest);
+         m_tags.push(qName);
+      } else if (ENTITY_FILE.equals(qName)) {
+         File file = m_maker.buildFile(attributes);
+
+         m_entity = file;
+         m_objs.push(file);
          m_tags.push(qName);
       } else if (ENTITY_WEBAPP.equals(qName)) {
          Webapp webapp = m_maker.buildWebapp(attributes);
@@ -401,6 +443,10 @@ public class DefaultSaxParser extends DefaultHandler {
 
             if (parent instanceof Wizard) {
                parseForWizard((Wizard) parent, tag, qName, attributes);
+            } else if (parent instanceof Manifest) {
+               parseForManifest((Manifest) parent, tag, qName, attributes);
+            } else if (parent instanceof File) {
+               parseForFile((File) parent, tag, qName, attributes);
             } else if (parent instanceof Webapp) {
                parseForWebapp((Webapp) parent, tag, qName, attributes);
             } else if (parent instanceof Module) {

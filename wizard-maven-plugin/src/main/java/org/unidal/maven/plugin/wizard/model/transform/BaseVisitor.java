@@ -3,8 +3,10 @@ package org.unidal.maven.plugin.wizard.model.transform;
 
 import org.unidal.maven.plugin.wizard.model.IVisitor;
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
+import org.unidal.maven.plugin.wizard.model.entity.File;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
+import org.unidal.maven.plugin.wizard.model.entity.Manifest;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
@@ -15,6 +17,10 @@ import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 public abstract class BaseVisitor implements IVisitor {
    @Override
    public void visitDatasource(Datasource datasource) {
+   }
+
+   @Override
+   public void visitFile(File file) {
    }
 
    @Override
@@ -32,6 +38,13 @@ public abstract class BaseVisitor implements IVisitor {
 
       for (Group group : jdbc.getGroups()) {
          visitGroup(group);
+      }
+   }
+
+   @Override
+   public void visitManifest(Manifest manifest) {
+      for (File file : manifest.getFiles()) {
+         visitFile(file);
       }
    }
 
@@ -63,6 +76,10 @@ public abstract class BaseVisitor implements IVisitor {
 
    @Override
    public void visitWizard(Wizard wizard) {
+      if (wizard.getManifest() != null) {
+         visitManifest(wizard.getManifest());
+      }
+
       if (wizard.getWebapp() != null) {
          visitWebapp(wizard.getWebapp());
       }

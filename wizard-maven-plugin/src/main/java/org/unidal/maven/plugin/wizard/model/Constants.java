@@ -5,9 +5,7 @@ public class Constants {
 
    public static final String ATTR_DEFAULT = "default";
 
-   public static final String ATTR_JSTL = "jstl";
-
-   public static final String ATTR_LAYOUT = "layout";
+   public static final String ATTR_LANGUAGE = "language";
 
    public static final String ATTR_MODULE = "module";
 
@@ -16,8 +14,6 @@ public class Constants {
    public static final String ATTR_PACKAGE = "package";
 
    public static final String ATTR_PATH = "path";
-
-   public static final String ATTR_PLUGIN_MANAGEMENT = "plugin-management";
 
    public static final String ATTR_STANDALONE = "standalone";
 
@@ -41,9 +37,13 @@ public class Constants {
 
    public static final String ENTITY_DATASOURCE = "datasource";
 
+   public static final String ENTITY_FILE = "file";
+
    public static final String ENTITY_GROUP = "group";
 
    public static final String ENTITY_JDBC = "jdbc";
+
+   public static final String ENTITY_MANIFEST = "manifest";
 
    public static final String ENTITY_MODEL = "model";
 
@@ -56,6 +56,8 @@ public class Constants {
    public static final String ENTITY_WEBAPP = "webapp";
 
    public static final String ENTITY_WIZARD = "wizard";
+
+   public static final String ENTITY_FILES = "files";
 
    public static final String ENTITY_GROUPS = "groups";
 

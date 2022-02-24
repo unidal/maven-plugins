@@ -2,8 +2,10 @@
 package org.unidal.maven.plugin.wizard.model.transform;
 
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
+import org.unidal.maven.plugin.wizard.model.entity.File;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
+import org.unidal.maven.plugin.wizard.model.entity.Manifest;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
@@ -16,9 +18,13 @@ public interface IParser<T> {
 
    public void parseForDatasource(IMaker<T> maker, ILinker linker, Datasource parent, T node);
 
+   public void parseForFile(IMaker<T> maker, ILinker linker, File parent, T node);
+
    public void parseForGroup(IMaker<T> maker, ILinker linker, Group parent, T node);
 
    public void parseForJdbc(IMaker<T> maker, ILinker linker, Jdbc parent, T node);
+
+   public void parseForManifest(IMaker<T> maker, ILinker linker, Manifest parent, T node);
 
    public void parseForModel(IMaker<T> maker, ILinker linker, Model parent, T node);
 

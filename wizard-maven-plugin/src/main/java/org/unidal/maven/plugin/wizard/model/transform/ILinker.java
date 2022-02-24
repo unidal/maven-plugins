@@ -2,8 +2,10 @@
 package org.unidal.maven.plugin.wizard.model.transform;
 
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
+import org.unidal.maven.plugin.wizard.model.entity.File;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
+import org.unidal.maven.plugin.wizard.model.entity.Manifest;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
@@ -15,9 +17,13 @@ public interface ILinker {
 
    public boolean onDatasource(Jdbc parent, Datasource datasource);
 
+   public boolean onFile(Manifest parent, File file);
+
    public boolean onGroup(Jdbc parent, Group group);
 
    public boolean onJdbc(Wizard parent, Jdbc jdbc);
+
+   public boolean onManifest(Wizard parent, Manifest manifest);
 
    public boolean onModel(Wizard parent, Model model);
 

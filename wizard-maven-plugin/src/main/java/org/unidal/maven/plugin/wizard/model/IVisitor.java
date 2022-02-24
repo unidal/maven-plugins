@@ -2,8 +2,10 @@
 package org.unidal.maven.plugin.wizard.model;
 
 import org.unidal.maven.plugin.wizard.model.entity.Datasource;
+import org.unidal.maven.plugin.wizard.model.entity.File;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
+import org.unidal.maven.plugin.wizard.model.entity.Manifest;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Module;
 import org.unidal.maven.plugin.wizard.model.entity.Page;
@@ -15,9 +17,13 @@ public interface IVisitor {
 
    public void visitDatasource(Datasource datasource);
 
+   public void visitFile(File file);
+
    public void visitGroup(Group group);
 
    public void visitJdbc(Jdbc jdbc);
+
+   public void visitManifest(Manifest manifest);
 
    public void visitModel(Model model);
 
