@@ -2,8 +2,6 @@ package org.unidal.maven.plugin.wizard.pom;
 
 import java.io.File;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.unidal.lookup.annotation.Named;
@@ -11,10 +9,8 @@ import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 
 @Named
-public class WebAppPomBuilder extends AbstractPomBuilder implements LogEnabled {
+public class WebAppPomBuilder extends AbstractPomBuilder {
    private PomDelegate m_pom = new PomDelegate();
-
-   private Logger m_logger;
 
    private void addDependencies(Element root, Wizard wizard) {
       Element dependencies = m_pom.findOrCreateChild(root, "dependencies", "build", null);
@@ -33,12 +29,14 @@ public class WebAppPomBuilder extends AbstractPomBuilder implements LogEnabled {
       addDependencies(root, wizard);
       configurePlugin(root, wizard);
 
-      super.savePom(pomFile, doc);
+      if (m_pom.isModified()) {
+         super.savePom(pomFile, doc);
 
-      m_logger.info(String.format("Added dependencies to POM file(%s).", pomFile));
-      m_logger.info("");
-      m_logger.info("Please run following command to setup eclipse environment:");
-      m_logger.info("   mvn eclipse:clean eclipse:eclipse");
+         m_logger.info(String.format("Added dependencies to POM file(%s).", pomFile));
+         m_logger.info("");
+         m_logger.info("Please run following command to setup eclipse environment:");
+         m_logger.info("   mvn eclipse:clean eclipse:eclipse");
+      }
    }
 
    private void configurePlugin(Element root, Wizard wizard) {
@@ -50,13 +48,6 @@ public class WebAppPomBuilder extends AbstractPomBuilder implements LogEnabled {
       Element className = m_pom.findOrCreateChild(codegenPlexusConfiguration, "className");
 
       className.setText(wizard.getPackage() + ".build.ComponentsConfigurator");
-   }
-
-   @Override
-   public void enableLogging(Logger logger) {
-      m_logger = logger;
-
-      super.enableLogging(logger);
    }
 
    private void setPackaging(Element project, Wizard wizard) {

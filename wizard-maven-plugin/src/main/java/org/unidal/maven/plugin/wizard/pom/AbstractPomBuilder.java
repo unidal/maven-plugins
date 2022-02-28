@@ -17,7 +17,7 @@ import org.jdom.output.XMLOutputter;
 abstract class AbstractPomBuilder implements LogEnabled {
    private DependencyManager m_manager = new DependencyManager();
 
-   private Logger m_logger;
+   protected Logger m_logger;
 
    public AbstractPomBuilder() {
       m_manager.configure("org.unidal.foundation", "foundation", "6.0.0", null);

@@ -26,7 +26,7 @@ public class WebAppWizardBuilder extends AbstractWizardBuilder {
       wizard.accept(new Builder());
 
       super.saveWizard(wizard);
-      super.saveManifest("wizard.xml");
+      super.saveManifest();
       return wizard;
    }
 

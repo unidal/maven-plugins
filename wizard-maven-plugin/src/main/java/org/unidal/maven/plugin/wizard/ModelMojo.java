@@ -1,42 +1,23 @@
 package org.unidal.maven.plugin.wizard;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringReader;
 import java.sql.SQLException;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.jdom.CDATA;
-import org.jdom.Comment;
 import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
-import org.jdom.output.Format.TextMode;
 import org.jdom.output.XMLOutputter;
-import org.unidal.codegen.helper.PropertyProviders;
-import org.unidal.codegen.helper.PropertyProviders.IValidator;
 import org.unidal.codegen.meta.ModelMeta;
-import org.unidal.codegen.meta.WizardMeta;
-import org.unidal.helper.Files;
-import org.unidal.helper.Splitters;
-import org.unidal.helper.Transformers;
-import org.unidal.helper.Transformers.IBuilder;
-import org.unidal.maven.plugin.pom.PomDelegate;
+import org.unidal.maven.plugin.pom.AbstractWizardMojo;
+import org.unidal.maven.plugin.wizard.meta.ModelWizardBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
-import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;
-import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
-import org.unidal.tuple.Pair;
-import org.xml.sax.SAXException;
+import org.unidal.maven.plugin.wizard.pom.ModelPomBuilder;
 
 /**
  * Enable project to build model.
@@ -44,377 +25,110 @@ import org.xml.sax.SAXException;
  * @goal model
  * @author Frankie Wu
  */
-public class ModelMojo extends AbstractMojo {
+public class ModelMojo extends AbstractWizardMojo {
    /**
-    * Current project
-    * 
-    * @parameter expression="${project}"
-    * @required
-    * @readonly
-    */
-   protected MavenProject m_project;
-
-   /**
-    * Table meta component
+    * Model meta component
     * 
     * @component
     * @required
     * @readonly
     */
-   protected ModelMeta m_modelMeta;
+   private ModelMeta m_modelMeta;
 
    /**
-    * Current project base directory
-    * 
-    * @parameter expression="${basedir}"
-    * @required
-    * @readonly
-    */
-   protected File baseDir;
-
-   /**
-    * Wizard meta component
+    * Wizard builder component
     * 
     * @component
     * @required
     * @readonly
     */
-   protected WizardMeta m_wizardMeta;
+   private ModelWizardBuilder m_wizardBuilder;
 
    /**
-    * Current project base directory
+    * POM builder component
     * 
-    * @parameter expression="${sourceDir}" default-value="${basedir}"
+    * @component
     * @required
+    * @readonly
     */
-   protected String sourceDir;
-
-   /**
-    * Location of manifest.xml file
-    * 
-    * @parameter expression="${manifest}" default-value= "${basedir}/src/main/resources/META-INF/wizard/model/manifest.xml"
-    * @required
-    */
-   protected String manifest;
-
-   /**
-    * Location of generated source directory
-    * 
-    * @parameter expression="${resource.base}" default-value="/META-INF/wizard/model"
-    * @required
-    */
-   protected String resourceBase;
+   private ModelPomBuilder m_pomBuilder;
 
    /**
     * @parameter expression="${outputDir}" default-value="${basedir}/src/main/resources/META-INF/dal/model"
     * @required
     */
-   protected String outputDir;
-
-   /**
-    * Verbose information or not
-    * 
-    * @parameter expression="${verbose}" default-value="false"
-    */
-   protected boolean verbose;
-
-   /**
-    * Verbose information or not
-    * 
-    * @parameter expression="${debug}" default-value="false"
-    */
-   protected boolean debug;
-
-   private Pair<Wizard, Model> buildWizard(File wizardFile) throws IOException, SAXException {
-      Wizard wizard;
-
-      if (wizardFile.isFile()) {
-         String content = Files.forIO().readFrom(wizardFile, "utf-8");
-
-         wizard = DefaultSaxParser.parse(content);
-      } else {
-         String packageName = getPackageName();
-
-         wizard = new Wizard();
-         wizard.setPackage(packageName);
-      }
-
-      WizardBuilder builder = new WizardBuilder();
-
-      wizard.accept(builder);
-
-      Files.forIO().writeTo(wizardFile, wizard.toString());
-      getLog().info("File " + wizardFile.getCanonicalPath() + " generated.");
-      return new Pair<Wizard, Model>(wizard, builder.getModel());
-   }
+   private String outputDir;
 
    public void execute() throws MojoExecutionException, MojoFailureException {
+      MavenProject project = getProject();
+
       try {
-         final File manifestFile = getFile(manifest);
-         File wizardFile = new File(manifestFile.getParentFile(), "wizard.xml");
-         Pair<Wizard, Model> pair = buildWizard(wizardFile);
-         Model model = pair.getValue();
+         // prepare the wizard.xml and manifest.xml files
+         Wizard wizard = m_wizardBuilder.build(project);
 
-         generateModel(model);
+         // generate or regenerate the *-codegen.xml files
+         MetaGenerator generator = new MetaGenerator();
 
-         if (!manifestFile.exists()) {
-            saveXml(m_wizardMeta.getManifest("wizard.xml"), manifestFile);
+         for (Model model : wizard.getModels()) {
+            generator.generateModel(model);
          }
 
-         modifyPomFile(m_project.getFile(), pair.getKey());
+         // modify the pom.xml
+         m_pomBuilder.build(project.getFile(), wizard);
       } catch (Exception e) {
          e.printStackTrace();
          throw new MojoExecutionException("Error when generating model meta: " + e, e);
       }
    }
 
-   private void generateModel(Model model) throws SQLException, IOException {
-      String name = model.getName();
-      File file = new File(model.getSampleModel());
-      String sampleXml = Files.forIO().readFrom(file, "utf-8");
+   @Override
+   protected String getWizardType() {
+      return "model";
+   }
 
-      Document codegenDoc = m_modelMeta.getCodegen(new StringReader(sampleXml));
+   private class MetaGenerator {
+      public void generateModel(Model model) throws SQLException, IOException {
+         String name = model.getName();
 
-      File outDir = getFile(outputDir);
-      File outFile = new File(outDir, name + "-codegen.xml");
+         // codegen.xml file
+         File sampleFile = new File(model.getSampleModel());
+         Document codegenDoc = m_modelMeta.getCodegen(new FileReader(sampleFile));
+         File outFile = new File(outputDir, name + "-codegen.xml");
 
-      if (!outDir.exists()) {
-         outDir.mkdirs();
-      }
+         saveDocument(codegenDoc, outFile);
 
-      codegenDoc.addContent(0, new Comment(" THIS FILE WAS GENERATED BY CODEGEN, DO NOT EDIT IT! "));
-      saveFile(codegenDoc, outFile);
+         // model.xml file
+         File modelFile = new File(outputDir, name + "-model.xml");
 
-      File modelFile = new File(outDir, name + "-model.xml");
+         if (!modelFile.exists()) {
+            Document modelDoc = m_modelMeta.getModel(model.getPackage());
 
-      if (!modelFile.exists()) {
-         Document modelDoc = m_modelMeta.getModel(model.getPackage());
+            saveDocument(modelDoc, modelFile);
+         }
 
-         saveFile(modelDoc, modelFile);
-      }
-
-      File manifestFile = new File(outDir, name + "-manifest.xml");
-
-      if (!manifestFile.exists()) {
+         // manifest.xml file
+         File manifestFile = new File(outputDir, name + "-manifest.xml");
          Document manifestDoc = m_modelMeta.getManifest(outFile.getName(), modelFile.getName());
 
-         saveFile(manifestDoc, manifestFile);
-      }
-   }
-
-   private File getFile(String path) {
-      File file;
-
-      if (path.startsWith("/") || path.indexOf(':') == 1) {
-         file = new File(path);
-      } else {
-         file = new File(baseDir, path);
+         saveDocument(manifestDoc, manifestFile);
       }
 
-      return file;
-   }
+      private void saveDocument(Document codegen, File file) throws IOException {
+         File folder = file.getParentFile();
 
-   private String getPackageName() {
-      String groupId = m_project.getGroupId();
-      String artifactId = m_project.getArtifactId();
-      int index = artifactId.lastIndexOf('-');
-      String packageName = (groupId + "." + artifactId.substring(index + 1)).replace('-', '.');
-
-      packageName = PropertyProviders.fromConsole().forString("package", "Please input project-level package name:",
-            packageName, null);
-      return packageName;
-   }
-
-   void modifyPomFile(File pomFile, Wizard wizard) throws JDOMException, IOException {
-      Document doc = new SAXBuilder().build(pomFile);
-      boolean modified = new PomBuilder(wizard).build(doc);
-
-      if (modified) {
-         saveXml(doc, pomFile);
-         getLog().info("You need run following command to setup eclipse environment:");
-         getLog().info("   mvn eclipse:clean eclipse:eclipse");
-      }
-   }
-
-   private void saveFile(Document codegen, File file) throws IOException {
-      Format format = Format.getPrettyFormat();
-      XMLOutputter outputter = new XMLOutputter(format);
-      FileWriter writer = new FileWriter(file);
-
-      try {
-         outputter.output(codegen, writer);
-         getLog().info("File " + file.getCanonicalPath() + " generated.");
-      } finally {
-         writer.close();
-      }
-   }
-
-   private void saveXml(Document pom, File file) throws IOException {
-      File parent = file.getCanonicalFile().getParentFile();
-
-      if (!parent.exists()) {
-         parent.mkdirs();
-      }
-
-      Format format = Format.getPrettyFormat().setIndent("   ").setTextMode(TextMode.TRIM_FULL_WHITE);
-      XMLOutputter outputter = new XMLOutputter(format);
-      FileWriter writer = new FileWriter(file);
-
-      try {
-         outputter.output(pom, writer);
-         getLog().info("File " + file.getCanonicalPath() + " generated.");
-      } finally {
-         writer.close();
-      }
-   }
-
-   private class PomBuilder {
-      private Wizard m_wizard;
-
-      public PomBuilder(Wizard wizard) {
-         m_wizard = wizard;
-      }
-
-      public boolean build(Document doc) {
-         Element root = doc.getRootElement();
-         PomDelegate d = new PomDelegate();
-
-         Element build = d.findOrCreateChild(root, "build", null, "dependencies");
-         Element plugins = d.findOrCreateChild(build, "plugins");
-         Element plugin = d.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "5.0.0");
-         Element generate = d.checkPluginExecution(plugin, "dal-model", "generate-sources", "generate dal model files");
-         Element generateConfiguration = d.findOrCreateChild(generate, "configuration");
-         Element manifestElement = d.findOrCreateChild(generateConfiguration, "manifest");
-
-         buildManifest(m_wizard, manifestElement);
-         return d.isModified();
-      }
-
-      private void buildManifest(Wizard wizard, Element manifestElement) {
-         Set<String> all = new LinkedHashSet<String>();
-         String text = manifestElement.getText();
-
-         if (text != null) {
-            List<String> lines = Splitters.by(',').noEmptyItem().trim().split(text);
-
-            for (String line : lines) {
-               all.add(line);
-            }
+         if (!folder.exists()) {
+            folder.mkdirs();
          }
 
-         StringBuilder sb = new StringBuilder();
-         String indent = "                        ";
+         FileWriter writer = new FileWriter(file);
 
-         sb.append("\r\n");
+         try {
+            new XMLOutputter(Format.getPrettyFormat()).output(codegen, writer);
 
-         for (Model model : wizard.getModels()) {
-            String line = String.format("${basedir}/src/main/resources/META-INF/dal/model/%s-manifest.xml",
-                  model.getName());
-
-            all.add(line);
+            getLog().info("File " + file.getCanonicalPath() + " generated.");
+         } finally {
+            writer.close();
          }
-
-         for (String line : all) {
-            sb.append(indent);
-            sb.append(line).append(",\r\n");
-         }
-
-         sb.append(indent.substring(3));
-         manifestElement.addContent(new CDATA(sb.toString()));
-      }
-   }
-
-   private class WizardBuilder extends BaseVisitor {
-      private Model m_model;
-
-      public Model getModel() {
-         return m_model;
-      }
-
-      @SuppressWarnings({ "unchecked" })
-      private String getRootName(File sampleFile) throws IOException {
-         String xml = Files.forIO().readFrom(sampleFile, "utf-8");
-         Document doc = m_modelMeta.getCodegen(new StringReader(xml));
-         List<Element> children = doc.getRootElement().getChildren();
-
-         if (!children.isEmpty()) {
-            Element first = children.get(0);
-
-            return first.getAttributeValue("name");
-         }
-
-         return null;
-      }
-
-      @Override
-      public void visitWizard(final Wizard wizard) {
-         List<String> names = Transformers.forList().transform(wizard.getModels(), new IBuilder<Model, String>() {
-            @Override
-            public String build(Model model) {
-               return model.getName();
-            }
-         });
-         String name = PropertyProviders.fromConsole().forString("model",
-               "Select model name below or input a sample xml file:", names, null, new IValidator<String>() {
-                  @Override
-                  public boolean validate(String value) {
-                     if (wizard.findModel(value) != null) {
-                        return true;
-                     }
-
-                     if (new File(value).isFile()) {
-                        return true;
-                     }
-
-                     return false;
-                  }
-               });
-         Model model = wizard.findModel(name);
-
-         if (model == null) {
-            try {
-               File sampleFile = new File(name);
-               String rootName = getRootName(sampleFile);
-               String prefix = PropertyProviders.fromConsole().forString("prefix", "Prefix name of target files:",
-                     rootName, new IValidator<String>() {
-                        @Override
-                        public boolean validate(String value) {
-                           if (wizard.findModel(value) != null) {
-                              System.out.println("The prefix has been already used by others.");
-                              return false;
-                           }
-
-                           return true;
-                        }
-                     });
-
-               String defaultPackage = wizard.getPackage() + "." + prefix.substring(prefix.indexOf('-') + 1);
-               String packageName = PropertyProviders.fromConsole().forString("package",
-                     "Package name of generated model:", defaultPackage, null);
-
-               model = new Model(prefix);
-
-               model.setSampleModel(name);
-               model.setPackage(packageName);
-               wizard.addModel(model);
-            } catch (Exception e) {
-               throw new RuntimeException(e);
-            }
-         } else {
-            File file = new File(model.getSampleModel());
-
-            if (!file.exists()) {
-               String sampleModel = PropertyProviders.fromConsole().forString("sample",
-                     String.format("Sample model(%s) does not exist, please input a new one:", model.getSampleModel()),
-                     null, null);
-
-               model.setSampleModel(sampleModel);
-            }
-         }
-
-         m_model = model;
-
-         visitModel(model);
       }
    }
 }

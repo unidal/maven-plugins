@@ -20,6 +20,14 @@
 			</requirements>
 		</component>
 		<component>
+			<role>org.unidal.maven.plugin.wizard.pom.ModelPomBuilder</role>
+			<implementation>org.unidal.maven.plugin.wizard.pom.ModelPomBuilder</implementation>
+		</component>
+		<component>
+			<role>org.unidal.maven.plugin.wizard.meta.ModelWizardBuilder</role>
+			<implementation>org.unidal.maven.plugin.wizard.meta.ModelWizardBuilder</implementation>
+		</component>
+		<component>
 			<role>org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder</role>
 			<implementation>org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder</implementation>
 		</component>

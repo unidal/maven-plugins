@@ -35,6 +35,14 @@ public class TestServer extends JettyServer {
       server.startWebapp();
       server.stopServer();
    }
+   
+   @Override
+   protected void configure(WebAppContext context) throws Exception {
+      System.setProperty("template.html.cache.ttl", "-1"); // disable HTML template cache
+      System.setProperty("devMode", "true");
+
+      super.configure(context);
+   }
 
    @Override
    protected String getContextPath() {

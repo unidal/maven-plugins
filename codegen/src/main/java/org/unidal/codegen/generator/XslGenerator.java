@@ -62,6 +62,8 @@ public class XslGenerator implements Generator {
 
             ctx.closeStorage();
          }
+
+         ctx.log(LogLevel.INFO, ctx.getGeneratedFiles() + " files generated.");
       } catch (Exception e) {
          throw e;
       }

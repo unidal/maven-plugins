@@ -40,22 +40,15 @@
      <xsl:with-param name="template" select="'test/all-tests.xsl'"/>
    </xsl:call-template>
 
-   <xsl:if test="@module='false'">
-      <!-- TestServer class -->
-      <xsl:call-template name="generate-test-java">
-        <xsl:with-param name="package" select="@package"/>
-        <xsl:with-param name="class" select="'TestServer'"/>
-        <xsl:with-param name="template" select="'test/test-server.xsl'"/>
-      </xsl:call-template>
-   </xsl:if>
-
    <!-- ComponentsConfigurator class -->
    <xsl:call-template name="generate-java">
      <xsl:with-param name="package" select="concat(@package, '.build')"/>
      <xsl:with-param name="class" select="'ComponentsConfigurator'"/>
      <xsl:with-param name="template" select="'build/components-configurator.xsl'"/>
    </xsl:call-template>
+</xsl:template>
 
+<xsl:template match="webapp">
    <!-- WebComponentConfigurator class -->
    <xsl:call-template name="generate-java">
      <xsl:with-param name="package" select="concat(@package, '.build')"/>
@@ -65,15 +58,20 @@
    </xsl:call-template>
 
    <xsl:if test="@module='false'">
+      <!-- TestServer class -->
+      <xsl:call-template name="generate-test-java">
+        <xsl:with-param name="package" select="@package"/>
+        <xsl:with-param name="class" select="'TestServer'"/>
+        <xsl:with-param name="template" select="'test/test-server.xsl'"/>
+      </xsl:call-template>
+
       <!-- WEB-INF/web.xml file -->
       <xsl:call-template name="generate-web-resource">
         <xsl:with-param name="file" select="'WEB-INF/web.xml'"/>
         <xsl:with-param name="template" select="'web-inf/web-xml.xsl'"/>
       </xsl:call-template>
    </xsl:if>
-</xsl:template>
 
-<xsl:template match="webapp">
    <xsl:if test="@layout='bootstrap'">
       <!-- NavigationBar class -->
       <xsl:call-template name="generate-java">
@@ -94,6 +92,13 @@
         <xsl:with-param name="template" select="'web-inf/app-tld.xsl'"/>
       </xsl:call-template>
 
+      <xsl:call-template name="copy-resources">
+        <xsl:with-param name="file" select="'bootstrap'"/>
+        <xsl:with-param name="target" select="$webapp-root" />
+      </xsl:call-template>
+   </xsl:if>
+
+   <xsl:if test="@language='thymeleaf'">
       <xsl:call-template name="copy-resources">
         <xsl:with-param name="file" select="'bootstrap'"/>
         <xsl:with-param name="target" select="$webapp-root" />
@@ -157,24 +162,6 @@
      <xsl:with-param name="template" select="concat('page', '/handler.xsl')"/>
    </xsl:call-template>
 
-   <!-- JspFile class -->
-   <xsl:call-template name="generate-java">
-     <xsl:with-param name="class" select="@jsp-file-class"/>
-     <xsl:with-param name="package" select="@package"/>
-     <xsl:with-param name="module" select="../@name"/>
-     <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="template" select="concat('page', '/jsp-file.xsl')"/>
-   </xsl:call-template>
-
-   <!-- JspViewer class -->
-   <xsl:call-template name="generate-java">
-     <xsl:with-param name="class" select="@jsp-viewer-class"/>
-     <xsl:with-param name="package" select="@package"/>
-     <xsl:with-param name="module" select="../@name"/>
-     <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="template" select="concat('page', '/jsp-viewer.xsl')"/>
-   </xsl:call-template>
-
    <!-- Model class -->
    <xsl:call-template name="generate-java">
      <xsl:with-param name="class" select="@model-class"/>
@@ -192,16 +179,36 @@
      <xsl:with-param name="name" select="@name"/>
      <xsl:with-param name="template" select="concat('page', '/payload.xsl')"/>
    </xsl:call-template>
-   
-   <!-- view.jsp -->
-   <xsl:call-template name="generate-resource">
-     <xsl:with-param name="src-dir" select="$webapp-root" />
-     <xsl:with-param name="package" select="@package"/>
-     <xsl:with-param name="module" select="../@name"/>
-     <xsl:with-param name="name" select="@name"/>
-     <xsl:with-param name="file" select="substring(@view,1)"/>
-     <xsl:with-param name="template" select="concat('pres', '/view-jsp.xsl')"/>
-   </xsl:call-template>
+
+   <xsl:if test="//webapp/@language='jsp'">
+	 <!-- JspFile class -->
+	 <xsl:call-template name="generate-java">
+	   <xsl:with-param name="class" select="@jsp-file-class"/>
+	   <xsl:with-param name="package" select="@package"/>
+	   <xsl:with-param name="module" select="../@name"/>
+	   <xsl:with-param name="name" select="@name"/>
+	   <xsl:with-param name="template" select="concat('page', '/jsp-file.xsl')"/>
+	 </xsl:call-template>
+	
+	 <!-- JspViewer class -->
+	 <xsl:call-template name="generate-java">
+	   <xsl:with-param name="class" select="@jsp-viewer-class"/>
+	   <xsl:with-param name="package" select="@package"/>
+	   <xsl:with-param name="module" select="../@name"/>
+	   <xsl:with-param name="name" select="@name"/>
+	   <xsl:with-param name="template" select="concat('page', '/jsp-viewer.xsl')"/>
+	 </xsl:call-template>
+	
+	 <!-- view.jsp -->
+	 <xsl:call-template name="generate-resource">
+	   <xsl:with-param name="src-dir" select="$webapp-root" />
+	   <xsl:with-param name="package" select="@package"/>
+	   <xsl:with-param name="module" select="../@name"/>
+	   <xsl:with-param name="name" select="@name"/>
+	   <xsl:with-param name="file" select="substring(@view,1)"/>
+	   <xsl:with-param name="template" select="concat('pres', '/view-jsp.xsl')"/>
+	 </xsl:call-template>
+   </xsl:if>
 </xsl:template>
 
 <xsl:template name="wizard-policy">

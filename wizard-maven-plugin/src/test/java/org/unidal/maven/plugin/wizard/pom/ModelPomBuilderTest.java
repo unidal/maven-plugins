@@ -1,27 +1,31 @@
-package org.unidal.maven.plugin.wizard;
+package org.unidal.maven.plugin.wizard.pom;
 
 import java.io.File;
 
+import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 
-@RunWith(JUnit4.class)
-public class ModelMojoTest extends ComponentTestCase {
+public class ModelPomBuilderTest extends ComponentTestCase {
    @Test
-   public void testPom() throws Exception {
-      ModelMojo mojo = new ModelMojo();
-      File pomFile = new File(getClass().getResource("model/pom-before.xml").getFile());
-      File expectedPomFile = new File(getClass().getResource("model/pom-after.xml").getFile());
-      String expected = Files.forIO().readFrom(expectedPomFile, "utf-8");
+   public void test() throws Exception {
+      File pomFile = new File(getClass().getResource("model-pom-before.xml").getFile());
+      File expectedPomFile = new File(getClass().getResource("model-pom-after.xml").getFile());
+      ModelPomBuilder builder = lookup(ModelPomBuilder.class);
       File tmpFile = new File("target/pom.xml");
+      Wizard wizard = getWizard();
+      String expected = Files.forIO().readFrom(expectedPomFile, "utf-8");
 
       Files.forDir().copyFile(pomFile, tmpFile);
+      builder.enableLogging(new ConsoleLogger());
+
+      builder.build(tmpFile, wizard);
+      builder.build(tmpFile, wizard);
+      builder.build(tmpFile, wizard);
 
       String actual = Files.forIO().readFrom(tmpFile, "utf-8");
 
@@ -30,7 +34,7 @@ public class ModelMojoTest extends ComponentTestCase {
 
    private Wizard getWizard() {
       Wizard wizard = new Wizard();
-      
+
       wizard.addModel(new Model("first"));
       wizard.addModel(new Model("second"));
       wizard.addModel(new Model("third"));

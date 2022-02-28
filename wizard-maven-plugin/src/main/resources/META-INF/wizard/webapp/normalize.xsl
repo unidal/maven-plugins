@@ -59,6 +59,9 @@
          </xsl:choose>
       </xsl:attribute>
       
+      <xsl:attribute name="layout">
+      	<xsl:value-of select="'bootstrap'"/>
+      </xsl:attribute>
       <xsl:attribute name="app-tld">
          <xsl:choose>
             <xsl:when test="@module='true'">/WEB-INF/<xsl:value-of select="@name"/>.tld</xsl:when>
@@ -69,6 +72,12 @@
          <xsl:choose>
             <xsl:when test="@module='true'">/WEB-INF/tags/<xsl:value-of select="@name"/>.tag</xsl:when>
             <xsl:otherwise>/WEB-INF/tags/layout.tag</xsl:otherwise>
+         </xsl:choose>
+      </xsl:attribute>
+      <xsl:attribute name="layout-html">
+         <xsl:choose>
+            <xsl:when test="@module='true'">/META-INF/resources/html/<xsl:value-of select="@name"/>.html</xsl:when>
+            <xsl:otherwise>/WEB-INF/resources/html/layout.html</xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
 
@@ -120,13 +129,6 @@
          <xsl:choose>
             <xsl:when test="@module-page"><xsl:value-of select="@module-page"/></xsl:when>
             <xsl:otherwise><xsl:value-of select="$capital-name"/>Page</xsl:otherwise>
-         </xsl:choose>
-      </xsl:attribute>
-      
-      <xsl:attribute name="webres">
-         <xsl:choose>
-            <xsl:when test="@webres"><xsl:value-of select="@webres"/></xsl:when>
-            <xsl:otherwise>false</xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
       

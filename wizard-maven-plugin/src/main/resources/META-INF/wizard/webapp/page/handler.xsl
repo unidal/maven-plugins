@@ -9,6 +9,8 @@
 <xsl:variable name="space" select="' '"/>
 <xsl:variable name="empty" select="''"/>
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
+<xsl:variable name="is-jsp" select="//webapp/@language='jsp'"/>
+<xsl:variable name="is-th" select="//webapp/@language='thymeleaf'"/>
 
 <xsl:template match="/">
    <xsl:apply-templates select="/wizard/webapp/module[@name=$module]/page[@name=$name]"/>
@@ -28,12 +30,21 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
-
+<xsl:if test="$is-th">
+import org.unidal.web.mvc.view.HtmlTemplate;
+</xsl:if>
 @Named
 public class <xsl:value-of select="@handler-class"/> implements PageHandler<xsl:call-template name="generic-type"><xsl:with-param name="type" select="@context-class"/></xsl:call-template> {
+<xsl:if test="$is-jsp">
 	@Inject
 	private <xsl:value-of select="@jsp-viewer-class"/> m_jspViewer;
 
+</xsl:if>
+<xsl:if test="$is-th">
+	@Inject
+	private HtmlTemplate m_htmlTemplate;
+
+</xsl:if>
 	@Override
 	@PayloadMeta(<xsl:value-of select="@payload-class"/>.class)
 	@InboundActionMeta(name = "<xsl:value-of select="@path"/>")
@@ -50,7 +61,12 @@ public class <xsl:value-of select="@handler-class"/> implements PageHandler<xsl:
 		model.setPage(<xsl:value-of select="../@page-class"/>.<xsl:value-of select="@upper-name"/>);
 
 		if (!ctx.isProcessStopped()) {
+<xsl:if test="$is-jsp">
 		   m_jspViewer.view(ctx, model);
+</xsl:if>
+<xsl:if test="$is-th">
+		   m_htmlTemplate.render("<xsl:value-of select="../@path"/>/<xsl:value-of select="@path"/>", ctx, model);
+</xsl:if>
 		}
 	}
 }

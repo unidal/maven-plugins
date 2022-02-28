@@ -60,6 +60,25 @@ abstract class AbstractWizardBuilder implements LogEnabled {
       return name;
    }
 
+   protected String getDefaultPackageName(String groupId, String artifactId) {
+      List<String> parts = new ArrayList<String>();
+
+      Splitters.by('.').split(groupId, parts);
+      Splitters.by('-').split(artifactId, parts);
+
+      StringBuilder sb = new StringBuilder(256);
+      Set<String> done = new HashSet<String>();
+
+      for (String part : parts) {
+         if (!done.contains(part)) {
+            sb.append(part).append('.');
+            done.add(part);
+         }
+      }
+
+      return sb.substring(0, sb.length() - 1);
+   }
+
    private String guessPackageName() {
       for (String sourceRoot : m_project.getCompileSourceRoots()) {
          final AtomicReference<String> packageName = new AtomicReference<String>();
@@ -104,13 +123,13 @@ abstract class AbstractWizardBuilder implements LogEnabled {
       return wizard;
    }
 
-   protected void saveManifest(String path) throws IOException {
+   protected void saveManifest() throws IOException {
       File manifestFile = new File(m_project.getBasedir(), "src/main/resources/META-INF/wizard/manifest.xml");
 
       if (!manifestFile.isFile()) {
          Manifest manifest = new Manifest();
 
-         manifest.addFile(new org.unidal.maven.plugin.wizard.model.entity.File().setPath(path));
+         manifest.addFile(new org.unidal.maven.plugin.wizard.model.entity.File().setPath("wizard.xml"));
          Files.forIO().writeTo(manifestFile, manifest.toString());
          m_logger.info("File " + manifestFile.getCanonicalPath() + " created.");
       }

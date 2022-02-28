@@ -39,17 +39,15 @@
             <version>5.0.0</version>
             <executions>
                <execution>
-                  <id>generate dal model files</id>
+                  <id>generate model files</id>
                   <phase>generate-sources</phase>
                   <goals>
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[
-                        ${basedir}/src/main/resources/META-INF/dal/model/first-manifest.xml,
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/first-manifest.xml,
                         ${basedir}/src/main/resources/META-INF/dal/model/second-manifest.xml,
-                        ${basedir}/src/main/resources/META-INF/dal/model/third-manifest.xml,
-                     ]]></manifest>
+                        ${basedir}/src/main/resources/META-INF/dal/model/third-manifest.xml]]></manifest>
                   </configuration>
                </execution>
             </executions>

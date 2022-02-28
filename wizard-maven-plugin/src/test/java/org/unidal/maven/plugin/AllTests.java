@@ -10,7 +10,7 @@ import org.unidal.maven.plugin.wizard.ProjectTest;
 import org.unidal.maven.plugin.wizard.WebAppMojoTest;
 import org.unidal.maven.plugin.wizard.WizardModelTest;
 import org.unidal.maven.plugin.wizard.dom.DocumentBuilderTest;
-import org.unidal.maven.plugin.wizard.webapp.WebAppPomBuilderTest;
+import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilderTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({

@@ -42,7 +42,9 @@ class WebComponentConfigurator extends AbstractResourceConfigurator {
       all.add(A(<xsl:value-of select="@package"/>.<xsl:value-of select="@module-class"/>.class));
 <xsl:for-each select="page">
       all.add(A(<xsl:value-of select="@package"/>.<xsl:value-of select="@handler-class"/>.class));
+      <xsl:if test="//webapp/@language='jsp'">
       all.add(A(<xsl:value-of select="@package"/>.<xsl:value-of select="@jsp-viewer-class"/>.class));
+      </xsl:if>
 </xsl:for-each>
 </xsl:for-each>
       return all;

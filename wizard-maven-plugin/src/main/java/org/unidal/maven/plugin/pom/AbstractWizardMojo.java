@@ -57,7 +57,7 @@ public abstract class AbstractWizardMojo extends AbstractMojo {
    }
 
    protected File getManifestFile() {
-      String manifestXml = String.format("src/main/resources/META-INF/wizard/%s/manifest.xml", getWizardType());
+      String manifestXml = String.format("src/main/resources/META-INF/wizard/manifest.xml");
 
       return new File(m_project.getBasedir(), manifestXml);
    }
