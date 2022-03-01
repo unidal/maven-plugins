@@ -9,7 +9,7 @@
     <entity-ref name="model" type="list" names="models" />
   </entity>
   <entity name="manifest">
-    <entity-ref name="file" type="list" names="files" xml-indent="true" />
+    <entity-ref name="file" type="list" names="files" />
   </entity>
   <entity name="file">
     <attribute name="path" value-type="String" />

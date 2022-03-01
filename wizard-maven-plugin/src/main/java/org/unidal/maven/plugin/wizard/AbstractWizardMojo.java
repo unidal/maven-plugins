@@ -1,4 +1,4 @@
-package org.unidal.maven.plugin.pom;
+package org.unidal.maven.plugin.wizard;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.project.MavenProject;
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.GenerateContextSupport;
+import org.unidal.maven.plugin.pom.MavenContainer;
 
 /**
  * Abstract mojo with container, for inheritance purpose
@@ -67,10 +68,6 @@ public abstract class AbstractWizardMojo extends AbstractMojo {
    }
 
    protected abstract String getWizardType();
-
-   protected boolean isDebug() {
-      return debug;
-   }
 
    protected boolean isVerbose() {
       return verbose;

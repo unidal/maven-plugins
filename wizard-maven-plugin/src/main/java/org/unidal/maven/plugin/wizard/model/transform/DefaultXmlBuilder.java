@@ -19,7 +19,6 @@ import static org.unidal.maven.plugin.wizard.model.Constants.ELEMENT_URL;
 import static org.unidal.maven.plugin.wizard.model.Constants.ELEMENT_USER;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_DATASOURCE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_FILE;
-import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_FILES;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_GROUP;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_JDBC;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_MANIFEST;
@@ -347,13 +346,9 @@ public class DefaultXmlBuilder implements IVisitor {
       startTag(ENTITY_MANIFEST, null);
 
       if (!manifest.getFiles().isEmpty()) {
-         startTag(ENTITY_FILES);
-
          for (File file : manifest.getFiles()) {
             file.accept(m_visitor);
          }
-
-         endTag(ENTITY_FILES);
       }
 
       endTag(ENTITY_MANIFEST);

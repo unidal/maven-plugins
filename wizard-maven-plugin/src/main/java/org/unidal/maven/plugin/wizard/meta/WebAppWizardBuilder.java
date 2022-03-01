@@ -40,7 +40,7 @@ public class WebAppWizardBuilder extends AbstractWizardBuilder {
          }
 
          ConsoleProvider console = PropertyProviders.fromConsole();
-         String pageName = console.forString("page", "Select page below or new one:", pageNames, null, null);
+         String pageName = console.forString("web.page", "Select page below or new one:", pageNames, null, null);
          Page page = module.findPage(pageName);
 
          if (page == null) {
@@ -73,7 +73,7 @@ public class WebAppWizardBuilder extends AbstractWizardBuilder {
          }
 
          ConsoleProvider console = PropertyProviders.fromConsole();
-         String moduleName = console.forString("module", "Select module below or new name:", moduleNames, null, null);
+         String moduleName = console.forString("web.module", "Select module below or new name:", moduleNames, null, null);
          Module module = webapp.findModule(moduleName);
 
          if (module == null) { // new module
@@ -104,7 +104,7 @@ public class WebAppWizardBuilder extends AbstractWizardBuilder {
             wizard.setWebapp(webapp);
 
             if (webapp.getModule() == null) {
-               boolean module = PropertyProviders.fromConsole().forBoolean("module", "Is it a web module?", true);
+               boolean module = PropertyProviders.fromConsole().forBoolean("web.module", "Is it a web module?", true);
 
                webapp.setModule(module);
             }
@@ -115,8 +115,8 @@ public class WebAppWizardBuilder extends AbstractWizardBuilder {
 
             if (!webapp.isModule()) {
                String defaultName = packageName.substring(packageName.lastIndexOf('.') + 1);
-               String name = console.forString("name", "Webapp name:", defaultName, null);
-               String language = console.forString("language", "Which template language?",
+               String name = console.forString("web.name", "Webapp name:", defaultName, null);
+               String language = console.forString("web.template", "Which template language?",
                      Arrays.asList("Thymeleaf", "JSP"), "Thymeleaf", null);
 
                webapp.setName(name);

@@ -59,7 +59,7 @@ public class ModelWizardBuilder extends AbstractWizardBuilder {
 
          if (model.getName() == null) {
             String defaultName = getRootElementName(model.getSampleModel());
-            String name = console.forString("name", "Prefix name of target files:", defaultName,
+            String name = console.forString("model.name", "Prefix name of target files:", defaultName,
                   new IValidator<String>() {
                      @Override
                      public boolean validate(String name) {
@@ -77,7 +77,7 @@ public class ModelWizardBuilder extends AbstractWizardBuilder {
 
          if (model.getPackage() == null) {
             String defaultName = getDefaultPackageName(m_wizard.getPackage(), model.getName());
-            String packageName = console.forString("package", "Package name of generated model:", defaultName, null);
+            String packageName = console.forString("model.package", "Package name of generated model:", defaultName, null);
 
             model.setPackage(packageName);
          }
@@ -94,7 +94,7 @@ public class ModelWizardBuilder extends AbstractWizardBuilder {
          }
 
          ConsoleProvider console = PropertyProviders.fromConsole();
-         String name = console.forString("model", "Select model name below or input a sample xml file:", names, null,
+         String name = console.forString("model.sample", "Select model name below or input a sample xml file:", names, null,
                new IValidator<String>() {
                   @Override
                   public boolean validate(String name) {

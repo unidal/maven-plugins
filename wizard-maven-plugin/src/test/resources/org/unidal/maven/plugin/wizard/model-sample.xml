@@ -1,0 +1,30 @@
+<scenarios>
+   <scenario name="transaction" part="type">
+      <query id="data" type="report" name="transaction" window-time="${time}" window-size="${duration}">
+         <conditions>
+            <condition attribute="domain" op="eq" value="${domain}" case-sensitive="true"/>
+            <condition attribute="machine" op="eq" value="${machine}" case-sensitive="true" optional="true"/>
+            <condition attribute="type" op="contains" value="${keyword}" case-sensitive="false" optional="true"/>
+         </conditions>
+         <fields>
+            <field name="domain" />
+            <field name="time" />
+            <field name="type" />
+            <field name="total" />
+            <field name="failure" />
+            <field name="min" />
+            <field name="max" />
+            <field name="duration" />
+            <field name="duration2" />
+            <field name="p95" />
+            <field name="p999"/>
+            <field name="links"/>
+         </fields>
+         <configure>
+            <unit>1m</unit>
+         </configure>
+      </query>
+      <query/>
+   </scenario>
+   <scenario/>
+</scenarios>

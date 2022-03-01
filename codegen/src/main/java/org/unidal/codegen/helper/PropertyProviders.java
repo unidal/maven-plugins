@@ -35,14 +35,20 @@ public class PropertyProviders {
       public String forString(String name, String prompt, List<String> availableValues, String defaultValue,
             IValidator<String> validator) {
          String value = getString(name, prompt, availableValues, defaultValue);
+         int maxTimes = 5;
 
          if (validator != null) {
-            while (!validator.validate(value)) {
+            while (maxTimes > 0 && !validator.validate(value)) {
                value = getString(name, prompt, availableValues, defaultValue);
+               maxTimes--;
             }
          }
 
-         return value;
+         if (maxTimes <= 0) {
+            return defaultValue;
+         } else {
+            return value;
+         }
       }
 
       private String getString(String name, String prompt, String defaultValue) {
@@ -81,7 +87,7 @@ public class PropertyProviders {
             } else {
                System.out.print(sb.toString());
             }
-            
+
             System.out.flush();
 
             try {

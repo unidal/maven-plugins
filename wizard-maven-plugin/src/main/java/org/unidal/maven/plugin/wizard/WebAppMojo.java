@@ -4,7 +4,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.unidal.codegen.generator.Generator;
-import org.unidal.maven.plugin.pom.AbstractWizardMojo;
 import org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder;

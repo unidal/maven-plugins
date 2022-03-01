@@ -2,46 +2,32 @@ package org.unidal.maven.plugin.wizard;
 
 import java.io.File;
 
-import org.apache.maven.project.MavenProject;
+import org.junit.Assert;
 import org.junit.Test;
-import org.unidal.helper.Files;
-import org.unidal.helper.Reflects;
-import org.unidal.maven.plugin.pom.AbstractWizardMojo;
-import org.unidal.maven.plugin.pom.MavenContainer;
+import org.unidal.codegen.generator.Generator;
+import org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder;
+import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder;
 
-public class WebAppMojoTest extends AbstractMojoTest {
+public class WebAppMojoTest extends AbstractWizardMojoTest {
    @Test
-   public void test() throws Exception {
-      WebAppMojo mojo = new WebAppMojo();
-      MavenProject project = new MavenProject();
-      File pomFile = new File(getClass().getResource("pom-before.xml").getFile());
-      File tmpFile = new File("target/pom-single.xml");
+   public void testMojo() throws Exception {
+      AbstractWizardMojo mojo = WizardMojoBuilder.builder(this, WebAppMojo.class) //
+            .pom("webapp-pom.xml") //
+            .component("m_wizardBuilder", WebAppWizardBuilder.class) //
+            .component("m_pomBuilder", WebAppPomBuilder.class) //
+            .component("m_generator", Generator.class, "wizard-webapp") //
+            .build();
+      File baseDir = mojo.getProject().getBasedir();
 
-      Files.forDir().copyFile(pomFile, tmpFile);
-
-      project.setFile(tmpFile);
-
-      setField(mojo, AbstractWizardMojo.class, "m_project", project);
-      setField(mojo, AbstractWizardMojo.class, "m_container", lookup(MavenContainer.class));
-      setField(mojo, AbstractWizardMojo.class, "debug", true);
-      setField(mojo, AbstractWizardMojo.class, "verbose", false);
-
-      System.setProperty("war", "true");
-      System.setProperty("module", "ui");
-      System.setProperty("page", "home");
-      System.setProperty("template", "default");
+      System.setProperty("project.package", "org.unidal.webapp");
+      System.setProperty("web.module", "true");
+      System.setProperty("web.name", "cat");
+      System.setProperty("web.template", "thymeleaf");
+      System.setProperty("web.module", "ui");
+      System.setProperty("web.page", "home");
 
       mojo.execute();
-   }
 
-   @Test
-   public void testMojo() {
-      MavenProject project = MavenProjectBuilder.newBuilder().build();
-      
-      
-   }
-
-   private void setField(WebAppMojo mojo, Class<?> clazz, String field, Object value) {
-      Reflects.forField().setDeclaredFieldValue(clazz, field, mojo, value);
+      Assert.assertEquals(true, new File(baseDir, "pom.xml").exists());
    }
 }

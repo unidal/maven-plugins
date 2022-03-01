@@ -20,7 +20,6 @@ import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_PAGE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_TABLE;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_WEBAPP;
 import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_WIZARD;
-import static org.unidal.maven.plugin.wizard.model.Constants.ENTITY_FILES;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -267,9 +266,7 @@ public class DefaultSaxParser extends DefaultHandler {
    }
 
    private void parseForManifest(Manifest parentObj, String parentTag, String qName, Attributes attributes) throws SAXException {
-      if (ENTITY_FILES.equals(qName)) {
-         m_objs.push(parentObj);
-      } else if (ENTITY_FILE.equals(qName)) {
+      if (ENTITY_FILE.equals(qName)) {
          File file = m_maker.buildFile(attributes);
 
          m_linker.onFile(parentObj, file);

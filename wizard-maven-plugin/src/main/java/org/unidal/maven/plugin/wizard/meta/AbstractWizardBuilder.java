@@ -55,7 +55,7 @@ abstract class AbstractWizardBuilder implements LogEnabled {
       }
 
       ConsoleProvider console = PropertyProviders.fromConsole();
-      String name = console.forString("package", "Please input project-level package name:", defaultName, null);
+      String name = console.forString("project.package", "Please input project-level package name:", defaultName, null);
 
       return name;
    }

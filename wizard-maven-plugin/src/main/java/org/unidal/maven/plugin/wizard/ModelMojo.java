@@ -13,7 +13,6 @@ import org.jdom.Document;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.unidal.codegen.meta.ModelMeta;
-import org.unidal.maven.plugin.pom.AbstractWizardMojo;
 import org.unidal.maven.plugin.wizard.meta.ModelWizardBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
@@ -26,15 +25,6 @@ import org.unidal.maven.plugin.wizard.pom.ModelPomBuilder;
  * @author Frankie Wu
  */
 public class ModelMojo extends AbstractWizardMojo {
-   /**
-    * Model meta component
-    * 
-    * @component
-    * @required
-    * @readonly
-    */
-   private ModelMeta m_modelMeta;
-
    /**
     * Wizard builder component
     * 
@@ -52,6 +42,15 @@ public class ModelMojo extends AbstractWizardMojo {
     * @readonly
     */
    private ModelPomBuilder m_pomBuilder;
+
+   /**
+    * Model meta component
+    * 
+    * @component
+    * @required
+    * @readonly
+    */
+   private ModelMeta m_modelMeta;
 
    /**
     * @parameter expression="${outputDir}" default-value="${basedir}/src/main/resources/META-INF/dal/model"
