@@ -28,6 +28,14 @@
 			<implementation>org.unidal.maven.plugin.wizard.meta.ModelWizardBuilder</implementation>
 		</component>
 		<component>
+			<role>org.unidal.maven.plugin.wizard.pom.JdbcPomBuilder</role>
+			<implementation>org.unidal.maven.plugin.wizard.pom.JdbcPomBuilder</implementation>
+		</component>
+		<component>
+			<role>org.unidal.maven.plugin.wizard.meta.JdbcWizardBuilder</role>
+			<implementation>org.unidal.maven.plugin.wizard.meta.JdbcWizardBuilder</implementation>
+		</component>
+		<component>
 			<role>org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder</role>
 			<implementation>org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder</implementation>
 		</component>

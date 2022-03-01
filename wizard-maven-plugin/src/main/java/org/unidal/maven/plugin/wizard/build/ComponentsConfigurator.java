@@ -8,8 +8,10 @@ import org.unidal.lookup.configuration.Component;
 import org.unidal.maven.plugin.pom.MavenContainer;
 import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.pom.VersionMapping;
+import org.unidal.maven.plugin.wizard.meta.JdbcWizardBuilder;
 import org.unidal.maven.plugin.wizard.meta.ModelWizardBuilder;
 import org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder;
+import org.unidal.maven.plugin.wizard.pom.JdbcPomBuilder;
 import org.unidal.maven.plugin.wizard.pom.ModelPomBuilder;
 import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder;
 
@@ -28,6 +30,9 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
 
       all.add(A(ModelPomBuilder.class));
       all.add(A(ModelWizardBuilder.class));
+      
+      all.add(A(JdbcPomBuilder.class));
+      all.add(A(JdbcWizardBuilder.class));
 
       all.add(A(WebAppPomBuilder.class));
       all.add(A(WebAppWizardBuilder.class));

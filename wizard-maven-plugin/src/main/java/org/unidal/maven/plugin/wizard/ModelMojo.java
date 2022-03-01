@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLException;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -69,7 +68,7 @@ public class ModelMojo extends AbstractWizardMojo {
          MetaGenerator generator = new MetaGenerator();
 
          for (Model model : wizard.getModels()) {
-            generator.generateModel(model);
+            generator.generate(model);
          }
 
          // modify the pom.xml
@@ -86,30 +85,36 @@ public class ModelMojo extends AbstractWizardMojo {
    }
 
    private class MetaGenerator {
-      public void generateModel(Model model) throws SQLException, IOException {
-         String name = model.getName();
+      public void generate(Model model) throws IOException {
+         generateCodegenFile(model);
+         generateModelFile(model);
+         generateManifestFile(model);
+      }
 
-         // codegen.xml file
+      private void generateCodegenFile(Model model) throws IOException {
          File sampleFile = new File(model.getSampleModel());
-         Document codegenDoc = m_modelMeta.getCodegen(new FileReader(sampleFile));
-         File outFile = new File(outputDir, name + "-codegen.xml");
+         Document doc = m_modelMeta.getCodegen(new FileReader(sampleFile));
+         File file = new File(outputDir, model.getName() + "-codegen.xml");
 
-         saveDocument(codegenDoc, outFile);
+         saveDocument(doc, file);
+      }
 
-         // model.xml file
-         File modelFile = new File(outputDir, name + "-model.xml");
-
-         if (!modelFile.exists()) {
-            Document modelDoc = m_modelMeta.getModel(model.getPackage());
-
-            saveDocument(modelDoc, modelFile);
-         }
-
-         // manifest.xml file
+      private void generateManifestFile(Model model) throws IOException {
+         String name = model.getName();
          File manifestFile = new File(outputDir, name + "-manifest.xml");
-         Document manifestDoc = m_modelMeta.getManifest(outFile.getName(), modelFile.getName());
+         Document manifestDoc = m_modelMeta.getManifest(name + "-codegen.xml", name + "-model.xml");
 
          saveDocument(manifestDoc, manifestFile);
+      }
+
+      private void generateModelFile(Model model) throws IOException {
+         File file = new File(outputDir, model.getName() + "-model.xml");
+
+         if (!file.exists()) {
+            Document doc = m_modelMeta.getModel(model.getPackage());
+
+            saveDocument(doc, file);
+         }
       }
 
       private void saveDocument(Document codegen, File file) throws IOException {

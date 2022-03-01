@@ -6,9 +6,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Test;
 
-public class ProjectTest {
+public class ProjectMojoTest {
    @Test
-   public void testProject() throws MojoExecutionException, MojoFailureException {
+   public void test() throws MojoExecutionException, MojoFailureException {
       ProjectMojo mojo = new ProjectMojo();
 
       mojo.groupId = "org.unidal.test";

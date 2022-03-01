@@ -8,7 +8,7 @@ import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
 
 public class WizardModelTest {
    @Test
-   public void testModel() throws Exception {
+   public void test() throws Exception {
       String expected = Files.forIO().readFrom(getClass().getResourceAsStream("wizard.xml"), "utf-8");
       Wizard wizard = DefaultSaxParser.parse(expected);
 

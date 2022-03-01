@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import org.unidal.codegen.generator.wizard.AllWizardGeneratorTests;
 import org.unidal.maven.plugin.wizard.JdbcMojoTest;
 import org.unidal.maven.plugin.wizard.ModelMojoTest;
-import org.unidal.maven.plugin.wizard.ProjectTest;
+import org.unidal.maven.plugin.wizard.ProjectMojoTest;
 import org.unidal.maven.plugin.wizard.WebAppMojoTest;
 import org.unidal.maven.plugin.wizard.WizardModelTest;
 import org.unidal.maven.plugin.wizard.dom.DocumentBuilderTest;
@@ -17,7 +17,7 @@ import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilderTest;
 
 DocumentBuilderTest.class,
 
-ProjectTest.class,
+ProjectMojoTest.class,
 
 WizardModelTest.class,
 

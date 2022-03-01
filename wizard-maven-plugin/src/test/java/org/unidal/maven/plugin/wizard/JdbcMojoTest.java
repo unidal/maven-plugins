@@ -4,44 +4,31 @@ import java.io.File;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.unidal.helper.Files;
-import org.unidal.lookup.ComponentTestCase;
-import org.unidal.maven.plugin.wizard.model.entity.Group;
-import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
-import org.unidal.maven.plugin.wizard.model.entity.Wizard;
+import org.unidal.codegen.generator.Generator;
+import org.unidal.codegen.meta.TableMeta;
+import org.unidal.maven.plugin.wizard.meta.JdbcWizardBuilder;
+import org.unidal.maven.plugin.wizard.pom.JdbcPomBuilder;
 
-@RunWith(JUnit4.class)
-public class JdbcMojoTest extends ComponentTestCase {
+public class JdbcMojoTest extends AbstractWizardMojoTest {
    @Test
-   public void testPom() throws Exception {
-      JdbcMojo mojo = new JdbcMojo();
-      File pomFile = new File(getClass().getResource("jdbc/pom-before.xml").getFile());
-      File expectedPomFile = new File(getClass().getResource("jdbc/pom-after.xml").getFile());
-      String expected = Files.forIO().readFrom(expectedPomFile, "utf-8");
-      File tmpFile = new File("target/pom.xml");
+   public void testMojo() throws Exception {
+      AbstractWizardMojo mojo = WizardMojoBuilder.builder(this, JdbcMojo.class) //
+            .pom("jdbc-pom.xml") //
+            .component("m_wizardBuilder", JdbcWizardBuilder.class) //
+            .component("m_pomBuilder", JdbcPomBuilder.class) //
+            .component("m_tableMeta", TableMeta.class) //
+            .component("m_generator", Generator.class, "wizard-jdbc") //
+            .build();
+      File baseDir = mojo.getProject().getBasedir();
 
-      Files.forDir().copyFile(pomFile, tmpFile);
+      System.setProperty("project.package", "org.unidal.model");
+      System.setProperty("model.sample", getClass().getResource("model-sample.xml").getPath());
+      System.setProperty("model.package", "org.unidal.demo");
+      System.setProperty("model.name", "demo");
+      setField(mojo, "outputDir", new File(baseDir, "src/main/resources/META-INF/dal/model").toString());
+      
+      mojo.execute();
 
-      mojo.modifyPomFile(tmpFile, getWizard(), getJdbc());
-      mojo.modifyPomFile(tmpFile, getWizard(), getJdbc());
-
-      String actual = Files.forIO().readFrom(tmpFile, "utf-8");
-
-      Assert.assertEquals(expected.replaceAll("\r", ""), actual.replaceAll("\r", ""));
-   }
-
-   private Jdbc getJdbc() {
-      Jdbc jdbc = new Jdbc().setName("jdbc");
-
-      jdbc.addGroup(new Group("first"));
-      jdbc.addGroup(new Group("second"));
-      jdbc.addGroup(new Group("third"));
-      return jdbc;
-   }
-
-   private Wizard getWizard() {
-      return new Wizard().setPackage("org.unidal.test");
+      Assert.assertEquals(true, new File(baseDir, "pom.xml").exists());
    }
 }

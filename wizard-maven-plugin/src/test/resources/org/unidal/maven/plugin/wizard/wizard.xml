@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat">
-   <webapp package="com.dianping.cat" name="cat" module="false" jstl="true" layout="bootstrap" plugin-management="true">
+   <webapp package="com.dianping.cat" name="cat" module="false">
       <module name="dashboard" path="d" default="true">
-         <page name="home" title="Home" default="true" package="com.dianping.cat.page.home">
+         <page name="home" default="true" package="com.dianping.cat.page.home" title="Home">
             <description>Home Page of Garden</description>
          </page>
-         <page name="trend" title="Trend" path="trend" standalone="true" view="trend.jsp">
+         <page name="trend" path="trend" title="Trend" standalone="true" view="trend.jsp">
             <description>Technical Trends</description>
          </page>
       </module>
       <module name="toolkit" path="t">
-         <page name="query" title="DB Query" default="true">
+         <page name="query" default="true" title="DB Query">
             <description>Database Query Toolkit</description>
          </page>
       </module>
       <module name="ui" path="ui">
-         <page name="home" title="Home" default="true" path="home" standalone="true">
+         <page name="home" path="home" default="true" title="Home" standalone="true">
             <description>Home</description>
          </page>
       </module>
       <module name="report" path="r" default="true" package="com.dianping.cat.matrix">
-         <page name="matrix" title="Matrix" default="true" path="matrix" standalone="false">
+         <page name="matrix" path="matrix" default="true" title="Matrix" standalone="false">
             <description>Matrix</description>
          </page>
       </module>
