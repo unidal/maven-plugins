@@ -9,6 +9,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.unidal.lookup.annotation.Named;
 import org.unidal.maven.plugin.pom.PomDelegate;
+import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 
@@ -49,6 +50,8 @@ public class JdbcPomBuilder extends AbstractPomBuilder {
       Element configuration = m_pom.findOrCreateChild(generate, "configuration");
       Element manifestElement = m_pom.findOrCreateChild(configuration, "manifest");
 
+      // for pom.xml rewrite
+      m_pom.setModified(true);
       manifestElement.setContent(new CDATA(getManifestFiles(wizard)));
    }
 
@@ -59,14 +62,16 @@ public class JdbcPomBuilder extends AbstractPomBuilder {
       boolean first = true;
 
       for (Jdbc jdbc : wizard.getJdbcs()) {
-         if (first) {
-            first = false;
-         } else {
-            sb.append(",");
-         }
+         for (Group group : jdbc.getGroups()) {
+            if (first) {
+               first = false;
+            } else {
+               sb.append(",");
+            }
 
-         sb.append("\r\n");
-         sb.append(indent).append(prefix).append(jdbc.getName()).append("-manifest.xml");
+            sb.append("\r\n");
+            sb.append(indent).append(prefix).append(group.getName()).append("-manifest.xml");
+         }
       }
 
       return sb.toString();

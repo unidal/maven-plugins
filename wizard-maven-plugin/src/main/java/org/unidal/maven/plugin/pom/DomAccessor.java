@@ -203,7 +203,7 @@ public class DomAccessor {
       return result;
    }
 
-   protected void setModified(boolean modified) {
+   public void setModified(boolean modified) {
       m_modifed = modified;
    }
 

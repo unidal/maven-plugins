@@ -9,7 +9,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>org.unidal.maven.plugins</groupId>
    <artifactId>default</artifactId>
-   <version>5.0.0</version>
+   <version>6.0.0</version>
    <name>Maven Plugins Parent POM</name>
    <packaging>pom</packaging>
    <modules>
@@ -30,7 +30,7 @@
       <foundation.version>6.0.0</foundation.version>
       <maven-core.version>3.2.1</maven-core.version>
       <jdom.version>1.1</jdom.version>
-      <mysql.version>5.1.46</mysql.version>
+      <mysql.version>8.0.28</mysql.version>
       <junit.version>4.12</junit.version>
       <mockito.version>1.9.0</mockito.version>
       <plexus-archiver.version>2.1.1</plexus-archiver.version>
@@ -97,7 +97,7 @@
             <plugin>
                <groupId>org.unidal.maven.plugins</groupId>
                <artifactId>codegen-maven-plugin</artifactId>
-               <version>5.0.0</version>
+               <version>6.0.0</version>
             </plugin>
          </plugins>
       </pluginManagement>

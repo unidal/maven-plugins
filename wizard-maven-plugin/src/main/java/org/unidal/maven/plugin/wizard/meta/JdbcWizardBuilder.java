@@ -163,7 +163,7 @@ public class JdbcWizardBuilder extends AbstractWizardBuilder {
          }
 
          System.out.println("Existing tables: " + existingNames);
-         console.forString("table", "Select table name below, or '.' for end:", availableNames, null,
+         console.forString("table", "Select table name below, or '.' for end: ", availableNames, null,
                new IValidator<String>() {
                   @Override
                   public boolean validate(String name) {
