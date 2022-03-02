@@ -21,11 +21,17 @@ public class JdbcMojoTest extends AbstractWizardMojoTest {
             .build();
       File baseDir = mojo.getProject().getBasedir();
 
-      System.setProperty("project.package", "org.unidal.model");
-      System.setProperty("model.sample", getClass().getResource("model-sample.xml").getPath());
-      System.setProperty("model.package", "org.unidal.demo");
-      System.setProperty("model.name", "demo");
-      setField(mojo, "outputDir", new File(baseDir, "src/main/resources/META-INF/dal/model").toString());
+      System.setProperty("project.package", "org.unidal.jdbc");
+      System.setProperty("datasource", "test");
+      System.setProperty("jdbc.package", "org.unidal.jdbc.dal");
+      System.setProperty("driver", "com.mysql.cj.jdbc.Driver");
+      System.setProperty("url", "jdbc:mysql://localhost:3306/test");
+      System.setProperty("user", "user");
+      System.setProperty("password", "password");
+      System.setProperty("properties", "useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=true");
+      System.setProperty("group", "group1");
+      System.setProperty("table", "table1");
+      setField(mojo, "outputDir", new File(baseDir, "src/main/resources/META-INF/dal/jdbc").toString());
       
       mojo.execute();
 

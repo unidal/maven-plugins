@@ -125,7 +125,7 @@ public class JdbcWizardBuilder extends AbstractWizardBuilder {
          ConsoleProvider console = PropertyProviders.fromConsole();
 
          ds.setDriver(console.forString("driver", "JDBC driver:", "com.mysql.cj.jdbc.Driver", null));
-         ds.setUrl(console.forString("url", "JDBC URL:", "jdbc:mysql://localhost:3306/" + ds.getName(), null));
+         ds.setUrl(console.forString("url", "JDBC URL:", "jdbc:mysql://localhost:3306/" + m_jdbc.getName(), null));
          ds.setUser(console.forString("user", "User:", null, null));
 
          String password = console.forString("password", "Password:(use '<none>' if no password)", null, null);
@@ -143,8 +143,6 @@ public class JdbcWizardBuilder extends AbstractWizardBuilder {
          String defaultProperties = "useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=true";
 
          ds.setProperties(console.forString("properties", "Connection properties:", defaultProperties, null));
-
-         m_conn = setupConnection(ds);
       }
 
       @Override
@@ -165,11 +163,11 @@ public class JdbcWizardBuilder extends AbstractWizardBuilder {
          }
 
          System.out.println("Existing tables: " + existingNames);
-         console.forString("table", "Select table name below, or '<end>' to end:", availableNames, null,
+         console.forString("table", "Select table name below, or '.' for end:", availableNames, null,
                new IValidator<String>() {
                   @Override
                   public boolean validate(String name) {
-                     if ("<end>".equals(name)) {
+                     if (".".equals(name)) {
                         return true;
                      } else if (availableNames.contains(name)) {
                         existingNames.add(name);
@@ -189,14 +187,22 @@ public class JdbcWizardBuilder extends AbstractWizardBuilder {
 
          ConsoleProvider console = PropertyProviders.fromConsole();
 
+         if (jdbc.getPackage() == null) {
+            String packageName = console.forString("jdbc.package", "Jdbc Package:", m_wizard.getPackage() + ".dal",
+                  null);
+
+            jdbc.setPackage(packageName);
+         }
+
          // setup data source
-         String packageName = console.forString("jdbc.package", "Jdbc Package:", m_wizard.getPackage() + ".dal", null);
+         if (jdbc.getDatasource() == null) {
+            jdbc.setDatasource(new Datasource());
 
-         jdbc.setPackage(packageName);
-         jdbc.setDatasource(new Datasource());
+            visitDatasource(jdbc.getDatasource());
+         }
 
-         visitDatasource(jdbc.getDatasource());
-
+         m_conn = setupConnection(jdbc.getDatasource());
+         
          // for group
          List<String> names = new ArrayList<String>();
 

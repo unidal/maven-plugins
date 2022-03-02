@@ -9,7 +9,6 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.project.MavenProject;
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.GenerateContextSupport;
-import org.unidal.maven.plugin.pom.MavenContainer;
 
 /**
  * Abstract mojo with container, for inheritance purpose
@@ -25,15 +24,6 @@ public abstract class AbstractWizardMojo extends AbstractMojo {
    private MavenProject m_project;
 
    /**
-    * Maven Component Container
-    * 
-    * @component
-    * @required
-    * @readonly
-    */
-   private MavenContainer m_container;
-
-   /**
     * Verbose information or not
     * 
     * @parameter expression="${verbose}" default-value="false"
@@ -47,14 +37,10 @@ public abstract class AbstractWizardMojo extends AbstractMojo {
     */
    private boolean debug;
 
-   protected GenerateContext createGenerateContext() throws IOException {
-      String resourceBase = String.format("/META-INF/wizard/%s", getWizardType());
+   protected GenerateContext createContext() throws IOException {
+      String resourceBase = String.format("/META-INF/wizard/%s/xsl", getWizardType());
 
       return new WizardGenerateContext(resourceBase, m_project.getBasedir(), getManifestFile());
-   }
-
-   protected MavenContainer getContainer() {
-      return m_container;
    }
 
    protected File getManifestFile() {
@@ -68,18 +54,6 @@ public abstract class AbstractWizardMojo extends AbstractMojo {
    }
 
    protected abstract String getWizardType();
-
-   protected boolean isVerbose() {
-      return verbose;
-   }
-
-   protected <T> T lookup(Class<T> role) {
-      return m_container.lookup(role);
-   }
-
-   protected <T> T lookup(Class<T> role, String roleHint) {
-      return m_container.lookup(role, roleHint);
-   }
 
    protected class WizardGenerateContext extends GenerateContextSupport {
       private final File m_manifestXml;

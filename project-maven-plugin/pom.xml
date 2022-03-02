@@ -22,10 +22,6 @@
          <artifactId>plexus-archiver</artifactId>
       </dependency>
       <dependency>
-         <groupId>jdom</groupId>
-         <artifactId>jdom</artifactId>
-      </dependency>
-      <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>

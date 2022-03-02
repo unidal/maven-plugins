@@ -109,57 +109,5 @@
 				</requirement>
 			</requirements>
 		</component>
-		<component>
-			<role>org.unidal.codegen.aggregator.XmlAggregator</role>
-			<role-hint>wizard-webapp</role-hint>
-			<implementation>org.unidal.codegen.aggregator.DefaultXmlAggregator</implementation>
-			<configuration>
-				<structureFile>META-INF/wizard/webapp/structure.xml</structureFile>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.codegen.generator.Generator</role>
-			<role-hint>wizard-webapp</role-hint>
-			<implementation>org.unidal.codegen.generator.XslGenerator</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>org.unidal.codegen.transformer.XslTransformer</role>
-				</requirement>
-				<requirement>
-					<role>org.unidal.codegen.manifest.ManifestParser</role>
-				</requirement>
-				<requirement>
-					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
-					<role-hint>wizard-webapp</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>org.unidal.codegen.aggregator.XmlAggregator</role>
-			<role-hint>wizard-jdbc</role-hint>
-			<implementation>org.unidal.codegen.aggregator.DefaultXmlAggregator</implementation>
-			<configuration>
-				<structureFile>META-INF/wizard/jdbc/structure.xml</structureFile>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.codegen.generator.Generator</role>
-			<role-hint>wizard-jdbc</role-hint>
-			<implementation>org.unidal.codegen.generator.XslGenerator</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>org.unidal.codegen.transformer.XslTransformer</role>
-				</requirement>
-				<requirement>
-					<role>org.unidal.codegen.manifest.ManifestParser</role>
-				</requirement>
-				<requirement>
-					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
-					<role-hint>wizard-jdbc</role-hint>
-				</requirement>
-			</requirements>
-		</component>
 	</components>
 </plexus>

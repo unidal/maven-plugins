@@ -53,7 +53,7 @@ public class WebAppMojo extends AbstractWizardMojo {
          Wizard wizard = m_wizardBuilder.build(project);
 
          // generate web scaffold files
-         m_generator.generate(createGenerateContext());
+         m_generator.generate(createContext());
 
          // modify the pom.xml
          m_pomBuilder.build(project.getFile(), wizard);

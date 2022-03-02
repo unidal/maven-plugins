@@ -83,7 +83,7 @@ public class PropertyProviders {
                   System.out.println((count++) + ": " + availableValue);
                }
 
-               System.out.print("Please select:");
+               System.out.print("Please select: ");
             } else {
                System.out.print(sb.toString());
             }

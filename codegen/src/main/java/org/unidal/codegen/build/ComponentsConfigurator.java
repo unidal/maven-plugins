@@ -53,17 +53,6 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
             .req(XslTransformer.class, ManifestParser.class) //
             .req(XmlAggregator.class, "dal-model"));
 
-      all.add(C(XmlAggregator.class, "wizard-webapp", DefaultXmlAggregator.class) //
-            .config(E("structureFile").value("META-INF/wizard/webapp/structure.xml")));
-      all.add(C(Generator.class, "wizard-webapp", XslGenerator.class).is(PER_LOOKUP) //
-            .req(XslTransformer.class, ManifestParser.class) //
-            .req(XmlAggregator.class, "wizard-webapp"));
-
-      all.add(C(XmlAggregator.class, "wizard-jdbc", DefaultXmlAggregator.class) //
-            .config(E("structureFile").value("META-INF/wizard/jdbc/structure.xml")));
-      all.add(C(Generator.class, "wizard-jdbc", XslGenerator.class).is(PER_LOOKUP) //
-            .req(XslTransformer.class, ManifestParser.class) //
-            .req(XmlAggregator.class, "wizard-jdbc"));
 
       return all;
    }

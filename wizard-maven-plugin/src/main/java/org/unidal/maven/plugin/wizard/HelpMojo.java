@@ -11,8 +11,6 @@ import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.Parameter;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.unidal.helper.Splitters;
-import org.unidal.maven.plugin.pom.MavenContainer;
-import org.unidal.maven.plugin.pom.VersionMapping;
 
 /**
  * Describe all mojos in the plugin.
@@ -22,15 +20,6 @@ import org.unidal.maven.plugin.pom.VersionMapping;
  * @author Frankie Wu
  */
 public class HelpMojo extends AbstractMojo {
-   /**
-    * Maven Component Container
-    * 
-    * @component
-    * @required
-    * @readonly
-    */
-   protected MavenContainer m_container;
-
    /**
     * Specify one or many goals separated by comma(',').
     * 
@@ -73,8 +62,6 @@ public class HelpMojo extends AbstractMojo {
 
    @Override
    public void execute() throws MojoExecutionException, MojoFailureException {
-      m_container.lookup(VersionMapping.class);
-      
       m_pd = (PluginDescriptor) super.getPluginContext().get("pluginDescriptor");
 
       if (goal != null && goal.length() > 0) {

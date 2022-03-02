@@ -55,7 +55,7 @@
             <version>${maven-core.version}</version>
          </dependency>
          <dependency>
-            <groupId>jdom</groupId>
+            <groupId>org.jdom</groupId>
             <artifactId>jdom</artifactId>
             <version>${jdom.version}</version>
          </dependency>

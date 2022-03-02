@@ -3,14 +3,6 @@
 <plexus>
 	<components>
 		<component>
-			<role>org.unidal.maven.plugin.pom.MavenContainer</role>
-			<implementation>org.unidal.maven.plugin.pom.MavenContainer</implementation>
-		</component>
-		<component>
-			<role>org.unidal.maven.plugin.pom.VersionMapping</role>
-			<implementation>org.unidal.maven.plugin.pom.VersionMapping</implementation>
-		</component>
-		<component>
 			<role>org.unidal.maven.plugin.pom.PomDelegate</role>
 			<implementation>org.unidal.maven.plugin.pom.PomDelegate</implementation>
 			<requirements>
@@ -36,12 +28,62 @@
 			<implementation>org.unidal.maven.plugin.wizard.meta.JdbcWizardBuilder</implementation>
 		</component>
 		<component>
+			<role>org.unidal.codegen.aggregator.XmlAggregator</role>
+			<role-hint>wizard-jdbc</role-hint>
+			<implementation>org.unidal.codegen.aggregator.DefaultXmlAggregator</implementation>
+			<configuration>
+				<structureFile>META-INF/wizard/jdbc/structure.xml</structureFile>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.codegen.generator.Generator</role>
+			<role-hint>wizard-jdbc</role-hint>
+			<implementation>org.unidal.codegen.generator.XslGenerator</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.codegen.transformer.XslTransformer</role>
+				</requirement>
+				<requirement>
+					<role>org.unidal.codegen.manifest.ManifestParser</role>
+				</requirement>
+				<requirement>
+					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
+					<role-hint>wizard-jdbc</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder</role>
 			<implementation>org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder</implementation>
 		</component>
 		<component>
 			<role>org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder</role>
 			<implementation>org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder</implementation>
+		</component>
+		<component>
+			<role>org.unidal.codegen.aggregator.XmlAggregator</role>
+			<role-hint>wizard-webapp</role-hint>
+			<implementation>org.unidal.codegen.aggregator.DefaultXmlAggregator</implementation>
+			<configuration>
+				<structureFile>META-INF/wizard/webapp/structure.xml</structureFile>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.codegen.generator.Generator</role>
+			<role-hint>wizard-webapp</role-hint>
+			<implementation>org.unidal.codegen.generator.XslGenerator</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.codegen.transformer.XslTransformer</role>
+				</requirement>
+				<requirement>
+					<role>org.unidal.codegen.manifest.ManifestParser</role>
+				</requirement>
+				<requirement>
+					<role>org.unidal.codegen.aggregator.XmlAggregator</role>
+					<role-hint>wizard-webapp</role-hint>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>
