@@ -8,14 +8,11 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.unidal.lookup.annotation.Named;
-import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 
 @Named
 public class ModelPomBuilder extends AbstractPomBuilder {
-   private PomDelegate m_pom = new PomDelegate();
-
    public void build(File pomFile, Wizard wizard) throws JDOMException, IOException {
       Document doc = super.loadPom(pomFile);
       Element root = doc.getRootElement();
@@ -35,7 +32,7 @@ public class ModelPomBuilder extends AbstractPomBuilder {
    private void configurePlugin(Element root, Wizard wizard) {
       Element build = m_pom.findOrCreateChild(root, "build", null, "dependencies");
       Element plugins = m_pom.findOrCreateChild(build, "plugins");
-      Element plugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "5.0.0");
+      Element plugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin");
       Element generate = m_pom.checkPluginExecution(plugin, "dal-model", "generate-sources", "generate model files");
       Element configuration = m_pom.findOrCreateChild(generate, "configuration");
       Element manifestElement = m_pom.findOrCreateChild(configuration, "manifest");

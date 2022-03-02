@@ -1,4 +1,4 @@
-package org.unidal.maven.plugin.pom;
+package org.unidal.maven.plugin.wizard.dom;
 
 import java.io.File;
 import java.io.IOException;

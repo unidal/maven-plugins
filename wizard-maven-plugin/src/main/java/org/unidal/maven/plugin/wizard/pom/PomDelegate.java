@@ -1,4 +1,4 @@
-package org.unidal.maven.plugin.pom;
+package org.unidal.maven.plugin.wizard.pom;
 
 import java.io.File;
 import java.util.List;
@@ -8,37 +8,28 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
 import org.unidal.maven.plugin.wizard.dom.DomAccessor;
-import org.unidal.tuple.Triple;
 
-@Named
 public class PomDelegate extends DomAccessor {
    private static Namespace NS = Namespace.getNamespace("http://maven.apache.org/POM/4.0.0");
 
-   @Inject
-   private VersionMapping m_mapping;
+   private VersionMapping m_versionMapping;
 
    private Log m_logger;
 
-   private boolean m_verbose;
-
-   public boolean isVerbose() {
-      return m_verbose;
+   public PomDelegate(VersionMapping versionMapping) {
+      m_versionMapping = versionMapping;
    }
 
-   public void setVerbose(boolean verbose) {
-      m_verbose = verbose;
-   }
-
-   public boolean checkDependency(Element dependencies, String groupId, String artifactId, String version, String scope) {
+   public boolean checkDependency(Element dependencies, String groupId, String artifactId, String scope) {
       Element dependency = findDependency(dependencies, groupId, artifactId);
 
       if (dependency == null) {
          dependency = new Element("dependency", NS);
          createChild(dependency, "groupId", groupId);
          createChild(dependency, "artifactId", artifactId);
+
+         String version = m_versionMapping.getVersion(groupId, artifactId);
 
          if (version != null) {
             createChild(dependency, "version", version);
@@ -60,43 +51,6 @@ public class PomDelegate extends DomAccessor {
       }
    }
 
-   public boolean findOrCreateDependency(Element dependencies, String id, String scope) {
-      Triple<String, String, String> triple = m_mapping.findById(id);
-      String groupId = triple.getFirst();
-      String artifactId = triple.getMiddle();
-      String version = triple.getLast();
-      Element dependency = findDependency(dependencies, groupId, artifactId);
-
-      if (dependency == null) {
-         dependency = new Element("dependency", NS);
-
-         createChild(dependency, "groupId", groupId);
-         createChild(dependency, "artifactId", artifactId);
-
-         if (version != null && version.length() > 0) {
-            createChild(dependency, "version", version);
-         }
-
-         if (scope != null) {
-            createChild(dependency, "scope", scope);
-         }
-
-         dependencies.addContent(dependency);
-         verbose(String.format("Dependency(%s:%s:%s) added.", groupId, artifactId, version));
-         return false;
-      } else {
-         return true;
-      }
-   }
-
-   private void verbose(String pattern, Object... args) {
-      if (m_verbose) {
-         if (m_logger != null) {
-            m_logger.info(String.format(pattern, args));
-         }
-      }
-   }
-
    public boolean checkExclusion(Element dependency, String groupId, String artifactId) {
       Element exclusions = findOrCreateChild(dependency, "exclusions");
       Element exclusion = findExclusion(exclusions, groupId, artifactId);
@@ -115,7 +69,7 @@ public class PomDelegate extends DomAccessor {
    }
 
    @SuppressWarnings("unchecked")
-   public Element checkPlugin(Element plugins, String groupId, String artifactId, String version) {
+   public Element checkPlugin(Element plugins, String groupId, String artifactId) {
       List<Element> children = plugins.getChildren("plugin", NS);
       Element plugin = null;
 
@@ -131,11 +85,14 @@ public class PomDelegate extends DomAccessor {
 
       if (plugin == null) {
          plugin = new Element("plugin", NS);
+
          if (groupId != null) {
             createChild(plugin, "groupId", groupId);
          }
 
          createChild(plugin, "artifactId", artifactId);
+
+         String version = m_versionMapping.getVersion(groupId, artifactId);
 
          if (version != null) {
             createChild(plugin, "version", version);
@@ -256,5 +213,9 @@ public class PomDelegate extends DomAccessor {
    public PomDelegate setLog(Log log) {
       m_logger = log;
       return this;
+   }
+
+   public static interface VersionMapping {
+      public String getVersion(String groupId, String artifactId);
    }
 }

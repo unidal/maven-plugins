@@ -8,20 +8,17 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.unidal.lookup.annotation.Named;
-import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
 import org.unidal.maven.plugin.wizard.model.entity.Jdbc;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 
 @Named
 public class JdbcPomBuilder extends AbstractPomBuilder {
-   private PomDelegate m_pom = new PomDelegate();
-
    private void addDependencies(Element root, Wizard wizard) {
       Element dependencies = m_pom.findOrCreateChild(root, "dependencies", "build", null);
 
-      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", "6.0.0", null)) {
-         m_pom.checkDependency(dependencies, "mysql", "mysql-connector-java", "8.0.28", "runtime");
+      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "dal-jdbc", null)) {
+         m_pom.checkDependency(dependencies, "mysql", "mysql-connector-java", "runtime");
       }
    }
 
@@ -45,7 +42,7 @@ public class JdbcPomBuilder extends AbstractPomBuilder {
    private void configurePlugin(Element root, Wizard wizard) {
       Element build = m_pom.findOrCreateChild(root, "build", null, "dependencies");
       Element plugins = m_pom.findOrCreateChild(build, "plugins");
-      Element plugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin", "5.0.0");
+      Element plugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "codegen-maven-plugin");
       Element generate = m_pom.checkPluginExecution(plugin, "dal-jdbc", "generate-sources", "generate jdbc files");
       Element configuration = m_pom.findOrCreateChild(generate, "configuration");
       Element manifestElement = m_pom.findOrCreateChild(configuration, "manifest");

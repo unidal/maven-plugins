@@ -5,19 +5,16 @@ import java.io.File;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.unidal.lookup.annotation.Named;
-import org.unidal.maven.plugin.pom.PomDelegate;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 
 @Named
 public class WebAppPomBuilder extends AbstractPomBuilder {
-   private PomDelegate m_pom = new PomDelegate();
-
    private void addDependencies(Element root, Wizard wizard) {
       Element dependencies = m_pom.findOrCreateChild(root, "dependencies", "build", null);
 
-      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "web-framework", "6.0.0", null)) {
-         m_pom.checkDependency(dependencies, "javax.servlet", "javax.servlet-api", "3.1.0", "provided");
-         m_pom.checkDependency(dependencies, "org.unidal.test", "test-framework", "6.0.0", "test");
+      if (!m_pom.checkDependency(dependencies, "org.unidal.framework", "web-framework", null)) {
+         m_pom.checkDependency(dependencies, "javax.servlet", "javax.servlet-api", "provided");
+         m_pom.checkDependency(dependencies, "org.unidal.test", "test-framework", "test");
       }
    }
 
@@ -42,7 +39,7 @@ public class WebAppPomBuilder extends AbstractPomBuilder {
    private void configurePlugin(Element root, Wizard wizard) {
       Element build = m_pom.findOrCreateChild(root, "build", null, "dependencies");
       Element plugins = m_pom.findOrCreateChild(build, "plugins");
-      Element plexusPlugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin", "5.0.0");
+      Element plexusPlugin = m_pom.checkPlugin(plugins, "org.unidal.maven.plugins", "plexus-maven-plugin");
       Element plexus = m_pom.checkPluginExecution(plexusPlugin, "plexus", null, "generate plexus component descriptor");
       Element codegenPlexusConfiguration = m_pom.findOrCreateChild(plexus, "configuration");
       Element className = m_pom.findOrCreateChild(codegenPlexusConfiguration, "className");

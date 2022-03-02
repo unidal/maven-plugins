@@ -12,7 +12,7 @@ import org.unidal.codegen.helper.PropertyProviders;
 import org.unidal.codegen.helper.PropertyProviders.ConsoleProvider;
 import org.unidal.codegen.helper.PropertyProviders.IValidator;
 import org.unidal.lookup.annotation.Named;
-import org.unidal.maven.plugin.pom.DomAccessor;
+import org.unidal.maven.plugin.wizard.dom.DomAccessor;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.model.transform.BaseVisitor;

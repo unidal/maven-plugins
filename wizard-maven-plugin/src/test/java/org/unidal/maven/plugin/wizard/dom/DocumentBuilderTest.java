@@ -8,7 +8,6 @@ import org.jdom.Document;
 import org.junit.Test;
 import org.unidal.codegen.aggregator.XmlAggregator;
 import org.unidal.lookup.ComponentTestCase;
-import org.unidal.maven.plugin.pom.DomAccessor;
 
 public class DocumentBuilderTest extends ComponentTestCase {
    @Test

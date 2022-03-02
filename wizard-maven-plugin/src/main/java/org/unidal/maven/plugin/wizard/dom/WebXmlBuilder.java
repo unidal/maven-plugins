@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.unidal.maven.plugin.pom.DomAccessor;
 
 public class WebXmlBuilder extends DomAccessor {
    private Namespace m_activeNamespace = Namespace.getNamespace("http://java.sun.com/xml/ns/javaee");
