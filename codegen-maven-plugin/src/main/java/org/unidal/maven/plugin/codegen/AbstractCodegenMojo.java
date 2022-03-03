@@ -1,4 +1,4 @@
-package org.unidal.maven.plugin.wizard;
+package org.unidal.maven.plugin.codegen;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import org.apache.maven.project.MavenProject;
 import org.unidal.codegen.generator.GenerateContext;
 import org.unidal.codegen.generator.GenerateContextSupport;
 
-public abstract class AbstractWizardMojo extends AbstractMojo {
+public abstract class AbstractCodegenMojo extends AbstractMojo {
    /**
     * Current project
     * 
@@ -34,30 +34,27 @@ public abstract class AbstractWizardMojo extends AbstractMojo {
     */
    private boolean debug;
 
-   protected GenerateContext createContext() throws IOException {
-      String resourceBase = String.format("/META-INF/wizard/%s/xsl", getWizardType());
+   protected GenerateContext createContext(File manifestFile, String sourceDir) throws IOException {
+      String resourceBase = String.format("/META-INF/dal/%s/xsl", getCodegenType());
 
-      return new WizardGenerateContext(resourceBase, m_project.getBasedir(), getManifestFile());
+      return new CodegenGenerateContext(resourceBase, m_project.getBasedir(), manifestFile, sourceDir);
    }
 
-   protected File getManifestFile() {
-      String manifestXml = String.format("src/main/resources/META-INF/wizard/manifest.xml");
-
-      return new File(m_project.getBasedir(), manifestXml);
-   }
+   protected abstract String getCodegenType();
 
    protected MavenProject getProject() {
       return m_project;
    }
 
-   protected abstract String getWizardType();
-
-   protected class WizardGenerateContext extends GenerateContextSupport {
+   protected class CodegenGenerateContext extends GenerateContextSupport {
       private final File m_manifestXml;
 
-      private WizardGenerateContext(String resourceBasePath, File projectBaseDir, File manifestXml) throws IOException {
+      private CodegenGenerateContext(String resourceBasePath, File projectBaseDir, File manifestXml, String sourceDir)
+            throws IOException {
          super(resourceBasePath, projectBaseDir);
          m_manifestXml = manifestXml;
+
+         getProperties().put("src-main-java", sourceDir);
       }
 
       public URL getManifestXml() {

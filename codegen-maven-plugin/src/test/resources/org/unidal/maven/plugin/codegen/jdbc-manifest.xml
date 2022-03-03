@@ -1,0 +1,4 @@
+<manifest>
+	<file path="jdbc-codegen.xml"/>
+	<file path="jdbc-dal.xml"/>
+</manifest>

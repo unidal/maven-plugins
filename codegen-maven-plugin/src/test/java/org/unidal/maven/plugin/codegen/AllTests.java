@@ -8,11 +8,9 @@ import org.unidal.codegen.generator.AllGeneratorTests;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-	MojoTest.class,
-	
-	AllGeneratorTests.class,
-	
+      AllGeneratorTests.class,
+
 })
 public class AllTests {
-	
+
 }

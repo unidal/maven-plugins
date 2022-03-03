@@ -3,94 +3,60 @@ package org.unidal.maven.plugin.codegen;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
 import org.unidal.codegen.generator.GenerateContext;
-import org.unidal.codegen.generator.GenerateContextSupport;
 import org.unidal.codegen.generator.Generator;
-
 import org.unidal.helper.Splitters;
 
 /**
- * DAL code generator for modeling in Java language
+ * Generates model files in Java language.
  * 
  * @goal dal-model
  * @phase generate-sources
  * @author Frankie Wu
  */
-public class DalModelMojo extends AbstractMojo {
+public class DalModelMojo extends AbstractCodegenMojo {
    /**
     * XSL code generator implementation
     * 
-    * @component role="org.unidal.codegen.generator.Generator"
-    *            role-hint="dal-model"
+    * @component role="org.unidal.codegen.generator.Generator" role-hint="dal-model"
     * @required
     * @readonly
     */
-   protected Generator m_generator;
-
-   /**
-    * Current project
-    * 
-    * @parameter expression="${project}"
-    * @required
-    * @readonly
-    */
-   protected MavenProject m_project;
+   private Generator m_generator;
 
    /**
     * Current project base directory
     * 
-    * @parameter expression="${sourceDir}"
-    *            default-value="${basedir}/target/generated-sources/dal-model"
+    * @parameter expression="${sourceDir}" default-value="${basedir}/target/generated-sources/dal-model"
     * @required
     */
-   protected String sourceDir;
+   private String sourceDir;
 
    /**
     * Location of manifest.xml file
     * 
-    * @parameter expression="${manifest}" default-value=
-    *            "${basedir}/src/main/resources/META-INF/dal/model/manifest.xml"
+    * @parameter expression="${manifest}"
     * @required
     */
-   protected String manifest;
-
-   /**
-    * Location of XSL template base.
-    * 
-    * @parameter expression="${resource.base}"
-    *            default-value="/META-INF/dal/model"
-    * @required
-    */
-   protected String resouceBase;
-
-   /**
-    * Verbose information or not
-    * 
-    * @parameter expression="${verbose}" default-value="false"
-    */
-   protected boolean verbose;
-
-   /**
-    * Verbose information or not
-    * 
-    * @parameter expression="${debug}" default-value="false"
-    */
-   protected boolean debug;
+   private String manifest;
 
    /**
     * Skip this codegen or not
     * 
     * @parameter expression="${codegen.skip}" default-value="false"
     */
-   protected boolean skip;
+   private boolean skip;
+
+   /**
+    * for test or not
+    * 
+    * @parameter expression="${codegen.test}" default-value="false"
+    */
+   private boolean test;
 
    public void execute() throws MojoExecutionException, MojoFailureException {
       if (skip) {
@@ -98,58 +64,39 @@ public class DalModelMojo extends AbstractMojo {
          return;
       }
 
-      List<String> parts = Splitters.by(',').noEmptyItem().trim().split(manifest);
+      List<String> files = Splitters.by(',').noEmptyItem().trim().split(manifest);
 
       try {
-         for (String part : parts) {
-            generateModel(part);
+         for (String file : files) {
+            generateModel(file);
          }
       } catch (Exception e) {
-         throw new MojoExecutionException("Code generating failed.", e);
+         throw new MojoExecutionException("Error when generating code due to " + e, e);
       }
    }
 
-   private void generateModel(String manifest) throws MojoExecutionException, IOException, MalformedURLException, Exception {
+   private void generateModel(String manifest)
+         throws MojoExecutionException, IOException, MalformedURLException, Exception {
       File manifestFile = new File(manifest);
 
       if (!manifestFile.exists()) {
-         throw new MojoExecutionException(String.format("Manifest(%s) not found!", manifestFile.getCanonicalPath()));
+         throw new MojoExecutionException(String.format("Manifest(%s) is not found!", manifestFile.getCanonicalPath()));
       }
 
-      final URL manifestXml = manifestFile.toURI().toURL();
-      final GenerateContext ctx = new GenerateContextSupport(resouceBase, m_project.getBasedir()) {
-         @Override
-         protected void configure(Map<String, String> properties) {
-            properties.put("src-main-java", sourceDir);
-         }
-
-         @Override
-         public URL getManifestXml() {
-            return manifestXml;
-         }
-
-         @Override
-         public void log(LogLevel logLevel, String message) {
-            switch (logLevel) {
-            case DEBUG:
-               if (debug) {
-                  getLog().info(message);
-               }
-               break;
-            case INFO:
-               if (debug || verbose) {
-                  getLog().info(message);
-               }
-               break;
-            case ERROR:
-               getLog().error(message);
-               break;
-            }
-         }
-      };
+      final GenerateContext ctx = super.createContext(manifestFile, sourceDir);
 
       m_generator.generate(ctx);
-      m_project.addCompileSourceRoot(sourceDir);
-      getLog().info(ctx.getGeneratedFiles() + " files generated.");
+
+      if (test) {
+         getProject().addTestCompileSourceRoot(sourceDir);
+      } else {
+         getProject().addCompileSourceRoot(sourceDir);
+      }
+
+   }
+
+   @Override
+   protected String getCodegenType() {
+      return "model";
    }
 }
