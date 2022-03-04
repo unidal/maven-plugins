@@ -8,7 +8,7 @@ import org.unidal.codegen.generator.model.ModelGenerateTestSupport;
 public class KeysGeneratorTest extends ModelGenerateTestSupport {
    @Override
    protected File getProjectBaseDir() {
-      return new File("target/generated-model-keys");
+      return new File("target/generated-model-key");
    }
 
    @Override

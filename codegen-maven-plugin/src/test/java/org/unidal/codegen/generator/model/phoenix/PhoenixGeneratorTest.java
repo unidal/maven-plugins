@@ -2,6 +2,7 @@ package org.unidal.codegen.generator.model.phoenix;
 
 import java.io.File;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.codegen.generator.model.ModelGenerateTestSupport;
 
@@ -21,6 +22,7 @@ public class PhoenixGeneratorTest extends ModelGenerateTestSupport {
       return false;
    }
    
+   @Ignore
    @Test
    public void testRoutingConfigure() throws Exception {
       generate("configure-manifest.xml");
@@ -31,6 +33,7 @@ public class PhoenixGeneratorTest extends ModelGenerateTestSupport {
       generate("config-manifest.xml");
    }
 
+   @Ignore
    @Test
    public void testDeploy() throws Exception {
       generate("deploy-manifest.xml");

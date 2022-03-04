@@ -14,7 +14,7 @@ public class JdbcGenerateContext extends GenerateContextSupport {
    private URL m_manifestXml;
 
    public JdbcGenerateContext(File projectBaseDir, File manifestXml) throws IOException {
-      super("/META-INF/dal/jdbc", projectBaseDir);
+      super("/META-INF/dal/jdbc/xsl", projectBaseDir);
 
       m_manifestXml = manifestXml.toURI().toURL();
    }

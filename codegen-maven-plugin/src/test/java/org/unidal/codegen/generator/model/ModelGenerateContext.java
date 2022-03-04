@@ -14,7 +14,7 @@ public class ModelGenerateContext extends GenerateContextSupport {
    private URL m_manifestXml;
 
    public ModelGenerateContext(File projectBaseDir, File manifestXml) throws IOException {
-      super("/META-INF/dal/model", projectBaseDir);
+      super("/META-INF/dal/model/xsl", projectBaseDir);
 
       m_manifestXml = manifestXml.toURI().toURL();
    }

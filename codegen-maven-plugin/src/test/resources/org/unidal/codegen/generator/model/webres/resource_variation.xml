@@ -24,7 +24,6 @@
     <entity-ref name="rule" type="list" names="rules" />
   </entity>
   <entity name="rule" dynamic-attributes="true">
-    <attribute name="urn" value-type="com.ebay.webres.resource.api.IResourceUrn" render="false" />
     <element name="text" value-type="String" text="true" />
   </entity>
 </model>

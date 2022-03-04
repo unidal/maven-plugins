@@ -669,7 +669,7 @@
       <xsl:value-of select="$empty-line"/>
    </xsl:if>
 
-   <xsl:for-each select="$entity/attribute[not(@key='true')][not(@deprecated='true')]">
+   <xsl:for-each select="$entity/attribute[not(@key='true')][not(@render='false')][not(@deprecated='true')]">
       <xsl:choose>
       	<!-- TODO @default-value -->
       	<xsl:when test="not(@primitive='true') or (@type='array' or @type='list' or @type='set')">

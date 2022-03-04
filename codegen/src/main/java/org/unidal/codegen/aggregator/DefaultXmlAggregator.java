@@ -121,6 +121,11 @@ public class DefaultXmlAggregator implements XmlAggregator {
       public List<File> getFiles() {
          return m_files;
       }
+
+      @Override
+      public String toString() {
+         return String.format("Manifest[%s]", m_files);
+      }
    }
 
    static class ManifestParser extends XmlHandler {
@@ -406,7 +411,15 @@ public class DefaultXmlAggregator implements XmlAggregator {
 
       @Override
       public String toString() {
-         return m_name + "[" + m_keyValue + "]";
+         StringBuilder sb = new StringBuilder(1024);
+
+         sb.append(m_name).append("[key: ").append(m_keyValue).append("]").append("\r\n");
+
+         for (Node child : m_children) {
+            sb.append(child);
+         }
+
+         return sb.toString();
       }
    }
 
@@ -467,7 +480,15 @@ public class DefaultXmlAggregator implements XmlAggregator {
 
       @Override
       public String toString() {
-         return m_name + "[" + m_keyName + "]";
+         StringBuilder sb = new StringBuilder(1024);
+
+         sb.append(m_name).append("[key: ").append(m_keyName).append("]").append("\r\n");
+
+         for (NodeDefinition child : m_children.values()) {
+            sb.append(child);
+         }
+
+         return sb.toString();
       }
    }
 
