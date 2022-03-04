@@ -12,7 +12,7 @@
             <node name="readset" key="name"/>
          </node>
          <node name="updatesets">
-            <node name="readset" key="name"/>
+            <node name="updateset" key="name"/>
          </node>
          <node name="query-defs">
             <node name="query" key="name">

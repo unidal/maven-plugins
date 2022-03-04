@@ -54,26 +54,6 @@
         <xsl:with-param name="template" select="'dao.xsl'"/>
       </xsl:call-template>
    </xsl:if>
-
-   <xsl:if test="@bo-package != ''">
-      <!-- Bo class -->
-      <xsl:call-template name="generate-java">
-        <xsl:with-param name="class" select="@bo-class"/>
-        <xsl:with-param name="package" select="@bo-package"/>
-        <xsl:with-param name="name" select="@name"/>
-        <xsl:with-param name="template" select="'bo.xsl'"/>
-        <xsl:with-param name="mode" select="'create_if_not_exists'"/>
-      </xsl:call-template>
-      
-      <!-- BOF class -->
-      <xsl:call-template name="generate-java">
-        <xsl:with-param name="class" select="@bof-class"/>
-        <xsl:with-param name="package" select="@bo-package"/>
-        <xsl:with-param name="name" select="@name"/>
-        <xsl:with-param name="template" select="'bof.xsl'"/>
-        <xsl:with-param name="mode" select="'create_if_not_exists'"/>
-      </xsl:call-template>
-   </xsl:if>
 </xsl:template>
 
 <xsl:template name="generate-java">

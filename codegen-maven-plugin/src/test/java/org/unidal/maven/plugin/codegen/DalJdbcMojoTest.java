@@ -18,8 +18,11 @@ public class DalJdbcMojoTest extends AbstractCodegenMojoTest {
       setField(mojo, "sourceDir", new File(baseDir, "generated-sources").toString());
       setField(mojo, "manifest", getClass().getResource("jdbc-manifest.xml").getPath());
 
+      setField(mojo, "debug", true);
+      
+      
       mojo.execute();
-System.out.println(baseDir);
+
       Assert.assertEquals(true, new File(baseDir, "pom.xml").exists());
    }
 }

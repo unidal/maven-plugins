@@ -56,13 +56,6 @@
             <xsl:otherwise><xsl:value-of select="../@do-package"/></xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
-      <xsl:variable name="bo-package">
-         <xsl:choose>
-            <xsl:when test="@bo-package"><xsl:value-of select="@bo-package"/></xsl:when>
-            <xsl:when test="@do-package"><xsl:value-of select="@do-package"/></xsl:when>
-            <xsl:otherwise><xsl:value-of select="../@do-package"/></xsl:otherwise>
-         </xsl:choose>
-      </xsl:variable>
 
       <!-- attribute definition -->
       <xsl:attribute name="name">
@@ -87,18 +80,6 @@
       <xsl:attribute name="dao-class">
          <xsl:value-of select="$class-name"/><xsl:value-of select="'Dao'"/>
       </xsl:attribute>
-      
-      <xsl:if test="@gen-bo='true' or ../@gen-bo='true'">
-         <xsl:attribute name="bo-package">
-            <xsl:value-of select="$bo-package"/>
-         </xsl:attribute>
-         <xsl:attribute name="bo-class">
-            <xsl:value-of select="$class-name"/><xsl:value-of select="'Bo'"/>
-         </xsl:attribute>
-         <xsl:attribute name="bof-class">
-            <xsl:value-of select="$class-name"/><xsl:value-of select="'Bof'"/>
-         </xsl:attribute>
-      </xsl:if>
 
       <xsl:attribute name="param-name">
          <xsl:value-of select="$nonrmalized-name"/>
