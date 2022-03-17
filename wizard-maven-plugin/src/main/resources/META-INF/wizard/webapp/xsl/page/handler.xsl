@@ -24,8 +24,9 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 
 import <xsl:value-of select="../@package"></xsl:value-of>.<xsl:value-of select="../@page-class"/>;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
+<xsl:if test="$is-th">
+import org.unidal.lookup.annotation.Inject;<xsl:value-of select="$empty-line"/>
+</xsl:if>import org.unidal.lookup.annotation.Named;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -35,16 +36,16 @@ import org.unidal.web.mvc.view.HtmlTemplate;
 </xsl:if>
 @Named
 public class <xsl:value-of select="@handler-class"/> implements PageHandler<xsl:call-template name="generic-type"><xsl:with-param name="type" select="@context-class"/></xsl:call-template> {
-<xsl:if test="$is-jsp">
+<xsl:choose>
+   <xsl:when test="$is-jsp">
 	@Inject
 	private <xsl:value-of select="@jsp-viewer-class"/> m_jspViewer;
-
-</xsl:if>
-<xsl:if test="$is-th">
+   </xsl:when>
+   <xsl:when test="$is-th">
 	@Inject
 	private HtmlTemplate m_htmlTemplate;
-
-</xsl:if>
+   </xsl:when>
+</xsl:choose>
 	@Override
 	@PayloadMeta(<xsl:value-of select="@payload-class"/>.class)
 	@InboundActionMeta(name = "<xsl:value-of select="@path"/>")
@@ -61,12 +62,17 @@ public class <xsl:value-of select="@handler-class"/> implements PageHandler<xsl:
 		model.setPage(<xsl:value-of select="../@page-class"/>.<xsl:value-of select="@upper-name"/>);
 
 		if (!ctx.isProcessStopped()) {
-<xsl:if test="$is-jsp">
+<xsl:choose>
+   <xsl:when test="$is-jsp">
 		   m_jspViewer.view(ctx, model);
-</xsl:if>
-<xsl:if test="$is-th">
+   </xsl:when>
+   <xsl:when test="$is-th">
 		   m_htmlTemplate.render("<xsl:value-of select="../@path"/>/<xsl:value-of select="@path"/>", ctx, model);
-</xsl:if>
+   </xsl:when>
+   <xsl:otherwise>
+		   ctx.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request!");
+   </xsl:otherwise>
+</xsl:choose>
 		}
 	}
 }
