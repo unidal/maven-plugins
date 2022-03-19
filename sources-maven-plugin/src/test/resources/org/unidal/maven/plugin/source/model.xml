@@ -1,0 +1,11 @@
+<root>
+	<count lines="100" empty="20" comment="10"></count>
+	<project name="project">
+		<count lines="100" empty="20" comment="10"></count>
+		<class package="org.unidal" class="MyClass" main="true" codegen="false" test="false">
+			<count lines="100" empty="20" comment="10"></count>
+		</class>
+		<class></class>
+	</project>
+	<project></project>
+</root>

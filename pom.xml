@@ -16,6 +16,7 @@
       <module>codegen</module>
       <module>codegen-maven-plugin</module>
       <module>plexus-maven-plugin</module>
+      <module>sources-maven-plugin</module>
       <module>project-maven-plugin</module>
       <module>wizard-maven-plugin</module>
    </modules>
@@ -37,6 +38,9 @@
 
       <codegen.plugin.version>${project.version}</codegen.plugin.version>
    </properties>
+   <prerequisites>
+      <maven>3.2.1</maven>
+   </prerequisites>
    <dependencyManagement>
       <dependencies>
          <dependency>

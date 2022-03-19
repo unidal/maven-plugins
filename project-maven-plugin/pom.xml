@@ -9,9 +9,6 @@
    <artifactId>project-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
    <name>Project Maven Plugin</name>
-   <prerequisites>
-      <maven>3.2.1</maven>
-   </prerequisites>
    <dependencies>
       <dependency>
          <groupId>${project.groupId}</groupId>

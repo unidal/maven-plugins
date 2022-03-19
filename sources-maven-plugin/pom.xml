@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.unidal.maven.plugins</groupId>
+      <artifactId>default</artifactId>
+      <version>6.0.0</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <artifactId>sources-maven-plugin</artifactId>
+   <packaging>maven-plugin</packaging>
+   <name>Sources Maven Plugin</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.unidal.foundation</groupId>
+         <artifactId>foundation-service</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.maven</groupId>
+         <artifactId>maven-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>codegen-maven-plugin</artifactId>
+            <version>6.0.0</version>
+            <configuration>
+               <sourceDir>${basedir}/src/main/java</sourceDir>
+               <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/model-manifest.xml]]></manifest>
+            </configuration>
+            <executions>
+               <execution>
+                  <id>generate model files</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/model-manifest.xml]]></manifest>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+</project>
+

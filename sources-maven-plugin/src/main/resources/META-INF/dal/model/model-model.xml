@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="org.unidal.maven.plugins.source.model" class-suffix="Model" enable-sax-parser="true" enable-base-visitor="true">
+  <entity name="count">
+    <attribute name="lines" value-type="int" primitive="true" method-inc="true" />
+    <attribute name="empty" value-type="int" primitive="true" method-inc="true" />
+    <attribute name="comment" value-type="int" primitive="true" method-inc="true" />
+    <snippet>
+	   public void add(CountModel count) {
+	      m_lines += count.m_lines;
+	      m_empty += count.m_empty;
+	      m_comment += count.m_comment;
+	   }
+    </snippet>
+  </entity>
+</model>
+

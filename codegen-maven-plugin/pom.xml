@@ -9,9 +9,6 @@
    <artifactId>codegen-maven-plugin</artifactId>
    <packaging>maven-plugin</packaging>
    <name>Code Generation Maven Plugin</name>
-   <prerequisites>
-      <maven>3.2.1</maven>
-   </prerequisites>
    <dependencies>
       <dependency>
          <groupId>${project.groupId}</groupId>
