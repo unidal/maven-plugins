@@ -6,8 +6,8 @@
       <version>6.0.0</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
-   <artifactId>codegen</artifactId>
-   <name>Code Generator</name>
+   <artifactId>codegen-foundation</artifactId>
+   <name>Code Generation Foundation</name>
    <dependencies>
       <dependency>
          <groupId>org.unidal.foundation</groupId>

@@ -67,7 +67,7 @@ public class PropertyProviders {
 
          while (value == null) {
             sb.setLength(0);
-            sb.append(prompt);
+            sb.append(prompt).append(' ');
 
             if (defaultValue != null) {
                sb.append('[').append(defaultValue).append(']');

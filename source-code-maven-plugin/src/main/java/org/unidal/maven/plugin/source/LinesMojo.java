@@ -141,13 +141,18 @@ public class LinesMojo extends AbstractMojo {
    private static class CountPrinter extends BaseVisitor {
       @Override
       public void visitProject(ProjectModel project) {
-         System.out.println(project.getName() + ": " + project.getCount());
+         int len = "<?xml version=\"1.0\" encoding=\"utf-8\"?>".length();
+
+         System.out.println(project.getName() + ": " + project.getCount().toString().substring(len));
       }
 
       @Override
       public void visitRoot(RootModel root) {
-         System.out.println("ALL: " + root.getCount());
          super.visitRoot(root);
+         
+         int len = "<?xml version=\"1.0\" encoding=\"utf-8\"?>".length();
+         
+         System.out.println("TOTAL: " + root.getCount().toString().substring(len));
       }
    }
 

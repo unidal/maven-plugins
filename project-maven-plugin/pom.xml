@@ -12,7 +12,7 @@
    <dependencies>
       <dependency>
          <groupId>${project.groupId}</groupId>
-         <artifactId>codegen</artifactId>
+         <artifactId>codegen-foundation</artifactId>
       </dependency>
       <dependency>
          <groupId>org.codehaus.plexus</groupId>

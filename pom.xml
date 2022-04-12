@@ -13,12 +13,12 @@
    <name>Maven Plugins Parent POM</name>
    <packaging>pom</packaging>
    <modules>
-      <module>codegen</module>
+      <module>codegen-foundation</module>
       <module>codegen-maven-plugin</module>
       <module>plexus-maven-plugin</module>
-      <module>sources-maven-plugin</module>
-      <module>project-maven-plugin</module>
       <module>wizard-maven-plugin</module>
+      <module>project-maven-plugin</module>
+      <module>source-code-maven-plugin</module>
    </modules>
    <url>https://gitee.com/unidal/maven-plugins</url>
    <scm>
@@ -45,7 +45,7 @@
       <dependencies>
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>codegen</artifactId>
+            <artifactId>codegen-foundation</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
