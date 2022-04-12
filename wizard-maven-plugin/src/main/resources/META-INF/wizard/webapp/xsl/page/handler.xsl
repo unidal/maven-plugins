@@ -22,6 +22,7 @@
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 
 import <xsl:value-of select="../@package"></xsl:value-of>.<xsl:value-of select="../@page-class"/>;
 <xsl:if test="$is-th">
@@ -61,16 +62,16 @@ public class <xsl:value-of select="@handler-class"/> implements PageHandler<xsl:
 		model.setAction(Action.VIEW);
 		model.setPage(<xsl:value-of select="../@page-class"/>.<xsl:value-of select="@upper-name"/>);
 
-		if (!ctx.isProcessStopped()) {
+		if (!ctx.isProcessStopped()) {<xsl:value-of select="$empty"/>
 <xsl:choose>
    <xsl:when test="$is-jsp">
-		   m_jspViewer.view(ctx, model);
+		   m_jspViewer.view(ctx, model);<xsl:value-of select="$empty"/>
    </xsl:when>
    <xsl:when test="$is-th">
-		   m_htmlTemplate.render("<xsl:value-of select="../@path"/>/<xsl:value-of select="@path"/>", ctx, model);
+		   m_htmlTemplate.render("<xsl:value-of select="../@path"/>/<xsl:value-of select="@path"/>", ctx, model);<xsl:value-of select="$empty"/>
    </xsl:when>
    <xsl:otherwise>
-		   ctx.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request!");
+		   ctx.sendError(HttpServletResponse.SC_BAD_REQUEST, "Bad request!");<xsl:value-of select="$empty"/>
    </xsl:otherwise>
 </xsl:choose>
 		}

@@ -53,7 +53,16 @@ public class WebAppWizardBuilder extends AbstractWizardBuilder {
             page.setPath(pageName);
             page.setTitle(Character.toUpperCase(pageName.charAt(0)) + pageName.substring(1));
             page.setDescription(page.getTitle());
-            page.setPackage(module.getPackage() + "." + pageName);
+
+            String defaultPackage = module.getPackage() + "." + pageName;
+            String packageName = console.forString("web.page.package", "Page package:", defaultPackage, null);
+
+            if (packageName.startsWith(".")) { // only replace last part
+               page.setPackage(module.getPackage() + packageName);
+            } else {
+               page.setPackage(packageName);
+            }
+
             module.addPage(page);
          }
 
@@ -73,7 +82,8 @@ public class WebAppWizardBuilder extends AbstractWizardBuilder {
          }
 
          ConsoleProvider console = PropertyProviders.fromConsole();
-         String moduleName = console.forString("web.module", "Select module below or new name:", moduleNames, null, null);
+         String moduleName = console.forString("web.module", "Select module below or new name:", moduleNames, null,
+               null);
          Module module = webapp.findModule(moduleName);
 
          if (module == null) { // new module

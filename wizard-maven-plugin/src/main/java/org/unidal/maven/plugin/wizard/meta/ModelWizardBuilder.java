@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.apache.maven.project.MavenProject;
 import org.jdom.Document;
-import org.jdom.Element;
 import org.unidal.codegen.helper.PropertyProviders;
 import org.unidal.codegen.helper.PropertyProviders.ConsoleProvider;
 import org.unidal.codegen.helper.PropertyProviders.IValidator;
@@ -36,16 +35,13 @@ public class ModelWizardBuilder extends AbstractWizardBuilder {
    private class Builder extends BaseVisitor {
       private Wizard m_wizard;
 
-      @SuppressWarnings({ "unchecked" })
       private String getRootElementName(String xmlFile) {
          File file = new File(xmlFile);
 
          try {
             Document doc = new DomAccessor().loadDocument(file);
 
-            for (Element child : (List<Element>) doc.getRootElement().getChildren()) {
-               return child.getName();
-            }
+            return doc.getRootElement().getName();
          } catch (Exception e) {
             // ignore it
          }
@@ -77,7 +73,8 @@ public class ModelWizardBuilder extends AbstractWizardBuilder {
 
          if (model.getPackage() == null) {
             String defaultName = getDefaultPackageName(m_wizard.getPackage(), model.getName());
-            String packageName = console.forString("model.package", "Package name of generated model:", defaultName, null);
+            String packageName = console.forString("model.package", "Package name of generated model:", defaultName,
+                  null);
 
             model.setPackage(packageName);
          }
@@ -94,8 +91,8 @@ public class ModelWizardBuilder extends AbstractWizardBuilder {
          }
 
          ConsoleProvider console = PropertyProviders.fromConsole();
-         String name = console.forString("model.sample", "Select model name below or input a sample xml file:", names, null,
-               new IValidator<String>() {
+         String name = console.forString("model.sample", "Select model name below or input a sample xml file:", names,
+               null, new IValidator<String>() {
                   @Override
                   public boolean validate(String name) {
                      return wizard.findModel(name) != null || new File(name).isFile();
