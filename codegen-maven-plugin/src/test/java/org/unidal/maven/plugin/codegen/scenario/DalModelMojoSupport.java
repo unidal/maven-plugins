@@ -17,6 +17,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.LogEnabled;
@@ -41,11 +42,11 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
       field.set(instance, value);
    }
 
-   protected <T extends AbstractCodegenMojo> MyMojoBuilder<T> builderOf(Class<T> mojoClass, String scenario)
+   protected <T extends AbstractCodegenMojo> MyMojoBuilder<T> builderOf(Class<T> mojoClass, MyHelper helper)
          throws Exception {
       MyMojoBuilder<T> builder = new MyMojoBuilder<T>();
 
-      builder.initialize(getContainer(), mojoClass, scenario);
+      builder.initialize(getContainer(), mojoClass, helper);
       return builder;
    }
 
@@ -91,20 +92,24 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
       manager.setLocation(StandardLocation.SOURCE_PATH, helper.getSourcePath());
       manager.setLocation(StandardLocation.CLASS_OUTPUT, helper.getClassOutput());
 
-      boolean result = compiler.getTask(null, manager, diagnostics, null, null, helper.sourceFiles()).call();
+      boolean success = compiler.getTask(null, manager, diagnostics, null, null, helper.sourceFiles()).call();
 
       manager.close();
 
-      if (!result) {
+      if (!success) {
          for (Diagnostic<? extends JavaFileObject> d : diagnostics.getDiagnostics()) {
-            helper.addMessage(new MyMessage(helper.getScenario(), d));
+            helper.addMessage(new MyMessage(helper, d));
+         }
+
+         if (!helper.checkError()) {
+            throw helper.buildError();
          }
       }
    }
 
-   protected File generate(MyHelper manager) throws Exception {
-      File baseDir = manager.getBaseDir();
-      DalModelMojo mojo = builderOf(DalModelMojo.class, manager.getScenario()) //
+   protected File generate(MyHelper helper) throws Exception {
+      File baseDir = helper.getBaseDir();
+      DalModelMojo mojo = builderOf(DalModelMojo.class, helper) //
             .component("m_generator", Generator.class, "dal-model").build();
       final AtomicReference<File> manifest = new AtomicReference<File>();
 
@@ -119,7 +124,7 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
          }
       });
 
-      setField(mojo, "sourceDir", manager.getGeneratedSourcePath().toString());
+      setField(mojo, "sourceDir", helper.getGeneratedSourcePath().toString());
       setField(mojo, "manifest", manifest.get().getPath());
 
       mojo.execute();
@@ -133,13 +138,46 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
 
       private List<MyMessage> m_messages = new ArrayList<MyMessage>();
 
+      private Log m_log;
+
       public MyHelper(String scenario) {
          m_scenario = scenario;
          m_baseDir = new File("src/test/dal-model/" + scenario);
+         m_log = new MyLog(scenario);
 
          if (!m_baseDir.exists()) {
             throw new IllegalArgumentException(String.format("Scenario(%s) does not found!", scenario));
          }
+      }
+
+      public Error buildError() {
+         StringBuilder sb = new StringBuilder(256);
+         int count = 0;
+
+         for (MyMessage message : m_messages) {
+            if (message.m_diagnostic.getKind().name().equals("ERROR")) {
+               sb.append(message).append("\r\n");
+               count++;
+            }
+         }
+
+         sb.insert(0, String.format("Generated code failed to compile, %s errors found:\r\n", count));
+
+         return new AssertionError(sb.substring(0, sb.length() - 2));
+      }
+
+      public boolean checkError() {
+         boolean found = false;
+
+         for (MyMessage message : m_messages) {
+            System.out.println(message);
+
+            if (message.m_diagnostic.getKind().name().equals("ERROR")) {
+               found = true;
+            }
+         }
+
+         return !found;
       }
 
       public void addMessage(MyMessage message) {
@@ -156,6 +194,10 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
 
       public File getGeneratedSourcePath() {
          return new File(m_baseDir, "target/generated-sources");
+      }
+
+      public Log getLog() {
+         return m_log;
       }
 
       public List<MyMessage> getMessages() {
@@ -215,12 +257,12 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
    }
 
    protected static class MyMessage {
-      private String m_scenario;
+      private MyHelper m_helper;
 
       private Diagnostic<? extends JavaFileObject> m_diagnostic;
 
-      public MyMessage(String scenario, Diagnostic<? extends JavaFileObject> diagnostic) {
-         m_scenario = scenario;
+      public MyMessage(MyHelper helper, Diagnostic<? extends JavaFileObject> diagnostic) {
+         m_helper = helper;
          m_diagnostic = diagnostic;
       }
 
@@ -228,15 +270,15 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
       public String toString() {
          StringBuilder sb = new StringBuilder(256);
 
-         sb.append('[').append(m_scenario).append("] ");
+         sb.append('[').append(m_helper.getScenario()).append("] ");
          sb.append(m_diagnostic.getKind()).append(' ');
-         sb.append(m_diagnostic.getCode()).append(' ');
 
          if (m_diagnostic.getSource() != null) {
             sb.append(m_diagnostic.getSource().getName()).append(' ');
-            sb.append(m_diagnostic.getLineNumber()).append(':').append(m_diagnostic.getColumnNumber());
+            sb.append(m_diagnostic.getLineNumber()).append(':').append(m_diagnostic.getColumnNumber()).append(' ');
          }
 
+         sb.append(m_diagnostic.getCode());
          return sb.toString();
       }
    }
@@ -273,10 +315,10 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
          return this;
       }
 
-      private void initialize(PlexusContainer container, Class<T> mojoClass, String scenario) throws Exception {
+      private void initialize(PlexusContainer container, Class<T> mojoClass, MyHelper helper) throws Exception {
          m_container = container;
          m_mojo = (T) mojoClass.getConstructor().newInstance();
-         m_mojo.setLog(new MyLog(scenario));
+         m_mojo.setLog(helper.getLog());
 
          MavenProject project = new MavenProject() {
             @Override
