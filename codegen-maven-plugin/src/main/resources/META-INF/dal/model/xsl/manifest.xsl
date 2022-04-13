@@ -56,6 +56,13 @@
      <xsl:with-param name="template" select="'base-entity.xsl'"/>
    </xsl:call-template>
    
+   <!-- Helper class -->
+   <xsl:call-template name="generate-java">
+     <xsl:with-param name="class" select="concat(//entity[@root='true']/@class-name, 'Helper')"/>
+     <xsl:with-param name="package" select="$package"/>
+     <xsl:with-param name="template" select="'helper.xsl'"/>
+   </xsl:call-template>
+   
    <xsl:if test="@enable-xml-sample='true'">
       <!-- model.xml file -->
       <xsl:call-template name="generate-test-resource">
