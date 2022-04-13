@@ -61,7 +61,7 @@ public class DalJdbcMojo extends AbstractCodegenMojo {
 
    public void execute() throws MojoExecutionException, MojoFailureException {
       if (skip) {
-         getLog().info("Model codegen was skipped explicitly.");
+         getLog().info("DAL JDBC code generation is skipped explicitly.");
          return;
       }
 
@@ -87,6 +87,8 @@ public class DalJdbcMojo extends AbstractCodegenMojo {
       GenerateContext ctx = createContext(manifestFile, sourceDir);
 
       m_generator.generate(ctx);
+
+      getLog().info(ctx.getGeneratedFiles() + " files generated.");
 
       if (test) {
          getProject().addTestCompileSourceRoot(sourceDir);

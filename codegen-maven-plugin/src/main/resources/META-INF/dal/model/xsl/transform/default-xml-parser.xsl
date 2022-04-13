@@ -17,7 +17,7 @@
    <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:call-template name='import-list'/>
-   <xsl:value-of select="$empty"/>public class DefaultSaxParser extends DefaultHandler {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>public class DefaultXmlParser extends DefaultHandler {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name="declare-field-variables"/>
    <xsl:call-template name='method-parse'/>
    <xsl:call-template name='method-build-any'/>
@@ -114,7 +114,7 @@
 <xsl:template name="declare-field-variables">
    private DefaultLinker m_linker = new DefaultLinker(true);
 
-   private DefaultSaxMaker m_maker = new DefaultSaxMaker();
+   private DefaultXmlMaker m_maker = new DefaultXmlMaker();
 
    private Stack<xsl:value-of select="'&lt;String&gt;'" disable-output-escaping="yes"/> m_tags = new Stack<xsl:value-of select="'&lt;String&gt;'" disable-output-escaping="yes"/>();
 
@@ -144,7 +144,7 @@
       <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   private static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> type, InputSource is) throws SAXException, IOException {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         DefaultSaxParser parser = new DefaultSaxParser();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         DefaultXmlParser parser = new DefaultXmlParser();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         SAXParserFactory factory = SAXParserFactory.newInstance();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>         factory.setValidating(false);<xsl:value-of select="$empty-line"/>

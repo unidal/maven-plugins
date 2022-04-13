@@ -10,7 +10,7 @@ public class DalModelMojoTest extends AbstractCodegenMojoTest {
    @Test
    public void testMojo() throws Exception {
       AbstractCodegenMojo mojo = CodegenMojoBuilder.builder(this, DalModelMojo.class) //
-            .pom("model-pom.xml") //
+            .pom("pom.xml") //
             .component("m_generator", Generator.class, "dal-model") //
             .build();
       File baseDir = mojo.getProject().getBasedir();

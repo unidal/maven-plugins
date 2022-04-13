@@ -54,13 +54,13 @@ public class DalModelMojo extends AbstractCodegenMojo {
    /**
     * for test or not
     * 
-    * @parameter expression="${codegen.test}" default-value="false"
+    * @parameter default-value="false"
     */
    private boolean test;
 
    public void execute() throws MojoExecutionException, MojoFailureException {
       if (skip) {
-         getLog().info("Model codegen was skipped explicitly.");
+         getLog().info("DAL model code generation is skipped explicitly.");
          return;
       }
 
@@ -87,12 +87,13 @@ public class DalModelMojo extends AbstractCodegenMojo {
 
       m_generator.generate(ctx);
 
+      getLog().info(ctx.getGeneratedFiles() + " files generated.");
+
       if (test) {
          getProject().addTestCompileSourceRoot(sourceDir);
       } else {
          getProject().addCompileSourceRoot(sourceDir);
       }
-
    }
 
    @Override

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tenant-report period="HOUR" start-time="2022-03-29 11:00:00">
+   <organization code="org-a" name="Organization A"/>
+   <tenant code="tenant-a" name="Tenant A" organization="org-a" creation-date="2022-02-20 20:58:00" last-modified-date="2022-02-20 20:58:00">
+      <domain name="domain-a" id="10001" creation-date="2022-02-20 20:58:00" last-modified-date="2022-02-20 20:58:00">
+         <process name="123@localhost" id="123456" creation-date="2022-02-20 20:58:00" last-modified-date="2022-02-20 20:58:00"/>
+      </domain>
+   </tenant>
+</tenant-report>

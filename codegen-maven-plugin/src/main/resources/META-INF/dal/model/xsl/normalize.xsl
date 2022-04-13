@@ -49,6 +49,18 @@
             <xsl:with-param name="name" select="$normalized-name"/>
          </xsl:call-template>
       </xsl:variable>
+      <xsl:variable name="class-prefix">
+         <xsl:choose>
+            <xsl:when test="@class-prefix"><xsl:value-of select="@class-prefix"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="../@class-prefix"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+      <xsl:variable name="class-suffix">
+         <xsl:choose>
+            <xsl:when test="@class-suffix"><xsl:value-of select="@class-suffix"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="../@class-suffix"/></xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
       <xsl:variable name="class-name">
          <xsl:choose>
             <xsl:when test="@class-name">
@@ -61,9 +73,9 @@
                </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:value-of select="../@class-prefix"/>
+               <xsl:value-of select="$class-prefix"/>
                <xsl:value-of select="$capital-name"/>
-               <xsl:value-of select="../@class-suffix"/>
+               <xsl:value-of select="$class-suffix"/>
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>

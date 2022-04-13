@@ -57,8 +57,7 @@ public class CodeMojo extends AbstractMojo {
 
          String target = m_obfuscater.encode(source);
 
-         getLog().info("The result is:");
-         getLog().info("~{" + target + "}");
+         getLog().info("The result is: ~{" + target + "}");
       } catch (Exception e) {
          throw new MojoFailureException("Error when encoding text: " + source, e);
       }

@@ -42,7 +42,7 @@ public abstract class AbstractCodegenMojo extends AbstractMojo {
 
    protected abstract String getCodegenType();
 
-   protected MavenProject getProject() {
+   public MavenProject getProject() {
       return m_project;
    }
 

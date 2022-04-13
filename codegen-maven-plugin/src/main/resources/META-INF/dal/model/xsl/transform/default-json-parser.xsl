@@ -203,7 +203,7 @@
 <xsl:template name="method-create-root-entity">
    private Object createRootEntity() {
       try {
-         Object entity = m_entityClass.newInstance();
+         Object entity = m_entityClass.getConstructor().newInstance();
 
          return entity;
       } catch (Exception e) {

@@ -17,7 +17,7 @@
    <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:call-template name='import-list'/>
-   <xsl:value-of select="$empty"/>public class DefaultSaxMaker implements IMaker<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'Attributes'"/></xsl:call-template> {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>public class DefaultXmlMaker implements IMaker<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'Attributes'"/></xsl:call-template> {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name='method-build-children'/>
    <xsl:call-template name='method-convert-value'/>
    <xsl:call-template name='method-to-class'/>
