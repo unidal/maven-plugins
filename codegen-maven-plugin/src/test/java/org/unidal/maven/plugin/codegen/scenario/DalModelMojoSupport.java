@@ -5,10 +5,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,12 +25,6 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.unidal.codegen.generator.Generator;
 import org.unidal.helper.Files;
 import org.unidal.helper.Reflects;
@@ -46,7 +36,7 @@ import org.unidal.lookup.PlexusContainer;
 import org.unidal.maven.plugin.codegen.AbstractCodegenMojo;
 import org.unidal.maven.plugin.codegen.DalModelMojo;
 
-public abstract class DalModelMojoSupport extends ComponentTestCase {
+public class DalModelMojoSupport extends ComponentTestCase {
    protected static void setField(Object instance, String fieldName, Object value) throws Exception {
       Field field = Reflects.forField().getDeclaredField(instance, fieldName);
 
@@ -96,9 +86,10 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
    protected void checkOne(String scenario) throws Exception {
       MyHelper helper = new MyHelper(scenario);
 
+      Files.forDir().delete(new File(helper.getBaseDir(), "target"), true);
+
       generateCode(helper);
       compileSource(helper);
-      runTests(helper);
 
       if (!helper.checkError()) {
          throw helper.buildError();
@@ -110,7 +101,7 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
       DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
       StandardJavaFileManager manager = compiler.getStandardFileManager(diagnostics, null, null);
 
-      manager.setLocation(StandardLocation.SOURCE_PATH, helper.getSourcePath());
+      manager.setLocation(StandardLocation.SOURCE_PATH, helper.getSourcePaths());
       manager.setLocation(StandardLocation.CLASS_OUTPUT, helper.getClassOutput());
 
       boolean success = compiler.getTask(null, manager, diagnostics, null, null, helper.sourceFiles()).call();
@@ -148,13 +139,6 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
       return baseDir;
    }
 
-   private void runTests(MyHelper helper) throws Exception {
-      MyTestRunner runner = new MyTestRunner(helper);
-
-      runner.prepare();
-      runner.runTests();
-   }
-
    private static class MyHelper {
       private String m_scenario;
 
@@ -176,18 +160,6 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
 
       public void addMessage(Diagnostic<? extends JavaFileObject> diagnostic) {
          m_messages.add(new MyMessage(this, diagnostic));
-      }
-
-      public void addMessage(Error error) {
-         m_messages.add(new MyMessage(this, error));
-      }
-
-      public void addMessage(Exception exception) {
-         m_messages.add(new MyMessage(this, exception));
-      }
-
-      public void addMessage(String message, Exception exception) {
-         m_messages.add(new MyMessage(this, message, exception));
       }
 
       public Error buildError() {
@@ -236,10 +208,6 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
          return pathOf(true, "target/classes");
       }
 
-      public File getCompiledClassesPath() {
-         return new File(m_baseDir, "target/classes");
-      }
-
       public File getGeneratedSourcePath() {
          return new File(m_baseDir, "target/generated-sources");
       }
@@ -256,7 +224,7 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
          return m_scenario;
       }
 
-      public List<File> getSourcePath() {
+      public List<File> getSourcePaths() {
          return pathOf(false, "sources", "target/generated-sources", "test-sources");
       }
 
@@ -283,7 +251,7 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
       public List<JavaFileObject> sourceFiles() {
          final List<JavaFileObject> files = new ArrayList<JavaFileObject>();
 
-         for (File path : getSourcePath()) {
+         for (File path : getSourcePaths()) {
             Scanners.forDir().scan(path, new SourceFileMatcher(files));
          }
 
@@ -429,207 +397,6 @@ public abstract class DalModelMojoSupport extends ComponentTestCase {
          };
 
          setField(m_mojo, "m_project", project);
-      }
-   }
-
-   private static class MyTestClass {
-      private Class<?> m_klass;
-
-      private List<Method> m_beforeClassMethods = new ArrayList<Method>();
-
-      private List<Method> m_afterClassMethods = new ArrayList<Method>();
-
-      private List<Method> m_beforeMethods = new ArrayList<Method>();
-
-      private List<Method> m_afterMethods = new ArrayList<Method>();
-
-      private List<Method> m_testMethods = new ArrayList<Method>();
-
-      public MyTestClass(Class<?> klass) {
-         m_klass = klass;
-
-         initialize();
-      }
-
-      private void handleException(MyHelper helper, Method method, Throwable t) {
-         if (t instanceof Exception) {
-            Exception e = (Exception) t;
-            Test test = method.getAnnotation(Test.class);
-
-            if (test != null) {
-               if (test.expected() != Test.None.class) {
-                  String message = String.format("Unexpected exception, expected<%s> but was<%s>", test.expected().getName(),
-                        e.getClass().getName());
-
-                  helper.addMessage(message, e);
-               } else {
-                  String message = String.format("Exception %s thrown. ", e.getClass().getName());
-
-                  helper.addMessage(message, e);
-               }
-            } else if (Modifier.isStatic(method.getModifiers())) {
-               helper.addMessage(e);
-            } else {
-               helper.addMessage(null, e);
-            }
-         } else if (t instanceof Error) {
-            helper.addMessage((Error) t);
-         }
-      }
-
-      private void initialize() {
-         Method[] methods = m_klass.getMethods();
-
-         for (Method method : methods) {
-            if (method.getDeclaringClass() == Object.class) {
-               continue;
-            } else if (method.getParameterCount() != 0 || method.getReturnType() != Void.TYPE) {
-               continue;
-            }
-
-            // no arguments and no return
-            if (Modifier.isStatic(method.getModifiers())) { // static method
-               BeforeClass bc = method.getAnnotation(BeforeClass.class);
-               AfterClass ac = method.getAnnotation(AfterClass.class);
-
-               if (bc != null) {
-                  m_beforeClassMethods.add(method);
-               } else if (ac != null) {
-                  m_afterClassMethods.add(method);
-               }
-            } else { // member method
-               Before bc = method.getAnnotation(Before.class);
-               After ac = method.getAnnotation(After.class);
-               Test test = method.getAnnotation(Test.class);
-               Ignore ignore = method.getAnnotation(Ignore.class);
-
-               if (bc != null) {
-                  m_beforeMethods.add(method);
-               } else if (ac != null) {
-                  m_afterMethods.add(method);
-               } else if (test != null && ignore == null) {
-                  m_testMethods.add(method);
-               }
-            }
-         }
-      }
-
-      public boolean isEligible() {
-         Ignore ignore = m_klass.getAnnotation(Ignore.class);
-
-         return ignore == null && !m_testMethods.isEmpty();
-      }
-
-      public void run(MyHelper helper) throws Exception {
-         for (Method beforeClass : m_beforeClassMethods) {
-            try {
-               beforeClass.invoke(null);
-            } catch (Exception e) {
-               handleException(helper, beforeClass, e.getCause());
-               return;
-            }
-         }
-
-         for (Method method : m_testMethods) {
-            // make new instance every time
-            Object instance = m_klass.getDeclaredConstructor().newInstance();
-
-            for (Method before : m_beforeMethods) {
-               try {
-                  before.invoke(instance);
-               } catch (Exception e) {
-                  handleException(helper, before, e.getCause());
-                  return;
-               }
-            }
-
-            try {
-               method.invoke(instance);
-            } catch (Error e) {
-               helper.addMessage(e);
-            } catch (Exception e) {
-               handleException(helper, method, e.getCause());
-            }
-
-            for (Method after : m_afterMethods) {
-               try {
-                  after.invoke(instance);
-               } catch (Exception e) {
-                  handleException(helper, after, e.getCause());
-                  return;
-               }
-            }
-         }
-
-         for (Method afterClass : m_afterClassMethods) {
-            try {
-               afterClass.invoke(null);
-            } catch (Exception e) {
-               // ignore it
-            }
-         }
-      }
-   }
-
-   private static class MyTestRunner {
-      private MyHelper m_helper;
-
-      private URLClassLoader m_classloader;
-
-      private List<MyTestClass> m_testClasses = new ArrayList<MyTestClass>();
-
-      public MyTestRunner(MyHelper helper) {
-         m_helper = helper;
-      }
-
-      public void prepare() throws Exception {
-         File path = m_helper.getCompiledClassesPath();
-         final List<String> classNames = new ArrayList<String>();
-
-         m_classloader = new URLClassLoader(new URL[] { path.toURI().toURL() }, getClass().getClassLoader());
-
-         Scanners.forDir().scan(path, new FileMatcher() {
-            @Override
-            public Direction matches(File base, String path) {
-               if (path.endsWith("Test.class")) {
-                  String className = path.substring(0, path.length() - 6).replace('/', '.');
-
-                  if (className.lastIndexOf('$') < 0) {
-                     classNames.add(className);
-                  }
-               }
-
-               return Direction.DOWN;
-            }
-         });
-
-         for (String className : classNames) {
-            MyTestClass testClass = tryLoadTestClass(className);
-
-            if (testClass != null && testClass.isEligible()) {
-               m_testClasses.add(testClass);
-            }
-         }
-      }
-
-      public void runTests() throws Exception {
-         for (MyTestClass testClass : m_testClasses) {
-            testClass.run(m_helper);
-         }
-      }
-
-      private MyTestClass tryLoadTestClass(String className) throws Exception {
-         try {
-            Class<?> klass = m_classloader.loadClass(className);
-
-            if (!klass.isInterface() && !klass.isEnum() && !klass.isAnnotation() && !klass.isSynthetic()) {
-               return new MyTestClass(klass);
-            }
-         } catch (Exception e) {
-            e.printStackTrace();
-         }
-
-         return null;
       }
    }
 

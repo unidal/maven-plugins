@@ -6,8 +6,6 @@ import java.io.InputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.cat.report.tenant.model.entity.TenantReport;
-import org.unidal.cat.report.tenant.model.transform.DefaultXmlBuilder;
-import org.unidal.cat.report.tenant.model.transform.DefaultXmlParser;
 import org.unidal.helper.Files;
 import org.xml.sax.SAXException;
 
@@ -16,11 +14,35 @@ public class DefaultXmlTest {
    public void test() throws SAXException, IOException {
       InputStream in = getClass().getResourceAsStream("/tenant-report.xml");
       String xml = Files.forIO().readUtf8String(in);
+      TenantReport report = TenantReportHelper.fromXml(xml);
+      String xml2 = TenantReportHelper.asXml(report);
 
-      TenantReport report = DefaultXmlParser.parse(xml);
-      String actual = new DefaultXmlBuilder().buildXml(report);
+      System.out.println(xml2);
+      Assert.assertEquals(xml.replaceAll("\r\n", "\n"), xml2.replaceAll("\r\n", "\n"));
+   }
 
-      Assert.assertEquals(xml.replaceAll("\r\n", "\n"), actual.replaceAll("\r\n", "\n"));
+   @Test
+   public void test2() throws SAXException, IOException {
+      InputStream in = getClass().getResourceAsStream("/tenant-report.xml");
+      TenantReport report = TenantReportHelper.fromXml(in);
 
+      String xml = TenantReportHelper.asXml(report);
+
+      System.out.println(xml);
+   }
+
+   @Test(expected = RuntimeException.class)
+   public void test3() throws Exception {
+      throw new RuntimeException("Aha");
+   }
+
+   @Test(expected = RuntimeException.class)
+   public void test4() throws Exception {
+      // throw new Exception("Aha");
+   }
+
+   @Test
+   public void test5() throws Exception {
+      throw new AssertionError("Aha");
    }
 }
