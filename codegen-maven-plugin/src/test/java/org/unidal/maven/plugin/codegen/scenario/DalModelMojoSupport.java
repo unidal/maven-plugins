@@ -2,8 +2,6 @@ package org.unidal.maven.plugin.codegen.scenario;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +35,14 @@ import org.unidal.maven.plugin.codegen.AbstractCodegenMojo;
 import org.unidal.maven.plugin.codegen.DalModelMojo;
 
 public class DalModelMojoSupport extends ComponentTestCase {
-   protected static void setField(Object instance, String fieldName, Object value) throws Exception {
+   private static void setField(Object instance, String fieldName, Object value) throws Exception {
       Field field = Reflects.forField().getDeclaredField(instance, fieldName);
 
       field.setAccessible(true);
       field.set(instance, value);
    }
 
-   protected <T extends AbstractCodegenMojo> MyMojoBuilder<T> builderOf(Class<T> mojoClass, MyHelper helper)
+   private <T extends AbstractCodegenMojo> MyMojoBuilder<T> builderOf(Class<T> mojoClass, MyHelper helper)
          throws Exception {
       MyMojoBuilder<T> builder = new MyMojoBuilder<T>();
 
@@ -52,7 +50,74 @@ public class DalModelMojoSupport extends ComponentTestCase {
       return builder;
    }
 
-   protected void checkAll() throws Exception {
+   private void compileSource(MyHelper helper) throws Exception {
+      JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+      DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+      StandardJavaFileManager manager = compiler.getStandardFileManager(diagnostics, null, null);
+
+      manager.setLocation(StandardLocation.SOURCE_PATH, helper.getSourcesPath());
+      manager.setLocation(StandardLocation.CLASS_OUTPUT, helper.getClassOutput());
+
+      boolean success = compiler.getTask(null, manager, diagnostics, null, null, helper.sourceFiles()).call();
+
+      manager.close();
+
+      if (!success) {
+         for (Diagnostic<? extends JavaFileObject> d : diagnostics.getDiagnostics()) {
+            helper.addMessage(d);
+         }
+      }
+   }
+
+   private void copyResources(MyHelper helper) throws IOException {
+      File resourcesPath = helper.getTestResourcesPath();
+
+      if (resourcesPath.isDirectory()) {
+         File classOutput = helper.getClassOutput().get(0);
+
+         Files.forDir().copyDir(resourcesPath, classOutput);
+      }
+   }
+
+   private File generateCode(MyHelper helper) throws Exception {
+      File baseDir = helper.getBaseDir();
+      DalModelMojo mojo = builderOf(DalModelMojo.class, helper) //
+            .component("m_generator", Generator.class, "dal-model").build();
+      final AtomicReference<File> manifest = new AtomicReference<File>();
+
+      Scanners.forDir().scan(new File(baseDir, "model"), new FileMatcher() {
+         @Override
+         public Direction matches(File base, String path) {
+            if (path.endsWith("-manifest.xml")) {
+               manifest.set(new File(base, path));
+            }
+
+            return Direction.NEXT;
+         }
+      });
+
+      setField(mojo, "sourceDir", helper.getGeneratedSourcesPath().toString());
+      setField(mojo, "manifest", manifest.get().getPath());
+
+      mojo.execute();
+      return baseDir;
+   }
+
+   protected void prepare(String scenario) throws Exception {
+      MyHelper helper = new MyHelper(scenario);
+
+      Files.forDir().delete(new File(helper.getBaseDir(), "target"), true);
+
+      generateCode(helper);
+      compileSource(helper);
+      copyResources(helper);
+
+      if (!helper.checkError()) {
+         throw helper.buildError();
+      }
+   }
+
+   protected void prepareAll() throws Exception {
       final List<String> scenarios = new ArrayList<String>();
       MyHelper helper = new MyHelper("");
 
@@ -81,62 +146,6 @@ public class DalModelMojoSupport extends ComponentTestCase {
       if (!helper.checkError()) {
          throw helper.buildError();
       }
-   }
-
-   protected void checkOne(String scenario) throws Exception {
-      MyHelper helper = new MyHelper(scenario);
-
-      Files.forDir().delete(new File(helper.getBaseDir(), "target"), true);
-
-      generateCode(helper);
-      compileSource(helper);
-
-      if (!helper.checkError()) {
-         throw helper.buildError();
-      }
-   }
-
-   private void compileSource(MyHelper helper) throws Exception {
-      JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-      DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
-      StandardJavaFileManager manager = compiler.getStandardFileManager(diagnostics, null, null);
-
-      manager.setLocation(StandardLocation.SOURCE_PATH, helper.getSourcePaths());
-      manager.setLocation(StandardLocation.CLASS_OUTPUT, helper.getClassOutput());
-
-      boolean success = compiler.getTask(null, manager, diagnostics, null, null, helper.sourceFiles()).call();
-
-      manager.close();
-
-      if (!success) {
-         for (Diagnostic<? extends JavaFileObject> d : diagnostics.getDiagnostics()) {
-            helper.addMessage(d);
-         }
-      }
-   }
-
-   private File generateCode(MyHelper helper) throws Exception {
-      File baseDir = helper.getBaseDir();
-      DalModelMojo mojo = builderOf(DalModelMojo.class, helper) //
-            .component("m_generator", Generator.class, "dal-model").build();
-      final AtomicReference<File> manifest = new AtomicReference<File>();
-
-      Scanners.forDir().scan(new File(baseDir, "model"), new FileMatcher() {
-         @Override
-         public Direction matches(File base, String path) {
-            if (path.endsWith("-manifest.xml")) {
-               manifest.set(new File(base, path));
-            }
-
-            return Direction.NEXT;
-         }
-      });
-
-      setField(mojo, "sourceDir", helper.getGeneratedSourcePath().toString());
-      setField(mojo, "manifest", manifest.get().getPath());
-
-      mojo.execute();
-      return baseDir;
    }
 
    private static class MyHelper {
@@ -180,9 +189,7 @@ public class DalModelMojoSupport extends ComponentTestCase {
 
          sb.insert(0, String.format("Generated code failed to compile, %s errors found:\r\n", count));
 
-         AssertionError error = new AssertionError(sb.substring(0, sb.length() - 2), cause);
-
-         return error;
+         return new AssertionError(sb.substring(0, sb.length() - 2), cause);
       }
 
       public boolean checkError() {
@@ -208,7 +215,7 @@ public class DalModelMojoSupport extends ComponentTestCase {
          return pathOf(true, "target/classes");
       }
 
-      public File getGeneratedSourcePath() {
+      public File getGeneratedSourcesPath() {
          return new File(m_baseDir, "target/generated-sources");
       }
 
@@ -224,8 +231,12 @@ public class DalModelMojoSupport extends ComponentTestCase {
          return m_scenario;
       }
 
-      public List<File> getSourcePaths() {
+      public List<File> getSourcesPath() {
          return pathOf(false, "sources", "target/generated-sources", "test-sources");
+      }
+
+      public File getTestResourcesPath() {
+         return new File(m_baseDir, "test-resources");
       }
 
       private List<File> pathOf(boolean createIfNotExists, String... files) {
@@ -251,7 +262,7 @@ public class DalModelMojoSupport extends ComponentTestCase {
       public List<JavaFileObject> sourceFiles() {
          final List<JavaFileObject> files = new ArrayList<JavaFileObject>();
 
-         for (File path : getSourcePaths()) {
+         for (File path : getSourcesPath()) {
             Scanners.forDir().scan(path, new SourceFileMatcher(files));
          }
 
@@ -272,14 +283,12 @@ public class DalModelMojoSupport extends ComponentTestCase {
       }
    }
 
-   protected static class MyMessage {
+   private static class MyMessage {
       private String m_message;
 
       private Throwable m_cause;
 
       private boolean m_error;
-
-      private boolean m_failed;
 
       public MyMessage(MyHelper helper, Diagnostic<? extends JavaFileObject> diagnostic) {
          StringBuilder sb = new StringBuilder(256);
@@ -297,53 +306,12 @@ public class DalModelMojoSupport extends ComponentTestCase {
          m_error = diagnostic.getKind().name().equals("ERROR");
       }
 
-      public MyMessage(MyHelper helper, Error error) {
-         StringBuilder sb = new StringBuilder(256);
-
-         sb.append('[').append(helper.getScenario()).append("] [FAILED] ");
-         append(sb, error);
-
-         m_message = sb.toString();
-         m_cause = error;
-         m_failed = true;
-      }
-
-      public MyMessage(MyHelper helper, Exception exception) {
-         StringBuilder sb = new StringBuilder(256);
-
-         sb.append('[').append(helper.getScenario()).append("] [ERROR] ");
-         append(sb, exception);
-
-         m_message = sb.toString();
-         m_cause = exception;
-         m_error = true;
-      }
-
-      public MyMessage(MyHelper helper, String message, Exception exception) {
-         StringBuilder sb = new StringBuilder(256);
-
-         sb.append('[').append(helper.getScenario()).append("] [FAILED] ");
-         sb.append(message);
-         append(sb, exception);
-
-         m_message = sb.toString();
-         m_cause = exception;
-         m_failed = true;
-      }
-
-      private void append(StringBuilder sb, Throwable t) {
-         StringWriter sw = new StringWriter(2048);
-
-         t.printStackTrace(new PrintWriter(sw));
-         sb.append(sw.toString());
-      }
-
       public Throwable getCause() {
          return m_cause;
       }
 
       public boolean isSuccess() {
-         return !m_error && !m_failed;
+         return !m_error;
       }
 
       @Override
@@ -352,7 +320,7 @@ public class DalModelMojoSupport extends ComponentTestCase {
       }
    }
 
-   protected static class MyMojoBuilder<T extends AbstractCodegenMojo> {
+   private static class MyMojoBuilder<T extends AbstractCodegenMojo> {
       private PlexusContainer m_container;
 
       private T m_mojo;
@@ -362,10 +330,6 @@ public class DalModelMojoSupport extends ComponentTestCase {
 
       public T build() throws Exception {
          return m_mojo;
-      }
-
-      public MyMojoBuilder<T> component(String fieldName, Class<?> role) throws Exception {
-         return component(fieldName, role, null);
       }
 
       public MyMojoBuilder<T> component(String fieldName, Class<?> role, String roleHint) throws Exception {

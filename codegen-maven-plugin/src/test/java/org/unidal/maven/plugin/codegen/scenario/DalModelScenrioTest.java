@@ -5,11 +5,11 @@ import org.junit.Test;
 public class DalModelScenrioTest extends DalModelMojoSupport {
    @Test
    public void all() throws Exception {
-      checkAll();
+      prepareAll();
    }
 
    @Test
    public void cat2TenantReport() throws Exception {
-      checkOne("cat2-tenant-report");
+      prepare("cat2-tenant-report");
    }
 }

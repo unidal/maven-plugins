@@ -88,7 +88,7 @@ public class DalModelRunner extends Suite {
 
          try {
             support.setUp();
-            support.checkOne(m_scenario);
+            support.prepare(m_scenario);
          } catch (Exception e) {
             e.printStackTrace();
          } finally {
