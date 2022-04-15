@@ -1,0 +1,6 @@
+eunit-excel:src/test/resources/org/unidal/codegen/generator/model/test/eunit_excel_manifest.xml
+eunit-cmd-testfwk:src/test/resources/org/unidal/codegen/generator/model/test/eunit_cmd_testfwk_manifest.xml
+eunit-benchmark-testfwk:src/test/resources/org/unidal/codegen/generator/model/test/eunit_benchmark_testfwk_manifest.xml
+eunit-resource:src/test/resources/org/unidal/codegen/generator/model/test/eunit_resource_manifest.xml
+ctest-report-model:src/test/resources/org/unidal/codegen/generator/model/test/ctest_report_model_manifest.xml
+eunit-testfwk:src/test/resources/org/unidal/codegen/generator/model/test/eunit_testfwk_manifest.xml

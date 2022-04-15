@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<model model-package="org.unidal.garden.rose.model" class-suffix="Kpi" enable-sax-parser="true" enable-json-builder="true">
-  <entity name="sum">
-    <attribute name="unit" value-type="String" />
-    <element name="text" alias="items" value-type="Integer[]" text="true" />
-  </entity>
-</model>
-

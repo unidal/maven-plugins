@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="org.unidal.codegen.key" enable-merger="true" enable-json-builder="true"
+   enable-xml="true" enable-native="true" enable-base-visitor="true" enable-model-test="true">
+   <entity name="root-element" dynamic-attributes="true" root="true">
+      <entity-ref name="no-key" type="list" names="no-key-list" />
+      <entity-ref name="one-key" type="list" names="one-key-list" method-find-or-create="true" />
+      <entity-ref name="one-key" alias="one-key-entry" type="map" names="one-key-map" xml-indent="true" method-find-or-create="true" />
+      <entity-ref name="two-key" type="list" names="two-key-list" method-find-or-create="true" />
+      <entity-ref name="two-key" alias="two-key-entry" type="map" names="two-key-map" xml-indent="true" method-find-or-create="true" />
+      <entity-ref name="three-key" type="list" names="three-key-list" xml-indent="true" method-find-or-create="true" />
+      <entity-ref name="three-key" alias="three-key-entry" type="map" names="three-key-map" xml-indent="true" method-find-or-create="true" />
+   </entity>
+   <entity name="no-key">
+      <attribute name="i1" value-type="int" />
+      <attribute name="l1" value-type="long" />
+      <attribute name="s1" value-type="String" />
+      <element name="e1" value-type="String" />
+      <element name="e2" value-type="String" />
+   </entity>
+   <entity name="one-key">
+      <attribute name="key" value-type="int" key="true" />
+      <attribute name="i1" value-type="int" />
+      <attribute name="l1" value-type="long" />
+      <attribute name="s1" value-type="String" />
+      <element name="e1" value-type="String" />
+      <element name="e2" value-type="String" />
+   </entity>
+   <entity name="two-key">
+      <attribute name="key2" value-type="int" key="true" key-index="2"/>
+      <attribute name="key1" value-type="String" key="true" />
+      <attribute name="i1" value-type="int" />
+      <attribute name="l1" value-type="long" />
+      <attribute name="s1" value-type="String" />
+      <element name="e1" value-type="String" />
+      <element name="e2" value-type="String" />
+   </entity>
+   <entity name="three-key">
+      <attribute name="key2" value-type="int" key="true" key-index="2"/>
+      <attribute name="key1" value-type="String" key="true" />
+      <attribute name="key3" value-type="int" key="true" key-index="3" primitive="true"/>
+      <attribute name="i1" value-type="int" />
+      <attribute name="l1" value-type="long" />
+      <attribute name="s1" value-type="String" />
+      <element name="e1" value-type="String" />
+      <element name="e2" value-type="String" />
+   </entity>
+</model>

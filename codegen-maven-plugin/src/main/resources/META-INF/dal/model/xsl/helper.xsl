@@ -26,6 +26,11 @@
    <xsl:call-template name='import-list'/>
    <xsl:value-of select="$empty"/>public class <xsl:value-of select="$class-name"/>Helper {<xsl:value-of select="$empty"/>
 
+<xsl:if test="$with-json-builder">
+   public static String asJson(IEntity<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'?'"/></xsl:call-template> entity) {
+      return new DefaultJsonBuilder().build(entity);
+   }
+</xsl:if>
 <xsl:if test="$with-native-builder">
    public static byte[] asNative(IEntity<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'?'"/></xsl:call-template> entity) {
       ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
@@ -46,7 +51,7 @@
    }
 
    public static <xsl:value-of select="$class-name"/> fromNative(InputStream in) throws IOException {
-      return fromXml(<xsl:value-of select="$class-name"/>.class, in);
+      return fromNative(<xsl:value-of select="$class-name"/>.class, in);
    }<xsl:value-of select="$empty-line"/>
 </xsl:if>
 <xsl:if test="$with-xml-parser">
@@ -112,6 +117,10 @@
       <xsl:value-of select="$empty"/>import <xsl:value-of select="$package"/>.entity.<xsl:value-of select="$class-name"/>;<xsl:value-of select="$empty-line"/>
    </xsl:if>
 
+   <xsl:if test="$with-json-builder">
+      <xsl:value-of select="$empty"/>import <xsl:value-of select="$package"/>.transform.DefaultJsonBuilder;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
+
    <xsl:if test="$with-native-builder">
       <xsl:value-of select="$empty"/>import <xsl:value-of select="$package"/>.transform.DefaultNativeBuilder;<xsl:value-of select="$empty-line"/>
    </xsl:if>
@@ -120,7 +129,7 @@
       <xsl:value-of select="$empty"/>import <xsl:value-of select="$package"/>.transform.DefaultNativeParser;<xsl:value-of select="$empty-line"/>
    </xsl:if>
 
-   <xsl:if test="$with-native-builder">
+   <xsl:if test="$with-xml-builder">
       <xsl:value-of select="$empty"/>import <xsl:value-of select="$package"/>.transform.DefaultXmlBuilder;<xsl:value-of select="$empty-line"/>
     </xsl:if>
 

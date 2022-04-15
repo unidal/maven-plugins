@@ -23,6 +23,7 @@
             </xsl:otherwise>
          </xsl:choose>
       </xsl:attribute>
+      <xsl:attribute name="enable-xml-builder">true</xsl:attribute>
       
       <xsl:apply-templates/>
    </xsl:copy>

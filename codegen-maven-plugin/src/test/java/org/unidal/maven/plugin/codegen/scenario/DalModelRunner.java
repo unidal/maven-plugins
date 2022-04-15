@@ -59,6 +59,8 @@ public class DalModelRunner extends Suite {
          }
       });
 
+      Collections.sort(scenarios);
+
       return scenarios;
    }
 
@@ -86,8 +88,9 @@ public class DalModelRunner extends Suite {
       protected List<Runner> getChildren() {
          try {
             new DalModelMojoSupport().run(m_scenario);
-         } catch (Exception e1) {
-            e1.printStackTrace();
+         } catch (Exception e) {
+            System.out.println(String.format("[%s] [ERROR]", m_scenario));
+            e.printStackTrace();
          }
 
          List<Runner> children = new ArrayList<Runner>();

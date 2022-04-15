@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
@@ -89,7 +90,7 @@ public class DalModelMojoSupport extends ComponentTestCase {
       Scanners.forDir().scan(new File(baseDir, "model"), new FileMatcher() {
          @Override
          public Direction matches(File base, String path) {
-            if (path.endsWith("-manifest.xml")) {
+            if (path.equals("manifest.xml") || path.endsWith("-manifest.xml")) {
                manifest.set(new File(base, path));
             }
 
@@ -148,17 +149,54 @@ public class DalModelMojoSupport extends ComponentTestCase {
          }
       });
 
+      Collections.sort(scenarios);
+
       for (String scenario : scenarios) {
-         MyHelper h = new MyHelper(scenario);
-
-         generateCode(h);
-         compileSource(h);
-
-         helper.getMessages().addAll(h.getMessages());
+         try {
+            setUp();
+            prepare(scenario);
+         } finally {
+            try {
+               tearDown();
+            } catch (Exception e) {
+               // ignore it
+            }
+         }
       }
+   }
 
-      if (!helper.checkError()) {
-         throw helper.buildError();
+   protected void runStartAt(final String firstScenario) throws Exception {
+      final List<String> scenarios = new ArrayList<String>();
+      MyHelper helper = new MyHelper("");
+
+      Scanners.forDir().scan(helper.getBaseDir(), new DirMatcher() {
+         @Override
+         public Direction matches(File base, String path) {
+            File file = new File(base, path);
+
+            if (file.isDirectory() && new File(file, "model").isDirectory()) {
+               if (path.compareTo(firstScenario) >= 0) {
+                  scenarios.add(path);
+               }
+            }
+
+            return Direction.NEXT;
+         }
+      });
+
+      Collections.sort(scenarios);
+
+      for (String scenario : scenarios) {
+         try {
+            setUp();
+            prepare(scenario);
+         } finally {
+            try {
+               tearDown();
+            } catch (Exception e) {
+               // ignore it
+            }
+         }
       }
    }
 
@@ -235,10 +273,6 @@ public class DalModelMojoSupport extends ComponentTestCase {
 
       public Log getLog() {
          return m_log;
-      }
-
-      public List<MyMessage> getMessages() {
-         return m_messages;
       }
 
       public String getScenario() {

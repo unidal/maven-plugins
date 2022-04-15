@@ -10,6 +10,16 @@
 <xsl:variable name="space" select="' '"/>
 <xsl:variable name="empty" select="''"/>
 <xsl:variable name="empty-line" select="'&#x0A;'"/>
+<xsl:variable name="with-xml-builder" select="/model[@enable-xml='true' or @enable-xml-builder='true']"/>
+<xsl:variable name="with-xml-parser" select="/model[@enable-xml='true' or @enable-xml-parser='true']"/>
+<xsl:variable name="with-json-builder" select="/model[@enable-json='true' or @enable-json-builder='true']"/>
+<xsl:variable name="with-json-parser" select="/model[@enable-json='true' or @enable-json-parser='true']"/>
+<xsl:variable name="with-dom-builder" select="/model[@enable-dom='true' or @enable-dom-builder='true']"/>
+<xsl:variable name="with-dom-parser" select="/model[@enable-dom='true' or @enable-dom-parser='true']"/>
+<xsl:variable name="with-native-builder" select="/model[@enable-native='true' or @enable-native-builder='true']"/>
+<xsl:variable name="with-native-parser" select="/model[@enable-native='true' or @enable-native-parser='true']"/>
+<xsl:variable name="with-native2-builder" select="/model[@enable-native2='true' or @enable-native2-builder='true']"/>
+<xsl:variable name="with-native2-parser" select="/model[@enable-native2='true' or @enable-native2-parser='true']"/>
 
 <xsl:template match="/">
    <xsl:call-template name="manifest"/>
@@ -24,9 +34,7 @@
 
 <xsl:template match="model">
    <xsl:variable name="package" select="@model-package"/>
-   <xsl:variable name="transform-package">
-       <xsl:value-of select="$package"/><xsl:value-of select="'.transform'"/>
-   </xsl:variable>
+   <xsl:variable name="transform-package" select="@transform-package"/>
 
    <!-- IEntity class -->
    <xsl:call-template name="generate-java">
@@ -66,7 +74,7 @@
    <!-- transform package -->
 
    <!-- XML format -->
-   <xsl:if test="@enable-xml='true' or @enable-xml-builder='true'">
+   <xsl:if test="$with-xml-builder">
       <!-- DefaultXmlBuilder class -->
       <xsl:call-template name="generate-java">
          <xsl:with-param name="class" select="'DefaultXmlBuilder'"/>
@@ -74,7 +82,7 @@
          <xsl:with-param name="template" select="'transform/default-xml-builder.xsl'"/>
       </xsl:call-template>
    </xsl:if>
-   <xsl:if test="@enable-xml='true' or @enable-xml-parser='true'">
+   <xsl:if test="$with-xml-parser">
       <!-- DefaultSaxMaker class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'DefaultXmlMaker'"/>
@@ -90,7 +98,7 @@
    </xsl:if>
 
    <!-- JSON format -->
-   <xsl:if test="@enable-json='true' or @enable-json-builder='true'">
+   <xsl:if test="$with-json-builder">
       <!-- DefaultJsonBuilder class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'DefaultJsonBuilder'"/>
@@ -98,7 +106,7 @@
         <xsl:with-param name="template" select="'transform/default-json-builder.xsl'"/>
       </xsl:call-template>
    </xsl:if>
-   <xsl:if test="@enable-json='true' or @enable-json-parser='true'">
+   <xsl:if test="$with-json-parser">
       <!-- DefaultJsonBuilder class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'DefaultJsonParser'"/>
@@ -108,7 +116,7 @@
    </xsl:if>
    
    <!-- DOM format -->
-   <xsl:if test="@enable-dom='true' or @enable-dom-builder='true'">
+   <xsl:if test="$with-dom-builder">
       <!-- DefaultDomMaker class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'DefaultDomBuilder'"/>
@@ -116,7 +124,7 @@
         <xsl:with-param name="template" select="'transform/default-dom-builder.xsl'"/>
       </xsl:call-template>
    </xsl:if>
-   <xsl:if test="@enable-dom='true' or @enable-dom-parser='true'">
+   <xsl:if test="$with-dom-parser">
       <!-- DefaultDomParser class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'DefaultDomParser'"/>
@@ -126,7 +134,7 @@
    </xsl:if>
       
    <!-- Native format -->
-   <xsl:if test="@enable-native='true' or @enable-native-builder='true'">
+   <xsl:if test="$with-native-builder">
       <!-- DefaultNativeBuilder class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'DefaultNativeBuilder'"/>
@@ -135,7 +143,7 @@
       </xsl:call-template>
    </xsl:if>
 
-   <xsl:if test="@enable-native='true' or @enable-native-parser='true'">
+   <xsl:if test="$with-native-parser">
       <!-- DefaultNativeParser class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'DefaultNativeParser'"/>
@@ -145,7 +153,7 @@
    </xsl:if>
       
    <!-- Native2 format -->
-   <xsl:if test="@enable-native2='true' or @enable-native2-builder='true'">
+   <xsl:if test="$with-native2-builder">
       <!-- DefaultNativeBuilder class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'DefaultNative2Builder'"/>
@@ -154,7 +162,7 @@
       </xsl:call-template>
    </xsl:if>
 
-   <xsl:if test="@enable-native2='true' or @enable-native2-parser='true'">
+   <xsl:if test="$with-native2-parser">
       <!-- DefaultNativeParser class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'DefaultNative2Parser'"/>
@@ -163,11 +171,8 @@
       </xsl:call-template>
    </xsl:if>
 
-   <xsl:if test="@enable-xml='true' or @enable-xml-parser='true' or 
-                 @enable-json='true' or @enable-json-parser='true' or 
-                 @enable-dom='true' or @enable-dom-parser='true' or 
-                 @enable-native='true' or @enable-native-parser='true' or 
-                 @enable-native2='true' or @enable-native2-parser='true'">
+   <xsl:if test="$with-xml-parser or $with-json-parser or $with-dom-parser or $with-native-parser or $with-native2-parser or
+   	            @enable-maker='true'">
       <!-- DefaultLinker class -->
       <xsl:call-template name="generate-java">
         <xsl:with-param name="class" select="'DefaultLinker'"/>
@@ -249,7 +254,7 @@
 
    <xsl:if test="@enable-xml-schema='true'">
       <!-- model.xsd file -->
-      <xsl:call-template name="generate-resource">
+      <xsl:call-template name="generate-test-resource">
         <xsl:with-param name="file" select="concat(translate($package,'.','/'), '/', //entity[@root='true']/@name, '.xsd')"/>
         <xsl:with-param name="template" select="'xml/schema.xsl'"/>
       </xsl:call-template>

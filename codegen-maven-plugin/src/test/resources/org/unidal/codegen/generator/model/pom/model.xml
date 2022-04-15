@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<model model-package="org.unidal.codegen.pom.model" enable-xml-parser="true" enable-sax-parser="true">
-   <entity name="project" root="true" dynamic-attributes="true">
-      <any />
-   </entity>
-</model>
