@@ -29,7 +29,6 @@
 </xsl:template>
 
 <xsl:template name="import-list">
-   <xsl:value-of select="$empty"/>import java.io.ByteArrayOutputStream;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.DataOutputStream;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.IOException;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.OutputStream;<xsl:value-of select="$empty-line"/>
@@ -38,6 +37,7 @@
       <xsl:value-of select="$empty"/>import java.util.Map;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    <xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IEntity;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IVisitor;<xsl:value-of select="$empty-line"/>
    <xsl:if test="$policy-filter='true'">
       <xsl:value-of select="$empty"/>import <xsl:value-of select="/model/@model-package"/>.IVisitorEnabled;<xsl:value-of select="$empty-line"/>
@@ -59,25 +59,16 @@
 
    private DataOutputStream m_out;
 
-   public DefaultNativeBuilder(OutputStream out) {
-      this(out, null);
+   public DefaultNativeBuilder() {
+      m_visitor = this;
    }
 
-   public DefaultNativeBuilder(OutputStream out, IVisitor visitor) {
+   public void build(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity, OutputStream out) {
       m_out = new DataOutputStream(out);
-      m_visitor = (visitor == null ? this : visitor);
+
+      entity.accept(m_visitor);
    }
 
-   public static byte[] build(<xsl:value-of select="$root/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$root/@param-name"/>) {
-      ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
-
-      build(<xsl:value-of select="$root/@param-name"/>, out);
-      return out.toByteArray();
-   }
-
-   public static void build(<xsl:value-of select="$root/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$root/@param-name"/>, OutputStream out) {
-      <xsl:value-of select="$root/@param-name"/>.accept(new DefaultNativeBuilder(out));
-   }
 <xsl:if test="$policy-filter='true'">
    @Override
    public void enableVisitor(IVisitor visitor) {

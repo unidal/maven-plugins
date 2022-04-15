@@ -63,52 +63,6 @@
      <xsl:with-param name="template" select="'helper.xsl'"/>
    </xsl:call-template>
    
-   <xsl:if test="@enable-xml-sample='true'">
-      <!-- model.xml file -->
-      <xsl:call-template name="generate-test-resource">
-        <xsl:with-param name="file" select="concat(translate($package,'.','/'), '/', //entity[@root='true']/@name, '.xml')"/>
-        <xsl:with-param name="template" select="'xml/sample.xsl'"/>
-      </xsl:call-template>
-   </xsl:if>
-
-   <xsl:if test="@enable-xml-schema='true'">
-      <!-- model.xsd file -->
-      <xsl:call-template name="generate-resource">
-        <xsl:with-param name="file" select="concat(translate($package,'.','/'), '/', //entity[@root='true']/@name, '.xsd')"/>
-        <xsl:with-param name="template" select="'xml/schema.xsl'"/>
-      </xsl:call-template>
-   </xsl:if>
-   
-   <xsl:if test="@enable-filter='true'">
-      <!-- IFilter class -->
-      <xsl:call-template name="generate-java">
-        <xsl:with-param name="class" select="'IFilter'"/>
-        <xsl:with-param name="package" select="$package"/>
-        <xsl:with-param name="template" select="'ifilter.xsl'"/>
-      </xsl:call-template>
-
-      <!-- IVisitorEnabled class -->
-      <xsl:call-template name="generate-java">
-        <xsl:with-param name="class" select="'IVisitorEnabled'"/>
-        <xsl:with-param name="package" select="$package"/>
-        <xsl:with-param name="template" select="'ivisitor_enabled.xsl'"/>
-      </xsl:call-template>
-
-      <!-- BaseFilter class -->
-      <xsl:call-template name="generate-java">
-        <xsl:with-param name="class" select="'BaseFilter'"/>
-        <xsl:with-param name="package" select="$transform-package"/>
-        <xsl:with-param name="template" select="'transform/base-filter.xsl'"/>
-      </xsl:call-template>
-
-      <!-- VisitorChain class -->
-      <xsl:call-template name="generate-java">
-        <xsl:with-param name="class" select="'VisitorChain'"/>
-        <xsl:with-param name="package" select="$transform-package"/>
-        <xsl:with-param name="template" select="'transform/visitor-chain.xsl'"/>
-      </xsl:call-template>
-   </xsl:if>
-   
    <!-- transform package -->
 
    <!-- XML format -->
@@ -209,6 +163,27 @@
       </xsl:call-template>
    </xsl:if>
 
+   <xsl:if test="@enable-xml='true' or @enable-xml-parser='true' or 
+                 @enable-json='true' or @enable-json-parser='true' or 
+                 @enable-dom='true' or @enable-dom-parser='true' or 
+                 @enable-native='true' or @enable-native-parser='true' or 
+                 @enable-native2='true' or @enable-native2-parser='true'">
+      <!-- DefaultLinker class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'DefaultLinker'"/>
+        <xsl:with-param name="package" select="$transform-package"/>
+        <xsl:with-param name="template" select="'transform/default-linker.xsl'"/>
+      </xsl:call-template>
+   </xsl:if>
+   
+   <xsl:if test="entity/any">
+      <xsl:call-template name="generate-java">
+         <xsl:with-param name="class" select="'Any'"/>
+         <xsl:with-param name="package" select="entity/@entity-package"/>
+         <xsl:with-param name="template" select="'entity/any.xsl'"/>
+      </xsl:call-template>
+   </xsl:if>
+
    <!-- supplement classes -->
    <xsl:if test="@enable-validator='true'">
       <!-- DefaultValidator class -->
@@ -263,39 +238,50 @@
         <xsl:with-param name="template" select="'transform/empty-visitor.xsl'"/>
       </xsl:call-template>
    </xsl:if>
-
-   <xsl:if test="@enable-xml='true' or @enable-xml-parser='true' or 
-                 @enable-json='true' or @enable-json-parser='true' or 
-                 @enable-dom='true' or @enable-dom-parser='true' or 
-                 @enable-native='true' or @enable-native-parser='true' or 
-                 @enable-native2='true' or @enable-native2-parser='true'">
-      <!-- ILinker class -->
-      <xsl:call-template name="generate-java">
-        <xsl:with-param name="class" select="'ILinker'"/>
-        <xsl:with-param name="package" select="$transform-package"/>
-        <xsl:with-param name="template" select="'transform/ilinker.xsl'"/>
-      </xsl:call-template>
    
-      <!-- DefaultLinker class -->
-      <xsl:call-template name="generate-java">
-        <xsl:with-param name="class" select="'DefaultLinker'"/>
-        <xsl:with-param name="package" select="$transform-package"/>
-        <xsl:with-param name="template" select="'transform/default-linker.xsl'"/>
+   <xsl:if test="@enable-xml-sample='true'">
+      <!-- model.xml file -->
+      <xsl:call-template name="generate-test-resource">
+        <xsl:with-param name="file" select="concat(translate($package,'.','/'), '/', //entity[@root='true']/@name, '.xml')"/>
+        <xsl:with-param name="template" select="'xml/sample.xsl'"/>
       </xsl:call-template>
-      
-      <!-- IMaker class -->
-      <xsl:call-template name="generate-java">
-        <xsl:with-param name="class" select="'IMaker'"/>
-        <xsl:with-param name="package" select="$transform-package"/>
-        <xsl:with-param name="template" select="'transform/imaker.xsl'"/>
+   </xsl:if>
+
+   <xsl:if test="@enable-xml-schema='true'">
+      <!-- model.xsd file -->
+      <xsl:call-template name="generate-resource">
+        <xsl:with-param name="file" select="concat(translate($package,'.','/'), '/', //entity[@root='true']/@name, '.xsd')"/>
+        <xsl:with-param name="template" select="'xml/schema.xsl'"/>
       </xsl:call-template>
    </xsl:if>
    
-   <xsl:if test="entity/any">
+   <xsl:if test="@enable-filter='true'">
+      <!-- IFilter class -->
       <xsl:call-template name="generate-java">
-         <xsl:with-param name="class" select="'Any'"/>
-         <xsl:with-param name="package" select="entity/@entity-package"/>
-         <xsl:with-param name="template" select="'entity/any.xsl'"/>
+        <xsl:with-param name="class" select="'IFilter'"/>
+        <xsl:with-param name="package" select="$package"/>
+        <xsl:with-param name="template" select="'ifilter.xsl'"/>
+      </xsl:call-template>
+
+      <!-- IVisitorEnabled class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'IVisitorEnabled'"/>
+        <xsl:with-param name="package" select="$package"/>
+        <xsl:with-param name="template" select="'ivisitor_enabled.xsl'"/>
+      </xsl:call-template>
+
+      <!-- BaseFilter class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'BaseFilter'"/>
+        <xsl:with-param name="package" select="$transform-package"/>
+        <xsl:with-param name="template" select="'transform/base-filter.xsl'"/>
+      </xsl:call-template>
+
+      <!-- VisitorChain class -->
+      <xsl:call-template name="generate-java">
+        <xsl:with-param name="class" select="'VisitorChain'"/>
+        <xsl:with-param name="package" select="$transform-package"/>
+        <xsl:with-param name="template" select="'transform/visitor-chain.xsl'"/>
       </xsl:call-template>
    </xsl:if>
 </xsl:template>

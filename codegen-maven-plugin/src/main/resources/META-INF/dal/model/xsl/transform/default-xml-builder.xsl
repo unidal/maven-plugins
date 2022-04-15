@@ -98,16 +98,13 @@
    }
 
    public DefaultXmlBuilder(boolean compact) {
-      this(compact, new StringBuilder(4096));
-   }
-
-   public DefaultXmlBuilder(boolean compact, StringBuilder sb) {
       m_compact = compact;
-      m_sb = sb;
-      m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>?xml version=\"1.0\" encoding=\"utf-8\"?<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
    }
 
-   public String buildXml(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
+   public String build(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
+      m_sb = new StringBuilder(8192);
+      m_sb.append("<xsl:value-of select="'&lt;'" disable-output-escaping="yes"/>?xml version=\"1.0\" encoding=\"utf-8\"?<xsl:value-of select="'&gt;'" disable-output-escaping="yes"/>\r\n");
+
       entity.accept(m_visitor);
       return m_sb.toString();
    }

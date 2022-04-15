@@ -16,7 +16,7 @@
    <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:call-template name='import-list'/>
-   <xsl:value-of select="$empty"/>public class DefaultLinker implements ILinker {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>public class DefaultLinker {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name='declare-field-variables'/>
    <xsl:call-template name='method-on-event'/>
    <xsl:value-of select="$empty"/>}<xsl:value-of select="$empty-line"/>
@@ -61,7 +61,6 @@
       <xsl:variable name="entity" select="//entity[@name=$name]"/>
 
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   public boolean <xsl:value-of select="@on-event-method"/>(final <xsl:value-of select="../@entity-class"/> parent, final <xsl:value-of select="$entity/@entity-class"/><xsl:value-of select="$space"/><xsl:value-of select="$entity/@param-name"/>) {<xsl:value-of select="$empty-line"/>
       <xsl:choose>
          <xsl:when test="@list='true'">

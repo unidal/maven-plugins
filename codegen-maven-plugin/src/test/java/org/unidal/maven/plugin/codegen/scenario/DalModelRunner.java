@@ -84,19 +84,10 @@ public class DalModelRunner extends Suite {
 
       @Override
       protected List<Runner> getChildren() {
-         DalModelMojoSupport support = new DalModelMojoSupport();
-
          try {
-            support.setUp();
-            support.prepare(m_scenario);
-         } catch (Exception e) {
-            e.printStackTrace();
-         } finally {
-            try {
-               support.tearDown();
-            } catch (Exception e) {
-               // ignore it
-            }
+            new DalModelMojoSupport().run(m_scenario);
+         } catch (Exception e1) {
+            e1.printStackTrace();
          }
 
          List<Runner> children = new ArrayList<Runner>();

@@ -17,7 +17,7 @@
    <xsl:value-of select="$empty"/>package <xsl:value-of select="$package"/>;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty-line"/>
    <xsl:call-template name='import-list'/>
-   <xsl:value-of select="$empty"/>public class DefaultXmlMaker implements IMaker<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'Attributes'"/></xsl:call-template> {<xsl:value-of select="$empty-line"/>
+   <xsl:value-of select="$empty"/>public class DefaultXmlMaker {<xsl:value-of select="$empty-line"/>
    <xsl:call-template name='method-build-children'/>
    <xsl:call-template name='method-convert-value'/>
    <xsl:call-template name='method-to-class'/>
@@ -77,7 +77,6 @@
          
             <xsl:if test="generate-id(//entity/element[@build-method=$build-method][(@list='true' or @set='true') and not(@render='false')][1])=generate-id()">
                <xsl:value-of select="$empty-line"/>
-               <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>   public <xsl:value-of select="@value-type-element" disable-output-escaping="yes"/><xsl:value-of select="$space"/><xsl:value-of select="@build-method"/>(Attributes attributes) {<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>      throw new UnsupportedOperationException();<xsl:value-of select="$empty-line"/>
                <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
@@ -85,7 +84,6 @@
          </xsl:when>
          <xsl:otherwise>
             <xsl:value-of select="$empty-line"/>
-            <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
             <xsl:if test="attribute[not(@render='false') and (@type='list' or @list='set')]">
                <xsl:value-of select="$empty"/>   @SuppressWarnings("unchecked")<xsl:value-of select="$empty-line"/>
             </xsl:if>
@@ -103,7 +101,6 @@
 </xsl:template>
 
 <xsl:template name="method-build-any">
-   <xsl:value-of select="$empty"/>   @Override<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>   public Any <xsl:value-of select="entity/any/@build-method"/>(Attributes attributes) {<xsl:value-of select="$empty-line"/>
    <xsl:choose>
      <xsl:when test="//entity/any">

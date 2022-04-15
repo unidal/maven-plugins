@@ -17,7 +17,7 @@
    <xsl:value-of select="$empty-line"/>
    <xsl:call-template name='import-list'/>
    <xsl:value-of select="$empty"/>public class DefaultNativeParser implements IVisitor {<xsl:value-of select="$empty-line"/>
-   <xsl:call-template name='method-commons'/>
+   <xsl:call-template name='method-fields'/>
    <xsl:call-template name='method-parse'/>
    <xsl:call-template name='method-visit'/>
    <xsl:call-template name='method-read-methods'/>
@@ -25,7 +25,6 @@
 </xsl:template>
 
 <xsl:template name="import-list">
-   <xsl:value-of select="$empty"/>import java.io.ByteArrayInputStream;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.DataInputStream;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.IOException;<xsl:value-of select="$empty-line"/>
    <xsl:value-of select="$empty"/>import java.io.InputStream;<xsl:value-of select="$empty-line"/>
@@ -55,44 +54,28 @@
    <xsl:value-of select="$empty-line"/>
 </xsl:template>
 
-<xsl:template name="method-commons">
+<xsl:template name="method-fields">
    <xsl:variable name="root" select="entity[@root='true']"/>
    private DefaultLinker m_linker = new DefaultLinker(true);
 
    private DataInputStream m_in;
-
-   public DefaultNativeParser(InputStream in) {
-      m_in = new DataInputStream(in);
-   }
 </xsl:template>
 
 <xsl:template name="method-parse">
    <xsl:variable name="current" select="."/>
    <xsl:value-of select="$empty-line"/>
    <xsl:for-each select="entity[@root='true']">
-      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(byte[] data) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return parseEntity(new <xsl:value-of select="@entity-class"/>(), new ByteArrayInputStream(data));<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="@entity-class"/> parse(InputStream in) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return parseEntity(new <xsl:value-of select="@entity-class"/>(), in);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parseEntity(T entity, InputStream in) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      DefaultNativeParser parser = new DefaultNativeParser(in);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parse(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> entityType, InputStream in) throws IOException {<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         entity.accept(parser);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      } catch (RuntimeException e) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         if (e.getCause() !=null <xsl:value-of select="'&amp;&amp;'" disable-output-escaping="yes"/> e.getCause() instanceof java.io.EOFException) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>            // ignore it<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         } else {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>            throw e;<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         T entity = entityType.getConstructor().newInstance();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      parser.m_linker.finish();<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      return entity;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         m_in = new DataInputStream(in);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         entity.accept(this);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         m_linker.finish();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         return entity;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      } catch (Exception e) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         throw new IOException("Unable to parse Native! " + e, e);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:for-each>

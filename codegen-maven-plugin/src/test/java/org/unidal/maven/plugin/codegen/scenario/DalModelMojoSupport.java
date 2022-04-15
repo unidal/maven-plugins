@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.tools.Diagnostic;
@@ -103,7 +104,7 @@ public class DalModelMojoSupport extends ComponentTestCase {
       return baseDir;
    }
 
-   protected void prepare(String scenario) throws Exception {
+   private void prepare(String scenario) throws Exception {
       MyHelper helper = new MyHelper(scenario);
 
       Files.forDir().delete(new File(helper.getBaseDir(), "target"), true);
@@ -117,7 +118,20 @@ public class DalModelMojoSupport extends ComponentTestCase {
       }
    }
 
-   protected void prepareAll() throws Exception {
+   protected void run(String scenario) throws Exception {
+      try {
+         setUp();
+         prepare(scenario);
+      } finally {
+         try {
+            tearDown();
+         } catch (Exception e) {
+            // ignore it
+         }
+      }
+   }
+
+   protected void runAll() throws Exception {
       final List<String> scenarios = new ArrayList<String>();
       MyHelper helper = new MyHelper("");
 
@@ -300,7 +314,7 @@ public class DalModelMojoSupport extends ComponentTestCase {
             sb.append(diagnostic.getLineNumber()).append(':').append(diagnostic.getColumnNumber()).append(' ');
          }
 
-         sb.append(diagnostic.getCode());
+         sb.append(diagnostic.getMessage(Locale.US));
 
          m_message = sb.toString();
          m_error = diagnostic.getKind().name().equals("ERROR");
@@ -377,7 +391,7 @@ public class DalModelMojoSupport extends ComponentTestCase {
             try {
                final String content = Files.forIO().readFrom(new File(base, path), "utf-8");
 
-               m_files.add(new SimpleJavaFileObject(new File(path).toURI(), Kind.SOURCE) {
+               m_files.add(new SimpleJavaFileObject(new File(base, path).toURI(), Kind.SOURCE) {
                   @Override
                   public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
                      return content;
