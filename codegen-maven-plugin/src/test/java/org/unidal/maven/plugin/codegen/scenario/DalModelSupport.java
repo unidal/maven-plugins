@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,14 +28,13 @@ import org.unidal.codegen.generator.Generator;
 import org.unidal.helper.Files;
 import org.unidal.helper.Reflects;
 import org.unidal.helper.Scanners;
-import org.unidal.helper.Scanners.DirMatcher;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.PlexusContainer;
 import org.unidal.maven.plugin.codegen.AbstractCodegenMojo;
 import org.unidal.maven.plugin.codegen.DalModelMojo;
 
-public class DalModelMojoSupport extends ComponentTestCase {
+public class DalModelSupport extends ComponentTestCase {
    private static void setField(Object instance, String fieldName, Object value) throws Exception {
       Field field = Reflects.forField().getDeclaredField(instance, fieldName);
 
@@ -52,7 +50,7 @@ public class DalModelMojoSupport extends ComponentTestCase {
       return builder;
    }
 
-   private void compileSource(MyHelper helper) throws Exception {
+   private void compileSources(MyHelper helper) throws Exception {
       JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
       DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
       StandardJavaFileManager manager = compiler.getStandardFileManager(diagnostics, null, null);
@@ -71,6 +69,17 @@ public class DalModelMojoSupport extends ComponentTestCase {
       }
    }
 
+   public void compileSources(String scenario) throws Exception {
+      MyHelper helper = new MyHelper(scenario);
+
+      compileSources(helper);
+      copyResources(helper);
+
+      if (!helper.checkError()) {
+         throw helper.buildError();
+      }
+   }
+
    private void copyResources(MyHelper helper) throws IOException {
       File resourcesPath = helper.getTestResourcesPath();
 
@@ -81,7 +90,7 @@ public class DalModelMojoSupport extends ComponentTestCase {
       }
    }
 
-   private File generateCode(MyHelper helper) throws Exception {
+   private File generateSources(MyHelper helper) throws Exception {
       File baseDir = helper.getBaseDir();
       DalModelMojo mojo = builderOf(DalModelMojo.class, helper) //
             .component("m_generator", Generator.class, "dal-model").build();
@@ -105,98 +114,15 @@ public class DalModelMojoSupport extends ComponentTestCase {
       return baseDir;
    }
 
-   private void prepare(String scenario) throws Exception {
+   public void generateSources(String scenario) throws Exception {
       MyHelper helper = new MyHelper(scenario);
 
       Files.forDir().delete(new File(helper.getBaseDir(), "target"), true);
 
-      generateCode(helper);
-      compileSource(helper);
-      copyResources(helper);
+      generateSources(helper);
 
       if (!helper.checkError()) {
          throw helper.buildError();
-      }
-   }
-
-   protected void run(String scenario) throws Exception {
-      try {
-         setUp();
-         prepare(scenario);
-      } finally {
-         try {
-            tearDown();
-         } catch (Exception e) {
-            // ignore it
-         }
-      }
-   }
-
-   protected void runAll() throws Exception {
-      final List<String> scenarios = new ArrayList<String>();
-      MyHelper helper = new MyHelper("");
-
-      Scanners.forDir().scan(helper.getBaseDir(), new DirMatcher() {
-         @Override
-         public Direction matches(File base, String path) {
-            File file = new File(base, path);
-
-            if (file.isDirectory() && new File(file, "model").isDirectory()) {
-               scenarios.add(path);
-            }
-
-            return Direction.NEXT;
-         }
-      });
-
-      Collections.sort(scenarios);
-
-      for (String scenario : scenarios) {
-         try {
-            setUp();
-            prepare(scenario);
-         } finally {
-            try {
-               tearDown();
-            } catch (Exception e) {
-               // ignore it
-            }
-         }
-      }
-   }
-
-   protected void runStartAt(final String firstScenario) throws Exception {
-      final List<String> scenarios = new ArrayList<String>();
-      MyHelper helper = new MyHelper("");
-
-      Scanners.forDir().scan(helper.getBaseDir(), new DirMatcher() {
-         @Override
-         public Direction matches(File base, String path) {
-            File file = new File(base, path);
-
-            if (file.isDirectory() && new File(file, "model").isDirectory()) {
-               if (path.compareTo(firstScenario) >= 0) {
-                  scenarios.add(path);
-               }
-            }
-
-            return Direction.NEXT;
-         }
-      });
-
-      Collections.sort(scenarios);
-
-      for (String scenario : scenarios) {
-         try {
-            setUp();
-            prepare(scenario);
-         } finally {
-            try {
-               tearDown();
-            } catch (Exception e) {
-               // ignore it
-            }
-         }
       }
    }
 

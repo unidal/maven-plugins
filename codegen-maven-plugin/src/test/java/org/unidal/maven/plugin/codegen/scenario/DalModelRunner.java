@@ -9,7 +9,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -25,13 +27,31 @@ import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.DirMatcher;
 import org.unidal.helper.Scanners.FileMatcher;
 
+/**
+ * <pre>
+ * <code>
+ * &#64;RunWith(DalModelRunner.class) 
+ * public class DalModelTests {
+ * 
+ * }
+ * </code>
+ * </pre>
+ * 
+ * @author qmwu2000
+ */
 public class DalModelRunner extends Suite {
    private File m_baseDir;
+
+   private Map<String, DalModelSupport> m_supports = new HashMap<String, DalModelSupport>();
 
    public DalModelRunner(Class<?> klass) throws InitializationError {
       super(klass, Collections.<Runner> emptyList());
 
       m_baseDir = new File("src/test/dal-model");
+   }
+
+   private DalModelSupport getSupport(String scenario) {
+      return m_supports.get(scenario);
    }
 
    @Override
@@ -160,8 +180,18 @@ public class DalModelRunner extends Suite {
       @Override
       public void run(RunNotifier notifier) {
          notifier.fireTestStarted(getDescription());
-         notifier.fireTestRunFinished(new Result());
-         notifier.fireTestFinished(getDescription());
+
+         try {
+            DalModelSupport support = getSupport(m_scenario);
+
+            support.compileSources(m_scenario);
+            support.tearDown();
+            notifier.fireTestRunFinished(new Result());
+         } catch (Throwable e) {
+            notifier.fireTestFailure(new Failure(getDescription(), e));
+         } finally {
+            notifier.fireTestFinished(getDescription());
+         }
       }
    }
 
@@ -181,8 +211,17 @@ public class DalModelRunner extends Suite {
       public void run(RunNotifier notifier) {
          notifier.fireTestStarted(getDescription());
 
-         notifier.fireTestRunFinished(new Result());
-         notifier.fireTestFinished(getDescription());
+         try {
+            DalModelSupport support = getSupport(m_scenario);
+
+            support.setUp();
+            support.generateSources(m_scenario);
+            notifier.fireTestRunFinished(new Result());
+         } catch (Throwable e) {
+            notifier.fireTestFailure(new Failure(getDescription(), e));
+         } finally {
+            notifier.fireTestFinished(getDescription());
+         }
       }
    }
 
@@ -334,10 +373,11 @@ public class DalModelRunner extends Suite {
    private class ScenarioRunner extends ParentRunner<Runner> {
       private String m_scenario;
 
-      public ScenarioRunner(String scenario) throws InitializationError {
+      public ScenarioRunner(String scenario) throws Exception {
          super(null);
 
          m_scenario = scenario;
+         m_supports.put(m_scenario, new DalModelSupport());
       }
 
       @Override

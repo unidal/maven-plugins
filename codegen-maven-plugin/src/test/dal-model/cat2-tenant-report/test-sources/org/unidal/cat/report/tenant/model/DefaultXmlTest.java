@@ -17,7 +17,6 @@ public class DefaultXmlTest {
       TenantReport report = TenantReportHelper.fromXml(xml);
       String xml2 = TenantReportHelper.asXml(report);
 
-      System.out.println(xml2);
       Assert.assertEquals(xml.replaceAll("\r\n", "\n"), xml2.replaceAll("\r\n", "\n"));
    }
 
@@ -38,10 +37,10 @@ public class DefaultXmlTest {
 
    @Test(expected = RuntimeException.class)
    public void test4() throws Exception {
-      // throw new Exception("Aha");
+      throw new RuntimeException("Aha");
    }
 
-   @Test
+   @Test(expected = AssertionError.class)
    public void test5() throws Exception {
       throw new AssertionError("Aha");
    }
