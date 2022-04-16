@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="org.unidal.codegen.key" enable-merger="true" enable-json-builder="true"
-   enable-xml="true" enable-native="true" enable-base-visitor="true" enable-model-test="true">
+   enable-xml="true" enable-native="true" enable-base-visitor="true">
    <entity name="root-element" dynamic-attributes="true" root="true">
       <entity-ref name="no-key" type="list" names="no-key-list" />
       <entity-ref name="one-key" type="list" names="one-key-list" method-find-or-create="true" />

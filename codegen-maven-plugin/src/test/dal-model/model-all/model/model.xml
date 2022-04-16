@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="org.unidal.codegen.all.model" enable-xml="true" enable-native="true" enable-json="true"
-   enable-merger="true" enable-base-visitor="true" enable-model-test="true">
+   enable-merger="true" enable-base-visitor="true">
    <entity name="root-element" dynamic-attributes="true" root="true">
       <entity-ref name="all-primitive-types" />
       <entity-ref name="all-reserved-keywords" />
