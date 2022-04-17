@@ -37,7 +37,6 @@
             <configuration>
                <sourceDir>${basedir}/src/main/java</sourceDir>
                <manifest><![CDATA[
-                     ${basedir}/src/main/resources/META-INF/dal/model/report_manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/model/group-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/model/plugin-manifest.xml,
                ]]></manifest>

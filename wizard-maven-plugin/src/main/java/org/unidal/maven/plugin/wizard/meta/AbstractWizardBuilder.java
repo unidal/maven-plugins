@@ -17,9 +17,9 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.DirMatcher;
 import org.unidal.helper.Splitters;
+import org.unidal.maven.plugin.wizard.model.WizardHelper;
 import org.unidal.maven.plugin.wizard.model.entity.Manifest;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
-import org.unidal.maven.plugin.wizard.model.transform.DefaultSaxParser;
 import org.xml.sax.SAXException;
 
 abstract class AbstractWizardBuilder implements LogEnabled {
@@ -114,7 +114,7 @@ abstract class AbstractWizardBuilder implements LogEnabled {
       if (wizardFile.isFile()) {
          String content = Files.forIO().readFrom(wizardFile, "utf-8");
 
-         wizard = DefaultSaxParser.parse(content);
+         wizard = WizardHelper.fromXml(content);
       } else {
          wizard = new Wizard();
          wizard.setPackage(getWizardPackageName());

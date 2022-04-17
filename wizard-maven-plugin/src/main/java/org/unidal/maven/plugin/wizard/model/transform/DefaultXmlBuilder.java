@@ -61,16 +61,13 @@ public class DefaultXmlBuilder implements IVisitor {
    }
 
    public DefaultXmlBuilder(boolean compact) {
-      this(compact, new StringBuilder(4096));
-   }
-
-   public DefaultXmlBuilder(boolean compact, StringBuilder sb) {
       m_compact = compact;
-      m_sb = sb;
-      m_sb.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n");
    }
 
-   public String buildXml(IEntity<?> entity) {
+   public String build(IEntity<?> entity) {
+      m_sb = new StringBuilder(8192);
+      m_sb.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n");
+
       entity.accept(m_visitor);
       return m_sb.toString();
    }

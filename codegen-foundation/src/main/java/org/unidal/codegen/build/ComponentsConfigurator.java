@@ -11,9 +11,6 @@ import org.unidal.codegen.generator.XslGenerator;
 import org.unidal.codegen.manifest.DefaultManifestCreator;
 import org.unidal.codegen.manifest.DefaultManifestParser;
 import org.unidal.codegen.manifest.ManifestParser;
-import org.unidal.codegen.meta.DefaultModelMeta;
-import org.unidal.codegen.meta.DefaultTableMeta;
-import org.unidal.codegen.meta.DefaultWizardMeta;
 import org.unidal.codegen.template.DefaultXslTemplateManager;
 import org.unidal.codegen.transformer.DefaultXslTransformer;
 import org.unidal.codegen.transformer.XslTransformer;
@@ -30,9 +27,6 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
       List<Component> all = new ArrayList<Component>();
 
       all.add(A(DefaultObfuscater.class));
-      all.add(A(DefaultTableMeta.class));
-      all.add(A(DefaultModelMeta.class));
-      all.add(A(DefaultWizardMeta.class));
       all.add(A(DefaultManifestCreator.class));
       all.add(A(DefaultXslTemplateManager.class));
       all.add(A(DefaultXslTransformer.class));

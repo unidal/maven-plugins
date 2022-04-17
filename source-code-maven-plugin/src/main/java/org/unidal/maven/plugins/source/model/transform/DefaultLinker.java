@@ -8,7 +8,7 @@ import org.unidal.maven.plugins.source.model.entity.CountModel;
 import org.unidal.maven.plugins.source.model.entity.ProjectModel;
 import org.unidal.maven.plugins.source.model.entity.RootModel;
 
-public class DefaultLinker implements ILinker {
+public class DefaultLinker {
    @SuppressWarnings("unused")
    private boolean m_deferrable;
 
@@ -24,31 +24,26 @@ public class DefaultLinker implements ILinker {
       }
    }
 
-   @Override
    public boolean onClass(final ProjectModel parent, final ClassModel _class) {
       parent.addClass(_class);
       return true;
    }
 
-   @Override
    public boolean onCount(final RootModel parent, final CountModel count) {
       parent.setCount(count);
       return true;
    }
 
-   @Override
    public boolean onCount(final ProjectModel parent, final CountModel count) {
       parent.setCount(count);
       return true;
    }
 
-   @Override
    public boolean onCount(final ClassModel parent, final CountModel count) {
       parent.setCount(count);
       return true;
    }
 
-   @Override
    public boolean onProject(final RootModel parent, final ProjectModel project) {
       parent.addProject(project);
       return true;

@@ -11,7 +11,7 @@ import org.apache.maven.project.MavenProject;
 import org.jdom.Document;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.unidal.codegen.meta.ModelMeta;
+import org.unidal.maven.plugin.wizard.meta.ModelMeta;
 import org.unidal.maven.plugin.wizard.meta.ModelWizardBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Model;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;

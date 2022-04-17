@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unidal.codegen.meta.ModelMeta;
+import org.unidal.maven.plugin.wizard.meta.ModelMeta;
 import org.unidal.maven.plugin.wizard.meta.ModelWizardBuilder;
 import org.unidal.maven.plugin.wizard.pom.ModelPomBuilder;
 

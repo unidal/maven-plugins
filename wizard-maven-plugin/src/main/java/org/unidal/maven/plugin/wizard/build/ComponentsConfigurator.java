@@ -12,6 +12,9 @@ import org.unidal.codegen.transformer.XslTransformer;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 import org.unidal.maven.plugin.pom.PomDelegate;
+import org.unidal.maven.plugin.wizard.meta.DefaultModelMeta;
+import org.unidal.maven.plugin.wizard.meta.DefaultTableMeta;
+import org.unidal.maven.plugin.wizard.meta.DefaultWizardMeta;
 import org.unidal.maven.plugin.wizard.meta.JdbcWizardBuilder;
 import org.unidal.maven.plugin.wizard.meta.ModelWizardBuilder;
 import org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder;
@@ -40,6 +43,7 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
    private List<Component> defineJdbcComponents() {
       List<Component> all = new ArrayList<Component>();
 
+      all.add(A(DefaultTableMeta.class));
       all.add(A(JdbcPomBuilder.class));
       all.add(A(JdbcWizardBuilder.class));
 
@@ -55,6 +59,7 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
    private List<Component> defineModelComponents() {
       List<Component> all = new ArrayList<Component>();
 
+      all.add(A(DefaultModelMeta.class));
       all.add(A(ModelPomBuilder.class));
       all.add(A(ModelWizardBuilder.class));
 
@@ -64,6 +69,7 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
    private List<Component> defineWebappComponents() {
       List<Component> all = new ArrayList<Component>();
 
+      all.add(A(DefaultWizardMeta.class));
       all.add(A(WebAppPomBuilder.class));
       all.add(A(WebAppWizardBuilder.class));
 

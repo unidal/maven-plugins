@@ -5,8 +5,8 @@ import java.io.File;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.codegen.generator.Generator;
-import org.unidal.codegen.meta.TableMeta;
 import org.unidal.maven.plugin.wizard.meta.JdbcWizardBuilder;
+import org.unidal.maven.plugin.wizard.meta.TableMeta;
 import org.unidal.maven.plugin.wizard.pom.JdbcPomBuilder;
 
 public class JdbcMojoTest extends AbstractWizardMojoTest {
