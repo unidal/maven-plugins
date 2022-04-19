@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="org.unidal.cat.meta.dal.event" do-class-suffix="Do" gen="true">
+  <entity name="entity" table="entity" alias="e">
+    <query-defs>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[
+        INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)
+        ON DUPLICATE KEY UPDATE
+           <FIELD name='entity-details'/> = ${entity-details},
+           <FIELD name='last-modified-date'/> = NOW()
+        ]]></statement>
+      </query>
+      <query name="find-all-by-kind" type="SELECT" multiple="true">
+        <param name="kind" />
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='kind'/> = ${kind}
+        ]]></statement>
+      </query>
+      <query name="find-by-kind-type-name" type="SELECT">
+        <param name="kind" />
+        <param name="type" />
+        <param name="name" />
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='kind'/> = ${kind}
+           AND <FIELD name='type'/> = ${type}
+           AND <FIELD name='name'/> = ${name}
+        ]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="event" table="event" alias="e2">
+    <member name="max-id" field="" select-expr="MAX(id)" value-type="int" all="false" />
+    <var name="limit" value-type="int" />
+    <readsets>
+      <readset name="MAX_ID">
+           <member name="max-id"/>
+      </readset>
+    </readsets>
+    <query-defs>
+      <query name="find-first" type="SELECT">
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        LIMIT 1
+        ]]></statement>
+      </query>
+      <query name="find-all-by-last-id" type="SELECT" multiple="true">
+        <param name="id" />
+        <param name="limit" />
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> > ${id}
+        ORDER BY <FIELD name='id'/>
+        LIMIT ${limit}
+        ]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>

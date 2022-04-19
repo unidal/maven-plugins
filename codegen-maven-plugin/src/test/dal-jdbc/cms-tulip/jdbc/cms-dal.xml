@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="org.unidal.tulip.model.dal.cms" do-class-suffix="Do" gen="true">
+  <entity name="metadata" table="metadata" alias="m">
+    <member name="entity-name" field="entity_name" value-type="String" length="64" nullable="false" key="true" />
+    <member name="entity-display-name" field="entity_display_name" value-type="String" length="64" nullable="false" />
+    <member name="entity-details" field="entity_details" value-type="byte[]" length="65535" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+    <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" insert-expr="NOW()" update-expr="NOW()" />
+    <var name="key-entity-name" value-type="String" key-member="entity-name" />
+    <primary-key name="PRIMARY" members="entity_name" />
+    <query-defs>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[
+        INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)
+        ON DUPLICATE KEY UPDATE
+           <FIELD name='entity-display-name'/> = ${entity-display-name},
+           <FIELD name='entity-details'/> = ${entity-details},
+           <FIELD name='last-modified-date'/> = NOW()
+        ]]></statement>
+      </query>
+      <query name="find-all" type="SELECT" multiple="true">
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        ]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="entity" table="entity" alias="c">
+    <member name="entity-name" field="entity_name" value-type="String" length="64" nullable="false" key="true" />
+    <member name="entity-id" field="entity_id" value-type="String" length="64" nullable="false" key="true" />
+    <member name="entity-details" field="entity_details" value-type="byte[]" length="65535" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+    <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" insert-expr="NOW()" update-expr="NOW()" />
+    <var name="key-entity-name" value-type="String" key-member="entity-name" />
+    <var name="key-entity-id" value-type="String" key-member="entity-id" />
+    <primary-key name="PRIMARY" members="entity_name, entity_id" />
+    <query-defs>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[
+        INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)
+        ON DUPLICATE KEY UPDATE
+        	  <FIELD name='entity-details'/> = ${entity-details},
+           <FIELD name='last-modified-date'/> = NOW()
+        ]]></statement>
+      </query>
+      <query name="find-by-name-and-id" type="SELECT">
+        <param name="entity-name" />
+        <param name="entity-id" />
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='entity-name'/> = ${entity-name}
+           AND <FIELD name='entity-id'/> = ${entity-id}
+        ]]></statement>
+      </query>
+      <query name="find-all" type="SELECT" multiple="true">
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        ]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="event" table="event" alias="e">
+    <member name="event-id" field="event_id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="event-type" field="event_type" value-type="String" length="64" nullable="false" />
+    <member name="entity-name" field="entity_name" value-type="String" length="64" nullable="false" />
+    <member name="entity-key" field="entity_key" value-type="String" length="64" nullable="false" />
+    <member name="event-details" field="event_details" value-type="byte[]" length="65535" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+    <member name="count" field="" select-expr="COUNT(*)" value-type="int" nullable="false" all="false" />
+    <member name="max-event-id" field="" select-expr="MAX(event_id)" value-type="int" all="false" />
+    <var name="key-event-id" value-type="int" key-member="event-id" />
+    <var name="offset" value-type="int" />
+    <var name="limit" value-type="int" />
+    <primary-key name="PRIMARY" members="event_id" />
+    <readsets>
+      <readset name="COUNT">
+      	  <member name="count"/>
+      </readset>
+      <readset name="MAX_EVENT_ID">
+      	  <member name="max-event-id"/>
+      </readset>
+    </readsets>
+    <query-defs>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[
+        INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)
+        ON DUPLICATE KEY UPDATE
+        	  <FIELD name='event-details'/> = ${event-details}
+        ]]></statement>
+      </query>
+      <query name="find-first" type="SELECT">
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        LIMIT 1
+        ]]></statement>
+      </query>
+      <query name="find-all-by-entity" type="SELECT" multiple="true">
+        <param name="entity-name" />
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='entity-name'/> = ${entity-name}
+        	  AND <FIELD name='event-type'/> IN <IN>'meta-created','meta-updated'</IN>
+        ORDER BY <FIELD name='event-id'/> DESC
+        ]]></statement>
+      </query>
+      <query name="find-all-by-entity-and-key" type="SELECT" multiple="true">
+        <param name="entity-name" />
+        <param name="entity-key" />
+        <param name="offset" />
+        <param name="limit" />
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='entity-name'/> = ${entity-name}
+        	  AND <FIELD name='entity-key'/> LIKE CONCAT('%', ${entity-key}, '%')
+        	  AND <FIELD name='event-type'/> IN <IN>'entity-created','entity-updated', 'entity-tagged'</IN>
+        ORDER BY <FIELD name='event-id'/> DESC
+        LIMIT ${limit} OFFSET ${offset}
+        ]]></statement>
+      </query>
+      <query name="find-all-by-last-event-id" type="SELECT" multiple="true">
+        <param name="event-id" />
+        <param name="limit" />
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='event-id'/> > ${event-id}
+        ORDER BY <FIELD name='event-id'/>
+        LIMIT ${limit}
+        ]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="config" table="config" alias="c">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="category" field="category" value-type="String" length="64" nullable="false" />
+    <member name="name" field="name" value-type="String" length="64" nullable="false" />
+    <member name="description" field="description" value-type="String" length="256" nullable="false" />
+    <member name="status" field="status" value-type="int" length="10" nullable="false" />
+    <member name="details" field="details" value-type="byte[]" length="65535" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+    <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" insert-expr="NOW()" update-expr="NOW()" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="category_name" members="category ASC, name ASC" />
+    <query-defs>
+       <query name="upsert" type="INSERT">
+        <statement><![CDATA[
+        INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)
+        ON DUPLICATE KEY UPDATE
+        	  <FIELD name='description'/> = ${description},
+        	  <FIELD name='details'/> = ${details},
+           <FIELD name='last-modified-date'/> = NOW()
+        ]]></statement>
+      </query>
+      <query name="find-all-by-category" type="SELECT" multiple="true">
+        <param name="category" />
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='category'/> = ${category}
+        ]]></statement>
+      </query>
+      <query name="find-by-category-and-name" type="SELECT">
+        <param name="category" />
+        <param name="name" />
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='category'/> = ${category}
+           AND <FIELD name='name'/> = ${name}
+        ]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="access" table="access" alias="a">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="app-key" field="app_key" value-type="String" length="64" nullable="false" />
+    <member name="status" field="status" value-type="int" length="10" nullable="false" />
+    <member name="details" field="details" value-type="byte[]" length="65535" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" insert-expr="NOW()" />
+    <member name="last-modified-date" field="last_modified_date" value-type="Date" nullable="false" insert-expr="NOW()" update-expr="NOW()" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="app_key" unique="true" members="app_key ASC" />
+    <query-defs>
+       <query name="upsert" type="INSERT">
+        <statement><![CDATA[
+        INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)
+        ON DUPLICATE KEY UPDATE
+        	  <FIELD name='status'/> = ${status},
+        	  <FIELD name='details'/> = ${details},
+           <FIELD name='last-modified-date'/> = NOW()
+        ]]></statement>
+      </query>
+      <query name="find-all" type="SELECT" multiple="true">
+        <statement><![CDATA[
+        SELECT <FIELDS/>
+        FROM <TABLE/>
+        ]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>
+

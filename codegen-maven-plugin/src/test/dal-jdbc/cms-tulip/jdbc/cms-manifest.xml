@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="cms-codegen.xml" />
+  <file path="cms-dal.xml" />
+</manifest>
+
