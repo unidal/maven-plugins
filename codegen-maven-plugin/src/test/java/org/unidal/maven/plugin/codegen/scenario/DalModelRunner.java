@@ -12,17 +12,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.ParentRunner;
 import org.junit.runners.Suite;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
+import org.junit.runners.model.TestClass;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.DirMatcher;
 import org.unidal.helper.Scanners.FileMatcher;
@@ -50,24 +53,11 @@ public class DalModelRunner extends Suite {
       m_baseDir = new File("src/test/dal-model");
    }
 
-   private DalModelSupport getSupport(String scenario) {
-      return m_supports.get(scenario);
-   }
-
    @Override
    protected List<Runner> getChildren() {
-      List<Runner> children = new ArrayList<Runner>();
       List<String> scenarios = getScenarios();
 
-      for (String scenario : scenarios) {
-         try {
-            children.add(new ScenarioRunner(scenario));
-         } catch (Exception e) {
-            e.printStackTrace();
-         }
-      }
-
-      return children;
+      return new RunnersBuilder().buildScenarios(scenarios);
    }
 
    private List<String> getScenarios() {
@@ -91,8 +81,19 @@ public class DalModelRunner extends Suite {
       return scenarios;
    }
 
+   private DalModelSupport getSupport(String scenario) {
+      return m_supports.get(scenario);
+   }
+
    private File getTestClassesPath(String scenario) {
       return new File(m_baseDir, String.format("%s/target/classes", scenario));
+   }
+
+   private URLClassLoader getTestClassloader(String scenario) throws MalformedURLException {
+      File path = getTestClassesPath(scenario);
+      URL[] urls = { path.toURI().toURL() };
+
+      return new URLClassLoader(urls, getClass().getClassLoader());
    }
 
    private List<String> getTestMethods(String scenario, String testName) {
@@ -165,94 +166,69 @@ public class DalModelRunner extends Suite {
       return new File(m_baseDir, String.format("%s/test-sources", scenario));
    }
 
-   private class CompileSourcesRunner extends Runner {
+   private static interface Job {
+      /**
+       * Do the real work.
+       * 
+       * @return true means successful, false means skipped
+       * 
+       * @throws Exception
+       *            thrown if any error happens
+       */
+      public boolean run() throws Exception;
+   }
+
+   private class JobForCompileSources implements Job {
       private String m_scenario;
 
-      public CompileSourcesRunner(String scenario) {
+      public JobForCompileSources(String scenario) {
          m_scenario = scenario;
       }
 
       @Override
-      public Description getDescription() {
-         return Description.createTestDescription(m_scenario, "compile-sources");
-      }
+      public boolean run() throws Exception {
+         DalModelSupport support = getSupport(m_scenario);
 
-      @Override
-      public void run(RunNotifier notifier) {
-         notifier.fireTestStarted(getDescription());
-
-         try {
-            DalModelSupport support = getSupport(m_scenario);
-
-            support.compileSources(m_scenario);
-            support.tearDown();
-            notifier.fireTestRunFinished(new Result());
-         } catch (Throwable e) {
-            notifier.fireTestFailure(new Failure(getDescription(), e));
-         } finally {
-            notifier.fireTestFinished(getDescription());
-         }
+         support.compileSources(m_scenario);
+         support.tearDown();
+         return true;
       }
    }
 
-   private class GenerateSourcesRunner extends Runner {
+   private class JobForGenerateSources implements Job {
       private String m_scenario;
 
-      public GenerateSourcesRunner(String scenario) {
+      public JobForGenerateSources(String scenario) {
          m_scenario = scenario;
       }
 
       @Override
-      public Description getDescription() {
-         return Description.createTestDescription(m_scenario, "generate-sources");
-      }
+      public boolean run() throws Exception {
+         DalModelSupport support = getSupport(m_scenario);
 
-      @Override
-      public void run(RunNotifier notifier) {
-         notifier.fireTestStarted(getDescription());
-
-         try {
-            DalModelSupport support = getSupport(m_scenario);
-
-            support.setUp();
-            support.generateSources(m_scenario);
-            notifier.fireTestRunFinished(new Result());
-         } catch (Throwable e) {
-            notifier.fireTestFailure(new Failure(getDescription(), e));
-         } finally {
-            notifier.fireTestFinished(getDescription());
-         }
+         support.setUp();
+         support.generateSources(m_scenario);
+         return true;
       }
    }
 
-   private class RunTestMethodRunner extends Runner {
-      private RunTestRunner m_parent;
+   private class JobForRunTestMethod extends JobManaged {
+      private String m_scenario;
 
       private String m_testName;
 
       private String m_methodName;
 
-      private Description m_description;
-
-      public RunTestMethodRunner(RunTestRunner parent, String testName, String methodName) {
-         m_parent = parent;
+      public JobForRunTestMethod(String scenario, String testName, String methodName) {
+         m_scenario = scenario;
          m_testName = testName;
          m_methodName = methodName;
       }
 
       @Override
-      public Description getDescription() {
-         if (m_description == null) {
-            m_description = Description.createTestDescription(m_testName, m_methodName);
-         }
-
-         return m_description;
-      }
-
-      @Override
-      public void run(RunNotifier notifier) {
+      public void run(RunNotifier notifier, Description description, boolean ignore) {
          try {
-            URLClassLoader classloader = m_parent.getTestClassloader();
+            URLClassLoader classloader = getTestClassloader(m_scenario);
             Class<?> testClass = classloader.loadClass(m_testName);
             Method method = testClass.getMethod(m_methodName);
             final FrameworkMethod fm = new FrameworkMethod(method);
@@ -261,7 +237,7 @@ public class DalModelRunner extends Suite {
             new BlockJUnit4ClassRunner(testClass) {
                @Override
                public Description getDescription() {
-                  return m_description;
+                  return Description.createTestDescription(m_testName, m_methodName);
                }
 
                @Override
@@ -270,114 +246,76 @@ public class DalModelRunner extends Suite {
                }
             }.run(notifier);
          } catch (Exception e) {
-            notifier.fireTestFailure(new Failure(m_description, e));
+            notifier.fireTestFailure(new Failure(description, e));
          }
       }
    }
 
-   private class RunTestRunner extends ParentRunner<Runner> {
-      private String m_scenario;
-
-      private String m_testName;
-
-      private URLClassLoader m_classloader;
-
-      public RunTestRunner(String scenario, String testName) throws InitializationError {
-         super(null);
-
-         m_scenario = scenario;
-         m_testName = testName;
+   private static abstract class JobManaged implements Job {
+      public boolean run() throws Exception {
+         throw new UnsupportedOperationException("Not used here!");
       }
 
-      @Override
-      protected Description describeChild(Runner child) {
-         return child.getDescription();
-      }
-
-      @Override
-      protected List<Runner> getChildren() {
-         List<String> methods = getTestMethods(m_scenario, m_testName);
-         List<Runner> children = new ArrayList<Runner>();
-
-         for (String method : methods) {
-            children.add(new RunTestMethodRunner(this, m_testName, method));
-         }
-
-         return children;
-      }
-
-      @Override
-      protected String getName() {
-         return m_testName;
-      }
-
-      public URLClassLoader getTestClassloader() throws MalformedURLException {
-         if (m_classloader == null) {
-            File path = getTestClassesPath(m_scenario);
-            URL[] urls = { path.toURI().toURL() };
-
-            m_classloader = new URLClassLoader(urls, getClass().getClassLoader());
-         }
-
-         return m_classloader;
-      }
-
-      @Override
-      protected void runChild(Runner child, RunNotifier notifier) {
-         child.run(notifier);
-      }
+      public abstract void run(RunNotifier notifier, Description description, boolean ignore);
    }
 
-   private class RunTestsRunner extends ParentRunner<Runner> {
-      private String m_scenario;
+   private static class LeafRunner extends Runner {
+      private String m_displayName;
 
-      private List<String> m_testNames;
+      private String m_category;
 
-      public RunTestsRunner(String scenario, List<String> testNames) throws InitializationError {
-         super(null);
-         m_scenario = scenario;
-         m_testNames = testNames;
+      private Job m_job;
+
+      private boolean m_ignore;
+
+      public LeafRunner(String category, String displayName, Job job, boolean ignore) {
+         m_category = category;
+         m_displayName = displayName;
+         m_job = job;
+         m_ignore = ignore;
+      }
+
+      public LeafRunner(String category, String displayName, Job job) {
+         this(category, displayName, job, false);
       }
 
       @Override
-      protected Description describeChild(Runner child) {
-         return child.getDescription();
+      public Description getDescription() {
+         return Description.createTestDescription(m_category, m_displayName);
       }
 
       @Override
-      protected List<Runner> getChildren() {
-         List<Runner> children = new ArrayList<Runner>();
+      public void run(RunNotifier notifier) {
+         if (m_job instanceof JobManaged) {
+            ((JobManaged) m_job).run(notifier, getDescription(), m_ignore);
+         } else {
+            notifier.fireTestStarted(getDescription());
 
-         try {
-            for (String testName : m_testNames) {
-               children.add(new RunTestRunner(m_scenario, testName));
+            try {
+               if (m_ignore || m_job != null && !m_job.run()) {
+                  notifier.fireTestIgnored(getDescription());
+               }
+
+               notifier.fireTestRunFinished(new Result());
+            } catch (Throwable e) {
+               notifier.fireTestFailure(new Failure(getDescription(), e));
+            } finally {
+               notifier.fireTestFinished(getDescription());
             }
-         } catch (Exception e) {
-            e.printStackTrace();
          }
-
-         return children;
-      }
-
-      @Override
-      protected String getName() {
-         return "run-tests";
-      }
-
-      @Override
-      protected void runChild(Runner child, RunNotifier notifier) {
-         child.run(notifier);
       }
    }
 
-   private class ScenarioRunner extends ParentRunner<Runner> {
-      private String m_scenario;
+   private static class NodeRunner extends ParentRunner<Runner> {
+      private String m_displayName;
 
-      public ScenarioRunner(String scenario) throws Exception {
-         super(null);
+      private List<Runner> m_children;
 
-         m_scenario = scenario;
-         m_supports.put(m_scenario, new DalModelSupport());
+      public NodeRunner(String displayName, List<Runner> children) throws InitializationError {
+         super(new TestClass(null));
+
+         m_displayName = displayName;
+         m_children = children;
       }
 
       @Override
@@ -387,16 +325,51 @@ public class DalModelRunner extends Suite {
 
       @Override
       protected List<Runner> getChildren() {
-         List<Runner> children = new ArrayList<Runner>();
+         return m_children;
+      }
 
-         children.add(new GenerateSourcesRunner(m_scenario));
-         children.add(new CompileSourcesRunner(m_scenario));
+      @Override
+      protected String getName() {
+         return m_displayName;
+      }
+
+      @Override
+      public void run(RunNotifier notifier) {
+         final CountDownLatch latch = new CountDownLatch(m_children.size());
+
+         notifier.addListener(new RunListener() {
+            @Override
+            public void testIgnored(Description description) throws Exception {
+               latch.countDown();
+            }
+         });
+
+         super.run(notifier);
+
+         if (latch.getCount() == 0) { // all children are ignored
+            notifier.fireTestIgnored(getDescription());
+         }
+      }
+
+      @Override
+      protected void runChild(Runner child, RunNotifier notifier) {
+         child.run(notifier);
+      }
+   }
+
+   private class RunnersBuilder {
+      public List<Runner> buildScenario(String scenario) {
+         m_supports.put(scenario, new DalModelSupport());
+
+         List<Runner> children = new ArrayList<Runner>();
+         List<String> testNames = getTestNames(scenario);
 
          try {
-            List<String> testNames = getTestNames(m_scenario);
+            children.add(new LeafRunner(scenario, "generate-sources", new JobForGenerateSources(scenario)));
+            children.add(new LeafRunner(scenario, "compile-sources", new JobForCompileSources(scenario)));
 
             if (!testNames.isEmpty()) {
-               children.add(new RunTestsRunner(m_scenario, testNames));
+               children.add(new NodeRunner("run-tests", buildTests(scenario, testNames)));
             }
          } catch (Exception e) {
             e.printStackTrace();
@@ -405,14 +378,44 @@ public class DalModelRunner extends Suite {
          return children;
       }
 
-      @Override
-      protected String getName() {
-         return "scenario: " + m_scenario;
+      public List<Runner> buildScenarios(List<String> scenarios) {
+         List<Runner> children = new ArrayList<Runner>();
+
+         for (String scenario : scenarios) {
+            try {
+               children.add(new NodeRunner("scenario: " + scenario, buildScenario(scenario)));
+            } catch (Exception e) {
+               e.printStackTrace();
+            }
+         }
+
+         return children;
       }
 
-      @Override
-      protected void runChild(Runner child, RunNotifier notifier) {
-         child.run(notifier);
+      public List<Runner> buildTest(String scenario, String testName) {
+         List<Runner> children = new ArrayList<Runner>();
+         List<String> methods = getTestMethods(scenario, testName);
+
+         for (String method : methods) {
+            children.add(new LeafRunner(testName, method, new JobForRunTestMethod(scenario, testName, method)));
+         }
+
+         return children;
       }
+
+      public List<Runner> buildTests(String scenario, List<String> testNames) {
+         List<Runner> children = new ArrayList<Runner>();
+
+         try {
+            for (String testName : testNames) {
+               children.add(new NodeRunner(testName, buildTest(scenario, testName)));
+            }
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
+
+         return children;
+      }
+
    }
 }

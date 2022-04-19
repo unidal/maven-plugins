@@ -237,7 +237,27 @@ public class DalModelSupport extends ComponentTestCase {
          final List<JavaFileObject> files = new ArrayList<JavaFileObject>();
 
          for (File path : getSourcesPath()) {
-            Scanners.forDir().scan(path, new SourceFileMatcher(files));
+            Scanners.forDir().scan(path, new FileMatcher() {
+               @Override
+               public Direction matches(File base, String path) {
+                  if (path.endsWith(".java")) {
+                     try {
+                        final String content = Files.forIO().readFrom(new File(base, path), "utf-8");
+
+                        files.add(new SimpleJavaFileObject(new File(base, path).toURI(), Kind.SOURCE) {
+                           @Override
+                           public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
+                              return content;
+                           }
+                        });
+                     } catch (Exception e) {
+                        e.printStackTrace();
+                     }
+                  }
+
+                  return Direction.DOWN;
+               }
+            });
          }
 
          return files;
@@ -335,34 +355,6 @@ public class DalModelSupport extends ComponentTestCase {
          };
 
          setField(m_mojo, "m_project", project);
-      }
-   }
-
-   private static class SourceFileMatcher extends FileMatcher {
-      private final List<JavaFileObject> m_files;
-
-      private SourceFileMatcher(List<JavaFileObject> files) {
-         m_files = files;
-      }
-
-      @Override
-      public Direction matches(File base, String path) {
-         if (path.endsWith(".java")) {
-            try {
-               final String content = Files.forIO().readFrom(new File(base, path), "utf-8");
-
-               m_files.add(new SimpleJavaFileObject(new File(base, path).toURI(), Kind.SOURCE) {
-                  @Override
-                  public CharSequence getCharContent(boolean ignoreEncodingErrors) throws IOException {
-                     return content;
-                  }
-               });
-            } catch (Exception e) {
-               e.printStackTrace();
-            }
-         }
-
-         return Direction.DOWN;
       }
    }
 }
