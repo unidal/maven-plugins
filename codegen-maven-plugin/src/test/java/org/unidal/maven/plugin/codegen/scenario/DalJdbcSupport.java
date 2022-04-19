@@ -58,6 +58,8 @@ public class DalJdbcSupport extends ComponentTestCase {
       manager.setLocation(StandardLocation.SOURCE_PATH, helper.getSourcesPath());
       manager.setLocation(StandardLocation.CLASS_OUTPUT, helper.getClassOutput());
 
+      Files.forDir().delete(helper.getClassOutput().get(0), true);
+
       boolean success = compiler.getTask(null, manager, diagnostics, null, null, helper.sourceFiles()).call();
 
       manager.close();
@@ -149,7 +151,7 @@ public class DalJdbcSupport extends ComponentTestCase {
          m_messages.add(new MyMessage(this, diagnostic));
       }
 
-      public Error buildError() {
+      public Exception buildError() {
          StringBuilder sb = new StringBuilder(256);
          int count = 0;
          Throwable cause = null;
@@ -166,8 +168,7 @@ public class DalJdbcSupport extends ComponentTestCase {
          }
 
          sb.insert(0, String.format("Generated code failed to compile, %s errors found:\r\n", count));
-
-         return new AssertionError(sb.substring(0, sb.length() - 2), cause);
+         return new RuntimeException(sb.substring(0, sb.length() - 2), cause);
       }
 
       public boolean checkError() {
@@ -206,7 +207,7 @@ public class DalJdbcSupport extends ComponentTestCase {
       }
 
       public List<File> getSourcesPath() {
-         return pathOf(false, "sources", "target/generated-sources", "test-sources");
+         return pathOf(false, "sources", "target/generated-sources", "test-sources", "../sources");
       }
 
       public File getTestResourcesPath() {
