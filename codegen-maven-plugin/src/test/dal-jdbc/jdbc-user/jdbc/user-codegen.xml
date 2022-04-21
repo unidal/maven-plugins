@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<entities xmlns="http://www.unidal.org/dal/jdbc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.unidal.org/dal/jdbc jdbc.xsd">
+<entities>
    <entity name="user" table="user" alias="u">
       <member name="user-id" field="user_id" value-type="int" nullable="false" key="true"/>
       <member name="user-name" field="full_name" value-type="String" nullable="false"/>

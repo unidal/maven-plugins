@@ -24,15 +24,15 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.unidal.codegen.generator.Generator;
+import org.unidal.codegen.framework.XslGenerator;
 import org.unidal.helper.Files;
 import org.unidal.helper.Reflects;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.PlexusContainer;
-import org.unidal.maven.plugin.codegen.AbstractCodegenMojo;
 import org.unidal.maven.plugin.codegen.DalModelMojo;
+import org.unidal.maven.plugin.codegen.DalMojoSupport;
 
 public class DalModelSupport extends ComponentTestCase {
    private static void setField(Object instance, String fieldName, Object value) throws Exception {
@@ -42,8 +42,7 @@ public class DalModelSupport extends ComponentTestCase {
       field.set(instance, value);
    }
 
-   private <T extends AbstractCodegenMojo> MyMojoBuilder<T> builderOf(Class<T> mojoClass, MyHelper helper)
-         throws Exception {
+   private <T extends DalMojoSupport> MyMojoBuilder<T> builderOf(Class<T> mojoClass, MyHelper helper) throws Exception {
       MyMojoBuilder<T> builder = new MyMojoBuilder<T>();
 
       builder.initialize(getContainer(), mojoClass, helper);
@@ -95,7 +94,7 @@ public class DalModelSupport extends ComponentTestCase {
    private File generateSources(MyHelper helper) throws Exception {
       File baseDir = helper.getBaseDir();
       DalModelMojo mojo = builderOf(DalModelMojo.class, helper) //
-            .component("m_generator", Generator.class, "dal-model").build();
+            .component("m_generator", XslGenerator.class, null).build();
       final AtomicReference<File> manifest = new AtomicReference<File>();
 
       Scanners.forDir().scan(new File(baseDir, "model"), new FileMatcher() {
@@ -316,7 +315,7 @@ public class DalModelSupport extends ComponentTestCase {
       }
    }
 
-   private static class MyMojoBuilder<T extends AbstractCodegenMojo> {
+   private static class MyMojoBuilder<T extends DalMojoSupport> {
       private PlexusContainer m_container;
 
       private T m_mojo;

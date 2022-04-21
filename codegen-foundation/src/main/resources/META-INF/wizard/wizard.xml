@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="org.unidal.codegen">
+   <model package="org.unidal.codegen.model" name="model">
+      <sample-model>src/test/resources/org/unidal/codegen/codegen.xml</sample-model>
+   </model>
+</wizard>

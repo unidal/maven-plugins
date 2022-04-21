@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<root>
+<structure>
    <node name="wizard" no-namespace="true">
       <node name="webapp">
          <node name="module" key="name">
@@ -13,4 +13,4 @@
          </node>
       </node>
    </node>
-</root>
+</structure>

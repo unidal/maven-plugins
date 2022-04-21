@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="org.unidal.cat.meta" class-suffix="Model" enable-xml="true" enable-native="true" enable-base-visitor="true">
+  <entity name="tenants">
+    <entity-ref name="organization" type="map" names="organizations" method-find-or-create="true" />
+    <entity-ref name="tenant" type="map" names="tenants" method-find-or-create="true" />
+  </entity>
+  <entity name="organization">
+    <attribute name="code" value-type="String" key="true" />
+  </entity>
+  <entity name="tenant" implements="org.unidal.cat.meta.entity.Entity">
+    <attribute name="code" value-type="String" key="true" />
+    <entity-ref name="domain" type="map" names="domains" method-find-or-create="true" />
+    <snippet><![CDATA[
+      @Override
+      public TypeAndName getTypeAndName() {
+         return TypeAndName.of("", m_code);
+      }
+
+      @Override
+      public org.unidal.cat.meta.entity.EntityKind getKind() {
+         return org.unidal.cat.meta.entity.EntityKind.TENANT;
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="domain">
+    <attribute name="name" value-type="String" key="true" />
+    <attribute name="id" value-type="int" primitive="true" />
+    <entity-ref name="process" type="list" names="processes" method-find-or-create="true" />
+  </entity>
+  <entity name="process">
+    <attribute name="name" value-type="String" key="true" />
+    <attribute name="id" value-type="int" primitive="true" />
+  </entity>
+  <entity name="workers">
+    <entity-ref name="worker" type="map" names="workers" method-find-or-create="true" />
+  </entity>
+  <entity name="worker" implements="org.unidal.cat.meta.entity.Entity">
+    <attribute name="type" value-type="String" key="true" />
+    <attribute name="id" value-type="String" key="true" />
+    <snippet><![CDATA[
+      @Override
+      public TypeAndName getTypeAndName() {
+         return TypeAndName.of(m_type, m_id);
+      }
+
+      @Override
+      public org.unidal.cat.meta.entity.EntityKind getKind() {
+         return org.unidal.cat.meta.entity.EntityKind.WORKER;
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="scenarios">
+    <entity-ref name="scenario" type="map" names="scenarios" method-find-or-create="true" />
+  </entity>
+  <entity name="scenario" implements="org.unidal.cat.meta.entity.Entity">
+    <attribute name="group" value-type="String" key="true" />
+    <attribute name="name" value-type="String" key="true" />
+    <snippet><![CDATA[
+      @Override
+      public TypeAndName getTypeAndName() {
+         return TypeAndName.of(m_group, m_name);
+      }
+
+      @Override
+      public org.unidal.cat.meta.entity.EntityKind getKind() {
+         return org.unidal.cat.meta.entity.EntityKind.SCENARIO;
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="field">
+    <attribute name="name" value-type="String" key="true" />
+  </entity>
+  <entity name="configs">
+    <entity-ref name="config" type="map" names="configs" method-find-or-create="true" />
+  </entity>
+  <entity name="config" implements="org.unidal.cat.meta.entity.Entity">
+    <attribute name="category" value-type="String" key="true" />
+    <attribute name="name" value-type="String" key="true" />
+    <snippet><![CDATA[
+      @Override
+      public TypeAndName getTypeAndName() {
+         return TypeAndName.of(m_category, m_name);
+      }
+
+      @Override
+      public org.unidal.cat.meta.entity.EntityKind getKind() {
+         return org.unidal.cat.meta.entity.EntityKind.CONFIG;
+      }
+    ]]></snippet>
+  </entity>
+  <entity name="event" implements="org.unidal.cat.meta.event.Event">
+    <attribute name="id" value-type="int" primitive="true" />
+    <snippet><![CDATA[
+      @Override
+      public String getDetails() {
+         return m_text;
+      }
+
+      @Override
+      public org.unidal.cat.meta.event.EventKind getEventKind() {
+         return org.unidal.cat.meta.event.EventKind.of(m_kind, org.unidal.cat.meta.event.EventKind.UNKNOWN);
+      }
+
+      @Override
+      public boolean isEligible(org.unidal.cat.meta.entity.EntityKind... kinds) {
+         for (org.unidal.cat.meta.entity.EntityKind kind : kinds) {
+            if (kind.canProduceEventOf(m_kind)) {
+               return true;
+            }
+         }
+      
+         return false;
+      }
+      
+      @Override
+      public boolean isEligible(org.unidal.cat.meta.entity.EntityKind kind, String type) {
+         return kind.canProduceEventOf(m_kind) && m_type.equals(type);
+      }
+      
+      @Override
+      public boolean isEligible(org.unidal.cat.meta.entity.EntityKind kind, String type, String name) {
+         return kind.canProduceEventOf(m_kind) && m_type.equals(type) && m_name.equals(name);
+      }
+    ]]></snippet>
+  </entity>
+</model>

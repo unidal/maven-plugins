@@ -93,7 +93,7 @@ public class Any extends BaseEntity<xsl:value-of select="'&lt;Any&gt;'" disable-
    public List<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/> getAllChildren(String name) {
       List<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Any&gt;'" disable-output-escaping="yes"/>();
 
-      for (Any child : m_children) {
+      for (Any child : children(true)) {
          if (child.getName().equals(name)) {
             all.add(child);
          }

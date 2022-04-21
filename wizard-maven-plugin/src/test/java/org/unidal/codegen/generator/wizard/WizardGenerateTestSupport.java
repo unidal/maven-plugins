@@ -23,7 +23,7 @@ public abstract class WizardGenerateTestSupport extends ComponentTestCase {
    protected void generateJdbc(String manifestXml) throws Exception {
       Generator g = lookup(Generator.class, "wizard-jdbc");
       File manifest = new File(getClass().getResource(manifestXml).getFile());
-      GenerateContext ctx = new WizardGenerateContext(getProjectBaseDir(), "jdbc", manifest, isVerbose(), isDebug());
+      GenerateContext ctx = new WizardGenerationContext(getProjectBaseDir(), "jdbc", manifest, isVerbose(), isDebug());
       long start = System.currentTimeMillis();
 
       g.generate(ctx);
@@ -51,7 +51,7 @@ public abstract class WizardGenerateTestSupport extends ComponentTestCase {
    protected void generateWebapp(String manifestXml) throws Exception {
       Generator g = lookup(Generator.class, "wizard-webapp");
       File manifest = new File(getClass().getResource(manifestXml).getFile());
-      GenerateContext ctx = new WizardGenerateContext(getProjectBaseDir(), "webapp", manifest, isVerbose(), isDebug());
+      GenerateContext ctx = new WizardGenerationContext(getProjectBaseDir(), "webapp", manifest, isVerbose(), isDebug());
       long start = System.currentTimeMillis();
 
       g.generate(ctx);

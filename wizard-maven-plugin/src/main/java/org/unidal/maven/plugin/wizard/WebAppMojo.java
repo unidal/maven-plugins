@@ -3,7 +3,7 @@ package org.unidal.maven.plugin.wizard;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.unidal.codegen.generator.Generator;
+import org.unidal.codegen.framework.XslGenerator;
 import org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
 import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder;
@@ -13,7 +13,7 @@ import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder;
  * 
  * @goal webapp
  */
-public class WebAppMojo extends AbstractWizardMojo {
+public class WebAppMojo extends WizardMojoSupport {
    /**
     * Wizard builder component
     * 
@@ -33,13 +33,13 @@ public class WebAppMojo extends AbstractWizardMojo {
    private WebAppPomBuilder m_pomBuilder;
 
    /**
-    * POM builder component
+    * XSL code generator implementation
     * 
-    * @component role="org.unidal.codegen.generator.Generator" role-hint="wizard-webapp"
+    * @component role="org.unidal.codegen.framework.XslGenerator"
     * @required
     * @readonly
     */
-   private Generator m_generator;
+   private XslGenerator m_generator;
 
    public void execute() throws MojoExecutionException, MojoFailureException {
       MavenProject project = getProject();
@@ -53,7 +53,7 @@ public class WebAppMojo extends AbstractWizardMojo {
          Wizard wizard = m_wizardBuilder.build(project);
 
          // generate web scaffold files
-         m_generator.generate(createContext());
+         m_generator.generate(super.createContext());
 
          // modify the pom.xml
          m_pomBuilder.build(project.getFile(), wizard);

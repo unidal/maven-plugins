@@ -3,12 +3,6 @@ package org.unidal.maven.plugin.wizard.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.codegen.aggregator.DefaultXmlAggregator;
-import org.unidal.codegen.aggregator.XmlAggregator;
-import org.unidal.codegen.generator.Generator;
-import org.unidal.codegen.generator.XslGenerator;
-import org.unidal.codegen.manifest.ManifestParser;
-import org.unidal.codegen.transformer.XslTransformer;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 import org.unidal.maven.plugin.pom.PomDelegate;
@@ -47,12 +41,6 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
       all.add(A(JdbcPomBuilder.class));
       all.add(A(JdbcWizardBuilder.class));
 
-      all.add(C(XmlAggregator.class, "wizard-jdbc", DefaultXmlAggregator.class) //
-            .config(E("structureFile").value("META-INF/wizard/jdbc/structure.xml")));
-      all.add(C(Generator.class, "wizard-jdbc", XslGenerator.class) //
-            .req(XslTransformer.class, ManifestParser.class) //
-            .req(XmlAggregator.class, "wizard-jdbc"));
-
       return all;
    }
 
@@ -72,12 +60,6 @@ class ComponentsConfigurator extends AbstractResourceConfigurator {
       all.add(A(DefaultWizardMeta.class));
       all.add(A(WebAppPomBuilder.class));
       all.add(A(WebAppWizardBuilder.class));
-
-      all.add(C(XmlAggregator.class, "wizard-webapp", DefaultXmlAggregator.class) //
-            .config(E("structureFile").value("META-INF/wizard/webapp/structure.xml")));
-      all.add(C(Generator.class, "wizard-webapp", XslGenerator.class) //
-            .req(XslTransformer.class, ManifestParser.class) //
-            .req(XmlAggregator.class, "wizard-webapp"));
 
       return all;
    }

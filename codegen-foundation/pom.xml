@@ -27,5 +27,31 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>codegen-maven-plugin</artifactId>
+            <version>6.0.0</version>
+            <configuration>
+               <sourceDir>${basedir}/src/main/java</sourceDir>
+               <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/model-manifest.xml]]></manifest>
+            </configuration>
+            <!-- regenerate the mode in the command line using command "mvn codegen:dal-model" -->
+            <executions>
+               <execution>
+                  <id>generate model files</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/model-manifest.xml]]></manifest>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
 </project>
 

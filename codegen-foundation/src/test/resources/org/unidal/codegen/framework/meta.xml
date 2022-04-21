@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model model-package="org.unidal.cat.meta" class-suffix="Model" enable-xml="true" enable-native="true" enable-base-visitor="true">
+   <entity name="meta" root="true">
+      <entity-ref name="tenants"/>
+      <entity-ref name="workers"/>
+      <entity-ref name="scenarios"/>
+      <entity-ref name="configs"/>
+      <entity-ref name="events"/>
+   </entity>
+   <entity name="tenants">
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <entity-ref name="organization" type="map" names="organizations" method-find-or-create="true"/>
+      <entity-ref name="tenant" type="map" names="tenants" method-find-or-create="true"/>
+   </entity>
+   <entity name="organization">
+      <attribute name="code" value-type="String" key="true"/>
+      <attribute name="name" value-type="String"/>
+   </entity>
+   <entity name="tenant" implements="org.unidal.cat.meta.entity.Entity">
+      <attribute name="code" value-type="String" key="true"/>
+      <attribute name="name" value-type="String"/>
+      <attribute name="organization" value-type="String"/>
+      <attribute name="creation-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <element name="token" value-type="String"/>
+      <entity-ref name="domain" type="map" names="domains" method-find-or-create="true"/>
+      <snippet>
+      @Override
+      public TypeAndName getTypeAndName() {
+         return TypeAndName.of("", m_code);
+      }
+
+      @Override
+      public org.unidal.cat.meta.entity.EntityKind getKind() {
+         return org.unidal.cat.meta.entity.EntityKind.TENANT;
+      }
+    </snippet>
+   </entity>
+   <entity name="domain">
+      <attribute name="name" value-type="String" key="true"/>
+      <attribute name="id" value-type="int" primitive="true"/>
+      <attribute name="creation-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <entity-ref name="process" type="list" names="processes" method-find-or-create="true"/>
+   </entity>
+   <entity name="process">
+      <attribute name="name" value-type="String" key="true"/>
+      <attribute name="id" value-type="int" primitive="true"/>
+      <attribute name="creation-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+   </entity>
+   <entity name="workers">
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <entity-ref name="worker" type="map" names="workers" method-find-or-create="true"/>
+   </entity>
+   <entity name="worker" implements="org.unidal.cat.meta.entity.Entity">
+      <attribute name="type" value-type="String" key="true"/>
+      <attribute name="id" value-type="String" key="true"/>
+      <attribute name="ip-address" value-type="String"/>
+      <attribute name="http-port" value-type="int"/>
+      <attribute name="creation-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <entity-ref name="workload" type="list" names="workloads"/>
+      <snippet>
+      @Override
+      public TypeAndName getTypeAndName() {
+         return TypeAndName.of(m_type, m_id);
+      }
+
+      @Override
+      public org.unidal.cat.meta.entity.EntityKind getKind() {
+         return org.unidal.cat.meta.entity.EntityKind.WORKER;
+      }
+    </snippet>
+   </entity>
+   <entity name="workload">
+      <attribute name="name" value-type="String"/>
+      <attribute name="domain" value-type="String"/>
+   </entity>
+   <entity name="scenarios">
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <entity-ref name="scenario" type="map" names="scenarios" method-find-or-create="true"/>
+   </entity>
+   <entity name="scenario" implements="org.unidal.cat.meta.entity.Entity">
+      <attribute name="group" value-type="String" key="true"/>
+      <attribute name="name" value-type="String" key="true"/>
+      <attribute name="creation-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <entity-ref name="query" type="list" names="queries"/>
+      <snippet>
+      @Override
+      public TypeAndName getTypeAndName() {
+         return TypeAndName.of(m_group, m_name);
+      }
+
+      @Override
+      public org.unidal.cat.meta.entity.EntityKind getKind() {
+         return org.unidal.cat.meta.entity.EntityKind.SCENARIO;
+      }
+    </snippet>
+   </entity>
+   <entity name="query">
+      <attribute name="id" value-type="String"/>
+      <attribute name="on" value-type="String"/>
+      <attribute name="start" value-type="String"/>
+      <attribute name="duration" value-type="String"/>
+      <entity-ref name="condition" type="list" names="conditions" xml-indent="true"/>
+      <entity-ref name="field" type="list" names="fields" xml-indent="true"/>
+      <entity-ref name="configure"/>
+   </entity>
+   <entity name="condition">
+      <attribute name="attribute" value-type="String"/>
+      <attribute name="op" value-type="String"/>
+      <attribute name="value" value-type="String"/>
+      <attribute name="optional" value-type="boolean"/>
+      <attribute name="case-insensitive" value-type="boolean"/>
+   </entity>
+   <entity name="field">
+      <attribute name="name" value-type="String" key="true"/>
+   </entity>
+   <entity name="configure">
+      <element name="unit" value-type="String"/>
+   </entity>
+   <entity name="configs">
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <entity-ref name="config" type="map" names="configs" method-find-or-create="true"/>
+   </entity>
+   <entity name="config" implements="org.unidal.cat.meta.entity.Entity">
+      <attribute name="category" value-type="String" key="true"/>
+      <attribute name="name" value-type="String" key="true"/>
+      <attribute name="default-value" value-type="String"/>
+      <attribute name="creation-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <element name="text" value-type="String" text="true"/>
+      <snippet>
+      @Override
+      public TypeAndName getTypeAndName() {
+         return TypeAndName.of(m_category, m_name);
+      }
+
+      @Override
+      public org.unidal.cat.meta.entity.EntityKind getKind() {
+         return org.unidal.cat.meta.entity.EntityKind.CONFIG;
+      }
+    </snippet>
+   </entity>
+   <entity name="events">
+      <attribute name="last-modified-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <entity-ref name="event" type="list" names="events"/>
+   </entity>
+   <entity name="event" implements="org.unidal.cat.meta.event.Event">
+      <attribute name="id" value-type="int" primitive="true"/>
+      <attribute name="kind" value-type="String"/>
+      <attribute name="type" value-type="String"/>
+      <attribute name="name" value-type="String"/>
+      <attribute name="creation-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss"/>
+      <element name="text" value-type="String" text="true"/>
+      <snippet>
+      @Override
+      public String getDetails() {
+         return m_text;
+      }
+
+      @Override
+      public org.unidal.cat.meta.event.EventKind getEventKind() {
+         return org.unidal.cat.meta.event.EventKind.of(m_kind, org.unidal.cat.meta.event.EventKind.UNKNOWN);
+      }
+
+      @Override
+      public boolean isEligible(org.unidal.cat.meta.entity.EntityKind... kinds) {
+         for (org.unidal.cat.meta.entity.EntityKind kind : kinds) {
+            if (kind.canProduceEventOf(m_kind)) {
+               return true;
+            }
+         }
+      
+         return false;
+      }
+      
+      @Override
+      public boolean isEligible(org.unidal.cat.meta.entity.EntityKind kind, String type) {
+         return kind.canProduceEventOf(m_kind) &amp;&amp; m_type.equals(type);
+      }
+      
+      @Override
+      public boolean isEligible(org.unidal.cat.meta.entity.EntityKind kind, String type, String name) {
+         return kind.canProduceEventOf(m_kind) &amp;&amp; m_type.equals(type) &amp;&amp; m_name.equals(name);
+      }
+    </snippet>
+   </entity>
+</model>

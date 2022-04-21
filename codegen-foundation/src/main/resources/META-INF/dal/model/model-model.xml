@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="org.unidal.codegen.model" class-suffix="Model" enable-xml="true" enable-base-visitor="true">
+  <entity name="codegen" root="true">
+    <entity-ref name="manifest" />
+    <entity-ref name="structure" />
+    <entity-ref name="outputs" />
+    <any name="data" />
+  </entity>
+  <entity name="manifest">
+    <attribute name="path" value-type="String" />
+    <entity-ref name="file" type="list" names="files" />
+  </entity>
+  <entity name="file">
+    <attribute name="path" value-type="String" />
+  </entity>
+  <entity name="structure">
+    <attribute name="for" value-type="String" enabled="false" />
+    <entity-ref name="node" />
+  </entity>
+  <entity name="node">
+    <attribute name="name" value-type="String" key="true" />
+    <attribute name="no-namespace" value-type="boolean" />
+    <attribute name="key" value-type="String" />
+    <entity-ref name="node" type="list" names="nodes" />
+  </entity>
+  <entity name="outputs">
+    <attribute name="for" value-type="String" enabled="false" />
+    <entity-ref name="output" type="list" names="outputs" />
+  </entity>
+  <entity name="output">
+    <attribute name="path" value-type="String" key="true" />
+    <attribute name="op" value-type="String" />
+    <attribute name="template" value-type="String" />
+    <attribute name="mode" value-type="String" />
+    <entity-ref name="property" type="list" names="properties" />
+  </entity>
+  <entity name="property">
+    <attribute name="name" value-type="String" key="true" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+</model>
+

@@ -23,7 +23,7 @@ public abstract class AbstractWizardMojoTest extends ComponentTestCase {
    protected static class WizardMojoBuilder {
       private PlexusContainer m_container;
 
-      private AbstractWizardMojo m_mojo;
+      private WizardMojoSupport m_mojo;
 
       private WizardMojoBuilder() {
       }
@@ -33,14 +33,14 @@ public abstract class AbstractWizardMojoTest extends ComponentTestCase {
       }
 
       public static WizardMojoBuilder builder(AbstractWizardMojoTest test,
-            Class<? extends AbstractWizardMojo> mojoClass) throws Exception {
+            Class<? extends WizardMojoSupport> mojoClass) throws Exception {
          WizardMojoBuilder builder = new WizardMojoBuilder();
 
          builder.initialize(test.getContainer(), mojoClass);
          return builder;
       }
 
-      public AbstractWizardMojo build() throws Exception {
+      public WizardMojoSupport build() throws Exception {
          return m_mojo;
       }
 
@@ -60,7 +60,7 @@ public abstract class AbstractWizardMojoTest extends ComponentTestCase {
          return this;
       }
 
-      private void initialize(PlexusContainer container, Class<? extends AbstractWizardMojo> mojoClass)
+      private void initialize(PlexusContainer container, Class<? extends WizardMojoSupport> mojoClass)
             throws Exception {
          m_container = container;
          m_mojo = mojoClass.getConstructor().newInstance();
@@ -75,7 +75,7 @@ public abstract class AbstractWizardMojoTest extends ComponentTestCase {
          setField(m_mojo, "m_project", project);
       }
 
-      public <T extends AbstractWizardMojo> WizardMojoBuilder mojo(Class<T> mojoClass) throws Exception {
+      public <T extends WizardMojoSupport> WizardMojoBuilder mojo(Class<T> mojoClass) throws Exception {
          m_mojo = mojoClass.getConstructor().newInstance();
          return this;
       }

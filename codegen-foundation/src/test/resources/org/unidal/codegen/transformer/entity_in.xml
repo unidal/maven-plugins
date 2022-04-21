@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<entities>
-	<entity name="user" table="user" alias="u"/>
-	<entity name="user-address" table="user_address" alias="ua"/>
-	<entity name="t-user" entity-name="user" table="t_user" alias="u"/>
-	<entity name="t-user-address" entity-name="user-address" table="t_user_address" alias="ua"/>
-	<entity name="t-user" entity-name="user" class-name="MyUser" table="t_user" alias="u"/>
-	<entity name="t-user-address" entity-name="user-address" class-name="MyUserAddress" table="t_user_address" alias="ua"/>
-</entities>

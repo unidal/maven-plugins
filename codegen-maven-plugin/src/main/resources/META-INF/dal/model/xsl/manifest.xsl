@@ -26,7 +26,7 @@
 </xsl:template>
 
 <xsl:template name="manifest">
-   <xsl:element name="manifest">
+   <xsl:element name="outputs">
       <xsl:apply-templates select="/model"/>
       <xsl:apply-templates select="/model/entity"/>
    </xsl:element>
@@ -382,42 +382,32 @@
    <xsl:param name="class" select="''"/>
    <xsl:param name="name" select="''"/>
 
-    <xsl:value-of select="$empty-line"/>
-    <xsl:element name="file">
+    <xsl:element name="output">
+       <xsl:attribute name="op">apply_template</xsl:attribute>
        <xsl:attribute name="path"><xsl:value-of select="$path"/></xsl:attribute>
-       
        <xsl:attribute name="template"><xsl:value-of select="$template"/></xsl:attribute>
-       
        <xsl:attribute name="mode"><xsl:value-of select="$mode"/></xsl:attribute>
        
        <xsl:if test="$package">
-          <xsl:value-of select="$empty-line"/>
           <xsl:element name="property">
              <xsl:attribute name="name">package</xsl:attribute>
-             
              <xsl:value-of select="$package"/>
           </xsl:element>
        </xsl:if>
        
        <xsl:if test="$class">
-          <xsl:value-of select="$empty-line"/>
           <xsl:element name="property">
              <xsl:attribute name="name">class</xsl:attribute>
-          
              <xsl:value-of select="$class"/>
           </xsl:element>
        </xsl:if>
        
        <xsl:if test="$name">
-          <xsl:value-of select="$empty-line"/>
           <xsl:element name="property">
              <xsl:attribute name="name">name</xsl:attribute>
-          
              <xsl:value-of select="$name"/>
           </xsl:element>
        </xsl:if>
-       
-       <xsl:value-of select="$empty-line"/>
     </xsl:element>
 </xsl:template>
 

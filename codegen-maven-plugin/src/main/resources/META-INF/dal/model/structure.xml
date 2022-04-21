@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<root>
+<structure>
    <node name="model" no-namespace="true">
       <node name="entity" key="name">
          <node name="attribute" key="name"/>
          <node name="element" key="name,alias"/>
          <node name="entity-ref" key="alias,name"/>
+         <node name="snippet" />
+         <node name="any" />
       </node>
    </node>
-</root>
+</structure>

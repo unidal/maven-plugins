@@ -19,7 +19,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.unidal.codegen.generator.Generator;
+import org.unidal.codegen.framework.XslGenerator;
 import org.unidal.maven.plugin.wizard.meta.JdbcWizardBuilder;
 import org.unidal.maven.plugin.wizard.meta.TableMeta;
 import org.unidal.maven.plugin.wizard.model.entity.Group;
@@ -34,7 +34,7 @@ import org.unidal.maven.plugin.wizard.pom.JdbcPomBuilder;
  * @goal jdbc
  * @author Frankie Wu
  */
-public class JdbcMojo extends AbstractWizardMojo {
+public class JdbcMojo extends WizardMojoSupport {
    /**
     * Wizard builder component
     * 
@@ -56,11 +56,11 @@ public class JdbcMojo extends AbstractWizardMojo {
    /**
     * XSL code generator implementation
     * 
-    * @component role="org.unidal.codegen.generator.Generator" role-hint="wizard-jdbc"
+    * @component role="org.unidal.codegen.framework.XslGenerator"
     * @required
     * @readonly
     */
-   private Generator m_generator;
+   private XslGenerator m_generator;
 
    /**
     * Table meta component
@@ -70,8 +70,6 @@ public class JdbcMojo extends AbstractWizardMojo {
     * @readonly
     */
    private TableMeta m_tableMeta;
-
-   // ---
 
    /**
     * @parameter expression="${outputDir}" default-value="${basedir}/src/main/resources/META-INF/dal/jdbc"

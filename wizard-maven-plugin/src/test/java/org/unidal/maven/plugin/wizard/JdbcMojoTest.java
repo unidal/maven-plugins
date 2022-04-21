@@ -12,7 +12,7 @@ import org.unidal.maven.plugin.wizard.pom.JdbcPomBuilder;
 public class JdbcMojoTest extends AbstractWizardMojoTest {
    @Test
    public void testMojo() throws Exception {
-      AbstractWizardMojo mojo = WizardMojoBuilder.builder(this, JdbcMojo.class) //
+      WizardMojoSupport mojo = WizardMojoBuilder.builder(this, JdbcMojo.class) //
             .pom("jdbc-pom.xml") //
             .component("m_wizardBuilder", JdbcWizardBuilder.class) //
             .component("m_pomBuilder", JdbcPomBuilder.class) //

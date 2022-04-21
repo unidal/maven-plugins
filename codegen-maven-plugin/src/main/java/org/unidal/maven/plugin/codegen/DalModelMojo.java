@@ -1,14 +1,12 @@
 package org.unidal.maven.plugin.codegen;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.unidal.codegen.generator.GenerateContext;
-import org.unidal.codegen.generator.Generator;
+import org.unidal.codegen.framework.GenerationContext;
+import org.unidal.codegen.framework.XslGenerator;
 import org.unidal.helper.Splitters;
 
 /**
@@ -18,15 +16,15 @@ import org.unidal.helper.Splitters;
  * @phase generate-sources
  * @author Frankie Wu
  */
-public class DalModelMojo extends AbstractCodegenMojo {
+public class DalModelMojo extends DalMojoSupport {
    /**
     * XSL code generator implementation
     * 
-    * @component role="org.unidal.codegen.generator.Generator" role-hint="dal-model"
+    * @component role="org.unidal.codegen.framework.XslGenerator"
     * @required
     * @readonly
     */
-   private Generator m_generator;
+   private XslGenerator m_generator;
 
    /**
     * Current project base directory
@@ -75,19 +73,16 @@ public class DalModelMojo extends AbstractCodegenMojo {
       }
    }
 
-   private void generateModel(String manifest)
-         throws MojoExecutionException, IOException, MalformedURLException, Exception {
+   private void generateModel(String manifest) throws Exception {
       File manifestFile = new File(manifest);
 
       if (!manifestFile.exists()) {
-         throw new MojoExecutionException(String.format("Manifest(%s) is not found!", manifestFile.getCanonicalPath()));
+         throw new IllegalStateException(String.format("Manifest(%s) is not found!", manifestFile.getCanonicalPath()));
       }
 
-      final GenerateContext ctx = super.createContext(manifestFile, sourceDir);
+      GenerationContext ctx = super.createContext(manifestFile, sourceDir);
 
       m_generator.generate(ctx);
-
-      getLog().info(ctx.getGeneratedFiles() + " files generated.");
 
       if (test) {
          getProject().addTestCompileSourceRoot(sourceDir);

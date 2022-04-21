@@ -23,7 +23,7 @@ import org.unidal.maven.plugin.wizard.pom.ModelPomBuilder;
  * @goal model
  * @author Frankie Wu
  */
-public class ModelMojo extends AbstractWizardMojo {
+public class ModelMojo extends WizardMojoSupport {
    /**
     * Wizard builder component
     * 

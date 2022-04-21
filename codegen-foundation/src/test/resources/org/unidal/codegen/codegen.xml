@@ -1,0 +1,22 @@
+<codegen>
+   <manifest path="/META-INF/dal/model/meta-manifest.xml">
+      <file path="meta-codegen.xml" />
+      <file path="meta-model.xml" />
+   </manifest>
+   <structure for="">
+      <node name="model" no-namespace="true">
+         <node name="entity" key="name">
+            <node name="attribute" key="name" />
+            <node name="element" key="name,alias" />
+            <node name="entity-ref" key="alias,name" />
+         </node>
+      </node>
+   </structure>
+   <outputs for="">
+      <output path="/com/site/app/user/dal/User.java" op="apply_template" template="/META-INF/dal/jdbc/do.xsl" mode="create_or_overwrite">
+         <property name="do-package">org.unidal.app.user.dal</property>
+         <property name="name">user</property>
+      </output>
+      <output />
+   </outputs>
+</codegen>

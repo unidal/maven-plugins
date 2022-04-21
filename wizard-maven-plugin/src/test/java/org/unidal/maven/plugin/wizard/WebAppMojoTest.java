@@ -11,7 +11,7 @@ import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilder;
 public class WebAppMojoTest extends AbstractWizardMojoTest {
    @Test
    public void testMojo() throws Exception {
-      AbstractWizardMojo mojo = WizardMojoBuilder.builder(this, WebAppMojo.class) //
+      WizardMojoSupport mojo = WizardMojoBuilder.builder(this, WebAppMojo.class) //
             .pom("webapp-pom.xml") //
             .component("m_wizardBuilder", WebAppWizardBuilder.class) //
             .component("m_pomBuilder", WebAppPomBuilder.class) //
