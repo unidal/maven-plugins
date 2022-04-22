@@ -2,13 +2,13 @@ package org.unidal.codegen.generator.wizard;
 
 import java.io.File;
 
-import org.unidal.codegen.generator.GenerateContext;
-import org.unidal.codegen.generator.Generator;
+import org.unidal.codegen.framework.GenerationContext;
+import org.unidal.codegen.framework.XslGenerator;
 import org.unidal.lookup.ComponentTestCase;
 
 public abstract class WizardGenerateTestSupport extends ComponentTestCase {
-   protected void generateJdbc(GenerateContext ctx) throws Exception {
-      Generator g = lookup(Generator.class, "wizard-jdbc");
+   protected void generateJdbc(GenerationContext ctx) throws Exception {
+      XslGenerator g = lookup(XslGenerator.class, "wizard-jdbc");
       long start = System.currentTimeMillis();
 
       g.generate(ctx);
@@ -21,9 +21,9 @@ public abstract class WizardGenerateTestSupport extends ComponentTestCase {
    }
 
    protected void generateJdbc(String manifestXml) throws Exception {
-      Generator g = lookup(Generator.class, "wizard-jdbc");
+      XslGenerator g = lookup(XslGenerator.class, "wizard-jdbc");
       File manifest = new File(getClass().getResource(manifestXml).getFile());
-      GenerateContext ctx = new WizardGenerationContext(getProjectBaseDir(), "jdbc", manifest, isVerbose(), isDebug());
+      GenerationContext ctx = new WizardGenerationContext(getProjectBaseDir(), "jdbc", manifest, isVerbose(), isDebug());
       long start = System.currentTimeMillis();
 
       g.generate(ctx);
@@ -35,8 +35,8 @@ public abstract class WizardGenerateTestSupport extends ComponentTestCase {
       }
    }
 
-   protected void generateWebapp(GenerateContext ctx) throws Exception {
-      Generator g = lookup(Generator.class, "wizard-webapp");
+   protected void generateWebapp(GenerationContext ctx) throws Exception {
+      XslGenerator g = lookup(XslGenerator.class, "wizard-webapp");
       long start = System.currentTimeMillis();
 
       g.generate(ctx);
@@ -49,9 +49,9 @@ public abstract class WizardGenerateTestSupport extends ComponentTestCase {
    }
 
    protected void generateWebapp(String manifestXml) throws Exception {
-      Generator g = lookup(Generator.class, "wizard-webapp");
+      XslGenerator g = lookup(XslGenerator.class, "wizard-webapp");
       File manifest = new File(getClass().getResource(manifestXml).getFile());
-      GenerateContext ctx = new WizardGenerationContext(getProjectBaseDir(), "webapp", manifest, isVerbose(), isDebug());
+      GenerationContext ctx = new WizardGenerationContext(getProjectBaseDir(), "webapp", manifest, isVerbose(), isDebug());
       long start = System.currentTimeMillis();
 
       g.generate(ctx);

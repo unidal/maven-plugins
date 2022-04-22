@@ -22,7 +22,7 @@
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
+<xsl:if test="not($is-jsp) and not($is-th)">import javax.servlet.http.HttpServletResponse;</xsl:if>
 
 import <xsl:value-of select="../@package"></xsl:value-of>.<xsl:value-of select="../@page-class"/>;
 <xsl:if test="$is-th">

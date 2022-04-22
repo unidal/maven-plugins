@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unidal.codegen.generator.Generator;
+import org.unidal.codegen.framework.XslGenerator;
 import org.unidal.maven.plugin.wizard.meta.JdbcWizardBuilder;
 import org.unidal.maven.plugin.wizard.meta.TableMeta;
 import org.unidal.maven.plugin.wizard.pom.JdbcPomBuilder;
@@ -17,7 +17,7 @@ public class JdbcMojoTest extends AbstractWizardMojoTest {
             .component("m_wizardBuilder", JdbcWizardBuilder.class) //
             .component("m_pomBuilder", JdbcPomBuilder.class) //
             .component("m_tableMeta", TableMeta.class) //
-            .component("m_generator", Generator.class, "wizard-jdbc") //
+            .component("m_generator", XslGenerator.class) //
             .build();
       File baseDir = mojo.getProject().getBasedir();
 
@@ -32,7 +32,7 @@ public class JdbcMojoTest extends AbstractWizardMojoTest {
       System.setProperty("group", "group1");
       System.setProperty("table", "table1");
       setField(mojo, "outputDir", new File(baseDir, "src/main/resources/META-INF/dal/jdbc").toString());
-      
+
       mojo.execute();
 
       Assert.assertEquals(true, new File(baseDir, "pom.xml").exists());

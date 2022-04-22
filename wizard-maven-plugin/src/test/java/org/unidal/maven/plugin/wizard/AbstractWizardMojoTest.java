@@ -83,7 +83,7 @@ public abstract class AbstractWizardMojoTest extends ComponentTestCase {
       public WizardMojoBuilder pom(String pom) throws Exception {
          MavenProject project = m_mojo.getProject();
          String tmpDir = System.getProperty("java.io.tmpdir");
-         File baseDir = new File(tmpDir, "org.unidal.maven.plugin.wizard/" + m_mojo.getWizardType());
+         File baseDir = new File(tmpDir, "org.unidal.maven.plugin.wizard/" + m_mojo.getCodegenType());
 
          if (baseDir.isDirectory()) {
             Files.forDir().delete(baseDir, true);

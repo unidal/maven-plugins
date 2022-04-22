@@ -19,6 +19,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.unidal.codegen.framework.GenerationContext;
 import org.unidal.codegen.framework.XslGenerator;
 import org.unidal.maven.plugin.wizard.meta.JdbcWizardBuilder;
 import org.unidal.maven.plugin.wizard.meta.TableMeta;
@@ -77,6 +78,22 @@ public class JdbcMojo extends WizardMojoSupport {
     */
    private String outputDir;
 
+   /**
+    * Current project base directory
+    * 
+    * @parameter expression="${sourceDir}" default-value="${basedir}/target/generated-sources/dal-model"
+    * @required
+    */
+   private String sourceDir;
+
+   /**
+    * Current project base directory
+    * 
+    * @parameter expression="${manifest}" default-value="${basedir}/src/main/resources/META-INF/wizard/webapp/wizard.xml"
+    * @required
+    */
+   private String manifest;
+
    private Connection m_conn;
 
    public void execute() throws MojoExecutionException, MojoFailureException {
@@ -97,7 +114,7 @@ public class JdbcMojo extends WizardMojoSupport {
             }
          }
 
-         m_generator.generate(super.createContext());
+         generate(new File(manifest), sourceDir);
 
          // modify the pom.xml
          m_pomBuilder.build(project.getFile(), wizard);
@@ -107,8 +124,14 @@ public class JdbcMojo extends WizardMojoSupport {
       }
    }
 
+   public void generate(File manifest, String sourceDir) throws Exception {
+      GenerationContext ctx = super.createContext(manifest, sourceDir);
+
+      m_generator.generate(ctx);
+   }
+   
    @Override
-   protected String getWizardType() {
+   protected String getCodegenType() {
       return "jdbc";
    }
 

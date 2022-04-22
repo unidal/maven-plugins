@@ -34,41 +34,32 @@ public abstract class WizardMojoSupport extends AbstractMojo {
     */
    private boolean debug;
 
-   protected GenerationContext createContext() throws IOException {
-      String resourceBase = String.format("/META-INF/wizard/%s/xsl", getWizardType());
+   public GenerationContext createContext(File manifestFile, String sourceDir) throws IOException {
+      String resourceBase = String.format("/META-INF/wizard/%s/xsl", getCodegenType());
 
-      return new WizardMojoGenerationContext(m_project.getBasedir(), resourceBase, getManifestFile());
+      return new WizardMojoGenerationContext(resourceBase, manifestFile, sourceDir);
    }
 
-   protected File getManifestFile() {
-      String manifestXml = String.format("src/main/resources/META-INF/wizard/manifest.xml");
-
-      return new File(m_project.getBasedir(), manifestXml);
-   }
+   protected abstract String getCodegenType();
 
    public MavenProject getProject() {
       return m_project;
    }
 
-   protected abstract String getWizardType();
-
-   private class WizardMojoGenerationContext extends GenerationContextSupport {
+   protected class WizardMojoGenerationContext extends GenerationContextSupport {
       private final File m_manifestXml;
 
       private String m_resourceBasePath;
 
       private AtomicInteger m_generatedFiles = new AtomicInteger();
 
-      private WizardMojoGenerationContext(File projectBaseDir, String resourceBasePath, File manifestXml)
-            throws IOException {
-         super(projectBaseDir);
+      public WizardMojoGenerationContext(String resourceBasePath, File manifestXml, String sourceDir) throws IOException {
+         super(m_project.getBasedir());
 
          m_resourceBasePath = resourceBasePath;
          m_manifestXml = manifestXml;
-      }
 
-      public File getManifestXml() {
-         return m_manifestXml;
+         getProperties().put("src-main-java", sourceDir);
       }
 
       @Override
@@ -83,16 +74,8 @@ public abstract class WizardMojoSupport extends AbstractMojo {
          return m_generatedFiles;
       }
 
-      @Override
-      public void info(String message) {
-         getLog().info(message);
-      }
-
-      @Override
-      public void verbose(String message) {
-         if (debug || verbose) {
-            info(message);
-         }
+      public File getManifestXml() {
+         return m_manifestXml;
       }
 
       @Override
@@ -104,6 +87,18 @@ public abstract class WizardMojoSupport extends AbstractMojo {
             return url;
          } else {
             throw new RuntimeException("Can't find resource: " + path);
+         }
+      }
+
+      @Override
+      public void info(String message) {
+         getLog().info(message);
+      }
+
+      @Override
+      public void verbose(String message) {
+         if (debug || verbose) {
+            info(message);
          }
       }
    }

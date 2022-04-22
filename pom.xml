@@ -35,6 +35,7 @@
       <junit.version>4.13.2</junit.version>
       <mockito.version>1.9.0</mockito.version>
       <plexus-archiver.version>2.1.1</plexus-archiver.version>
+      <servlet-api.version>3.1.0</servlet-api.version>
 
       <codegen.plugin.version>${project.version}</codegen.plugin.version>
    </properties>
@@ -87,6 +88,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet-api.version}</version>
          </dependency>
          <dependency>
             <groupId>org.mockito</groupId>

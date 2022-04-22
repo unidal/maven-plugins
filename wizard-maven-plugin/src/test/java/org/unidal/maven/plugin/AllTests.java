@@ -9,7 +9,6 @@ import org.unidal.maven.plugin.wizard.ModelMojoTest;
 import org.unidal.maven.plugin.wizard.ProjectMojoTest;
 import org.unidal.maven.plugin.wizard.WebAppMojoTest;
 import org.unidal.maven.plugin.wizard.WizardModelTest;
-import org.unidal.maven.plugin.wizard.dom.DocumentBuilderTest;
 import org.unidal.maven.plugin.wizard.meta.CsprojMetaTest;
 import org.unidal.maven.plugin.wizard.meta.GameModelMetaTest;
 import org.unidal.maven.plugin.wizard.meta.MavenModelMetaTest;
@@ -21,34 +20,31 @@ import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilderTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-DocumentBuilderTest.class,
+      ModelMetaTest.class,
 
-ModelMetaTest.class,
+      TableMetaTest.class,
 
-TableMetaTest.class,
+      GameModelMetaTest.class,
 
-GameModelMetaTest.class,
+      MavenModelMetaTest.class,
 
-MavenModelMetaTest.class,
+      StarterMetadataMetaTest.class,
 
-StarterMetadataMetaTest.class,
+      CsprojMetaTest.class,
 
-CsprojMetaTest.class,
+      ProjectMojoTest.class,
 
-ProjectMojoTest.class,
+      WizardModelTest.class,
 
-WizardModelTest.class,
+      WebAppPomBuilderTest.class,
 
-WebAppPomBuilderTest.class,
+      WebAppMojoTest.class,
 
-WebAppMojoTest.class,
+      JdbcMojoTest.class,
 
-JdbcMojoTest.class,
+      ModelMojoTest.class,
 
-ModelMojoTest.class,
-
-AllWizardGeneratorTests.class,
-
+      AllWizardGeneratorTests.class,
 
 })
 public class AllTests {

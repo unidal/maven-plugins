@@ -1,4 +1,4 @@
-package org.unidal.maven.plugin.codegen.scenario;
+package org.unidal.codegen.framework.support;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +18,7 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
+import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.apache.maven.project.MavenProject;
@@ -31,25 +32,23 @@ import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.PlexusContainer;
-import org.unidal.maven.plugin.codegen.DalModelMojo;
-import org.unidal.maven.plugin.codegen.DalMojoSupport;
 
-public class DalModelSupport extends ComponentTestCase {
-   private static void setField(Object instance, String fieldName, Object value) throws Exception {
+public class CodegenMojoSupport extends ComponentTestCase {
+   protected static void setField(Object instance, String fieldName, Object value) throws Exception {
       Field field = Reflects.forField().getDeclaredField(instance, fieldName);
 
       field.setAccessible(true);
       field.set(instance, value);
    }
 
-   private <T extends DalMojoSupport> MyMojoBuilder<T> builderOf(Class<T> mojoClass, MyHelper helper) throws Exception {
+   protected <T extends Mojo> MyMojoBuilder<T> builderOf(Class<T> mojoClass, MyHelper helper) throws Exception {
       MyMojoBuilder<T> builder = new MyMojoBuilder<T>();
 
       builder.initialize(getContainer(), mojoClass, helper);
       return builder;
    }
 
-   private void compileSources(MyHelper helper) throws Exception {
+   protected void compileSources(MyHelper helper) throws Exception {
       JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
       DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
       StandardJavaFileManager manager = compiler.getStandardFileManager(diagnostics, null, null);
@@ -70,18 +69,7 @@ public class DalModelSupport extends ComponentTestCase {
       }
    }
 
-   public void compileSources(String scenario) throws Exception {
-      MyHelper helper = new MyHelper(scenario);
-
-      compileSources(helper);
-      copyResources(helper);
-
-      if (!helper.checkError()) {
-         throw helper.buildError();
-      }
-   }
-
-   private void copyResources(MyHelper helper) throws IOException {
+   protected void copyResources(MyHelper helper) throws IOException {
       File resourcesPath = helper.getTestResourcesPath();
 
       if (resourcesPath.isDirectory()) {
@@ -91,9 +79,9 @@ public class DalModelSupport extends ComponentTestCase {
       }
    }
 
-   private File generateSources(MyHelper helper) throws Exception {
+   protected void generateSources(MyHelper helper) throws Exception {
       File baseDir = helper.getBaseDir();
-      DalModelMojo mojo = builderOf(DalModelMojo.class, helper) //
+      Mojo mojo = builderOf(helper.getMojoClass(), helper) //
             .component("m_generator", XslGenerator.class, null).build();
       final AtomicReference<File> manifest = new AtomicReference<File>();
 
@@ -112,22 +100,11 @@ public class DalModelSupport extends ComponentTestCase {
       setField(mojo, "manifest", manifest.get().getPath());
 
       mojo.execute();
-      return baseDir;
    }
 
-   public void generateSources(String scenario) throws Exception {
-      MyHelper helper = new MyHelper(scenario);
+   protected static class MyHelper {
+      private String m_type;
 
-      Files.forDir().delete(new File(helper.getBaseDir(), "target"), true);
-
-      generateSources(helper);
-
-      if (!helper.checkError()) {
-         throw helper.buildError();
-      }
-   }
-
-   private static class MyHelper {
       private String m_scenario;
 
       private File m_baseDir;
@@ -136,14 +113,21 @@ public class DalModelSupport extends ComponentTestCase {
 
       private Log m_log;
 
-      public MyHelper(String scenario) {
+      private Class<? extends Mojo> m_mojoClass;
+
+      public MyHelper(Class<? extends Mojo> mojoClass, String type, String scenario) {
+         m_mojoClass = mojoClass;
+         m_type = type;
          m_scenario = scenario;
-         m_baseDir = new File("src/test/dal-model/" + scenario);
+         m_baseDir = new File(String.format("src/test/%s/%s", type, scenario));
          m_log = new MyLog(scenario);
 
          if (!m_baseDir.exists()) {
-            throw new IllegalArgumentException(String.format("Scenario(%s) does not found!", scenario));
+            throw new IllegalArgumentException(
+                  String.format("Scenario(%s) of mojo(%s) does not found!", scenario, type));
          }
+
+         Files.forDir().delete(new File(m_baseDir, "target"), true);
       }
 
       public void addMessage(Diagnostic<? extends JavaFileObject> diagnostic) {
@@ -202,16 +186,24 @@ public class DalModelSupport extends ComponentTestCase {
          return m_log;
       }
 
+      public Class<? extends Mojo> getMojoClass() {
+         return m_mojoClass;
+      }
+
       public String getScenario() {
          return m_scenario;
       }
 
       public List<File> getSourcesPath() {
-         return pathOf(false, "sources", "target/generated-sources", "test-sources");
+         return pathOf(false, "sources", "target/generated-sources", "test-sources", "../sources");
       }
 
       public File getTestResourcesPath() {
          return new File(m_baseDir, "test-resources");
+      }
+
+      public String getType() {
+         return m_type;
       }
 
       private List<File> pathOf(boolean createIfNotExists, String... files) {
@@ -315,7 +307,7 @@ public class DalModelSupport extends ComponentTestCase {
       }
    }
 
-   private static class MyMojoBuilder<T extends DalMojoSupport> {
+   public static class MyMojoBuilder<T extends Mojo> {
       private PlexusContainer m_container;
 
       private T m_mojo;

@@ -26,9 +26,11 @@ import org.junit.runners.Suite;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
+import org.unidal.codegen.framework.support.CodegenMojoSupport;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.DirMatcher;
 import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.maven.plugin.codegen.DalJdbcMojo;
 
 /**
  * <pre>
@@ -45,7 +47,7 @@ import org.unidal.helper.Scanners.FileMatcher;
 public class DalJdbcRunner extends Suite {
    private File m_baseDir;
 
-   private Map<String, DalJdbcSupport> m_supports = new HashMap<String, DalJdbcSupport>();
+   private Map<String, RunnerSupport> m_supports = new HashMap<String, RunnerSupport>();
 
    public DalJdbcRunner(Class<?> klass) throws InitializationError {
       super(klass, Collections.<Runner> emptyList());
@@ -57,7 +59,7 @@ public class DalJdbcRunner extends Suite {
    protected List<Runner> getChildren() {
       List<String> scenarios = getScenarios();
 
-      return new RunnersBuilder().buildScenarios(scenarios);
+      return new RunnerBuilder().buildScenarios(scenarios);
    }
 
    private List<String> getScenarios() {
@@ -68,7 +70,7 @@ public class DalJdbcRunner extends Suite {
          public Direction matches(File base, String path) {
             File file = new File(base, path);
 
-            if (file.isDirectory() && new File(file, "jdbc").isDirectory()) {
+            if (file.isDirectory() && new File(file, "model").isDirectory()) {
                scenarios.add(path);
             }
 
@@ -81,7 +83,7 @@ public class DalJdbcRunner extends Suite {
       return scenarios;
    }
 
-   private DalJdbcSupport getSupport(String scenario) {
+   private RunnerSupport getSupport(String scenario) {
       return m_supports.get(scenario);
    }
 
@@ -187,9 +189,9 @@ public class DalJdbcRunner extends Suite {
 
       @Override
       public boolean run() throws Exception {
-         DalJdbcSupport support = getSupport(m_scenario);
+         RunnerSupport support = getSupport(m_scenario);
 
-         support.compileSources(m_scenario);
+         support.compileSources();
          support.tearDown();
          return true;
       }
@@ -204,10 +206,10 @@ public class DalJdbcRunner extends Suite {
 
       @Override
       public boolean run() throws Exception {
-         DalJdbcSupport support = getSupport(m_scenario);
+         RunnerSupport support = getSupport(m_scenario);
 
          support.setUp();
-         support.generateSources(m_scenario);
+         support.generateSources();
          return true;
       }
    }
@@ -268,15 +270,15 @@ public class DalJdbcRunner extends Suite {
 
       private boolean m_ignore;
 
+      public LeafRunner(String category, String displayName, Job job) {
+         this(category, displayName, job, false);
+      }
+
       public LeafRunner(String category, String displayName, Job job, boolean ignore) {
          m_category = category;
          m_displayName = displayName;
          m_job = job;
          m_ignore = ignore;
-      }
-
-      public LeafRunner(String category, String displayName, Job job) {
-         this(category, displayName, job, false);
       }
 
       @Override
@@ -357,9 +359,9 @@ public class DalJdbcRunner extends Suite {
       }
    }
 
-   private class RunnersBuilder {
+   private class RunnerBuilder {
       public List<Runner> buildScenario(String scenario) {
-         m_supports.put(scenario, new DalJdbcSupport());
+         m_supports.put(scenario, new RunnerSupport(scenario));
 
          List<Runner> children = new ArrayList<Runner>();
          List<String> testNames = getTestNames(scenario);
@@ -416,6 +418,30 @@ public class DalJdbcRunner extends Suite {
 
          return children;
       }
+   }
 
+   private static class RunnerSupport extends CodegenMojoSupport {
+      private MyHelper m_helper;
+
+      public RunnerSupport(String scenario) {
+         m_helper = new MyHelper(DalJdbcMojo.class, "dal-jdbc", scenario);
+      }
+
+      public void compileSources() throws Exception {
+         compileSources(m_helper);
+         copyResources(m_helper);
+
+         if (!m_helper.checkError()) {
+            throw m_helper.buildError();
+         }
+      }
+
+      public void generateSources() throws Exception {
+         generateSources(m_helper);
+
+         if (!m_helper.checkError()) {
+            throw m_helper.buildError();
+         }
+      }
    }
 }

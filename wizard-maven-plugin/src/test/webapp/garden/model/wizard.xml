@@ -1,0 +1,17 @@
+<wizard package="com.dianping.garden">
+   <webapp name="garden" package="com.dianping.garden" language="thymeleaf">
+      <module name="dashboard" path="d" default="true">
+         <page name="home" title="Home" default="true">
+            <description>Home Page of Garden</description>
+         </page>
+         <page name="trend" title="Trend" path="trend">
+            <description>Technical Trends</description>
+         </page>
+      </module>
+      <module name="toolkit" path="t">
+         <page name="query" title="DB Query" default="true">
+            <description>Database Query Toolkit</description>
+         </page>
+      </module>
+   </webapp>
+</wizard>

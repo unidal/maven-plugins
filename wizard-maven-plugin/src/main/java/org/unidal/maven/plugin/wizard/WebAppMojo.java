@@ -1,8 +1,11 @@
 package org.unidal.maven.plugin.wizard;
 
+import java.io.File;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.unidal.codegen.framework.GenerationContext;
 import org.unidal.codegen.framework.XslGenerator;
 import org.unidal.maven.plugin.wizard.meta.WebAppWizardBuilder;
 import org.unidal.maven.plugin.wizard.model.entity.Wizard;
@@ -41,6 +44,22 @@ public class WebAppMojo extends WizardMojoSupport {
     */
    private XslGenerator m_generator;
 
+   /**
+    * Current project base directory
+    * 
+    * @parameter expression="${sourceDir}" default-value="${basedir}/src/main/java"
+    * @required
+    */
+   private String sourceDir;
+
+   /**
+    * Current project base directory
+    * 
+    * @parameter expression="${manifest}" default-value="${basedir}/src/main/resources/META-INF/wizard/webapp/wizard.xml"
+    * @required
+    */
+   private String manifest;
+
    public void execute() throws MojoExecutionException, MojoFailureException {
       MavenProject project = getProject();
 
@@ -53,7 +72,7 @@ public class WebAppMojo extends WizardMojoSupport {
          Wizard wizard = m_wizardBuilder.build(project);
 
          // generate web scaffold files
-         m_generator.generate(super.createContext());
+         generate(new File(manifest), sourceDir);
 
          // modify the pom.xml
          m_pomBuilder.build(project.getFile(), wizard);
@@ -63,8 +82,14 @@ public class WebAppMojo extends WizardMojoSupport {
       }
    }
 
+   public void generate(File manifest, String sourceDir) throws Exception {
+      GenerationContext ctx = super.createContext(manifest, sourceDir);
+
+      m_generator.generate(ctx);
+   }
+
    @Override
-   protected String getWizardType() {
+   protected String getCodegenType() {
       return "webapp";
    }
 }

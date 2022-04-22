@@ -26,9 +26,11 @@ import org.junit.runners.Suite;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.TestClass;
+import org.unidal.codegen.framework.support.CodegenMojoSupport;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.DirMatcher;
 import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.maven.plugin.codegen.DalModelMojo;
 
 /**
  * <pre>
@@ -45,7 +47,7 @@ import org.unidal.helper.Scanners.FileMatcher;
 public class DalModelRunner extends Suite {
    private File m_baseDir;
 
-   private Map<String, DalModelSupport> m_supports = new HashMap<String, DalModelSupport>();
+   private Map<String, RunnerSupport> m_supports = new HashMap<String, RunnerSupport>();
 
    public DalModelRunner(Class<?> klass) throws InitializationError {
       super(klass, Collections.<Runner> emptyList());
@@ -57,7 +59,7 @@ public class DalModelRunner extends Suite {
    protected List<Runner> getChildren() {
       List<String> scenarios = getScenarios();
 
-      return new RunnersBuilder().buildScenarios(scenarios);
+      return new RunnerBuilder().buildScenarios(scenarios);
    }
 
    private List<String> getScenarios() {
@@ -81,7 +83,7 @@ public class DalModelRunner extends Suite {
       return scenarios;
    }
 
-   private DalModelSupport getSupport(String scenario) {
+   private RunnerSupport getSupport(String scenario) {
       return m_supports.get(scenario);
    }
 
@@ -187,9 +189,9 @@ public class DalModelRunner extends Suite {
 
       @Override
       public boolean run() throws Exception {
-         DalModelSupport support = getSupport(m_scenario);
+         RunnerSupport support = getSupport(m_scenario);
 
-         support.compileSources(m_scenario);
+         support.compileSources();
          support.tearDown();
          return true;
       }
@@ -204,10 +206,10 @@ public class DalModelRunner extends Suite {
 
       @Override
       public boolean run() throws Exception {
-         DalModelSupport support = getSupport(m_scenario);
+         RunnerSupport support = getSupport(m_scenario);
 
          support.setUp();
-         support.generateSources(m_scenario);
+         support.generateSources();
          return true;
       }
    }
@@ -357,9 +359,9 @@ public class DalModelRunner extends Suite {
       }
    }
 
-   private class RunnersBuilder {
+   private class RunnerBuilder {
       public List<Runner> buildScenario(String scenario) {
-         m_supports.put(scenario, new DalModelSupport());
+         m_supports.put(scenario, new RunnerSupport(scenario));
 
          List<Runner> children = new ArrayList<Runner>();
          List<String> testNames = getTestNames(scenario);
@@ -416,6 +418,30 @@ public class DalModelRunner extends Suite {
 
          return children;
       }
+   }
 
+   private static class RunnerSupport extends CodegenMojoSupport {
+      private MyHelper m_helper;
+
+      public RunnerSupport(String scenario) {
+         m_helper = new MyHelper(DalModelMojo.class, "dal-model", scenario);
+      }
+
+      public void compileSources() throws Exception {
+         compileSources(m_helper);
+         copyResources(m_helper);
+
+         if (!m_helper.checkError()) {
+            throw m_helper.buildError();
+         }
+      }
+
+      public void generateSources() throws Exception {
+         generateSources(m_helper);
+
+         if (!m_helper.checkError()) {
+            throw m_helper.buildError();
+         }
+      }
    }
 }

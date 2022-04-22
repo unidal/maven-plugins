@@ -80,7 +80,7 @@ public class ModelMojo extends WizardMojoSupport {
    }
 
    @Override
-   protected String getWizardType() {
+   protected String getCodegenType() {
       return "model";
    }
 
