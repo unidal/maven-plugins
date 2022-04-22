@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <structure>
-   <node name="wizard" no-namespace="true">
+   <node name="wizard">
       <node name="webapp">
          <node name="module" key="name">
             <node name="page" key="name">
                <node name="description" />
             </node>
+         </node>
+      </node>
+      <node name="jdbc" key="name">
+         <node name="datasource">
+            <node name="driver" />
+            <node name="url" />
+            <node name="user" />
+            <node name="password" />
+            <node name="properties" />
+         </node>
+         <node name="group" key="name">
+            <node name="table" key="name" />
          </node>
       </node>
    </node>

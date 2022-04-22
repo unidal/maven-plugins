@@ -47,13 +47,6 @@
      <xsl:with-param name="template" select="'build/components-configurator.xsl'"/>
    </xsl:call-template>
 
-   <!-- AllTests class -->
-   <xsl:call-template name="generate-test-java">
-     <xsl:with-param name="class" select="'AllTests'"/>
-     <xsl:with-param name="package" select="/wizard/@package"/>
-     <xsl:with-param name="template" select="'test/all-tests.xsl'"/>
-   </xsl:call-template>
-
    <!-- DatabseConfigurator class -->
    <xsl:call-template name="generate-java">
      <xsl:with-param name="class" select="@configurator-class"/>

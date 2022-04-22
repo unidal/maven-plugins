@@ -55,7 +55,7 @@ public class WebAppMojo extends WizardMojoSupport {
    /**
     * Current project base directory
     * 
-    * @parameter expression="${manifest}" default-value="${basedir}/src/main/resources/META-INF/wizard/webapp/wizard.xml"
+    * @parameter expression="${manifest}" default-value="${basedir}/src/main/resources/META-INF/wizard/wizard.xml"
     * @required
     */
    private String manifest;

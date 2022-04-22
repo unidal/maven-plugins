@@ -1,0 +1,22 @@
+<wizard package="com.dianping.garden">
+   <jdbc package="com.dianping.garden.dal" name="garden">
+      <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://localhost:3306/cat</url>
+         <user>cat</user>
+         <password>cat</password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+      </datasource>
+      <group name="report" package="com.dianping.garden.dal.report">
+         <table name="report"/>
+         <table name="dailyreport"/>
+      </group>
+      <group name="graph" package="com.dianping.garden.dal.graph">
+         <table name="graph"/>
+         <table name="dailygraph"/>
+      </group>
+      <group name="task" package="com.dianping.garden.dal.task">
+         <table name="task"/>
+      </group>
+   </jdbc>
+</wizard>
