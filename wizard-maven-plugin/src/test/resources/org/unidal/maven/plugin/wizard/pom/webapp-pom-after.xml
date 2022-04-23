@@ -38,7 +38,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>plexus-maven-plugin</artifactId>
-            <version>5.0.0</version>
+            <version>6.0.0</version>
             <executions>
                <execution>
                   <id>generate plexus component descriptor</id>

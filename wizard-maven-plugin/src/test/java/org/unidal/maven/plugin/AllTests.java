@@ -3,45 +3,27 @@ package org.unidal.maven.plugin;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
-import org.unidal.maven.plugin.wizard.JdbcMojoTest;
-import org.unidal.maven.plugin.wizard.ModelMojoTest;
-import org.unidal.maven.plugin.wizard.ProjectMojoTest;
-import org.unidal.maven.plugin.wizard.WebAppMojoTest;
-import org.unidal.maven.plugin.wizard.WizardModelTest;
-import org.unidal.maven.plugin.wizard.meta.CsprojMetaTest;
-import org.unidal.maven.plugin.wizard.meta.GameModelMetaTest;
-import org.unidal.maven.plugin.wizard.meta.MavenModelMetaTest;
+import org.unidal.maven.plugin.property.PropertyProviderTest;
 import org.unidal.maven.plugin.wizard.meta.ModelMetaTest;
-import org.unidal.maven.plugin.wizard.meta.StarterMetadataMetaTest;
 import org.unidal.maven.plugin.wizard.meta.TableMetaTest;
+import org.unidal.maven.plugin.wizard.pom.JdbcPomBuilderTest;
+import org.unidal.maven.plugin.wizard.pom.ModelPomBuilderTest;
 import org.unidal.maven.plugin.wizard.pom.WebAppPomBuilderTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
+      PropertyProviderTest.class,
+
       ModelMetaTest.class,
 
       TableMetaTest.class,
 
-      GameModelMetaTest.class,
+      JdbcPomBuilderTest.class,
 
-      MavenModelMetaTest.class,
-
-      StarterMetadataMetaTest.class,
-
-      CsprojMetaTest.class,
-
-      ProjectMojoTest.class,
-
-      WizardModelTest.class,
+      ModelPomBuilderTest.class,
 
       WebAppPomBuilderTest.class,
-
-      WebAppMojoTest.class,
-
-      JdbcMojoTest.class,
-
-      ModelMojoTest.class,
 
 })
 public class AllTests {

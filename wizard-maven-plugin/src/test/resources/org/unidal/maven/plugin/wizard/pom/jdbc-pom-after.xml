@@ -17,7 +17,6 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>dal-jdbc</artifactId>
-         <version>6.0.0</version>
       </dependency>
       <dependency>
          <groupId>mysql</groupId>
@@ -31,7 +30,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>5.0.0</version>
+            <version>6.0.0</version>
             <executions>
                <execution>
                   <id>generate jdbc files</id>
@@ -40,7 +39,9 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/jdbc-manifest.xml]]></manifest>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/first-manifest.xml,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/second-manifest.xml,
+                        ${basedir}/src/main/resources/META-INF/dal/jdbc/third-manifest.xml]]></manifest>
                   </configuration>
                </execution>
             </executions>
