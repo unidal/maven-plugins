@@ -29,7 +29,7 @@ public class DalJdbcMojo extends DalMojoSupport {
    /**
     * Current project base directory
     * 
-    * @parameter expression="${sourceDir}" default-value="${basedir}/target/generated-sources/dal-jdbc"
+    * @parameter expression="${sourceDir}" default-value="target/generated-sources/dal-jdbc"
     * @required
     */
    private String sourceDir;

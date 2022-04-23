@@ -29,7 +29,7 @@ public class DalModelMojo extends DalMojoSupport {
    /**
     * Current project base directory
     * 
-    * @parameter expression="${sourceDir}" default-value="${basedir}/target/generated-sources/dal-model"
+    * @parameter expression="${sourceDir}" default-value="target/generated-sources/dal-model"
     * @required
     */
    private String sourceDir;
