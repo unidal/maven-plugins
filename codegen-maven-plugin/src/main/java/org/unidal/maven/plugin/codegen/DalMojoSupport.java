@@ -81,6 +81,14 @@ public abstract class DalMojoSupport extends AbstractMojo {
       @Override
       protected URL getResource(String name) {
          String path = m_resourceBasePath + "/" + name;
+
+         // to remove "../" within path "/META-INF/dal/model/xsl/../structure.xml"
+         try {
+            path = new File(path).getCanonicalPath();
+         } catch (Exception e) {
+            // ignore it
+         }
+
          URL url = getClass().getResource(path);
 
          if (url != null) {
