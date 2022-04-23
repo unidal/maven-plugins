@@ -29,7 +29,11 @@ public abstract class GenerationContextSupport implements GenerationContext {
 
    @Override
    public File getFile(String file) {
-      return new File(m_projectBaseDir, file);
+      if (file.startsWith("/")) {
+         return new File(file);
+      } else {
+         return new File(m_projectBaseDir, file);
+      }
    }
 
    public URL getManifestXsl() {
