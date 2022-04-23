@@ -19,27 +19,19 @@
 
 <xsl:template name="manifest">
    <xsl:element name="outputs">
-      <xsl:apply-templates select="/wizard/jdbc" />
+      <xsl:apply-templates select="/wizard" />
 	  
-	  <xsl:variable name="file">
-		  <xsl:choose>
-		  	 <xsl:when test="/wizard/jdbc/@file=''"><xsl:value-of select="/wizard/jdbc/@file"/></xsl:when>
-		  	 <xsl:when test="/wizard/jdbc/@file!=''"><xsl:value-of select="/wizard/jdbc/@file"/></xsl:when>
-		  	 <xsl:otherwise>datasources.xml</xsl:otherwise>
-		  </xsl:choose>
-	  </xsl:variable>
-	  <xsl:if test="$file">
-		  <!-- datasources.xml -->
-		  <xsl:call-template name="generate-resource">
-		     <xsl:with-param name="src-dir" select="$base-dir" />
-		     <xsl:with-param name="file" select="$file"/>
-		     <xsl:with-param name="template" select="'xml/datasources.xsl'"/>
-		  </xsl:call-template>
-	  </xsl:if> 
+	  <!-- datasources.xml -->
+	  <xsl:call-template name="generate-resource">
+	     <xsl:with-param name="src-dir" select="''" />
+	     <xsl:with-param name="file" select="'datasources.xml'"/>
+	     <xsl:with-param name="template" select="'xml/datasources.xsl'"/>
+         <xsl:with-param name="mode" select="'create_or_overwrite'"/>
+	  </xsl:call-template>
    </xsl:element>
 </xsl:template>
 
-<xsl:template match="jdbc">
+<xsl:template match="wizard">
    <!-- ComponentsConfigurator class -->
    <xsl:call-template name="generate-java">
      <xsl:with-param name="class" select="'ComponentsConfigurator'"/>
@@ -49,32 +41,11 @@
 
    <!-- DatabseConfigurator class -->
    <xsl:call-template name="generate-java">
-     <xsl:with-param name="class" select="@configurator-class"/>
+     <xsl:with-param name="class" select="'DatabaseConfigurator'"/>
      <xsl:with-param name="package" select="/wizard/@build-package"/>
-     <xsl:with-param name="name" select="@name"/>
      <xsl:with-param name="template" select="'build/database-configurator.xsl'"/>
      <xsl:with-param name="mode" select="'create_or_overwrite'"/>
    </xsl:call-template>
-</xsl:template>
-
-<xsl:template name="wizard-policy">
-   <xsl:param name="name"/>
-   <xsl:param name="default" select="'false'"/>
-   
-   <xsl:variable name="wizard" select="/wizard"/>
-   <xsl:variable name="enable-policy" select="$wizard/attribute::*[name()=concat('enable-', $name)]"/>
-   <xsl:variable name="disable-policy" select="$wizard/attribute::*[name()=concat('disable-', $name)]"/>
-   <xsl:choose>
-      <xsl:when test="$disable-policy">
-         <xsl:value-of select="not($disable-policy='true')"/>
-      </xsl:when>
-      <xsl:when test="$enable-policy">
-         <xsl:value-of select="$enable-policy='true'"/>
-      </xsl:when>
-      <xsl:otherwise>
-         <xsl:value-of select="$default"/>
-      </xsl:otherwise>
-   </xsl:choose>
 </xsl:template>
 
 <xsl:template name="generate-java">

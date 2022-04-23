@@ -2,3 +2,4 @@
 bin
 target
 .*
+wizard-maven-plugin/datasources.xml

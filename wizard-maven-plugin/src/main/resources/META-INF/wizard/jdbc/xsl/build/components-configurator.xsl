@@ -29,12 +29,12 @@ public class <xsl:value-of select="$class"/> extends AbstractResourceConfigurato
       List<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/> all = new ArrayList<xsl:value-of select="'&lt;Component&gt;'" disable-output-escaping="yes"/>();
 
       // move following line to top-level project if necessary
-		all.add(C(JdbcDataSourceDescriptorManager.class) //
-				.config(E("datasourceFile").value("datasources.xml"), //
-						E("baseDirRef").value("<xsl:value-of select="jdbc/@upper-name"/>_HOME")));
-<xsl:for-each select="jdbc">
-      all.addAll(new <xsl:value-of select="@configurator-class"/>().defineComponents());
-</xsl:for-each>
+      all.add(C(JdbcDataSourceDescriptorManager.class) //
+            .config(E("datasourceFile").value("datasources.xml"), //
+                  E("baseDirRef").value("<xsl:value-of select="jdbc/@upper-name"/>_HOME")));
+
+      all.addAll(new DatabaseConfigurator().defineComponents());
+
       return all;
    }
 
