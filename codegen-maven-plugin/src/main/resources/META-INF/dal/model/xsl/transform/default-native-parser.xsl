@@ -65,17 +65,10 @@
    <xsl:variable name="current" select="."/>
    <xsl:value-of select="$empty-line"/>
    <xsl:for-each select="entity[@root='true']">
-      <xsl:value-of select="$empty"/>   public <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T parse(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> entityType, InputStream in) throws IOException {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         T entity = entityType.getConstructor().newInstance();<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         m_in = new DataInputStream(in);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         entity.accept(this);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         m_linker.finish();<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         return entity;<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      } catch (Exception e) {<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>         throw new IOException("Unable to parse Native! " + e, e);<xsl:value-of select="$empty-line"/>
-      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>   public void parse(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity, InputStream in) throws IOException {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      m_in = new DataInputStream(in);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      entity.accept(this);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      m_linker.finish();<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>   }<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty-line"/>
    </xsl:for-each>

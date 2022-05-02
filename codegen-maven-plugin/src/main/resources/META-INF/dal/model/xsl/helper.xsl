@@ -27,27 +27,48 @@
    <xsl:value-of select="$empty"/>public class <xsl:value-of select="$class-name"/>Helper {<xsl:value-of select="$empty"/>
 
 <xsl:if test="$with-json-builder">
-   public static String asJson(IEntity<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'?'"/></xsl:call-template> entity) {
+   public static String asJson(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
       return new DefaultJsonBuilder().build(entity);
    }
 </xsl:if>
 <xsl:if test="$with-native-builder">
-   public static byte[] asNative(IEntity<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'?'"/></xsl:call-template> entity) {
+   public static byte[] asNative(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
       ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
 
       new DefaultNativeBuilder().build(entity, out);
       return out.toByteArray();
    }
+
+   public static void asNative(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity, OutputStream out) {
+      new DefaultNativeBuilder().build(entity, out);
+   }
 </xsl:if>
 <xsl:if test="$with-xml-builder">
-   public static String asXml(IEntity<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'?'"/></xsl:call-template> entity) {
+   public static String asXml(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity) {
       return new DefaultXmlBuilder().build(entity);
    }
 </xsl:if>
 
 <xsl:if test="$with-native-parser">
-   public static <xsl:call-template name="generic-type"><xsl:with-param name="type" select="'T extends IEntity&lt;T&gt;'"/></xsl:call-template> T fromNative(Class<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'T'"/></xsl:call-template> entityType, InputStream in) throws IOException {
-      return new DefaultNativeParser().parse(entityType, in);
+   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T fromNative(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> entityType, InputStream in) throws IOException {
+      <xsl:value-of select="$empty"/>      try {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         T entity = entityType.getConstructor().newInstance();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         new DefaultNativeParser().parse(entity, in);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         return entity;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      } catch (RuntimeException e) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         if (e.getCause() instanceof IOException) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            throw (IOException) e.getCause();<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         } else {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>            throw e;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         }<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      } catch (Exception e) {<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>         throw new RuntimeException(e);<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>      }<xsl:value-of select="$empty-line"/>
+   }
+
+   public static void fromNative(IEntity<xsl:value-of select="'&lt;?&gt;'" disable-output-escaping="yes"/> entity, InputStream in) throws IOException {
+      new DefaultNativeParser().parse(entity, in);
    }
 
    public static <xsl:value-of select="$class-name"/> fromNative(InputStream in) throws IOException {
@@ -55,11 +76,11 @@
    }<xsl:value-of select="$empty-line"/>
 </xsl:if>
 <xsl:if test="$with-xml-parser">
-   public static <xsl:call-template name="generic-type"><xsl:with-param name="type" select="'T extends IEntity&lt;T&gt;'"/></xsl:call-template> T fromXml(Class<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'T'"/></xsl:call-template> entityType, InputStream in) throws IOException {
+   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T fromXml(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> entityType, InputStream in) throws IOException {
       return new DefaultXmlParser().parse(entityType, new InputSource(withoutBom(in)));
    }
 
-   public static <xsl:call-template name="generic-type"><xsl:with-param name="type" select="'T extends IEntity&lt;T&gt;'"/></xsl:call-template> T fromXml(Class<xsl:call-template name="generic-type"><xsl:with-param name="type" select="'T'"/></xsl:call-template> entityType, String xml) throws IOException {
+   public static <xsl:value-of select="'&lt;T extends IEntity&lt;?&gt;&gt;'" disable-output-escaping="yes"/> T fromXml(Class<xsl:value-of select="'&lt;T&gt;'" disable-output-escaping="yes"/> entityType, String xml) throws IOException {
       return new DefaultXmlParser().parse(entityType, new InputSource(new StringReader(xml)));
    }
 
@@ -105,6 +126,7 @@
    <xsl:if test="$with-xml-parser or $with-native-parser">
       <xsl:value-of select="$empty"/>import java.io.IOException;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>import java.io.InputStream;<xsl:value-of select="$empty-line"/>
+      <xsl:value-of select="$empty"/>import java.io.OutputStream;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    
    <xsl:if test="$with-xml-parser">
