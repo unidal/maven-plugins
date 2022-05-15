@@ -126,6 +126,9 @@
    <xsl:if test="$with-xml-parser or $with-native-parser">
       <xsl:value-of select="$empty"/>import java.io.IOException;<xsl:value-of select="$empty-line"/>
       <xsl:value-of select="$empty"/>import java.io.InputStream;<xsl:value-of select="$empty-line"/>
+   </xsl:if>
+
+   <xsl:if test="$with-native-parser">
       <xsl:value-of select="$empty"/>import java.io.OutputStream;<xsl:value-of select="$empty-line"/>
    </xsl:if>
    
