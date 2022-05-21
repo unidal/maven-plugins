@@ -9,6 +9,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
+import org.codehaus.plexus.archiver.util.DefaultFileSet;
 import org.codehaus.plexus.archiver.zip.ZipArchiver;
 import org.codehaus.plexus.util.FileUtils;
 
@@ -19,83 +20,89 @@ import org.codehaus.plexus.util.FileUtils;
  * @goal package
  */
 public class PackageMojo extends AbstractMojo {
-   /**
-    * Current project
-    * 
-    * @parameter expression="${project}"
-    * @required
-    * @readonly
-    */
-   private MavenProject project;
+	/**
+	 * Current project
+	 * 
+	 * @parameter expression="${project}"
+	 * @required
+	 * @readonly
+	 */
+	private MavenProject project;
 
-   /**
-    * @parameter expression="${excludeDirs}" default-value="ws"
-    */
-   private String excludeDirs;
+	/**
+	 * @parameter expression="${excludeDirs}" default-value="ws"
+	 */
+	private String excludeDirs;
 
-   private static final String[] DEFAULT_INCLUDES = new String[] { "**/*" };
+	private static final String[] DEFAULT_INCLUDES = new String[] { "**/*" };
 
-   public void execute() throws MojoExecutionException, MojoFailureException {
-      File baseDir = project.getBasedir();
-      String targetDirectory = project.getBuild().getDirectory();
-      String outputFile = targetDirectory + "/" + baseDir.getName() + ".sources.jar";
+	public void execute() throws MojoExecutionException, MojoFailureException {
+		File baseDir = project.getBasedir();
+		String targetDirectory = project.getBuild().getDirectory();
+		String outputFile = targetDirectory + "/" + baseDir.getName() + ".sources.jar";
 
-      try {
-         Archiver a = new ZipArchiver();
-         String[] list = baseDir.list();
-         List<String> dirs = getExcludedDirs();
-         String[] excludes = getDefaultExcludes();
+		try {
+			Archiver a = new ZipArchiver();
+			String[] list = baseDir.list();
+			List<String> dirs = getExcludedDirs();
+			String[] excludes = getDefaultExcludes();
 
-         for (String item : list) {
-            if (item.startsWith(".") || dirs.contains(item)) {
-               continue;
-            }
+			for (String item : list) {
+				if (item.startsWith(".") || dirs.contains(item)) {
+					continue;
+				}
 
-            File file = new File(baseDir, item);
+				File file = new File(baseDir, item);
 
-            if (file.isFile()) {
-               a.addFile(file, item);
-            } else if (file.isDirectory()) {
-               if (!file.getPath().equals(targetDirectory)) {
-                  a.addDirectory(file, item + "/", DEFAULT_INCLUDES, excludes);
-               }
-            }
-         }
+				if (file.isFile()) {
+					a.addFile(file, item);
+				} else if (file.isDirectory()) {
+					if (!file.getPath().equals(targetDirectory)) {
+						DefaultFileSet fs = new DefaultFileSet(file);
 
-         a.setDestFile(new File(outputFile));
-         a.createArchive();
+						fs.setPrefix(item + "/");
+						fs.include(DEFAULT_INCLUDES);
+						fs.exclude(excludes);
 
-         getLog().info(String.format("File(%s) created.", a.getDestFile().getCanonicalPath()));
-      } catch (Exception e) {
-         throw new MojoExecutionException("Can't create archiver: " + outputFile, e);
-      }
-   }
+						a.addFileSet(fs);
+					}
+				}
+			}
 
-   private String[] getDefaultExcludes() {
-      List<String> excludes = new ArrayList<String>();
+			a.setDestFile(new File(outputFile));
+			a.createArchive();
 
-      excludes.add(".*");
-      excludes.add("**/.*");
-      excludes.add("**/.*/**");
-      excludes.add("**/WEB-INF/tmp");
-      excludes.add("**/target");
-      excludes.add("**/target/**/*");
-      excludes.add("**/*.jar");
+			getLog().info(String.format("File(%s) created.", a.getDestFile().getCanonicalPath()));
+		} catch (Exception e) {
+			throw new MojoExecutionException("Can't create archiver: " + outputFile, e);
+		}
+	}
 
-      for (String exclude : FileUtils.getDefaultExcludes()) {
-         excludes.add(exclude);
-      }
+	private String[] getDefaultExcludes() {
+		List<String> excludes = new ArrayList<String>();
 
-      return excludes.toArray(new String[0]);
-   }
+		excludes.add(".*");
+		excludes.add("**/.*");
+		excludes.add("**/.*/**");
+		excludes.add("**/WEB-INF/tmp");
+		excludes.add("**/target");
+		excludes.add("**/target/**/*");
+		excludes.add("**/*.jar");
 
-   private List<String> getExcludedDirs() {
-      List<String> excludes = new ArrayList<String>();
+		for (String exclude : FileUtils.getDefaultExcludes()) {
+			excludes.add(exclude);
+		}
 
-      for (String exclude : excludeDirs.split(",")) {
-         excludes.add(exclude);
-      }
+		return excludes.toArray(new String[0]);
+	}
 
-      return excludes;
-   }
+	private List<String> getExcludedDirs() {
+		List<String> excludes = new ArrayList<String>();
+
+		for (String exclude : excludeDirs.split(",")) {
+			excludes.add(exclude);
+		}
+
+		return excludes;
+	}
 }
