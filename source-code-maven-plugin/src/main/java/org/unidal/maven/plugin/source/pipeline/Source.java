@@ -1,9 +1,27 @@
 package org.unidal.maven.plugin.source.pipeline;
 
-import java.io.IOException;
+import java.io.File;
+
+import org.apache.maven.project.MavenProject;
 
 public interface Source {
-   public SourcePipeline pipeline();
+	String getClassName();
 
-   public void scanFile() throws IOException;
+	File getFile();
+
+	File getFolder();
+
+	MavenProject getModule();
+
+	String getPackage();
+
+	SourceScope getParentScope();
+
+	MavenProject getProject();
+
+	SourceScope getScope();
+
+	String getSourceRoot();
+
+	SourcePipeline pipeline();
 }

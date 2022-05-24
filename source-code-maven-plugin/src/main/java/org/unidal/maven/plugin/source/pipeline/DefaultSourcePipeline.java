@@ -32,7 +32,7 @@ public class DefaultSourcePipeline extends SourceHandlerAdaptor implements Sourc
       return m_head; // always starts from beginning
    }
 
-   AbstractSourceHandlerContext headContext() {
+   public AbstractSourceHandlerContext headContext() {
       return m_head;
    }
 

@@ -18,8 +18,7 @@
   <entity name="class">
     <attribute name="package" value-type="String" />
     <attribute name="class" value-type="String" />
-    <attribute name="main" value-type="boolean" />
-    <attribute name="codegen" value-type="boolean" />
+    <attribute name="generated" value-type="boolean" />
     <attribute name="test" value-type="boolean" />
     <entity-ref name="count" />
   </entity>

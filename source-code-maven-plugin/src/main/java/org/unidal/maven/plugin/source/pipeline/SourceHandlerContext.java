@@ -1,19 +1,11 @@
 package org.unidal.maven.plugin.source.pipeline;
 
 public interface SourceHandlerContext {
-   // public void fireClassFile(String packageName, String className);
-
-   public void fireComment(String line);
-
-   public void fireEmptyLine();
-
-   public void fireEnd();
+   public void fireEnd(SourceScope scope);
 
    public void fireLine(String line);
 
-   public void fireStart();
-
-   public void fireStatement(String line);
+   public void fireStart(SourceScope scope);
 
    public SourceHandler handler();
 

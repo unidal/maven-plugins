@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model model-package="org.unidal.maven.plugins.source.model" class-suffix="Model" enable-xml="true" enable-base-visitor="true">
+<model model-package="org.unidal.maven.plugin.source.count" class-suffix="Model" enable-xml="true" enable-base-visitor="true">
+  <entity name="root" root="true">
+    <entity-ref name="count" />
+    <entity-ref name="project" type="map" names="projects" method-find-or-create="true" />
+  </entity>
   <entity name="count">
     <attribute name="lines" value-type="int" primitive="true" method-inc="true" />
     <attribute name="empty" value-type="int" primitive="true" method-inc="true" />
@@ -11,6 +15,18 @@
 	      m_comment += count.m_comment;
 	   }
     </snippet>
+  </entity>
+  <entity name="project">
+    <attribute name="name" value-type="String" key="true" />
+    <entity-ref name="count" />
+    <entity-ref name="class" type="map" names="classes" method-find-or-create="true" />
+  </entity>
+  <entity name="class">
+    <attribute name="package" value-type="String" key="true" />
+    <attribute name="class" value-type="String" key="true" />
+    <attribute name="generated" value-type="boolean" />
+    <attribute name="test" value-type="boolean" />
+    <entity-ref name="count" />
   </entity>
 </model>
 
