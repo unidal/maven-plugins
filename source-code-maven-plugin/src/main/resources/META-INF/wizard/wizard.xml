@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wizard package="org.unidal.maven.plugins.source">
-   <model package="org.unidal.maven.plugins.source.model" name="model">
-      <sample-model>src/test/resources/org/unidal/maven/plugin/source/model.xml</sample-model>
+   <model package="org.unidal.maven.plugins.source.model" name="lines">
+      <sample-model>src/test/resources/org/unidal/maven/plugin/source/lines.xml</sample-model>
    </model>
 </wizard>
