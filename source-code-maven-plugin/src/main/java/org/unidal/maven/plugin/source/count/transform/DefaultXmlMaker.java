@@ -4,11 +4,14 @@ package org.unidal.maven.plugin.source.count.transform;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_CLASS;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_COMMENT;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_EMPTY;
+import static org.unidal.maven.plugin.source.count.Constants.ATTR_FILES;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_GENERATED;
+import static org.unidal.maven.plugin.source.count.Constants.ATTR_GENERATED_FILES;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_LINES;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_NAME;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_PACKAGE;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_TEST;
+import static org.unidal.maven.plugin.source.count.Constants.ATTR_TEST_FILES;
 
 import org.xml.sax.Attributes;
 
@@ -41,6 +44,9 @@ public class DefaultXmlMaker {
       String lines = attributes.getValue(ATTR_LINES);
       String empty = attributes.getValue(ATTR_EMPTY);
       String comment = attributes.getValue(ATTR_COMMENT);
+      String files = attributes.getValue(ATTR_FILES);
+      String generatedFiles = attributes.getValue(ATTR_GENERATED_FILES);
+      String testFiles = attributes.getValue(ATTR_TEST_FILES);
       CountModel count = new CountModel();
 
       if (lines != null) {
@@ -53,6 +59,18 @@ public class DefaultXmlMaker {
 
       if (comment != null) {
          count.setComment(convert(Integer.class, comment, 0));
+      }
+
+      if (files != null) {
+         count.setFiles(convert(Integer.class, files, 0));
+      }
+
+      if (generatedFiles != null) {
+         count.setGeneratedFiles(convert(Integer.class, generatedFiles, 0));
+      }
+
+      if (testFiles != null) {
+         count.setTestFiles(convert(Integer.class, testFiles, 0));
       }
 
       return count;

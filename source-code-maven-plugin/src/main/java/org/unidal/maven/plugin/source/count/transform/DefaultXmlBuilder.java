@@ -4,11 +4,14 @@ package org.unidal.maven.plugin.source.count.transform;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_CLASS;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_COMMENT;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_EMPTY;
+import static org.unidal.maven.plugin.source.count.Constants.ATTR_FILES;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_GENERATED;
+import static org.unidal.maven.plugin.source.count.Constants.ATTR_GENERATED_FILES;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_LINES;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_NAME;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_PACKAGE;
 import static org.unidal.maven.plugin.source.count.Constants.ATTR_TEST;
+import static org.unidal.maven.plugin.source.count.Constants.ATTR_TEST_FILES;
 import static org.unidal.maven.plugin.source.count.Constants.ENTITY_CLASS;
 import static org.unidal.maven.plugin.source.count.Constants.ENTITY_COUNT;
 import static org.unidal.maven.plugin.source.count.Constants.ENTITY_PROJECT;
@@ -214,7 +217,7 @@ public class DefaultXmlBuilder implements IVisitor {
 
    @Override
    public void visitCount(CountModel count) {
-      startTag(ENTITY_COUNT, true, null, ATTR_LINES, count.getLines(), ATTR_EMPTY, count.getEmpty(), ATTR_COMMENT, count.getComment());
+      startTag(ENTITY_COUNT, true, null, ATTR_LINES, count.getLines(), ATTR_EMPTY, count.getEmpty(), ATTR_COMMENT, count.getComment(), ATTR_FILES, count.getFiles(), ATTR_GENERATED_FILES, count.getGeneratedFiles(), ATTR_TEST_FILES, count.getTestFiles());
    }
 
    @Override

@@ -1,7 +1,7 @@
 <root>
 	<count lines="100" empty="20" comment="10"></count>
 	<project name="project">
-		<count lines="100" empty="20" comment="10"></count>
+		<count lines="100" empty="20" comment="10" files="1" generated-files="1" test-files="1"></count>
 		<class package="org.unidal" class="MyClass" generated="false" test="false">
 			<count lines="100" empty="20" comment="10"></count>
 		</class>

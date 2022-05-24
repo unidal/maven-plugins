@@ -11,6 +11,12 @@ public class CountModel extends BaseEntity<CountModel> {
 
    private int m_comment;
 
+   private int m_files;
+
+   private int m_generatedFiles;
+
+   private int m_testFiles;
+
    public CountModel() {
    }
 
@@ -36,6 +42,18 @@ public class CountModel extends BaseEntity<CountModel> {
             return false;
          }
 
+         if (getFiles() != _o.getFiles()) {
+            return false;
+         }
+
+         if (getGeneratedFiles() != _o.getGeneratedFiles()) {
+            return false;
+         }
+
+         if (getTestFiles() != _o.getTestFiles()) {
+            return false;
+         }
+
 
          return true;
       }
@@ -51,8 +69,20 @@ public class CountModel extends BaseEntity<CountModel> {
       return m_empty;
    }
 
+   public int getFiles() {
+      return m_files;
+   }
+
+   public int getGeneratedFiles() {
+      return m_generatedFiles;
+   }
+
    public int getLines() {
       return m_lines;
+   }
+
+   public int getTestFiles() {
+      return m_testFiles;
    }
 
    @Override
@@ -62,6 +92,9 @@ public class CountModel extends BaseEntity<CountModel> {
       hash = hash * 31 + m_lines;
       hash = hash * 31 + m_empty;
       hash = hash * 31 + m_comment;
+      hash = hash * 31 + m_files;
+      hash = hash * 31 + m_generatedFiles;
+      hash = hash * 31 + m_testFiles;
 
       return hash;
    }
@@ -86,6 +119,26 @@ public class CountModel extends BaseEntity<CountModel> {
       return this;
    }
 
+   public CountModel incFiles() {
+      m_files++;
+      return this;
+   }
+
+   public CountModel incFiles(int files) {
+      m_files += files;
+      return this;
+   }
+
+   public CountModel incGeneratedFiles() {
+      m_generatedFiles++;
+      return this;
+   }
+
+   public CountModel incGeneratedFiles(int generatedFiles) {
+      m_generatedFiles += generatedFiles;
+      return this;
+   }
+
    public CountModel incLines() {
       m_lines++;
       return this;
@@ -96,6 +149,16 @@ public class CountModel extends BaseEntity<CountModel> {
       return this;
    }
 
+   public CountModel incTestFiles() {
+      m_testFiles++;
+      return this;
+   }
+
+   public CountModel incTestFiles(int testFiles) {
+      m_testFiles += testFiles;
+      return this;
+   }
+
    @Override
    public void mergeAttributes(CountModel other) {
       m_lines = other.getLines();
@@ -103,6 +166,12 @@ public class CountModel extends BaseEntity<CountModel> {
       m_empty = other.getEmpty();
 
       m_comment = other.getComment();
+
+      m_files = other.getFiles();
+
+      m_generatedFiles = other.getGeneratedFiles();
+
+      m_testFiles = other.getTestFiles();
    }
 
    public CountModel setComment(int comment) {
@@ -115,8 +184,23 @@ public class CountModel extends BaseEntity<CountModel> {
       return this;
    }
 
+   public CountModel setFiles(int files) {
+      m_files = files;
+      return this;
+   }
+
+   public CountModel setGeneratedFiles(int generatedFiles) {
+      m_generatedFiles = generatedFiles;
+      return this;
+   }
+
    public CountModel setLines(int lines) {
       m_lines = lines;
+      return this;
+   }
+
+   public CountModel setTestFiles(int testFiles) {
+      m_testFiles = testFiles;
       return this;
    }
 
@@ -125,6 +209,9 @@ public class CountModel extends BaseEntity<CountModel> {
       m_lines += count.m_lines;
       m_empty += count.m_empty;
       m_comment += count.m_comment;
+      m_files += count.m_files;
+      m_generatedFiles += count.m_generatedFiles;
+      m_testFiles += count.m_testFiles;
    }
 
    /********* Code Snippet End *********/

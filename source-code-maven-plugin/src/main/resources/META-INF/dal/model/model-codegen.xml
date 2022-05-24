@@ -9,6 +9,9 @@
     <attribute name="lines" value-type="int" />
     <attribute name="empty" value-type="int" />
     <attribute name="comment" value-type="int" />
+    <attribute name="files" value-type="int" />
+    <attribute name="generated-files" value-type="int" />
+    <attribute name="test-files" value-type="int" />
   </entity>
   <entity name="project">
     <attribute name="name" value-type="String" />

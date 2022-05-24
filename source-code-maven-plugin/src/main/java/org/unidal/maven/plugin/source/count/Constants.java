@@ -9,7 +9,11 @@ public class Constants {
 
    public static final String ATTR_EMPTY = "empty";
 
+   public static final String ATTR_FILES = "files";
+
    public static final String ATTR_GENERATED = "generated";
+
+   public static final String ATTR_GENERATED_FILES = "generated-files";
 
    public static final String ATTR_LINES = "lines";
 
@@ -18,6 +22,8 @@ public class Constants {
    public static final String ATTR_PACKAGE = "package";
 
    public static final String ATTR_TEST = "test";
+
+   public static final String ATTR_TEST_FILES = "test-files";
 
    public static final String ENTITY_CLASS = "class";
 

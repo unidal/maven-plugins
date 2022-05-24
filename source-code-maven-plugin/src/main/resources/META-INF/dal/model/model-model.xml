@@ -8,12 +8,18 @@
     <attribute name="lines" value-type="int" primitive="true" method-inc="true" />
     <attribute name="empty" value-type="int" primitive="true" method-inc="true" />
     <attribute name="comment" value-type="int" primitive="true" method-inc="true" />
+    <attribute name="files" value-type="int" primitive="true" method-inc="true" />
+    <attribute name="generated-files" value-type="int" primitive="true" method-inc="true" />
+    <attribute name="test-files" value-type="int" primitive="true" method-inc="true" />
     <snippet>
-	   public void add(CountModel count) {
-	      m_lines += count.m_lines;
-	      m_empty += count.m_empty;
-	      m_comment += count.m_comment;
-	   }
+       public void add(CountModel count) {
+          m_lines += count.m_lines;
+          m_empty += count.m_empty;
+          m_comment += count.m_comment;
+          m_files += count.m_files;
+          m_generatedFiles += count.m_generatedFiles;
+          m_testFiles += count.m_testFiles;
+       }
     </snippet>
   </entity>
   <entity name="project">

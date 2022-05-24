@@ -92,6 +92,23 @@ public class LineCounter extends SourceHandlerAdaptor {
 		}
 
 		@Override
+		public void visitClass(ClassModel _class) {
+			CountModel count = _class.getCount();
+
+			count.incFiles();
+
+			if (_class.isGenerated()) {
+				count.incGeneratedFiles();
+			}
+
+			if (_class.isTest()) {
+				count.incTestFiles();
+			}
+
+			super.visitClass(_class);
+		}
+
+		@Override
 		public void visitProject(ProjectModel project) {
 			m_project = new CountModel();
 
