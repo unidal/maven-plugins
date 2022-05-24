@@ -6,15 +6,14 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.unidal.maven.plugin.source.handler.LineCounter;
+import org.unidal.maven.plugin.source.lines.handler.LineCounter;
 import org.unidal.maven.plugin.source.pipeline.DefaultSource;
 import org.unidal.maven.plugin.source.pipeline.DefaultSourcePipeline;
 import org.unidal.maven.plugin.source.pipeline.PipelineDriver;
 import org.unidal.maven.plugin.source.pipeline.SourceHandlerContext;
-import org.unidal.maven.plugin.source.pipeline.SourcePipeline;
 
 /**
- * Counts the source lines of the current Java project.
+ * Counts the source lines for the current Java project.
  * 
  * @aggregator true
  * @goal lines
@@ -35,18 +34,12 @@ public class LinesMojo extends AbstractMojo {
 		DefaultSourcePipeline pipeline = source.pipeline();
 		SourceHandlerContext ctx = pipeline.headContext();
 
-		configure(source.pipeline());
-
-		PipelineDriver driver = new PipelineDriver();
+		pipeline.addLast(new LineCounter());
 
 		try {
-			driver.handleProject(source, ctx, m_project);
+			new PipelineDriver().handleProject(source, ctx, m_project);
 		} catch (IOException e) {
 			throw new MojoExecutionException("Error when executing mojo! " + e, e);
 		}
-	}
-
-	private void configure(SourcePipeline pipeline) {
-		pipeline.addLast(new LineCounter());
 	}
 }
