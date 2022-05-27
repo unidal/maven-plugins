@@ -23,9 +23,7 @@ public class DefaultSource implements Source {
 
 	private File m_file;
 
-	private boolean m_test;
-
-	private boolean m_generated;
+	private String m_line;
 
 	private Stack<SourceScope> m_scopes = new Stack<>();
 
@@ -46,6 +44,10 @@ public class DefaultSource implements Source {
 	@Override
 	public File getFolder() {
 		return m_folder;
+	}
+
+	public String getLine() {
+		return m_line;
 	}
 
 	@Override
@@ -82,14 +84,6 @@ public class DefaultSource implements Source {
 		return m_sourceRoot;
 	}
 
-	public boolean isGenerated() {
-		return m_generated;
-	}
-
-	public boolean isTest() {
-		return m_test;
-	}
-
 	@Override
 	public DefaultSourcePipeline pipeline() {
 		return m_pipeline;
@@ -115,6 +109,10 @@ public class DefaultSource implements Source {
 		m_folder = folder;
 	}
 
+	public void setLine(String line) {
+		m_line = line;
+	}
+
 	public void setModule(MavenProject module) {
 		m_module = module;
 	}
@@ -129,11 +127,6 @@ public class DefaultSource implements Source {
 
 	public void setSourceRoot(String sourceRoot) {
 		m_sourceRoot = sourceRoot;
-		m_generated = sourceRoot.contains("/target/generated-");
-	}
-
-	public void setTest(boolean test) {
-		m_test = test;
 	}
 
 	@Override

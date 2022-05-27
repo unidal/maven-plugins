@@ -36,6 +36,7 @@ public class PipelineDriver {
 			List<String> lines = Files.readAllLines(path);
 
 			for (String line : lines) {
+				source.setLine(line);
 				source.pipeline().handleLine(ctx, line);
 			}
 		} catch (IOException e) {
@@ -56,8 +57,6 @@ public class PipelineDriver {
 		for (Resource resource : module.getResources()) {
 			handleSourceRoot(source, ctx, resource.getDirectory(), SourceScope.RESOURCE);
 		}
-
-		source.setTest(true);
 
 		for (String sourceRoot : module.getTestCompileSourceRoots()) {
 			handleSourceRoot(source, ctx, sourceRoot, SourceScope.TEST_SOURCE);

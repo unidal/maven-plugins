@@ -15,6 +15,14 @@ public enum SourceScope {
 
 	FILE;
 
+	public boolean isFile() {
+		return this == FILE;
+	}
+
+	public boolean isProject() {
+		return this == PROJECT;
+	}
+
 	public boolean isSource() {
 		return this == SOURCE || this == TEST_SOURCE;
 	}

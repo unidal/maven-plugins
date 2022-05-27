@@ -15,7 +15,7 @@ public class LineCounter extends SourceHandlerAdaptor {
 
 	@Override
 	public void handleEnd(SourceHandlerContext ctx, SourceScope scope) {
-		if (scope == SourceScope.PROJECT) {
+		if (scope.isProject()) {
 			m_root.accept(new CountAggregator());
 			m_root.accept(new CountPrinter());
 
@@ -27,7 +27,7 @@ public class LineCounter extends SourceHandlerAdaptor {
 
 	@Override
 	public void handleStart(SourceHandlerContext ctx, SourceScope scope) {
-		if (scope == SourceScope.FILE) {
+		if (scope.isFile()) {
 			Source source = ctx.source();
 			SourceScope parentScope = source.getParentScope();
 

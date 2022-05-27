@@ -11,6 +11,8 @@ public interface Source {
 
 	File getFolder();
 
+	String getLine();
+
 	MavenProject getModule();
 
 	String getPackage();
@@ -22,6 +24,6 @@ public interface Source {
 	SourceScope getScope();
 
 	String getSourceRoot();
-
+	
 	SourcePipeline pipeline();
 }
