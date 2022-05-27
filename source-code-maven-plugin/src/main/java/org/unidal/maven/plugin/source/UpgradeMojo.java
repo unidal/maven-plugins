@@ -11,6 +11,7 @@ import org.unidal.maven.plugin.source.pipeline.DefaultSourcePipeline;
 import org.unidal.maven.plugin.source.pipeline.PipelineDriver;
 import org.unidal.maven.plugin.source.pipeline.SourceHandlerContext;
 import org.unidal.maven.plugin.source.upgrade.handler.ClassFileSink;
+import org.unidal.maven.plugin.source.upgrade.handler.ContainerHolderClassHandler;
 import org.unidal.maven.plugin.source.upgrade.handler.InitializableInterfaceHandler;
 import org.unidal.maven.plugin.source.upgrade.handler.InjectAnnotationHandler;
 import org.unidal.maven.plugin.source.upgrade.handler.NamedAnnotationHandler;
@@ -40,6 +41,7 @@ public class UpgradeMojo extends AbstractMojo {
 		pipeline.addLast(new InjectAnnotationHandler());
 		pipeline.addLast(new NamedAnnotationHandler());
 		pipeline.addLast(new InitializableInterfaceHandler());
+		pipeline.addLast(new ContainerHolderClassHandler());
 		pipeline.addLast(new ClassFileSink());
 
 		try {
