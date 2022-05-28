@@ -15,9 +15,9 @@ public class InitializableInterfaceHandler extends SourceHandlerAdaptor {
 				ctx.fireLine(line.replace("org.unidal.lookup.extension.Initializable",
 				      "org.springframework.beans.factory.InitializingBean"));
 			}
-		} else if (str.contains("implements ") && str.contains("Initializable")) {
+		} else if (str.contains(" implements ") && str.contains(" Initializable")) {
 			ctx.fireLine(line.replace("Initializable", "InitializingBean"));
-		} else if (str.startsWith("public void initialize()")) {
+		} else if (str.startsWith("public void initialize() throws InitializationException")) {
 			String prefix = line.substring(0, line.indexOf("public"));
 
 			ctx.fireLine(prefix + "public void afterPropertiesSet() throws Exception {");

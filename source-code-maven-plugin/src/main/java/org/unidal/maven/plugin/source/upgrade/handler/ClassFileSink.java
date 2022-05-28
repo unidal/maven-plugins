@@ -1,10 +1,13 @@
 package org.unidal.maven.plugin.source.upgrade.handler;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
+import org.unidal.helper.Files;
 import org.unidal.maven.plugin.source.pipeline.SourceHandlerAdaptor;
 import org.unidal.maven.plugin.source.pipeline.SourceHandlerContext;
 import org.unidal.maven.plugin.source.pipeline.SourceScope;
@@ -14,12 +17,17 @@ public class ClassFileSink extends SourceHandlerAdaptor {
 
 	private boolean m_dirty;
 
+	private int m_files;
+
 	@Override
 	public void handleEnd(SourceHandlerContext ctx, SourceScope scope) {
 		if (scope.isFile()) {
 			if (m_dirty) {
 				m_source.writeToFile(ctx.source().getFile());
+				m_files++;
 			}
+		} else if (scope.isProject()) {
+			System.out.println(m_files + " files updated.");
 		}
 
 		ctx.fireEnd(scope);
@@ -49,7 +57,7 @@ public class ClassFileSink extends SourceHandlerAdaptor {
 	private class ClassSource {
 		private String m_package;
 
-		private List<String> m_imports = new ArrayList<>();
+		private Set<String> m_imports = new TreeSet<>();
 
 		private List<String> m_statements = new ArrayList<>();
 
@@ -69,8 +77,6 @@ public class ClassFileSink extends SourceHandlerAdaptor {
 			sb.append(m_package).append("\r\n");
 			sb.append("\r\n");
 
-			Collections.sort(m_imports);
-
 			for (String line : m_imports) {
 				sb.append(line).append("\r\n");
 			}
@@ -88,8 +94,13 @@ public class ClassFileSink extends SourceHandlerAdaptor {
 				}
 			}
 
-			System.out.println(file);
-			System.out.println(sb);
+			System.out.println("Updating " + file);
+
+			try {
+				Files.forIO().writeTo(file, sb.toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

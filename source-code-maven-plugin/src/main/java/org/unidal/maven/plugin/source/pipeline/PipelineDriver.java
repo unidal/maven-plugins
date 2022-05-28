@@ -86,16 +86,18 @@ public class PipelineDriver {
 
 	private void handleSourceRoot(DefaultSource source, SourceHandlerContext ctx, String sourceRoot, SourceScope scope)
 	      throws IOException {
-		Path basePath = new File(sourceRoot).toPath();
+		File file = new File(sourceRoot);
 
 		source.setSourceRoot(sourceRoot);
 		handleStart(source, ctx, scope);
 
-		Files.walk(basePath).forEach(path -> {
-			if (path.toFile().isFile()) {
-				handleFile(source, ctx, scope, path);
-			}
-		});
+		if (file.isDirectory()) {
+			Files.walk(file.toPath()).forEach(path -> {
+				if (path.toFile().isFile()) {
+					handleFile(source, ctx, scope, path);
+				}
+			});
+		}
 
 		handleEnd(source, ctx, scope);
 	}
