@@ -91,7 +91,7 @@ public class PipelineDriver {
 		source.setSourceRoot(sourceRoot);
 		handleStart(source, ctx, scope);
 
-		if (file.isDirectory()) {
+		if (file.exists() && file.isDirectory()) {
 			Files.walk(file.toPath()).forEach(path -> {
 				if (path.toFile().isFile()) {
 					handleFile(source, ctx, scope, path);
