@@ -43,6 +43,8 @@
       <mysql.version>8.0.28</mysql.version>
       <mockito.version>1.9.0</mockito.version>
       <plexus-archiver.version>4.2.7</plexus-archiver.version>
+      <releases.repo>https://oss.sonatype.org/service/local/staging/deploy/maven2</releases.repo>
+      <snapshots.repo>https://oss.sonatype.org/content/repositories/snapshots</snapshots.repo>
    </properties>
    <prerequisites>
       <maven>3.8.5</maven>
@@ -101,6 +103,23 @@
          </dependency>
       </dependencies>
    </dependencyManagement>
+   <profiles>
+      <profile>
+         <id>ossrh</id>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-gpg-plugin</artifactId>
+               </plugin>
+               <plugin>
+                  <groupId>org.sonatype.plugins</groupId>
+                  <artifactId>nexus-staging-maven-plugin</artifactId>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
    <build>
       <pluginManagement>
          <plugins>
@@ -108,6 +127,60 @@
                <groupId>org.unidal.maven.plugins</groupId>
                <artifactId>codegen-maven-plugin</artifactId>
                <version>6.0.0</version>
+            </plugin>
+            <plugin>
+               <groupId>org.sonatype.plugins</groupId>
+               <artifactId>nexus-staging-maven-plugin</artifactId>
+               <version>1.6.8</version>
+               <extensions>true</extensions>
+               <configuration>
+                  <serverId>ossrh</serverId>
+                  <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                  <autoReleaseAfterClose>false</autoReleaseAfterClose>
+               </configuration>
+            </plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-javadoc-plugin</artifactId>
+               <version>2.10.4</version>
+               <executions>
+                  <execution>
+                     <id>attach-javadocs</id>
+                     <goals>
+                        <goal>jar</goal>
+                     </goals>
+                     <configuration>
+                        <additionalparam>-Xdoclint:none</additionalparam>
+                     </configuration>
+                  </execution>
+               </executions>
+            </plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-gpg-plugin</artifactId>
+               <version>1.6</version>
+               <executions>
+                  <execution>
+                     <id>sign-artifacts</id>
+                     <phase>verify</phase>
+                     <goals>
+                        <goal>sign</goal>
+                     </goals>
+                  </execution>
+               </executions>
+            </plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-source-plugin</artifactId>
+               <version>2.2.1</version>
+               <executions>
+                  <execution>
+                     <id>attach-sources</id>
+                     <goals>
+                        <goal>jar-no-fork</goal>
+                     </goals>
+                  </execution>
+               </executions>
             </plugin>
          </plugins>
       </pluginManagement>
@@ -194,4 +267,14 @@
          </plugin>
       </plugins>
    </reporting>
+   <distributionManagement>
+      <snapshotRepository>
+         <id>snapshots</id>
+         <url>${snapshots.repo}</url>
+      </snapshotRepository>
+      <repository>
+         <id>releases</id>
+         <url>${releases.repo}</url>
+      </repository>
+   </distributionManagement>
 </project>
