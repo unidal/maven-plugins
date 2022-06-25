@@ -21,12 +21,19 @@
       <module>source-code-maven-plugin</module>
    </modules>
    <url>https://gitee.com/unidal/maven-plugins</url>
+   <description>Maven Plugins Parent POM</description>
    <scm>
       <connection>scm:git:git://gitee.com/unidal/maven-plugins.git</connection>
       <developerConnection>scm:git:ssh://git@gitee.com/unidal/maven-plugins.git</developerConnection>
       <url>https://gitee.com/unidal/maven-plugins/tree/master</url>
       <tag>HEAD</tag>
    </scm>
+   <licenses>
+      <license>
+         <name>The Apache License, Version 2.0</name>
+         <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      </license>
+   </licenses>
    <properties>
       <foundation.version>6.0.0</foundation.version>
       <maven-core.version>3.8.5</maven-core.version>
