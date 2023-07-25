@@ -42,7 +42,7 @@
       <jdom.version>1.1</jdom.version>
       <mysql.version>8.0.28</mysql.version>
       <mockito.version>1.9.0</mockito.version>
-      <plexus-archiver.version>4.2.7</plexus-archiver.version>
+      <plexus-archiver.version>4.8.0</plexus-archiver.version>
       <releases.repo>https://oss.sonatype.org/service/local/staging/deploy/maven2</releases.repo>
       <snapshots.repo>https://oss.sonatype.org/content/repositories/snapshots</snapshots.repo>
    </properties>
